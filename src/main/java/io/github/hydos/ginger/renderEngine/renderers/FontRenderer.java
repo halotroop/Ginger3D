@@ -50,6 +50,7 @@ public class FontRenderer {
 		GL20.glEnableVertexAttribArray(1);
 		shader.loadColour(text.getColour());
 		shader.loadTranslation(text.getPosition());
+		shader.loadText(text);
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, text.getVertexCount());
 		GL30.glBindVertexArray(0);
 		GL20.glDisableVertexAttribArray(0);

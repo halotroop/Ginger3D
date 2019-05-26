@@ -10,12 +10,12 @@ uniform sampler2D fontAtlas;
 const float width = 0.5;
 const float edge = 0.1;
 
-uniform float borderWidth = 0.0;
-uniform float borderEdge = 0.1;
+uniform float borderWidth;
+uniform float borderEdge;
 
-uniform vec2 offset = vec2(0.0, 0.0);
+uniform vec2 offset;
 
-uniform vec3 outlineColour = vec3(1.0,0.0,0.0);
+uniform vec3 outlineColour;
 
 void main(void){
 

@@ -54,6 +54,9 @@ public class Example {
         
         GUIText text = new GUIText("hi, this is some sample text", 3, font, new Vector2f(0,0), 1f, true);
         text.setColour(0, 1, 0);
+        text.setBorderWidth(0.7f);
+        text.setBorderEdge(0.4f);
+        text.setOffset(new Vector2f(0.006f, 0.006f));
         
         masterRenderer = new MasterRenderer();		
 
@@ -108,16 +111,18 @@ public class Example {
 		entities.add(entity);
 		entities.add(dragon);
 	
-		
+		float colour = 0;
 		terrains.add(terrain);
-		
 		while(!Window.closed()) {
 			
 			if(Window.isUpdating()) {
 				Window.update();
+				colour = colour + 0.001f;
 				picker.update();
 				camera.move();
 				entity.move(terrain);
+				text.setOutlineColour(new Vector3f(colour, colour /2, colour / 3));
+				
 				Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 				if(terrainPoint!=null) {
 					barrel.setPosition(terrainPoint);
@@ -128,7 +133,6 @@ public class Example {
 				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
 				masterRenderer.renderGuis(guis);
 				TextMaster.render();
-				
 				Window.swapBuffers();
 			}
 			
