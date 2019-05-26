@@ -1,4 +1,4 @@
-package normalMappingRenderer;
+package io.github.hydos.ginger.renderEngine.renderers;
 
 import java.util.List;
 import java.util.Map;
@@ -7,17 +7,18 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector4f;
 
-import entities.Camera;
-import entities.Entity;
-import entities.Light;
-import models.RawModel;
-import models.TexturedModel;
-import renderEngine.MasterRenderer;
-import textures.ModelTexture;
-import toolbox.Maths;
+import io.github.hydos.ginger.elements.Entity;
+import io.github.hydos.ginger.elements.Light;
+import io.github.hydos.ginger.elements.ThirdPersonCamera;
+import io.github.hydos.ginger.io.Window;
+import io.github.hydos.ginger.mathEngine.Maths;
+import io.github.hydos.ginger.mathEngine.matrixes.Matrix4f;
+import io.github.hydos.ginger.mathEngine.vectors.Vector4f;
+import io.github.hydos.ginger.renderEngine.models.RawModel;
+import io.github.hydos.ginger.renderEngine.models.TexturedModel;
+import io.github.hydos.ginger.renderEngine.shaders.NormalMappingShader;
+import io.github.hydos.ginger.renderEngine.texture.ModelTexture;
 
 public class NormalMappingRenderer {
 
@@ -31,7 +32,7 @@ public class NormalMappingRenderer {
 		shader.stop();
 	}
 
-	public void render(Map<TexturedModel, List<Entity>> entities, Vector4f clipPlane, List<Light> lights, Camera camera) {
+	public void render(Map<TexturedModel, List<Entity>> entities, Vector4f clipPlane, List<Light> lights, ThirdPersonCamera camera) {
 		shader.start();
 		prepare(clipPlane, lights, camera);
 		for (TexturedModel model : entities.keySet()) {
@@ -57,13 +58,12 @@ public class NormalMappingRenderer {
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
 		ModelTexture texture = model.getTexture();
-		shader.loadNumberOfRows(texture.getNumberOfRows());
-		if (texture.isHasTransparency()) {
+		if (texture.isTransparent()) {
 			MasterRenderer.disableCulling();
 		}
 		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
 	}
 
 	private void unbindTexturedModel() {
@@ -78,13 +78,13 @@ public class NormalMappingRenderer {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),
 				entity.getRotY(), entity.getRotZ(), entity.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
-		shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
+		shader.loadOffset(0, 0);
 	}
 
-	private void prepare(Vector4f clipPlane, List<Light> lights, Camera camera) {
+	private void prepare(Vector4f clipPlane, List<Light> lights, ThirdPersonCamera camera) {
 		shader.loadClipPlane(clipPlane);
 		//need to be public variables in MasterRenderer
-		shader.loadSkyColour(MasterRenderer.RED, MasterRenderer.GREEN, MasterRenderer.BLUE);
+		shader.loadSkyColour(Window.getColour());
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		
 		shader.loadLights(lights, viewMatrix);

@@ -1,14 +1,12 @@
-package normalMappingRenderer;
+package io.github.hydos.ginger.renderEngine.shaders;
 
 import java.util.List;
 
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
-
-import entities.Light;
-import shaders.ShaderProgram;
+import io.github.hydos.ginger.elements.Light;
+import io.github.hydos.ginger.mathEngine.matrixes.Matrix4f;
+import io.github.hydos.ginger.mathEngine.vectors.Vector2f;
+import io.github.hydos.ginger.mathEngine.vectors.Vector3f;
+import io.github.hydos.ginger.mathEngine.vectors.Vector4f;
 
 public class NormalMappingShader extends ShaderProgram{
 	
@@ -65,36 +63,36 @@ public class NormalMappingShader extends ShaderProgram{
 		}
 	}
 	
-	protected void connectTextureUnits(){
+	public void connectTextureUnits(){
 		super.loadInt(location_modelTexture, 0);
 	}
 	
-	protected void loadClipPlane(Vector4f plane){
+	public void loadClipPlane(Vector4f plane){
 		super.loadVector(location_plane, plane);
 	}
 	
-	protected void loadNumberOfRows(int numberOfRows){
+	public void loadNumberOfRows(int numberOfRows){
 		super.loadFloat(location_numberOfRows, numberOfRows);
 	}
 	
-	protected void loadOffset(float x, float y){
+	public void loadOffset(float x, float y){
 		super.load2DVector(location_offset, new Vector2f(x,y));
 	}
 	
-	protected void loadSkyColour(float r, float g, float b){
+	public void loadSkyColour(float r, float g, float b){
 		super.loadVector(location_skyColour, new Vector3f(r,g,b));
 	}
 	
-	protected void loadShineVariables(float damper,float reflectivity){
+	public void loadShineVariables(float damper,float reflectivity){
 		super.loadFloat(location_shineDamper, damper);
 		super.loadFloat(location_reflectivity, reflectivity);
 	}
 	
-	protected void loadTransformationMatrix(Matrix4f matrix){
+	public void loadTransformationMatrix(Matrix4f matrix){
 		super.loadMatrix(location_transformationMatrix, matrix);
 	}
 	
-	protected void loadLights(List<Light> lights, Matrix4f viewMatrix){
+	public void loadLights(List<Light> lights, Matrix4f viewMatrix){
 		for(int i=0;i<MAX_LIGHTS;i++){
 			if(i<lights.size()){
 				super.loadVector(location_lightPositionEyeSpace[i], getEyeSpacePosition(lights.get(i), viewMatrix));
@@ -108,19 +106,24 @@ public class NormalMappingShader extends ShaderProgram{
 		}
 	}
 	
-	protected void loadViewMatrix(Matrix4f viewMatrix){
+	public void loadViewMatrix(Matrix4f viewMatrix){
 		super.loadMatrix(location_viewMatrix, viewMatrix);
 	}
 	
-	protected void loadProjectionMatrix(Matrix4f projection){
+	public void loadProjectionMatrix(Matrix4f projection){
 		super.loadMatrix(location_projectionMatrix, projection);
 	}
 	
-	private Vector3f getEyeSpacePosition(Light light, Matrix4f viewMatrix){
+	public Vector3f getEyeSpacePosition(Light light, Matrix4f viewMatrix){
 		Vector3f position = light.getPosition();
 		Vector4f eyeSpacePos = new Vector4f(position.x,position.y, position.z, 1f);
 		Matrix4f.transform(viewMatrix, eyeSpacePos, eyeSpacePos);
 		return new Vector3f(eyeSpacePos);
+	}
+
+	public void loadSkyColour(Vector3f colour) {
+		super.loadVector(location_skyColour, colour);
+		
 	}
 	
 	
