@@ -52,7 +52,7 @@ public class Example {
         
         FontType font = new FontType(Loader.loadFontAtlas("calibri.png"), "calibri.fnt");
         
-        GUIText text = new GUIText("hi this is some sample text", 1, font, new Vector2f(0,0), 1f, true);
+        GUIText text = new GUIText("hi, this is some sample text", 3, font, new Vector2f(0,0), 1f, true);
         text.setColour(0, 1, 0);
         
         masterRenderer = new MasterRenderer();		
@@ -127,6 +127,7 @@ public class Example {
 				barrel.increaseRotation(0, 1, 0);
 				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
 				masterRenderer.renderGuis(guis);
+				TextMaster.render();
 				
 				Window.swapBuffers();
 			}

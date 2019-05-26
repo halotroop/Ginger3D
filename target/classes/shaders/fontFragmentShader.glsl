@@ -5,7 +5,7 @@ in vec2 pass_textureCoords;
 out vec4 out_colour;
 
 uniform vec3 colour;
-uniform smapler2D fontAtlas;
+uniform sampler2D fontAtlas;
 
 void main(void){
 
