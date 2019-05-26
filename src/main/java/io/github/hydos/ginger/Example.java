@@ -50,7 +50,7 @@ public class Example {
 		
         TextMaster.init();
         
-        FontType font = new FontType(Loader.loadFontAtlas("calibri.png"), "calibri.fnt");
+        FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
         
         GUIText text = new GUIText("hi, this is some sample text", 3, font, new Vector2f(0,0), 1f, true);
         text.setColour(0, 1, 0);
@@ -90,7 +90,7 @@ public class Example {
 		Entity grassEntity = new Entity(tgrass, new Vector3f(-3,terrain.getHeightOfTerrain(-3, -3),-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f));
 		entities.add(grassEntity);
 		
-		ThirdPersonCamera camera = new ThirdPersonCamera(new Vector3f(0,1,0), entity);
+		ThirdPersonCamera camera = new ThirdPersonCamera(new Vector3f(0,0.1f,0), entity);
 		
 		GuiTexture guiTexture = new GuiTexture(new ModelTexture("guis/ginger.png").getTextureID(), new Vector2f(0.5f,0.5f), new Vector2f(0.25f,0.25f));
 		guis.add(guiTexture);

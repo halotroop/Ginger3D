@@ -31,82 +31,83 @@ public class ThirdPersonCamera {
 
 	}
 
-	public void move() {
+	public void move(){
 		calculateZoom();
 		calculatePitch();
 		calculateAngleAroundPlayer();
-		float hori = calculateHorizontalDistance();
-		float vert = calculateVerticalDistance();
-		calculateCameraPosition(hori, vert);
+		float horizontalDistance = calculateHorizontalDistance();
+		float verticalDistance = calculateVerticalDistance();
+		calculateCameraPosition(horizontalDistance, verticalDistance);
 		this.yaw = 180 - (player.getRotY() + angleAroundPlayer);
+	}
+	
+	public void invertPitch(){
+		this.pitch = -pitch;
 	}
 
 	public Vector3f getPosition() {
 		return position;
 	}
 
-
 	public float getPitch() {
 		return pitch;
 	}
-
 
 	public float getYaw() {
 		return yaw;
 	}
 
-
 	public float getRoll() {
 		return roll;
 	}
-
-	private void calculateZoom() {
-
+	
+	private void calculateCameraPosition(float horizDistance, float verticDistance){
+		float theta = player.getRotY() + angleAroundPlayer;
+		float offsetX = (float) (horizDistance * Math.sin(Math.toRadians(theta)));
+		float offsetZ = (float) (horizDistance * Math.cos(Math.toRadians(theta)));
+		position.x = player.getPosition().x - offsetX;
+		position.z = player.getPosition().z - offsetZ;
+		position.y = player.getPosition().y + verticDistance;
+	}
+	
+	private float calculateHorizontalDistance(){
+		float hD = (float) (distanceFromPlayer * Math.cos(Math.toRadians(pitch)));
+		if(hD < 0)
+			hD = 0;
+		return hD;
+	}
+	
+	private float calculateVerticalDistance(){
+		return (float) (distanceFromPlayer * Math.sin(Math.toRadians(pitch+4)));
+	}
+	
+	private void calculateZoom(){
 		GLFW.glfwSetScrollCallback(Window.window, new GLFWScrollCallback() {
 			@Override public void invoke (long win, double dx, double dy) {
 				float zoomLevel = (float) dy * 0.1f;
 				distanceFromPlayer -= zoomLevel;
 			}
-		});	}
-
-	private void calculatePitch() {
+		});	
+	}
+	
+	private void calculatePitch(){
 		if(Window.isMouseDown(1)) {
-			float pitchChange = (float) (Window.getDY() * 0.1f);
+			float pitchChange = (float) (Window.getDY() * 0.2f);
 			pitch += pitchChange;
-			if(pitch < 0)
+			if(pitch < 0){
 				pitch = 0;
-			else if(pitch > 90)
+			}else if(pitch > 90){
 				pitch = 90;
+			}
 		}
 	}
 	
-	private void calculateAngleAroundPlayer() {
+	private void calculateAngleAroundPlayer(){
 		if(Window.isMouseDown(1)) {
 			float angleChange = (float) (Window.getDX() * 0.3f);
-			angleAroundPlayer =- angleChange;
+			angleAroundPlayer -= angleChange;
 		}
 	}
 	
-	private float calculateHorizontalDistance() {
-		return (float) (distanceFromPlayer * Math.cos(Math.toRadians(pitch)));
-	}
-	
-	private float calculateVerticalDistance(){
-		float vD = (float) (distanceFromPlayer * Math.sin(Math.toRadians(pitch)));
-		if(vD < 0.1f)
-			vD = 0.1f;
-		return vD;
-	}
-
-	
-	public void calculateCameraPosition(float horizDistance, float verticDistance) {
-		float theta = player.getRotY() + angleAroundPlayer;
-		float offsetX = (float) (horizDistance * Math.sin(Math.toRadians(theta)));
-		float offsetZ = (float) (horizDistance * Math.cos(Math.toRadians(theta)));
-		position.y = player.getPosition().y + verticDistance;
-		position.x = player.getPosition().x - offsetX;
-		position.z = player.getPosition().z - offsetZ;
-		
-	}
 
 }
