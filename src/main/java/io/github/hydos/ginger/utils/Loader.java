@@ -8,6 +8,7 @@ import java.util.List;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
@@ -98,13 +99,12 @@ public class Loader {
 		}
 	}
 
-	public static RawModel loadToVAO(float[] positions, int[] indices, float[] textureCoords) {
+	public static int loadToVAO(float[] positions, float[] textureCoords) {
 		int vaoID = createVAO();
-		bindIndicesBuffer(indices);
-		storeDataInAttributeList(0, 3, positions);
+		storeDataInAttributeList(0, 2, positions);
 		storeDataInAttributeList(1, 2, textureCoords);
 		unbindVAO();
-		return new RawModel(vaoID, indices.length);
+		return vaoID;
 	}
 	
 	public static RawModel loadToVAO(float[] positions, int[] indices, float[] normals, float[] textureCoords) {
@@ -116,13 +116,49 @@ public class Loader {
 		unbindVAO();
 		return new RawModel(vaoID, indices.length);
 	}
+	
+	public static RawModel loadToVAO(float[] positions, int[] indices, float[] normals, float[] tangents, float[] textureCoords) {
+		int vaoID = createVAO();
+		bindIndicesBuffer(indices);
+		storeDataInAttributeList(0, 3, positions);
+		storeDataInAttributeList(1, 2, textureCoords);
+		storeDataInAttributeList(2, 3, normals);
+		storeDataInAttributeList(3, 3, tangents);
+		unbindVAO();
+		return new RawModel(vaoID, indices.length);
+	}
 
 	public static TerrainTexture loadTerrainTexture(String string) {
 		return new TerrainTexture(new ModelTexture("terrain/" + string).getTextureID());
 	}
 
 	public static int loadTexture(String path) {
-		return new ModelTexture(path).getTextureID();
+		int textureID = GL11.glGenTextures();
+        Image texture = Image.createImage("/textures/" + path);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+        GL11.glTexParameterf(GL11.GL_TEXTURE_2D, 10241, 9729.0f);
+        GL11.glTexParameterf(GL11.GL_TEXTURE_2D, 10240, 9729.0f);
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, texture.getWidth(), texture.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, texture.getImage());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+        GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+        GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -0.4f);
+        return textureID;
 	}
+	
+	public static int loadFontAtlas(String path) {
+		int textureID = GL11.glGenTextures();
+        Image texture = Image.createImage("/fonts/" + path);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+        GL11.glTexParameterf(GL11.GL_TEXTURE_2D, 10241, 9729.0f);
+        GL11.glTexParameterf(GL11.GL_TEXTURE_2D, 10240, 9729.0f);
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, texture.getWidth(), texture.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, texture.getImage());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+        GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+        GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -0.4f);
+        return textureID;
+	}
+	
 	
 }

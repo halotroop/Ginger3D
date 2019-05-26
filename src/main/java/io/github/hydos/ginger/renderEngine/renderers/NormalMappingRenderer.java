@@ -15,6 +15,7 @@ import io.github.hydos.ginger.io.Window;
 import io.github.hydos.ginger.mathEngine.Maths;
 import io.github.hydos.ginger.mathEngine.matrixes.Matrix4f;
 import io.github.hydos.ginger.mathEngine.vectors.Vector4f;
+import io.github.hydos.ginger.renderEngine.MasterRenderer;
 import io.github.hydos.ginger.renderEngine.models.RawModel;
 import io.github.hydos.ginger.renderEngine.models.TexturedModel;
 import io.github.hydos.ginger.renderEngine.shaders.NormalMappingShader;
@@ -45,6 +46,7 @@ public class NormalMappingRenderer {
 			unbindTexturedModel();
 		}
 		shader.stop();
+		entities.clear();
 	}
 	
 	public void cleanUp(){
@@ -57,6 +59,7 @@ public class NormalMappingRenderer {
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
+		GL20.glEnableVertexAttribArray(3);
 		ModelTexture texture = model.getTexture();
 		if (texture.isTransparent()) {
 			MasterRenderer.disableCulling();
@@ -64,6 +67,8 @@ public class NormalMappingRenderer {
 		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
+		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getNormalMap());
 	}
 
 	private void unbindTexturedModel() {
@@ -71,6 +76,7 @@ public class NormalMappingRenderer {
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
 		GL20.glDisableVertexAttribArray(2);
+		GL20.glDisableVertexAttribArray(3);
 		GL30.glBindVertexArray(0);
 	}
 

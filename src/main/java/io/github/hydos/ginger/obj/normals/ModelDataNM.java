@@ -1,4 +1,4 @@
-package io.github.hydos.ginger.normals.obj;
+package io.github.hydos.ginger.obj.normals;
 
 public class ModelDataNM {
 

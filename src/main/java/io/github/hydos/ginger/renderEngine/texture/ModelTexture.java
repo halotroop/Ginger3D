@@ -10,8 +10,12 @@ public class ModelTexture {
     private boolean transparency = false;
     private boolean useFakeLighting = false;
     
+    public int numberOfRows = 1;
+    
+    private int normalMap;
+    
     private float shineDamper = 1;
-    private float reflectivity = 1;
+    private float reflectivity = 0;
     
     private Image texture;
     
@@ -46,6 +50,14 @@ public class ModelTexture {
     public Image getTexture() {
     	return texture;
     }
+
+	public int getNormalMap() {
+		return normalMap;
+	}
+
+	public void setNormalMap(int normalMap) {
+		this.normalMap = normalMap;
+	}
 
 	public float getShineDamper() {
 		return shineDamper;

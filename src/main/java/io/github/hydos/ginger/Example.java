@@ -7,13 +7,18 @@ import io.github.hydos.ginger.elements.Entity;
 import io.github.hydos.ginger.elements.Light;
 import io.github.hydos.ginger.elements.Player;
 import io.github.hydos.ginger.elements.ThirdPersonCamera;
+import io.github.hydos.ginger.font.FontType;
+import io.github.hydos.ginger.font.GUIText;
+import io.github.hydos.ginger.font.TextMaster;
 import io.github.hydos.ginger.guis.GuiTexture;
 import io.github.hydos.ginger.io.Window;
 import io.github.hydos.ginger.mathEngine.vectors.Vector2f;
 import io.github.hydos.ginger.mathEngine.vectors.Vector3f;
+import io.github.hydos.ginger.mathEngine.vectors.Vector4f;
 import io.github.hydos.ginger.obj.ModelLoader;
+import io.github.hydos.ginger.obj.normals.NormalMappedObjLoader;
+import io.github.hydos.ginger.renderEngine.MasterRenderer;
 import io.github.hydos.ginger.renderEngine.models.TexturedModel;
-import io.github.hydos.ginger.renderEngine.renderers.MasterRenderer;
 import io.github.hydos.ginger.renderEngine.texture.ModelTexture;
 import io.github.hydos.ginger.renderEngine.tools.MousePicker;
 import io.github.hydos.ginger.terrain.Terrain;
@@ -31,7 +36,9 @@ public class Example {
 	
 	private List<Light> lights = new ArrayList<Light>();
 		
-	private List<Entity> entities = new ArrayList<Entity>();	
+	private List<Entity> entities = new ArrayList<Entity>();
+
+	private List<Entity> normalMapEntities = new ArrayList<Entity>();
 	
 	
 	public void main(String[] args) {
@@ -41,6 +48,13 @@ public class Example {
 		
         Window.setBackgroundColour(0.2f, 0.2f, 0.8f);
 		
+        TextMaster.init();
+        
+        FontType font = new FontType(Loader.loadFontAtlas("calibri.png"), "calibri.fnt");
+        
+        GUIText text = new GUIText("hi this is some sample text", 1, font, new Vector2f(0,0), 1f, true);
+        text.setColour(0, 1, 0);
+        
         masterRenderer = new MasterRenderer();		
 
 		TexturedModel tModel = ModelLoader.loadModel("stall.obj", "stallTexture.png");
@@ -83,6 +97,14 @@ public class Example {
 		
 		MousePicker picker = new MousePicker(camera, masterRenderer.getProjectionMatrix(), terrain);
 		
+		
+		TexturedModel barrelModel = new TexturedModel(NormalMappedObjLoader.loadOBJ("barrel.obj"), new ModelTexture("barrel.png"));
+		barrelModel.getTexture().setNormalMap(new ModelTexture("modelNormals/barrelNormal.png").getTextureID());
+		barrelModel.getTexture().setShineDamper(10f);
+		barrelModel.getTexture().setReflectivity(0.5f);
+		
+		Entity barrel = new Entity(barrelModel, new Vector3f(1,terrain.getHeightOfTerrain(1, 1),1), 0, 0, 0, new Vector3f(0.25f,0.25f,0.25f));
+		normalMapEntities.add(barrel);
 		entities.add(entity);
 		entities.add(dragon);
 	
@@ -98,11 +120,12 @@ public class Example {
 				entity.move(terrain);
 				Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 				if(terrainPoint!=null) {
-					dragon.setPosition(terrainPoint);
+					barrel.setPosition(terrainPoint);
 				}
 								
 				dragon.increaseRotation(0,1,0);
-				masterRenderer.renderScene(entities, terrains, lights, camera);
+				barrel.increaseRotation(0, 1, 0);
+				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
 				masterRenderer.renderGuis(guis);
 				
 				Window.swapBuffers();
@@ -110,6 +133,7 @@ public class Example {
 			
 		}
 		masterRenderer.cleanUp();
+		TextMaster.cleanUp();
 		Loader.cleanUp();
 		System.exit(0);
 		

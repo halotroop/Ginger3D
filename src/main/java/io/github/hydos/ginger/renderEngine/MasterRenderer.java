@@ -1,4 +1,4 @@
-package io.github.hydos.ginger.renderEngine.renderers;
+package io.github.hydos.ginger.renderEngine;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +13,13 @@ import io.github.hydos.ginger.elements.ThirdPersonCamera;
 import io.github.hydos.ginger.guis.GuiTexture;
 import io.github.hydos.ginger.io.Window;
 import io.github.hydos.ginger.mathEngine.matrixes.Matrix4f;
+import io.github.hydos.ginger.mathEngine.vectors.Vector4f;
 import io.github.hydos.ginger.renderEngine.models.TexturedModel;
+import io.github.hydos.ginger.renderEngine.renderers.EntityRenderer;
+import io.github.hydos.ginger.renderEngine.renderers.GuiRenderer;
+import io.github.hydos.ginger.renderEngine.renderers.NormalMappingRenderer;
+import io.github.hydos.ginger.renderEngine.renderers.SkyboxRenderer;
+import io.github.hydos.ginger.renderEngine.renderers.TerrainRenderer;
 import io.github.hydos.ginger.renderEngine.shaders.GuiShader;
 import io.github.hydos.ginger.renderEngine.shaders.StaticShader;
 import io.github.hydos.ginger.renderEngine.shaders.TerrainShader;
@@ -32,9 +38,12 @@ public class MasterRenderer {
 	
 	private SkyboxRenderer skyboxRenderer;
 	
+	private NormalMappingRenderer normalRenderer;
+			
 	private Matrix4f projectionMatrix;
 	
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
+	private Map<TexturedModel, List<Entity>> normalMapEntities = new HashMap<TexturedModel, List<Entity>>();
 	
 	private static final float FOV = 70f;
 	private static final float NEAR_PLANE = 0.1f;
@@ -50,6 +59,8 @@ public class MasterRenderer {
 		guiShader = new GuiShader();
 		guiRenderer = new GuiRenderer(guiShader);
 		
+		normalRenderer = new NormalMappingRenderer(projectionMatrix);
+		
 		terrainShader = new TerrainShader();
 		terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
 
@@ -64,15 +75,22 @@ public class MasterRenderer {
 		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
 	
-	public void renderScene(List<Entity> entities, List<Terrain> terrains, List<Light> lights, ThirdPersonCamera camera) {
+	public void renderScene(List<Entity> entities, List<Entity> normalEntities, List<Terrain> terrains, List<Light> lights, ThirdPersonCamera camera, Vector4f clipPlane) {
 		renderEntities(entities, camera, lights);
+		renderNormalEntities(normalEntities, lights, camera, clipPlane);
 		renderTerrains(terrains, lights, camera);
-		renderEntities(entities, camera, lights);
-		renderTerrains(terrains, lights, camera);
+
 		skyboxRenderer.render(camera);
 		
 	}
 	
+	private void renderNormalEntities(List<Entity> normalEntities, List<Light> lights, ThirdPersonCamera camera, Vector4f clipPlane) {
+		for(Entity entity: normalEntities) {
+			processEntityWithNormal(entity);
+		}
+		normalRenderer.render(normalMapEntities, clipPlane, lights, camera);
+	}
+
 	public void renderGuis(List<GuiTexture> guis) {
 		guiRenderer.render(guis);
 	}
@@ -112,10 +130,23 @@ public class MasterRenderer {
 		}
 	}
 	
+	private void processEntityWithNormal(Entity entity) {
+		TexturedModel entityModel = entity.getModel();
+		List<Entity> batch = normalMapEntities.get(entityModel);
+		if(batch!=null) {
+			batch.add(entity);
+		}else {
+			List<Entity> newBatch = new ArrayList<Entity>();
+			newBatch.add(entity);
+			normalMapEntities.put(entityModel, newBatch);
+		}
+	}
+	
 	public void cleanUp() {
 		entityShader.cleanUp();
 		terrainShader.cleanUp();
 		guiRenderer.cleanUp();
+		normalRenderer.cleanUp();
 		
 	}
 	

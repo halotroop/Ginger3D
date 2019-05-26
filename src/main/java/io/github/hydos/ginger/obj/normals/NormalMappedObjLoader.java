@@ -1,10 +1,8 @@
-package io.github.hydos.ginger.normals.obj;
+package io.github.hydos.ginger.obj.normals;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,16 +13,10 @@ import io.github.hydos.ginger.utils.Loader;
 
 public class NormalMappedObjLoader {
 
-	private static final String RES_LOC = "res/";
 
 	public static RawModel loadOBJ(String objFileName) {
-		FileReader isr = null;
-		File objFile = new File(RES_LOC + objFileName + ".obj");
-		try {
-			isr = new FileReader(objFile);
-		} catch (FileNotFoundException e) {
-			System.err.println("File not found in res; don't use any extention");
-		}
+		BufferedReader isr = null;
+		isr = new BufferedReader(new InputStreamReader(Class.class.getResourceAsStream("/models/" + objFileName)));
 		BufferedReader reader = new BufferedReader(isr);
 		String line;
 		List<VertexNM> vertices = new ArrayList<VertexNM>();
@@ -77,14 +69,15 @@ public class NormalMappedObjLoader {
 		float[] texturesArray = new float[vertices.size() * 2];
 		float[] normalsArray = new float[vertices.size() * 3];
 		float[] tangentsArray = new float[vertices.size() * 3];
+		@SuppressWarnings("unused")
+		//some weird eclipse only error here i think
 		float furthest = convertDataToArrays(vertices, textures, normals, verticesArray,
 				texturesArray, normalsArray, tangentsArray);
 		int[] indicesArray = convertIndicesListToArray(indices);
 
-		return Loader.loadToVAO(verticesArray, indicesArray, normalsArray, texturesArray);
+		return Loader.loadToVAO(verticesArray, indicesArray, normalsArray, tangentsArray, texturesArray);
 	}
 
-	//used to be NEW
 	private static void calculateTangents(VertexNM v0, VertexNM v1, VertexNM v2,
 			List<Vector2f> textures) {
 		Vector3f delatPos1 = Vector3f.sub(v1.getPosition(), v0.getPosition(), null);
@@ -170,7 +163,7 @@ public class NormalMappedObjLoader {
 				return dealWithAlreadyProcessedVertex(anotherVertex, newTextureIndex,
 						newNormalIndex, indices, vertices);
 			} else {
-				VertexNM duplicateVertex = previousVertex.duplicate(vertices.size());//NEW
+				VertexNM duplicateVertex = previousVertex.duplicate(vertices.size());
 				duplicateVertex.setTextureIndex(newTextureIndex);
 				duplicateVertex.setNormalIndex(newNormalIndex);
 				previousVertex.setDuplicateVertex(duplicateVertex);

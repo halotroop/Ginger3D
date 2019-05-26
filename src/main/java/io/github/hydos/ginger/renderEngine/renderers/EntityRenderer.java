@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL30;
 import io.github.hydos.ginger.elements.Entity;
 import io.github.hydos.ginger.mathEngine.Maths;
 import io.github.hydos.ginger.mathEngine.matrixes.Matrix4f;
+import io.github.hydos.ginger.renderEngine.MasterRenderer;
 import io.github.hydos.ginger.renderEngine.models.RawModel;
 import io.github.hydos.ginger.renderEngine.models.TexturedModel;
 import io.github.hydos.ginger.renderEngine.shaders.StaticShader;
