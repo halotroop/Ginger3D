@@ -37,9 +37,7 @@ public class ParticleRenderer {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		prepare();
 		for(ParticleTexture texture : particles.keySet()) {
-			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
-			shader.loadNumberOfRows(texture.getNumberOfRows());
+			bindTexture(texture);
 			for(Particle particle : particles.get(texture)) {
 				updateModelViewMatrix(particle.getPosition(), particle.getRotation(), particle.getScale().x, viewMatrix);
 			}
@@ -51,6 +49,12 @@ public class ParticleRenderer {
 
 	public void cleanUp(){
 		shader.cleanUp();
+	}
+	
+	private void bindTexture(ParticleTexture texture) {
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
+		shader.loadNumberOfRows(texture.getNumberOfRows());
 	}
 	
 	private void updateModelViewMatrix(Vector3f position, float rotation, float scale, Matrix4f viewMatrix) {
@@ -68,7 +72,6 @@ public class ParticleRenderer {
 		Matrix4f.rotate((float)Math.toRadians(rotation), new Vector3f(0,0,1), modelMatrix, modelMatrix);
 		Matrix4f.scale(new Vector3f(scale,scale,scale), modelMatrix, modelMatrix);
 		Matrix4f modelViewMatrix = Matrix4f.mul(viewMatrix, modelMatrix, null);
-		shader.loadModelViewMatrix(modelViewMatrix);
 	}
 	
 	private void prepare(){
