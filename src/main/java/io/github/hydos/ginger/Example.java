@@ -3,30 +3,31 @@ package io.github.hydos.ginger;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.hydos.ginger.elements.Entity;
-import io.github.hydos.ginger.elements.Light;
-import io.github.hydos.ginger.elements.Player;
-import io.github.hydos.ginger.elements.ThirdPersonCamera;
-import io.github.hydos.ginger.font.FontType;
-import io.github.hydos.ginger.font.GUIText;
-import io.github.hydos.ginger.font.TextMaster;
-import io.github.hydos.ginger.guis.GuiTexture;
-import io.github.hydos.ginger.io.Window;
-import io.github.hydos.ginger.mathEngine.vectors.Vector2f;
-import io.github.hydos.ginger.mathEngine.vectors.Vector3f;
-import io.github.hydos.ginger.mathEngine.vectors.Vector4f;
-import io.github.hydos.ginger.obj.ModelLoader;
-import io.github.hydos.ginger.obj.normals.NormalMappedObjLoader;
-import io.github.hydos.ginger.particle.ParticleMaster;
-import io.github.hydos.ginger.particle.ParticleSystem;
-import io.github.hydos.ginger.renderEngine.MasterRenderer;
-import io.github.hydos.ginger.renderEngine.models.TexturedModel;
-import io.github.hydos.ginger.renderEngine.texture.ModelTexture;
-import io.github.hydos.ginger.renderEngine.tools.MousePicker;
-import io.github.hydos.ginger.terrain.Terrain;
-import io.github.hydos.ginger.terrain.TerrainTexture;
-import io.github.hydos.ginger.terrain.TerrainTexturePack;
-import io.github.hydos.ginger.utils.Loader;
+import io.github.hydos.ginger.engine.elements.Entity;
+import io.github.hydos.ginger.engine.elements.Light;
+import io.github.hydos.ginger.engine.elements.Player;
+import io.github.hydos.ginger.engine.elements.ThirdPersonCamera;
+import io.github.hydos.ginger.engine.font.FontType;
+import io.github.hydos.ginger.engine.font.GUIText;
+import io.github.hydos.ginger.engine.font.TextMaster;
+import io.github.hydos.ginger.engine.guis.GuiTexture;
+import io.github.hydos.ginger.engine.io.Window;
+import io.github.hydos.ginger.engine.mathEngine.vectors.Vector2f;
+import io.github.hydos.ginger.engine.mathEngine.vectors.Vector3f;
+import io.github.hydos.ginger.engine.mathEngine.vectors.Vector4f;
+import io.github.hydos.ginger.engine.obj.ModelLoader;
+import io.github.hydos.ginger.engine.obj.normals.NormalMappedObjLoader;
+import io.github.hydos.ginger.engine.particle.ParticleMaster;
+import io.github.hydos.ginger.engine.particle.ParticleSystem;
+import io.github.hydos.ginger.engine.particle.ParticleTexture;
+import io.github.hydos.ginger.engine.renderEngine.MasterRenderer;
+import io.github.hydos.ginger.engine.renderEngine.models.TexturedModel;
+import io.github.hydos.ginger.engine.renderEngine.texture.ModelTexture;
+import io.github.hydos.ginger.engine.renderEngine.tools.MousePicker;
+import io.github.hydos.ginger.engine.terrain.Terrain;
+import io.github.hydos.ginger.engine.terrain.TerrainTexture;
+import io.github.hydos.ginger.engine.terrain.TerrainTexturePack;
+import io.github.hydos.ginger.engine.utils.Loader;
 
 public class Example {
 	
@@ -119,12 +120,14 @@ public class Example {
 		float colour = 0;
 		terrains.add(terrain);
 		
-		ParticleSystem system = new ParticleSystem(50, 25, 0.3f, 4, 0.5f);
+		ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("particles/smoke.png"), 8);
+		
+		ParticleSystem system = new ParticleSystem(particleTexture, 50, 25, 0.3f, 4, 4f);
 		system.randomizeRotation();
-		system.setDirection(new Vector3f(0,1,0), 0.1f);
-		system.setLifeError(0.1f);
-		system.setSpeedError(0.4f);
-		system.setScaleError(0.8f);
+		system.setDirection(new Vector3f(0,-0.001f,0), 0.01f);
+		system.setLifeError(0);
+		system.setSpeedError(0);
+		system.setScaleError(1f);
 		
 		while(!Window.closed()) {
 			
@@ -132,7 +135,7 @@ public class Example {
 				Window.update();
 				colour = colour + 0.001f;
 				picker.update();
-				ParticleMaster.update();
+				ParticleMaster.update(camera);
 				camera.move();
 				entity.move(terrain);
 				text.setOutlineColour(new Vector3f(colour, colour /2, colour / 3));
