@@ -40,11 +40,12 @@ public class Particle {
 	}
 	
 	public boolean update() {
-		velocity.y += Player.GRAVITY * gravityEffect * Window.getTime();
+		float time = (float) Window.getTime() / 100000000;
+		velocity.y += Player.GRAVITY * gravityEffect * time;
 		Vector3f change = new Vector3f(velocity);
-		change.scale((float) Window.getTime());
+		change.scale((float) time);
 		Vector3f.add(change, position, position);
-		elapsedTime += Window.getTime();
+		elapsedTime += time;
 		return elapsedTime < lifeLength;
 	}
 

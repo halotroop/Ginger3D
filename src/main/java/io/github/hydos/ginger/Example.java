@@ -119,7 +119,7 @@ public class Example {
 		float colour = 0;
 		terrains.add(terrain);
 		
-		ParticleSystem system = new ParticleSystem(50, 25, 0.3f, 4, 1);
+		ParticleSystem system = new ParticleSystem(50, 25, 0.3f, 4, 0.5f);
 		system.randomizeRotation();
 		system.setDirection(new Vector3f(0,1,0), 0.1f);
 		system.setLifeError(0.1f);
@@ -132,7 +132,6 @@ public class Example {
 				Window.update();
 				colour = colour + 0.001f;
 				picker.update();
-				System.out.println("a");
 				ParticleMaster.update();
 				camera.move();
 				entity.move(terrain);
@@ -142,7 +141,6 @@ public class Example {
 				if(terrainPoint!=null) {
 					barrel.setPosition(terrainPoint);
 				}
-				System.out.println("b");
 				system.generateParticles(new Vector3f(0,0,0));
 
 				dragon.increaseRotation(0,1,0);

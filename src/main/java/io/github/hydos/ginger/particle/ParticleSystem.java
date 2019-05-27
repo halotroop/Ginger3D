@@ -64,19 +64,17 @@ public class ParticleSystem {
 	}
 
 	public void generateParticles(Vector3f systemCenter) {
-		float delta = (float) Window.getTime() / 1000000;
+		float delta = (float) Window.getTime() / 100000000;
 		float particlesToCreate = pps * delta;
 		int count = (int) Math.floor(particlesToCreate);
 		float partialParticle = particlesToCreate % 1;
-		System.out.println("c");
-		System.out.println(count);
+
 		for (int i = 0; i < count; i++) {
 			emitParticle(systemCenter);
 		}
 		if (Math.random() < partialParticle) {
 			emitParticle(systemCenter);
 		}
-		System.out.println("d");
 	}
 
 	private void emitParticle(Vector3f center) {
