@@ -23,6 +23,7 @@ import io.github.hydos.ginger.engine.renderEngine.renderers.TerrainRenderer;
 import io.github.hydos.ginger.engine.renderEngine.shaders.GuiShader;
 import io.github.hydos.ginger.engine.renderEngine.shaders.StaticShader;
 import io.github.hydos.ginger.engine.renderEngine.shaders.TerrainShader;
+import io.github.hydos.ginger.engine.shadow.ShadowMapMasterRenderer;
 import io.github.hydos.ginger.engine.terrain.Terrain;
 
 public class MasterRenderer {
@@ -42,14 +43,16 @@ public class MasterRenderer {
 			
 	private Matrix4f projectionMatrix;
 	
+	private ShadowMapMasterRenderer shadowMapRenderer;
+	
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	private Map<TexturedModel, List<Entity>> normalMapEntities = new HashMap<TexturedModel, List<Entity>>();
 	
-	private static final float FOV = 70f;
-	private static final float NEAR_PLANE = 0.1f;
+	public static final float FOV = 70f;
+	public static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000f;
 	
-	public MasterRenderer() {
+	public MasterRenderer(ThirdPersonCamera camera) {
 		createProjectionMatrix();
 		entityShader = new StaticShader();
 		entityRenderer = new EntityRenderer(entityShader, projectionMatrix);
@@ -63,6 +66,8 @@ public class MasterRenderer {
 		
 		terrainShader = new TerrainShader();
 		terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
+		
+		shadowMapRenderer = new ShadowMapMasterRenderer(camera);
 
 	}
 	
@@ -142,10 +147,23 @@ public class MasterRenderer {
 		}
 	}
 	
+	public void renderShadowMap(List<Entity> entityList, Light sun) {
+		for(Entity entity : entityList) {
+			processEntity(entity);
+		}
+		shadowMapRenderer.render(entities, sun);
+		entities.clear();
+	}
+	
+	public int getShadowMapTexture() {
+		return shadowMapRenderer.getShadowMap();
+	}
+	
 	public void cleanUp() {
 		entityShader.cleanUp();
 		terrainShader.cleanUp();
 		guiRenderer.cleanUp();
+		shadowMapRenderer.cleanUp();
 		normalRenderer.cleanUp();
 		
 	}
@@ -154,20 +172,19 @@ public class MasterRenderer {
 		return this.projectionMatrix;
 	}
 	
-	private void createProjectionMatrix() {
-		float aspectRatio = (float) Window.width / Window.height;
-		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
-		float x_Scale = y_scale / aspectRatio;
+    private void createProjectionMatrix(){
+    	projectionMatrix = new Matrix4f();
+		float aspectRatio = (float) Window.width / (float) Window.height;
+		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))));
+		float x_scale = y_scale / aspectRatio;
 		float frustum_length = FAR_PLANE - NEAR_PLANE;
-		
-		projectionMatrix = new Matrix4f();
-		projectionMatrix.m00 = x_Scale;
+
+		projectionMatrix.m00 = x_scale;
 		projectionMatrix.m11 = y_scale;
 		projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
 		projectionMatrix.m23 = -1;
-		projectionMatrix.m32 = -((2* NEAR_PLANE * FAR_PLANE) / frustum_length);
+		projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
 		projectionMatrix.m33 = 0;
-		
-	}
+    }
 	
 }

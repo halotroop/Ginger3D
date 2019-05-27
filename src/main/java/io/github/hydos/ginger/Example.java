@@ -53,22 +53,26 @@ public class Example {
 		
         TextMaster.init();
         
+		TexturedModel tModel = ModelLoader.loadModel("stall.obj", "stallTexture.png");
+		tModel.getTexture().setReflectivity(1f);
+		tModel.getTexture().setShineDamper(7f);
+		Player entity = new Player(tModel, new Vector3f(0,0,-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f));
+		ThirdPersonCamera camera = new ThirdPersonCamera(new Vector3f(0,0.1f,0), entity);
+        masterRenderer = new MasterRenderer(camera);		
+
+        
         FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
         
         GUIText text = new GUIText("hi, this is some sample text", 3, font, new Vector2f(0,0), 1f, true);
         text.setColour(0, 1, 0);
         text.setBorderWidth(0.7f);
         text.setBorderEdge(0.4f);
-        text.setOffset(new Vector2f(0.006f, 0.006f));
-        
-        masterRenderer = new MasterRenderer();		
-        
+        text.setOffset(new Vector2f(0.003f, 0.003f));
+                
         ParticleMaster.init(masterRenderer.getProjectionMatrix());
         
         
-		TexturedModel tModel = ModelLoader.loadModel("stall.obj", "stallTexture.png");
-		tModel.getTexture().setReflectivity(1f);
-		tModel.getTexture().setShineDamper(7f);
+
 		
 		TexturedModel dragonMdl = ModelLoader.loadModel("dragon.obj", "stallTexture.png");
 		dragonMdl.getTexture().setReflectivity(4f);
@@ -76,8 +80,7 @@ public class Example {
 		
 
 		
-		Player entity = new Player(tModel, new Vector3f(0,0,-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f));
-		Light sun = new Light(new Vector3f(0,-0.5f,0), new Vector3f(1, 1, 1), new Vector3f(0.1f, 0.1f, 0.1f));
+		Light sun = new Light(new Vector3f(1000000,1500000,-1000000), new Vector3f(1.3f, 1.3f, 1.3f), new Vector3f(0f, 0f, 0f));
 		lights.add(sun);
 	
 		TexturedModel tgrass = ModelLoader.loadModel("grass.obj", "grass.png");
@@ -99,7 +102,7 @@ public class Example {
 		Entity grassEntity = new Entity(tgrass, new Vector3f(-3,terrain.getHeightOfTerrain(-3, -3),-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f));
 		entities.add(grassEntity);
 		
-		ThirdPersonCamera camera = new ThirdPersonCamera(new Vector3f(0,0.1f,0), entity);
+		
 		
 		GuiTexture guiTexture = new GuiTexture(new ModelTexture("guis/ginger.png").getTextureID(), new Vector2f(0.5f,0.5f), new Vector2f(0.25f,0.25f));
 		guis.add(guiTexture);
@@ -120,11 +123,14 @@ public class Example {
 		float colour = 0;
 		terrains.add(terrain);
 		
+		GuiTexture shadowMap = new GuiTexture(masterRenderer.getShadowMapTexture(), new Vector2f(0.5f,0.5f), new Vector2f(0.5f,0.5f));
+		guis.add(shadowMap);
+		
 		ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("particles/smoke.png"), 8);
 		
-		ParticleSystem system = new ParticleSystem(particleTexture, 50, 25, 0.3f, 4, 4f);
+		ParticleSystem system = new ParticleSystem(particleTexture, 100, 5f, 0.3f, 4, 4f);
 		system.randomizeRotation();
-		system.setDirection(new Vector3f(0,-0.001f,0), 0.01f);
+		system.setDirection(new Vector3f(0,0.001f,0), 0.00001f);
 		system.setLifeError(0);
 		system.setSpeedError(0);
 		system.setScaleError(1f);
@@ -136,6 +142,10 @@ public class Example {
 				colour = colour + 0.001f;
 				picker.update();
 				ParticleMaster.update(camera);
+				sun.setPosition(new Vector3f(entity.getPosition().x, entity.getPosition().y + 4, entity.getPosition().z));
+				
+				masterRenderer.renderShadowMap(entities, sun);
+				
 				camera.move();
 				entity.move(terrain);
 				text.setOutlineColour(new Vector3f(colour, colour /2, colour / 3));
@@ -144,7 +154,7 @@ public class Example {
 				if(terrainPoint!=null) {
 					barrel.setPosition(terrainPoint);
 				}
-				system.generateParticles(new Vector3f(0,0,0));
+				system.generateParticles(new Vector3f(0,-2,0));
 
 				dragon.increaseRotation(0,1,0);
 				barrel.increaseRotation(0, 1, 0);
