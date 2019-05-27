@@ -104,7 +104,7 @@ public class ParticleRenderer {
 		Matrix4f.rotate((float)Math.toRadians(rotation), new Vector3f(0,0,1), modelMatrix, modelMatrix);
 		Matrix4f.scale(new Vector3f(scale,scale,scale), modelMatrix, modelMatrix);
 		Matrix4f modelViewMatrix = Matrix4f.mul(viewMatrix, modelMatrix, null);
-		storeMatrixData(modelMatrix, vboData);
+		storeMatrixData(modelViewMatrix, vboData);
 		
 	}
 	

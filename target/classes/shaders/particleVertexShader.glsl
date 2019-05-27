@@ -12,14 +12,14 @@ out vec2 textureCoords2;
 out float blend;
 
 uniform mat4 projectionMatrix;
-uniform float nuberOfRows;
+uniform float numberOfRows;
 
 void main(void){
 
 	vec2 textureCoords = position + vec2(0.5, 0.5);
 	textureCoords.y = 1.0 - textureCoords.y;
 
-	textureCoords /= nuberOfRows;
+	textureCoords /= numberOfRows;
 	textureCoords1 = textureCoords + texOffsets.xy;
 	textureCoords2 = textureCoords + texOffsets.zw;
 	blend = blendFactor;
