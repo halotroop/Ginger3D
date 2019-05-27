@@ -1,8 +1,10 @@
+io\github\hydos\ginger\particle\Particle.class
 io\github\hydos\ginger\terrain\TerrainTexture.class
 io\github\hydos\ginger\renderEngine\shaders\SkyboxShader.class
 io\github\hydos\ginger\mathEngine\matrixes\Matrix.class
 io\github\hydos\ginger\mathEngine\vectors\Vector.class
 io\github\hydos\ginger\elements\Entity.class
+io\github\hydos\ginger\renderEngine\renderers\ParticleRenderer.class
 io\github\hydos\ginger\obj\normals\VertexNM.class
 io\github\hydos\ginger\mathEngine\vectors\Vector3f.class
 io\github\hydos\ginger\font\GUIText.class
@@ -22,6 +24,7 @@ io\github\hydos\ginger\mathEngine\vectors\ReadableVector3f.class
 io\github\hydos\ginger\mathEngine\vectors\WritableVector2f.class
 io\github\hydos\ginger\renderEngine\renderers\GuiRenderer.class
 io\github\hydos\ginger\elements\FirstPersonCamera.class
+io\github\hydos\ginger\particle\ParticleSystem.class
 io\github\hydos\ginger\font\TextMeshCreator.class
 io\github\hydos\ginger\mathEngine\vectors\Vector4f.class
 io\github\hydos\ginger\Example.class
@@ -42,6 +45,8 @@ io\github\hydos\ginger\renderEngine\shaders\FontShader.class
 io\github\hydos\ginger\renderEngine\texture\ModelTexture.class
 io\github\hydos\ginger\obj\OBJFileLoader.class
 io\github\hydos\ginger\renderEngine\models\RawModel.class
+io\github\hydos\ginger\renderEngine\shaders\ParticleShader.class
+io\github\hydos\ginger\particle\ParticleMaster.class
 io\github\hydos\ginger\renderEngine\shaders\NormalMappingShader.class
 io\github\hydos\ginger\obj\ModelData.class
 io\github\hydos\ginger\obj\ModelLoader.class

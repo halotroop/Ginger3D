@@ -17,6 +17,8 @@ import io.github.hydos.ginger.mathEngine.vectors.Vector3f;
 import io.github.hydos.ginger.mathEngine.vectors.Vector4f;
 import io.github.hydos.ginger.obj.ModelLoader;
 import io.github.hydos.ginger.obj.normals.NormalMappedObjLoader;
+import io.github.hydos.ginger.particle.ParticleMaster;
+import io.github.hydos.ginger.particle.ParticleSystem;
 import io.github.hydos.ginger.renderEngine.MasterRenderer;
 import io.github.hydos.ginger.renderEngine.models.TexturedModel;
 import io.github.hydos.ginger.renderEngine.texture.ModelTexture;
@@ -59,7 +61,10 @@ public class Example {
         text.setOffset(new Vector2f(0.006f, 0.006f));
         
         masterRenderer = new MasterRenderer();		
-
+        
+        ParticleMaster.init(masterRenderer.getProjectionMatrix());
+        
+        
 		TexturedModel tModel = ModelLoader.loadModel("stall.obj", "stallTexture.png");
 		tModel.getTexture().setReflectivity(1f);
 		tModel.getTexture().setShineDamper(7f);
@@ -113,12 +118,22 @@ public class Example {
 	
 		float colour = 0;
 		terrains.add(terrain);
+		
+		ParticleSystem system = new ParticleSystem(50, 25, 0.3f, 4, 1);
+		system.randomizeRotation();
+		system.setDirection(new Vector3f(0,1,0), 0.1f);
+		system.setLifeError(0.1f);
+		system.setSpeedError(0.4f);
+		system.setScaleError(0.8f);
+		
 		while(!Window.closed()) {
 			
 			if(Window.isUpdating()) {
 				Window.update();
 				colour = colour + 0.001f;
 				picker.update();
+				System.out.println("a");
+				ParticleMaster.update();
 				camera.move();
 				entity.move(terrain);
 				text.setOutlineColour(new Vector3f(colour, colour /2, colour / 3));
@@ -127,16 +142,20 @@ public class Example {
 				if(terrainPoint!=null) {
 					barrel.setPosition(terrainPoint);
 				}
-								
+				System.out.println("b");
+				system.generateParticles(new Vector3f(0,0,0));
+
 				dragon.increaseRotation(0,1,0);
 				barrel.increaseRotation(0, 1, 0);
 				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
+				ParticleMaster.renderParticles(camera);
 				masterRenderer.renderGuis(guis);
 				TextMaster.render();
 				Window.swapBuffers();
 			}
 			
 		}
+		ParticleMaster.cleanUp();
 		masterRenderer.cleanUp();
 		TextMaster.cleanUp();
 		Loader.cleanUp();
