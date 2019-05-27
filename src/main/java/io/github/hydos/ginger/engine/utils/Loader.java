@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL33;
 
 import io.github.hydos.ginger.engine.renderEngine.models.RawModel;
 import io.github.hydos.ginger.engine.renderEngine.texture.Image;
@@ -69,13 +70,32 @@ public class Loader {
 		return vaoID;
 	}
 	
-	public int createEmptyVbo(int floatCount) {
+	public static int createEmptyVbo(int floatCount) {
 		int vbo = GL15.glGenBuffers();
 		vbos.add(vbo);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER,	vbo);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, floatCount * 4, GL15.GL_STREAM_DRAW);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 		return vbo;
+	}
+	
+	public static void updateVbo(int vbo, float[] data, FloatBuffer buffer) {
+		buffer.clear();
+		buffer.put(data);
+		buffer.flip();
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer.capacity(), GL15.GL_STREAM_DRAW);
+		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, buffer);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+	}
+	
+	public static void addInstancedAttribute(int vao, int vbo, int att, int dataSize, int instancedDataLength, int offset) {
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+		GL30.glBindVertexArray(vao);
+		GL20.glVertexAttribPointer(0, dataSize, GL11.GL_FLOAT, false, instancedDataLength * 4, offset * 4);
+		GL33.glVertexAttribDivisor(att, 1);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		GL30.glBindVertexArray(0);
 	}
 	
 	private static void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data) {

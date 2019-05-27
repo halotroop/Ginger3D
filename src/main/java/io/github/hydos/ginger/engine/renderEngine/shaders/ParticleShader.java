@@ -25,6 +25,9 @@ public class ParticleShader extends ShaderProgram {
 	@Override
 	protected void bindAttributes() {
 		super.bindAttribute(0, "position");
+		super.bindAttribute(1, "modelViewMatrix");
+		super.bindAttribute(5, "texOffsets");
+		super.bindAttribute(6, "blendFactor");
 	}
 	
 	public void loadNumberOfRows(float numberOfRows) {

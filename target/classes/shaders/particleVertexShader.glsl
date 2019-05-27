@@ -2,9 +2,9 @@
 
 in vec2 position;
 
-uniform mat4 modelViewMatrix;
-uniform vec4 texOffsets;
-uniform float blendFactor;
+in mat4 modelViewMatrix;
+in vec4 texOffsets;
+in float blendFactor;
 
 
 out vec2 textureCoords1;
