@@ -16,6 +16,7 @@ public class Player extends Entity{
 	
 	private static float terrainHeight = 0;
 	
+	private double timeModifier = 1;
 	
 	private float currentSpeed = 0;
 	private float currentTurn = 0;
@@ -23,21 +24,21 @@ public class Player extends Entity{
 	
 	private boolean isInAir = false;
 	
-	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale) {
+	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale, double timeScale) {
 		super(model, position, rotX, rotY, rotZ, scale);
+		this.timeModifier = timeScale;
 	}
 
 	public void move(Terrain t) {
-	
 		checkInputs();
-		super.increaseRotation(0, (float) ((currentTurn / 1000000) * Window.getTime()), 0);
-		float distance = (currentSpeed / 1000000) * Window.getFloatTime();
+		super.increaseRotation(0, (float) ((currentTurn) * Window.getTime() / timeModifier), 0);
+		float distance = (float) ((currentSpeed) * (Window.getTime() / (timeModifier * 2.5)));
 		float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
 		float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
 		super.increasePosition(dx, 0, dz);
-		super.increasePosition(0, (float) (upwardsSpeed * (Window.getTime() / 1000000)), 0);
+		super.increasePosition(0, (float) (upwardsSpeed * (Window.getTime() / (timeModifier * 2))), 0);
 		terrainHeight = t.getHeightOfTerrain(super.getPosition().x, super.getPosition().z);
-		upwardsSpeed += GRAVITY * Window.getTime() / 1000000;
+		upwardsSpeed += GRAVITY * Window.getTime() / (timeModifier * 2);
 		if(super.getPosition().y < terrainHeight) {
 			isInAir = false;
 			upwardsSpeed = 0;

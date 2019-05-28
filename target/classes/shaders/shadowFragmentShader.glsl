@@ -1,11 +1,16 @@
-#version 330
+#version 400
 
-out vec4 out_colour;
+in vec2 textureCoords;
 
-uniform sampler2D modelTexture;//will use this next week
+out vec4 out_Colour;
+
+uniform sampler2D modelTexture;
 
 void main(void){
+    float alpha = texture(modelTexture, textureCoords).a;
+    if(alpha < 0.5){
+    	discard;
+    }
 
-	out_colour = vec4(1.0);
-	
+    out_Colour = vec4(1.0);
 }

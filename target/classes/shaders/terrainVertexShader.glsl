@@ -18,7 +18,9 @@ uniform vec3 lightPosition[5];
 uniform mat4 toShadowMapSpace;
 
 const float density = 0.01;
-const float gradient = 1;
+const float gradient = 5;
+const float shadowDistance = 150.0;
+const float transitionDistance = 10.0;
 
 void main(void){
 
@@ -39,4 +41,9 @@ void main(void){
 	float distance = length(positionRelativeToCam.xyz);
 	visibility = exp(-pow((distance * density), gradient));
 	visibility = clamp(visibility, 0.0, 1.0);
+
+	distance = distance - (shadowDistance - transitionDistance);
+	distance = distance / transitionDistance;
+	shadowCoords.w = clamp(1.0-distance, 0.0, 1.0);
+
 }

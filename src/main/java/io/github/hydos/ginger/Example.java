@@ -56,7 +56,7 @@ public class Example {
 		TexturedModel tModel = ModelLoader.loadModel("stall.obj", "stallTexture.png");
 		tModel.getTexture().setReflectivity(1f);
 		tModel.getTexture().setShineDamper(7f);
-		Player entity = new Player(tModel, new Vector3f(0,0,-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f));
+		Player entity = new Player(tModel, new Vector3f(0,0,-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f), 5000);
 		ThirdPersonCamera camera = new ThirdPersonCamera(new Vector3f(0,0.1f,0), entity);
         masterRenderer = new MasterRenderer(camera);		
 
