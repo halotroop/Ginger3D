@@ -10,6 +10,7 @@ import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLCapabilities;
 
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector3f;
 import io.github.hydos.ginger.engine.renderEngine.texture.Image;
@@ -37,6 +38,7 @@ public class Window {
 //    private static int mouseX, mouseY;
 //    private static int mouseDX, mouseDY;
 	private static boolean mouseLocked = false;
+	public static GLCapabilities glContext;
 	
 	public static void create(int width, int height, String title, int fps) {
 		Window.width = width;
@@ -72,7 +74,7 @@ public class Window {
 	        }
 	        
 	        GLFW.glfwMakeContextCurrent(window);
-	        GL.createCapabilities();
+	        glContext = GL.createCapabilities();
 	        GL11.glEnable(GL11.GL_DEPTH_TEST);
 	        
 
