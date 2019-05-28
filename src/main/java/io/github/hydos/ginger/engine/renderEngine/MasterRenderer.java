@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 import io.github.hydos.ginger.engine.elements.Entity;
 import io.github.hydos.ginger.engine.elements.Light;
@@ -80,7 +81,13 @@ public class MasterRenderer {
 		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
 	
+	public void prepare() {
+		GL13.glActiveTexture(GL13.GL_TEXTURE5);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, shadowMapRenderer.getShadowMap());
+	}
+	
 	public void renderScene(List<Entity> entities, List<Entity> normalEntities, List<Terrain> terrains, List<Light> lights, ThirdPersonCamera camera, Vector4f clipPlane) {
+		prepare();
 		renderEntities(entities, camera, lights);
 		renderNormalEntities(normalEntities, lights, camera, clipPlane);
 		renderTerrains(terrains, lights, camera);
@@ -105,7 +112,7 @@ public class MasterRenderer {
 		terrainShader.loadSkyColour(Window.getColour());
 		terrainShader.loadLights(lights);
 		terrainShader.loadViewMatrix(camera);
-		terrainRenderer.render(terrains);
+		terrainRenderer.render(terrains, shadowMapRenderer.getToShadowMapSpaceMatrix());
 		terrainShader.stop();		
 	}
 

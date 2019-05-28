@@ -1,5 +1,4 @@
-#version 400 core
-
+#version 150
 in vec3 position;
 in vec2 textureCoords;
 in vec3 normal;
@@ -9,11 +8,14 @@ out vec3 surfaceNormal;
 out vec3 toLightVector[5];
 out vec3 toCameraVector;
 out float visibility;
+out vec4 shadowCoords;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition[5];
+
+uniform mat4 toShadowMapSpace;
 
 const float density = 0.01;
 const float gradient = 1;
@@ -21,6 +23,8 @@ const float gradient = 1;
 void main(void){
 
 	vec4 worldPosition = transformationMatrix * vec4(position.xyz,1.0);
+	shadowCoords = toShadowMapSpace * worldPosition;
+
 	vec4 positionRelativeToCam = viewMatrix * worldPosition;
 
 	gl_Position = projectionMatrix * positionRelativeToCam;

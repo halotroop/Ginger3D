@@ -75,7 +75,7 @@ public class Example {
 
 		
 		TexturedModel dragonMdl = ModelLoader.loadModel("dragon.obj", "stallTexture.png");
-		dragonMdl.getTexture().setReflectivity(4f);
+		dragonMdl.getTexture().setReflectivity(4f); 
 		dragonMdl.getTexture().setShineDamper(2f);
 		
 
@@ -123,8 +123,8 @@ public class Example {
 		float colour = 0;
 		terrains.add(terrain);
 		
-		GuiTexture shadowMap = new GuiTexture(masterRenderer.getShadowMapTexture(), new Vector2f(0.5f,0.5f), new Vector2f(0.5f,0.5f));
-		guis.add(shadowMap);
+//		GuiTexture shadowMap = new GuiTexture(masterRenderer.getShadowMapTexture(), new Vector2f(0.5f,0.5f), new Vector2f(0.5f,0.5f));
+//		guis.add(shadowMap);
 		
 		ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("particles/smoke.png"), 8);
 		
