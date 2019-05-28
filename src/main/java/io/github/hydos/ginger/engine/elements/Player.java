@@ -9,10 +9,10 @@ import io.github.hydos.ginger.engine.terrain.Terrain;
 
 public class Player extends Entity{
 	
-	private static final float RUN_SPEED = 0.3f;
-	private static final float TURN_SPEED = 3f;
-	public static final float GRAVITY = -0.04f;
-	private static final float JUMP_POWER = 0.3f;
+	private static float RUN_SPEED = 0.3f;
+	private static float TURN_SPEED = 0.7f;
+	public static float GRAVITY = -0.04f;
+	private static float JUMP_POWER = 0.3f;
 	
 	private static float terrainHeight = 0;
 	
@@ -27,6 +27,15 @@ public class Player extends Entity{
 	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale, double timeScale) {
 		super(model, position, rotX, rotY, rotZ, scale);
 		this.timeModifier = timeScale;
+	}
+	
+	public void setSpeeds(float runSpeed, float turnSpeed) {
+		RUN_SPEED = runSpeed;
+		TURN_SPEED = turnSpeed;
+	}
+	
+	public void setJumpPower(float power) {
+		JUMP_POWER = power;
 	}
 
 	public void move(Terrain t) {

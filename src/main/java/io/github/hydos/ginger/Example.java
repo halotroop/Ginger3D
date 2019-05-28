@@ -80,7 +80,7 @@ public class Example {
 		
 
 		
-		Light sun = new Light(new Vector3f(100,15,-10), new Vector3f(1.3f, 1.3f, 1.3f), new Vector3f(0.01f, 0.01f, 0.01f));
+		Light sun = new Light(new Vector3f(100,105,-100), new Vector3f(1.3f, 1.3f, 1.3f), new Vector3f(0.0001f, 0.0001f, 0.0001f));
 		lights.add(sun);
 	
 		TexturedModel tgrass = ModelLoader.loadModel("grass.obj", "grass.png");

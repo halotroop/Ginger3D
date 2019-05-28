@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL30;
 import io.github.hydos.ginger.engine.elements.Entity;
 import io.github.hydos.ginger.engine.mathEngine.Maths;
 import io.github.hydos.ginger.engine.mathEngine.matrixes.Matrix4f;
+import io.github.hydos.ginger.engine.renderEngine.MasterRenderer;
 import io.github.hydos.ginger.engine.renderEngine.models.RawModel;
 import io.github.hydos.ginger.engine.renderEngine.models.TexturedModel;
 
@@ -45,10 +46,16 @@ public class ShadowMapEntityRenderer {
 			bindModel(rawModel);
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
+			if(model.getTexture().isTransparent()) {
+				MasterRenderer.disableCulling();
+			}
 			for (Entity entity : entities.get(model)) {
 				prepareInstance(entity);
 				GL11.glDrawElements(GL11.GL_TRIANGLES, rawModel.getVertexCount(),
 						GL11.GL_UNSIGNED_INT, 0);
+			}
+			if(model.getTexture().isTransparent()) {
+				MasterRenderer.enableCulling();
 			}
 		}
 		GL20.glDisableVertexAttribArray(0);
