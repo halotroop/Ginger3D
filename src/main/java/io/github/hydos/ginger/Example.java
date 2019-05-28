@@ -80,7 +80,7 @@ public class Example {
 		
 
 		
-		Light sun = new Light(new Vector3f(1000000,1500000,-1000000), new Vector3f(1.3f, 1.3f, 1.3f), new Vector3f(0f, 0f, 0f));
+		Light sun = new Light(new Vector3f(100,15,-10), new Vector3f(1.3f, 1.3f, 1.3f), new Vector3f(0.01f, 0.01f, 0.01f));
 		lights.add(sun);
 	
 		TexturedModel tgrass = ModelLoader.loadModel("grass.obj", "grass.png");
@@ -142,7 +142,6 @@ public class Example {
 				colour = colour + 0.001f;
 				picker.update();
 				ParticleMaster.update(camera);
-				sun.setPosition(new Vector3f(entity.getPosition().x, entity.getPosition().y + 4, entity.getPosition().z));
 				
 				masterRenderer.renderShadowMap(entities, sun);
 				
