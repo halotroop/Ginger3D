@@ -56,7 +56,10 @@ public class Example {
 		TexturedModel tModel = ModelLoader.loadModel("stall.obj", "stallTexture.png");
 		tModel.getTexture().setReflectivity(1f);
 		tModel.getTexture().setShineDamper(7f);
-		Player entity = new Player(tModel, new Vector3f(0,0,-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f), 5000);
+		Player entity = new Player(tModel, new Vector3f(0,0,-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f));
+		entity.setSpeeds(0.00001f, 0.0003f);
+		entity.setGravity(-0.0000000001f);
+		entity.setJumpPower(0.00005f);
 		ThirdPersonCamera camera = new ThirdPersonCamera(new Vector3f(0,0.1f,0), entity);
         masterRenderer = new MasterRenderer(camera);		
 
@@ -128,7 +131,7 @@ public class Example {
 		
 		ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("particles/smoke.png"), 8);
 		
-		ParticleSystem system = new ParticleSystem(particleTexture, 100, 5f, 0.3f, 4, 4f);
+		ParticleSystem system = new ParticleSystem(particleTexture, 100, 10f, 0.3f, 4, 3f);
 		system.randomizeRotation();
 		system.setDirection(new Vector3f(0,0.001f,0), 0.00001f);
 		system.setLifeError(0);

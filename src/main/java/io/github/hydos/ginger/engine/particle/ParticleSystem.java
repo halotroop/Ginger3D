@@ -21,7 +21,7 @@ public class ParticleSystem {
 	private Random random = new Random();
 
 	public ParticleSystem(ParticleTexture texture, float pps, float speed, float gravityComplient, float lifeLength, float scale) {
-		this.pps = pps;
+		this.pps = pps / 100000;
 		this.averageSpeed = speed;
 		this.gravityComplient = gravityComplient;
 		this.averageLifeLength = lifeLength;
@@ -67,7 +67,7 @@ public class ParticleSystem {
 	}
 
 	public void generateParticles(Vector3f systemCenter) {
-		float delta = (float) Window.getTime() / 50000000;
+		float delta = (float) Window.getTime();
 		float particlesToCreate = pps * delta;
 		int count = (int) Math.floor(particlesToCreate);
 		float partialParticle = particlesToCreate % 1;
