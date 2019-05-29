@@ -1,10 +1,10 @@
 package io.github.hydos.ginger.engine.particle;
 
-import io.github.hydos.ginger.engine.elements.Player;
 import io.github.hydos.ginger.engine.elements.ThirdPersonCamera;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector2f;
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector3f;
+import io.github.hydos.ginger.main.settings.Constants;
 
 public class Particle {
 
@@ -72,7 +72,7 @@ public class Particle {
 
 	public boolean update(ThirdPersonCamera camera) {
 		float time = (float) Window.getTime() / 1000000;
-		velocity.y += Player.GRAVITY * gravityEffect * time;
+		velocity.y += Constants.gravity * gravityEffect * time;
 		Vector3f change = new Vector3f(velocity);
 		change.scale((float) time);
 		Vector3f.add(change, position, position);

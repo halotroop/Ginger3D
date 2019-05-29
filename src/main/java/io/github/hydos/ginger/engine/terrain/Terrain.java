@@ -10,11 +10,10 @@ import io.github.hydos.ginger.engine.mathEngine.vectors.Vector2f;
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector3f;
 import io.github.hydos.ginger.engine.renderEngine.models.RawModel;
 import io.github.hydos.ginger.engine.utils.Loader;
+import io.github.hydos.ginger.main.settings.Constants;
 
 public class Terrain {
 	
-	private static final float SIZE = 100;
-	private static final float MAX_HEIGHT = 20;
 	private static final float MAX_PIXEL_COLOUR = 256 * 256 * 256;
 	
 	private float[][] heights;
@@ -27,8 +26,8 @@ public class Terrain {
 	public Terrain(float gridX, float gridZ, TerrainTexturePack texturePack, TerrainTexture blendMap, String heightMapLocation) {
 		this.texturePack = texturePack;
 		this.blendMap = blendMap;
-		this.x = gridX * SIZE;
-		this.z = gridZ * SIZE;
+		this.x = gridX * Constants.terrainSize;
+		this.z = gridZ * Constants.terrainSize;
 
 		this.model = generateTerrain(heightMapLocation);
 
@@ -37,7 +36,7 @@ public class Terrain {
 	public float getHeightOfTerrain(float worldX, float worldZ) {
 		float terrainX = worldX - this.x;
 		float terrainZ = worldZ - this.z;
-		float gridSquareSize = SIZE / ((float) heights.length - 1);
+		float gridSquareSize = Constants.terrainSize / ((float) heights.length - 1);
 		int gridX = (int) Math.floor(terrainX / gridSquareSize);
 		int gridZ = (int) Math.floor(terrainZ / gridSquareSize);
 		if(gridX >= heights.length - 1 || gridZ >= heights.length - 1 || gridX <0 || gridZ < 0) {
@@ -100,11 +99,11 @@ public class Terrain {
 		
 		for(int i=0;i<VERTEX_COUNT;i++){
 			for(int j=0;j<VERTEX_COUNT;j++){
-				vertices[vertexPointer*3] = j/((float)VERTEX_COUNT - 1) * SIZE;
+				vertices[vertexPointer*3] = j/((float)VERTEX_COUNT - 1) * Constants.terrainSize;
 				float height = getHeight(j, i, image);
 				heights[j][i] = height;
 				vertices[vertexPointer*3+1] = height;
-				vertices[vertexPointer*3+2] = i/((float)VERTEX_COUNT - 1) * SIZE;
+				vertices[vertexPointer*3+2] = i/((float)VERTEX_COUNT - 1) * Constants.terrainSize;
 				Vector3f normal = calculateNormal(j, i, image);
 				normals[vertexPointer*3] = normal.x;
 				normals[vertexPointer*3+1] = normal.y;
@@ -139,7 +138,7 @@ public class Terrain {
 		float height = image.getRGB(x, z);
 		height += MAX_PIXEL_COLOUR / 2f;
 		height /= MAX_PIXEL_COLOUR / 2f;
-		height *= MAX_HEIGHT;
+		height *= Constants.terrainMaxHeight;
 		return height;
 	}
 	

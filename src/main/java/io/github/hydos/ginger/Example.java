@@ -20,6 +20,8 @@ import io.github.hydos.ginger.engine.obj.normals.NormalMappedObjLoader;
 import io.github.hydos.ginger.engine.particle.ParticleMaster;
 import io.github.hydos.ginger.engine.particle.ParticleSystem;
 import io.github.hydos.ginger.engine.particle.ParticleTexture;
+import io.github.hydos.ginger.engine.postProcessing.Fbo;
+import io.github.hydos.ginger.engine.postProcessing.PostProcessing;
 import io.github.hydos.ginger.engine.renderEngine.MasterRenderer;
 import io.github.hydos.ginger.engine.renderEngine.models.TexturedModel;
 import io.github.hydos.ginger.engine.renderEngine.texture.ModelTexture;
@@ -28,6 +30,8 @@ import io.github.hydos.ginger.engine.terrain.Terrain;
 import io.github.hydos.ginger.engine.terrain.TerrainTexture;
 import io.github.hydos.ginger.engine.terrain.TerrainTexturePack;
 import io.github.hydos.ginger.engine.utils.Loader;
+import io.github.hydos.ginger.main.GingerMain;
+import io.github.hydos.ginger.main.settings.Constants;
 
 public class Example {
 	
@@ -49,17 +53,19 @@ public class Example {
 		
 		Window.create(1200, 800, "Ginger Example", 60);
 		
+		GingerMain.init();
+		
         Window.setBackgroundColour(0.2f, 0.2f, 0.8f);
 		
-        TextMaster.init();
         
 		TexturedModel tModel = ModelLoader.loadModel("stall.obj", "stallTexture.png");
 		tModel.getTexture().setReflectivity(1f);
 		tModel.getTexture().setShineDamper(7f);
 		Player entity = new Player(tModel, new Vector3f(0,0,-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f));
-		entity.setSpeeds(0.00001f, 0.0003f);
-		entity.setGravity(-0.0000000001f);
-		entity.setJumpPower(0.00005f);
+		Constants.movementSpeed = 0.000005f;
+		Constants.turnSpeed = 0.00002f;
+		Constants.gravity = -0.000000000005f;
+		Constants.jumpPower = 0.000005f;
 		ThirdPersonCamera camera = new ThirdPersonCamera(new Vector3f(0,0.1f,0), entity);
         masterRenderer = new MasterRenderer(camera);		
 
@@ -138,6 +144,9 @@ public class Example {
 		system.setSpeedError(0);
 		system.setScaleError(1f);
 		
+		Fbo fbo = new Fbo(Window.width, Window.height, Fbo.DEPTH_RENDER_BUFFER);
+		PostProcessing.init();
+		
 		while(!Window.closed()) {
 			
 			if(Window.isUpdating()) {
@@ -160,14 +169,24 @@ public class Example {
 
 				dragon.increaseRotation(0,1,0);
 				barrel.increaseRotation(0, 1, 0);
+				
+//				fbo.bindFrameBuffer();
+//				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
+//				ParticleMaster.renderParticles(camera);
+//				fbo.unbindFrameBuffer();
+//				PostProcessing.doPostProcessing(fbo.getColourTexture());
+				
 				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
-				ParticleMaster.renderParticles(camera);
+				
 				masterRenderer.renderGuis(guis);
 				TextMaster.render();
+				
 				Window.swapBuffers();
 			}
 			
 		}
+		PostProcessing.cleanUp();
+		fbo.cleanUp();
 		ParticleMaster.cleanUp();
 		masterRenderer.cleanUp();
 		TextMaster.cleanUp();

@@ -6,14 +6,15 @@ import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector3f;
 import io.github.hydos.ginger.engine.renderEngine.models.TexturedModel;
 import io.github.hydos.ginger.engine.terrain.Terrain;
+import io.github.hydos.ginger.main.settings.Constants;
 
 public class Player extends Entity{
 	
-	private static float RUN_SPEED = 0.3f;
-	private static float TURN_SPEED = 0.7f;
-	public static float GRAVITY = -0.04f;
-	private static float JUMP_POWER = 0.3f;
-	
+//	private static float RUN_SPEED = 0.3f;
+//	private static float TURN_SPEED = 0.7f;
+//	public static float GRAVITY = -0.04f;
+//	private static float JUMP_POWER = 0.3f;
+
 	private static float terrainHeight = 0;
 	
 	
@@ -26,19 +27,6 @@ public class Player extends Entity{
 	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale) {
 		super(model, position, rotX, rotY, rotZ, scale);
 	}
-	
-	public void setSpeeds(float runSpeed, float turnSpeed) {
-		RUN_SPEED = runSpeed;
-		TURN_SPEED = turnSpeed;
-	}
-	
-	public void setJumpPower(float power) {
-		JUMP_POWER = power;
-	}
-	
-	public void setGravity(float gravity) {
-		GRAVITY = gravity;
-	}
 
 	public void move(Terrain t) {
 		checkInputs();
@@ -49,7 +37,7 @@ public class Player extends Entity{
 		super.increasePosition(dx, 0, dz);
 		super.increasePosition(0, (float) (upwardsSpeed * (Window.getTime())), 0);
 		terrainHeight = t.getHeightOfTerrain(super.getPosition().x, super.getPosition().z);
-		upwardsSpeed += GRAVITY * Window.getTime();
+		upwardsSpeed += Constants.gravity * Window.getTime();
 		if(super.getPosition().y < terrainHeight) {
 			isInAir = false;
 			upwardsSpeed = 0;
@@ -61,26 +49,26 @@ public class Player extends Entity{
 	private void jump() {
 		if(!isInAir) {
 			isInAir = true;
-			this.upwardsSpeed = JUMP_POWER;
+			this.upwardsSpeed = Constants.jumpPower;
 		}
 	}
 	
 	private void checkInputs() {
 		if(Window.isKeyDown(GLFW.GLFW_KEY_W)) {
-			this.currentSpeed = RUN_SPEED;
+			this.currentSpeed = Constants.movementSpeed;
 		}
 		else if(Window.isKeyDown(GLFW.GLFW_KEY_S)) {
-			this.currentSpeed = -RUN_SPEED;
+			this.currentSpeed = -Constants.movementSpeed;
 		}else {
 			this.currentSpeed = 0;
 		}
 		
 		if(Window.isKeyDown(GLFW.GLFW_KEY_A)) {
-			this.currentTurn = TURN_SPEED;
+			this.currentTurn = Constants.turnSpeed;
 
 		}
 		else if(Window.isKeyDown(GLFW.GLFW_KEY_D)) {
-			this.currentTurn = -TURN_SPEED;
+			this.currentTurn = -Constants.turnSpeed;
 		}
 		if(Window.isKeyReleased(68) || Window.isKeyReleased(65)){
 			this.currentTurn = 0;
