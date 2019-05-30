@@ -170,13 +170,13 @@ public class Example {
 				dragon.increaseRotation(0,1,0);
 				barrel.increaseRotation(0, 1, 0);
 				
-//				fbo.bindFrameBuffer();
-//				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
-//				ParticleMaster.renderParticles(camera);
-//				fbo.unbindFrameBuffer();
-//				PostProcessing.doPostProcessing(fbo.getColourTexture());
-				
+				fbo.bindFrameBuffer();
 				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
+				ParticleMaster.renderParticles(camera);
+				fbo.unbindFrameBuffer();
+				PostProcessing.doPostProcessing(fbo.getColourTexture());
+				
+//				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
 				
 				masterRenderer.renderGuis(guis);
 				TextMaster.render();

@@ -20,6 +20,7 @@ public class PostProcessing {
 	
 	public static void doPostProcessing(int colourTexture){
 		start();
+		
 		contrastChanger.render(colourTexture);
 		end();
 	}
