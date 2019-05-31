@@ -285,7 +285,7 @@ public class Window {
 	}
 	
 	public static Vector2f getNormalizedMouseCoordinates() {
-		float normalX = 1.0f + 2.0f * (float) getMouseX() / width;
+		float normalX = -1.0f + 2.0f * (float) getMouseX() / width;
 		float normalY = 1.0f - 2.0f * (float) getMouseY() / height;
 		return new Vector2f(normalX, normalY);
 	}

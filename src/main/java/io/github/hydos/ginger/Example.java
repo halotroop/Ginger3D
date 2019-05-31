@@ -11,6 +11,7 @@ import io.github.hydos.ginger.engine.font.FontType;
 import io.github.hydos.ginger.engine.font.GUIText;
 import io.github.hydos.ginger.engine.font.TextMaster;
 import io.github.hydos.ginger.engine.guis.GuiTexture;
+import io.github.hydos.ginger.engine.guis.buttons.Button;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector2f;
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector3f;
@@ -137,6 +138,8 @@ public class Example {
 		
 		ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("particles/smoke.png"), 8);
 		
+		Button button = new Button("/textures/guis/ginger.png", new Vector2f(0, 0), new Vector2f(0.5f, 0.5f));
+		button.show(guis);
 		ParticleSystem system = new ParticleSystem(particleTexture, 100, 10f, 0.3f, 4, 3f);
 		system.randomizeRotation();
 		system.setDirection(new Vector3f(0,0.001f,0), 0.00001f);
@@ -170,13 +173,18 @@ public class Example {
 				dragon.increaseRotation(0,1,0);
 				barrel.increaseRotation(0, 1, 0);
 				
-				fbo.bindFrameBuffer();
-				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
-				ParticleMaster.renderParticles(camera);
-				fbo.unbindFrameBuffer();
-				PostProcessing.doPostProcessing(fbo.getColourTexture());
-				
+//				fbo.bindFrameBuffer();
 //				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
+//				ParticleMaster.renderParticles(camera);
+//				fbo.unbindFrameBuffer();
+//				PostProcessing.doPostProcessing(fbo.getColourTexture());
+//				TODO: get fbo's working
+				button.update();
+				if(button.isHovering()) {
+					System.out.println("hover");
+				}
+				
+				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
 				
 				masterRenderer.renderGuis(guis);
 				TextMaster.render();

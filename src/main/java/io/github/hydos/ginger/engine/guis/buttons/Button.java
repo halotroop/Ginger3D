@@ -12,9 +12,7 @@ import io.github.hydos.ginger.engine.utils.Loader;
 public class Button{
 	
 	private GuiTexture guiTexture;
-		
-	private boolean isHidden = false;
-		
+				
 	private boolean shown = false;
 	
 	private boolean clicked = false;
@@ -26,17 +24,15 @@ public class Button{
 	}
 	
 	public void update() {
-		if(!isHidden) {
+		if(shown) {
 			Vector2f location = guiTexture.getPosition();
 			Vector2f scale = guiTexture.getScale();
 			
 			Vector2f mouseCoords = Window.getNormalizedMouseCoordinates();
-			
-			if(location.y + scale.y > - mouseCoords.y && location.y - scale.y < -mouseCoords.y && location.x + scale.x > mouseCoords.x && location.x - scale.x < mouseCoords.x) {
-				
-				if(!isHovering) {
-					isHovering = true;
-				}
+			System.out.println(mouseCoords);
+			if(location.y + scale.y > -mouseCoords.y && location.y - scale.y < -mouseCoords.y && location.x + scale.x > mouseCoords.x && location.x - scale.x < mouseCoords.x) {
+				System.out.println("hover");
+				isHovering = true;
 				if(Window.isMouseDown(GLFW.GLFW_MOUSE_BUTTON_1)) {
 					clicked = true;
 				}else {
@@ -44,6 +40,7 @@ public class Button{
 				}
 				
 			}else {
+				System.out.println("no hover");
 				if(isHovering) {
 					isHovering = false;
 				}
