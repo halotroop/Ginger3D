@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 
+import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
 import io.github.hydos.ginger.engine.elements.Entity;
 import io.github.hydos.ginger.engine.elements.Light;
-import io.github.hydos.ginger.engine.elements.ThirdPersonCamera;
 import io.github.hydos.ginger.engine.mathEngine.matrixes.Matrix4f;
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector2f;
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector3f;

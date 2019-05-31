@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import io.github.hydos.ginger.engine.elements.ThirdPersonCamera;
+import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
 import io.github.hydos.ginger.engine.mathEngine.matrixes.Matrix4f;
 import io.github.hydos.ginger.engine.renderEngine.models.RawModel;
 import io.github.hydos.ginger.engine.renderEngine.shaders.SkyboxShader;

@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL31;
 
-import io.github.hydos.ginger.engine.elements.ThirdPersonCamera;
+import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
 import io.github.hydos.ginger.engine.mathEngine.Maths;
 import io.github.hydos.ginger.engine.mathEngine.matrixes.Matrix4f;
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector3f;

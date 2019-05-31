@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import io.github.hydos.ginger.engine.elements.ThirdPersonCamera;
+import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
 import io.github.hydos.ginger.engine.mathEngine.matrixes.Matrix4f;
 import io.github.hydos.ginger.engine.renderEngine.renderers.ParticleRenderer;
 

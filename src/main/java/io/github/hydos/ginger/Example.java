@@ -3,10 +3,10 @@ package io.github.hydos.ginger;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
 import io.github.hydos.ginger.engine.elements.Entity;
 import io.github.hydos.ginger.engine.elements.Light;
 import io.github.hydos.ginger.engine.elements.Player;
-import io.github.hydos.ginger.engine.elements.ThirdPersonCamera;
 import io.github.hydos.ginger.engine.font.FontType;
 import io.github.hydos.ginger.engine.font.GUIText;
 import io.github.hydos.ginger.engine.font.TextMaster;

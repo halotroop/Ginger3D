@@ -8,9 +8,9 @@ import java.util.Map;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
+import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
 import io.github.hydos.ginger.engine.elements.Entity;
 import io.github.hydos.ginger.engine.elements.Light;
-import io.github.hydos.ginger.engine.elements.ThirdPersonCamera;
 import io.github.hydos.ginger.engine.guis.GuiTexture;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.mathEngine.matrixes.Matrix4f;
@@ -193,5 +193,11 @@ public class MasterRenderer {
 		projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
 		projectionMatrix.m33 = 0;
     }
+
+	public void renderGui(GuiTexture guiTexture) {
+		List<GuiTexture> texture = new ArrayList<GuiTexture>();
+		texture.add(guiTexture);
+		guiRenderer.render(texture);
+	}
 	
 }

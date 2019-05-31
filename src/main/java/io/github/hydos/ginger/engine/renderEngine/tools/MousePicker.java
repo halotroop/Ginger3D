@@ -1,6 +1,6 @@
 package io.github.hydos.ginger.engine.renderEngine.tools;
 
-import io.github.hydos.ginger.engine.elements.ThirdPersonCamera;
+import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.mathEngine.Maths;
 import io.github.hydos.ginger.engine.mathEngine.matrixes.Matrix4f;

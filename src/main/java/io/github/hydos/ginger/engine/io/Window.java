@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLCapabilities;
 
+import io.github.hydos.ginger.engine.mathEngine.vectors.Vector2f;
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector3f;
 import io.github.hydos.ginger.engine.renderEngine.texture.Image;
 
@@ -281,6 +282,12 @@ public class Window {
 	
 	public static double getDX() {
 		return Window.dx;
+	}
+	
+	public static Vector2f getNormalizedMouseCoordinates() {
+		float normalX = 1.0f + 2.0f * (float) getMouseX() / width;
+		float normalY = 1.0f - 2.0f * (float) getMouseY() / height;
+		return new Vector2f(normalX, normalY);
 	}
 	
 }

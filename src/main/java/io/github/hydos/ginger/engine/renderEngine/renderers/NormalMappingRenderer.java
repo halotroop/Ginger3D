@@ -8,9 +8,9 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
+import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
 import io.github.hydos.ginger.engine.elements.Entity;
 import io.github.hydos.ginger.engine.elements.Light;
-import io.github.hydos.ginger.engine.elements.ThirdPersonCamera;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.mathEngine.Maths;
 import io.github.hydos.ginger.engine.mathEngine.matrixes.Matrix4f;
