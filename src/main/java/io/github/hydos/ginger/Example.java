@@ -112,11 +112,6 @@ public class Example {
 		Entity grassEntity = new Entity(tgrass, new Vector3f(-3,terrain.getHeightOfTerrain(-3, -3),-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f));
 		entities.add(grassEntity);
 		
-		
-		
-		GuiTexture guiTexture = new GuiTexture(new ModelTexture("guis/ginger.png").getTextureID(), new Vector2f(0.5f,0.5f), new Vector2f(0.25f,0.25f));
-		guis.add(guiTexture);
-		
 		MousePicker picker = new MousePicker(camera, masterRenderer.getProjectionMatrix(), terrain);
 		
 		
@@ -138,7 +133,7 @@ public class Example {
 		
 		ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("particles/smoke.png"), 8);
 		
-		Button button = new Button("/textures/guis/ginger.png", new Vector2f(0, 0), new Vector2f(0.5f, 0.5f));
+		Button button = new Button("/textures/guis/ginger.png", new Vector2f(0.8f, 0), new Vector2f(0.1f, 0.1f));
 		button.show(guis);
 		ParticleSystem system = new ParticleSystem(particleTexture, 100, 10f, 0.3f, 4, 3f);
 		system.randomizeRotation();
@@ -180,8 +175,8 @@ public class Example {
 //				PostProcessing.doPostProcessing(fbo.getColourTexture());
 //				TODO: get fbo's working
 				button.update();
-				if(button.isHovering()) {
-					System.out.println("hover");
+				if(button.isClicked()) {
+					System.out.println("click");
 				}
 				
 				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
