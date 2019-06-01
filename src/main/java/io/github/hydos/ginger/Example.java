@@ -177,6 +177,7 @@ public class Example {
 				button.update();
 				if(button.isClicked()) {
 					System.out.println("click");
+					button.hide(guis);
 				}
 				
 				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));

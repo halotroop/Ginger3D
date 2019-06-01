@@ -43,6 +43,9 @@ public class Button{
 				}
 			}
 			
+		}else {
+			isHovering = false;
+			clicked = false;
 		}
 	}
 	
