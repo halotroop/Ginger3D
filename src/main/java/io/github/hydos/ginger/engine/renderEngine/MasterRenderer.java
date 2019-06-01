@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
 import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
-import io.github.hydos.ginger.engine.elements.buttons.GuiTexture;
+import io.github.hydos.ginger.engine.elements.GuiTexture;
 import io.github.hydos.ginger.engine.elements.objects.Entity;
 import io.github.hydos.ginger.engine.elements.objects.Light;
 import io.github.hydos.ginger.engine.io.Window;

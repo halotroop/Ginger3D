@@ -93,7 +93,7 @@ public class ThirdPersonCamera {
 	
 	private void calculatePitch(){
 		if(Window.isMouseDown(1)) {
-			float pitchChange = (float) (Window.getDY() * 0.2f);
+			float pitchChange = (float) (Window.dy * 0.2f);
 			pitch += pitchChange;
 			if(pitch < 0){
 				pitch = 0;
@@ -105,7 +105,7 @@ public class ThirdPersonCamera {
 	
 	private void calculateAngleAroundPlayer(){
 		if(Window.isMouseDown(1)) {
-			float angleChange = (float) (Window.getDX() * 0.3f);
+			float angleChange = (float) (Window.dx * 0.3f);
 			angleAroundPlayer -= angleChange;
 		}
 	}

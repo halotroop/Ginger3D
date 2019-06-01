@@ -1,4 +1,4 @@
-package io.github.hydos.ginger.engine.elements.buttons;
+package io.github.hydos.ginger.engine.elements;
 
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector2f;
 

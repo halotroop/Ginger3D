@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
+import io.github.hydos.ginger.engine.elements.GuiTexture;
 import io.github.hydos.ginger.engine.elements.buttons.TextureButton;
-import io.github.hydos.ginger.engine.elements.buttons.GuiTexture;
 import io.github.hydos.ginger.engine.elements.objects.Entity;
 import io.github.hydos.ginger.engine.elements.objects.Light;
 import io.github.hydos.ginger.engine.elements.objects.Player;
@@ -128,9 +128,6 @@ public class Example {
 		float colour = 0;
 		terrains.add(terrain);
 		
-//		GuiTexture shadowMap = new GuiTexture(masterRenderer.getShadowMapTexture(), new Vector2f(0.5f,0.5f), new Vector2f(0.5f,0.5f));
-//		guis.add(shadowMap);
-		
 		ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("particles/smoke.png"), 8);
 		
 		TextureButton button = new TextureButton("/textures/guis/ginger.png", new Vector2f(0.8f, 0), new Vector2f(0.1f, 0.1f));
@@ -149,6 +146,7 @@ public class Example {
 			
 			if(Window.isUpdating()) {
 				Window.update();
+				GingerMain.update();
 				colour = colour + 0.001f;
 				picker.update();
 				ParticleMaster.update(camera);
@@ -168,11 +166,11 @@ public class Example {
 				dragon.increaseRotation(0,1,0);
 				barrel.increaseRotation(0, 1, 0);
 				
-//				fbo.bindFrameBuffer();
-//				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
-//				ParticleMaster.renderParticles(camera);
-//				fbo.unbindFrameBuffer();
-//				PostProcessing.doPostProcessing(fbo.getColourTexture());
+				fbo.bindFrameBuffer();
+				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
+				ParticleMaster.renderParticles(camera);
+				fbo.unbindFrameBuffer();
+				PostProcessing.doPostProcessing(fbo.getColourTexture());
 //				TODO: get fbo's working
 				button.update();
 				if(button.isClicked()) {
@@ -180,7 +178,7 @@ public class Example {
 					button.hide(guis);
 				}
 				
-				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
+//				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
 				
 				masterRenderer.renderGuis(guis);
 				TextMaster.render();

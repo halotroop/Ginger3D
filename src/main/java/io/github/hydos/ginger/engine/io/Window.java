@@ -26,19 +26,14 @@ public class Window {
 	private static boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
 	private static boolean[] mouseButtons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
 	private static GLFWImage.Buffer iconBuffer = null;
-	private static GLFWImage cursorBuffer = null;
 	private static double fpsCap, time, processedTime = 0;
 	private static boolean isFullscreen = false;
-	private static double dy = 0;
-	private static double dx = 0;
+	public static double dy = 0;
+	public static double dx = 0;
     static double oldX = 0;
     static double oldY = 0;
     static double newX = 0;
     static double newY = 0;
-//    // Mouse positions
-//    private static int mouseX, mouseY;
-//    private static int mouseDX, mouseDY;
-	private static boolean mouseLocked = false;
 	public static GLCapabilities glContext;
 	
 	public static void create(int width, int height, String title, int fps) {
@@ -114,21 +109,6 @@ public class Window {
 		
 		oldX = newX;
 		oldY = newY;
-//        DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
-//        DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
-//
-//        GLFW.glfwGetCursorPos(window, x, y);
-//        x.rewind();
-//        y.rewind();
-//
-//        newX = (float) x.get();
-//        newY = (float) y.get();
-//
-//        float deltaX = newX - oldX;
-//        float deltaY = newY - oldY;
-//        Window.dx = deltaX;
-//        Window.dy = deltaY;
-		
 	}
 	
 	@Deprecated
@@ -215,22 +195,6 @@ public class Window {
 		iconBuffer.put(0, iconImage);
 	}
 	
-	public void setCursor(String path) {
-		Image cursor = Image.createImage("/res/textures/" + path);
-		cursorBuffer = GLFWImage.malloc();
-		cursorBuffer.set(cursor.getWidth(), cursor.getHeight(), cursor.getImage());
-
-		
-	}
-	
-	public static void showCursor() {
-		if(iconBuffer != null) {
-			long cursor = GLFW.glfwCreateCursor(cursorBuffer, 0, 0);
-			GLFW.glfwSetCursor(window, cursor);
-		}
-
-	}
-	
 	public static void showIcon() {
 		if(iconBuffer != null) {
 			GLFW.glfwSetWindowIcon(window, iconBuffer);
@@ -242,30 +206,12 @@ public class Window {
 		Window.isFullscreen = t;
 	}
 	
-	public boolean isFullscreen() {
-		return Window.isFullscreen;
-	}
-	
-	public void lockMouse() {
+	public static void lockMouse() {
 		GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
-		mouseLocked = true;
 	}
 	
-	public void unlockMouse() {
+	public static void unlockMouse() {
 		GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
-		mouseLocked = false;
-	}
-	
-	public void toggleMouseLock() {
-		if(mouseLocked) {
-			unlockMouse();
-		}else {
-			lockMouse();
-		}
-	}
-	
-	public boolean isMouseLocked() {
-		return mouseLocked;
 	}
 
 	public static Vector3f getColour() {
@@ -274,14 +220,6 @@ public class Window {
 	
 	private static long getCurrentTime() {
 		return (long) (GLFW.glfwGetTime()*1000/GLFW.glfwGetTimerFrequency());
-	}
-
-	public static double getDY() {
-		return Window.dy;
-	}
-	
-	public static double getDX() {
-		return Window.dx;
 	}
 	
 	public static Vector2f getNormalizedMouseCoordinates() {

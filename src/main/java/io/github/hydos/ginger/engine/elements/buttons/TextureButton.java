@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
 
+import io.github.hydos.ginger.engine.elements.GuiTexture;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector2f;
 import io.github.hydos.ginger.engine.utils.Loader;
