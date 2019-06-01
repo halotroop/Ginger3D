@@ -3,7 +3,7 @@ package io.github.hydos.ginger.engine.renderEngine.shaders;
 import java.util.List;
 
 import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
-import io.github.hydos.ginger.engine.elements.Light;
+import io.github.hydos.ginger.engine.elements.objects.Light;
 import io.github.hydos.ginger.engine.mathEngine.Maths;
 import io.github.hydos.ginger.engine.mathEngine.matrixes.Matrix4f;
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector3f;

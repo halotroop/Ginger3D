@@ -1,15 +1,14 @@
-package io.github.hydos.ginger.engine.guis.buttons;
+package io.github.hydos.ginger.engine.elements.buttons;
 
 import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
 
-import io.github.hydos.ginger.engine.guis.GuiTexture;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector2f;
 import io.github.hydos.ginger.engine.utils.Loader;
 
-public class Button{
+public class TextureAndTextButton{
 	
 	private GuiTexture guiTexture;
 				
@@ -19,7 +18,7 @@ public class Button{
 	
 	private boolean isHovering = false;
 
-	public Button(String texture, Vector2f position, Vector2f scale) {
+	public TextureAndTextButton(String texture, Vector2f position, Vector2f scale) {
 		guiTexture = new GuiTexture(Loader.loadTextureDirectly(texture), position, scale);
 	}
 	

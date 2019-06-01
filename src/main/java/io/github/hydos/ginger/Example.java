@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
-import io.github.hydos.ginger.engine.elements.Entity;
-import io.github.hydos.ginger.engine.elements.Light;
-import io.github.hydos.ginger.engine.elements.Player;
+import io.github.hydos.ginger.engine.elements.buttons.TextureButton;
+import io.github.hydos.ginger.engine.elements.buttons.GuiTexture;
+import io.github.hydos.ginger.engine.elements.objects.Entity;
+import io.github.hydos.ginger.engine.elements.objects.Light;
+import io.github.hydos.ginger.engine.elements.objects.Player;
 import io.github.hydos.ginger.engine.font.FontType;
 import io.github.hydos.ginger.engine.font.GUIText;
 import io.github.hydos.ginger.engine.font.TextMaster;
-import io.github.hydos.ginger.engine.guis.GuiTexture;
-import io.github.hydos.ginger.engine.guis.buttons.Button;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector2f;
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector3f;
@@ -133,7 +133,7 @@ public class Example {
 		
 		ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("particles/smoke.png"), 8);
 		
-		Button button = new Button("/textures/guis/ginger.png", new Vector2f(0.8f, 0), new Vector2f(0.1f, 0.1f));
+		TextureButton button = new TextureButton("/textures/guis/ginger.png", new Vector2f(0.8f, 0), new Vector2f(0.1f, 0.1f));
 		button.show(guis);
 		ParticleSystem system = new ParticleSystem(particleTexture, 100, 10f, 0.3f, 4, 3f);
 		system.randomizeRotation();

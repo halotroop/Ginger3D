@@ -1,4 +1,4 @@
-package io.github.hydos.ginger.engine.elements;
+package io.github.hydos.ginger.engine.elements.objects;
 
 import org.lwjgl.glfw.GLFW;
 

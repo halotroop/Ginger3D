@@ -3,7 +3,7 @@ package io.github.hydos.ginger.engine.cameras;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWScrollCallback;
 
-import io.github.hydos.ginger.engine.elements.Player;
+import io.github.hydos.ginger.engine.elements.objects.Player;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector3f;
 

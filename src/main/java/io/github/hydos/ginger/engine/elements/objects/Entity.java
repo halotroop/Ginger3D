@@ -1,4 +1,4 @@
-package io.github.hydos.ginger.engine.elements;
+package io.github.hydos.ginger.engine.elements.objects;
 
 import io.github.hydos.ginger.engine.mathEngine.vectors.Vector3f;
 import io.github.hydos.ginger.engine.renderEngine.models.TexturedModel;
