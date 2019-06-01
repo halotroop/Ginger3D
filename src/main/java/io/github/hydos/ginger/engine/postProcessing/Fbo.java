@@ -60,7 +60,6 @@ public class Fbo {
 	 * rendered after this will be rendered to this FBO, and not to the screen.
 	 */
 	public void bindFrameBuffer() {
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, frameBuffer);
 		GL11.glViewport(0, 0, Window.width, Window.height);
 	}
