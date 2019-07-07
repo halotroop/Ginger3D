@@ -16,6 +16,7 @@ public class ContrastChanger {
 	public void render(int texture) {
 		shader.start();
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		System.out.println(texture);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
 		renderer.renderQuad();
 		shader.stop();

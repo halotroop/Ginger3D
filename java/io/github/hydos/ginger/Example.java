@@ -3,6 +3,8 @@ package io.github.hydos.ginger;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.glfw.GLFW;
+
 import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
 import io.github.hydos.ginger.engine.elements.GuiTexture;
 import io.github.hydos.ginger.engine.elements.buttons.TextureButton;
@@ -52,7 +54,7 @@ public class Example {
 	public void main(String[] args) {
 		
 		
-		Window.create(1200, 800, "Ginger Example", 60);
+		Window.create(2000, 1200, "Ginger Example", 60);
 		
 		GingerMain.init();
 		
@@ -160,11 +162,16 @@ public class Example {
 				Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 				if(terrainPoint!=null) {
 					barrel.setPosition(terrainPoint);
+					if(Window.isMouseDown(GLFW.GLFW_MOUSE_BUTTON_1)) {
+						normalMapEntities.add(new Entity(barrelModel, terrainPoint, 0, 0, 0, new Vector3f(0.25f,0.25f,0.25f)));
+					}
 				}
 				system.generateParticles(new Vector3f(0,-2,0));
 
 				dragon.increaseRotation(0,1,0);
 				barrel.increaseRotation(0, 1, 0);
+				
+				GingerMain.preRenderScene(masterRenderer);
 				
 				fbo.bindFrameBuffer();
 				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
@@ -187,6 +194,7 @@ public class Example {
 			}
 			
 		}
+		Window.stop();
 		PostProcessing.cleanUp();
 		fbo.cleanUp();
 		ParticleMaster.cleanUp();

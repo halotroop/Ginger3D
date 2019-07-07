@@ -1,3 +1,4 @@
+
 package io.github.hydos.ginger.engine.postProcessing;
 
 import java.nio.ByteBuffer;
@@ -61,7 +62,7 @@ public class Fbo {
 	 */
 	public void bindFrameBuffer() {
 		GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, frameBuffer);
-		GL11.glViewport(0, 0, Window.width, Window.height);
+		GL11.glViewport(0, 0, width, height);
 	}
 
 	/**
@@ -123,15 +124,9 @@ public class Fbo {
 	 * 
 	 */
 	private void createFrameBuffer() {
-		boolean FBOEnabled = Window.glContext.GL_EXT_framebuffer_object;
-		if(FBOEnabled){
-			frameBuffer = GL30.glGenFramebuffers();
-			GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
-			GL11.glDrawBuffer(GL30.GL_COLOR_ATTACHMENT0);
-		}else {
-			System.err.println("fbos are not enabled!");
-		}
-
+		frameBuffer = GL30.glGenFramebuffers();
+		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
+		GL11.glDrawBuffer(GL30.GL_COLOR_ATTACHMENT0);
 	}
 
 	/**

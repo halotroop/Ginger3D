@@ -6,13 +6,13 @@ public class ImageRenderer {
 
 	private Fbo fbo;
 
-	public ImageRenderer(int width, int height) {
+	protected ImageRenderer(int width, int height) {
 		this.fbo = new Fbo(width, height, Fbo.NONE);
 	}
 
-	public ImageRenderer() {}
+	protected ImageRenderer() {}
 
-	public void renderQuad() {
+	protected void renderQuad() {
 		if (fbo != null) {
 			fbo.bindFrameBuffer();
 		}
@@ -23,11 +23,11 @@ public class ImageRenderer {
 		}
 	}
 
-	public int getOutputTexture() {
+	protected int getOutputTexture() {
 		return fbo.getColourTexture();
 	}
 
-	public void cleanUp() {
+	protected void cleanUp() {
 		if (fbo != null) {
 			fbo.cleanUp();
 		}

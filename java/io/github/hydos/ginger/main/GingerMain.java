@@ -5,6 +5,7 @@ import io.github.hydos.ginger.UI.enums.UIColourType;
 import io.github.hydos.ginger.engine.font.TextMaster;
 import io.github.hydos.ginger.engine.obj.ModelLoader;
 import io.github.hydos.ginger.engine.obj.normals.NormalMappedObjLoader;
+import io.github.hydos.ginger.engine.renderEngine.MasterRenderer;
 import io.github.hydos.ginger.engine.renderEngine.models.RawModel;
 import io.github.hydos.ginger.engine.renderEngine.models.TexturedModel;
 import io.github.hydos.ginger.engine.renderEngine.texture.ModelTexture;
@@ -33,8 +34,7 @@ public class GingerMain {
 		manager.update();
 	}
 	
-	
-	
-	
-	
+	public static void preRenderScene(MasterRenderer renderer) {
+		renderer.renderGui(manager.getBackgroundTexture());
+	}
 }

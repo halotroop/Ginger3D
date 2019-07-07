@@ -22,7 +22,7 @@ public class Window {
 	public static int height;
 	private static String title;
 	public static long window;
-	private static Vector3f backgroundColour = new Vector3f(0.2f,0.2f,0.4f);
+	private static Vector3f backgroundColour = new Vector3f(0.2f,0.2f,0.2f);
 	private static boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
 	private static boolean[] mouseButtons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
 	private static GLFWImage.Buffer iconBuffer = null;
@@ -35,10 +35,13 @@ public class Window {
     static double newX = 0;
     static double newY = 0;
 	public static GLCapabilities glContext;
+	public static int actuallWidth, actuallHeight;
 	
 	public static void create(int width, int height, String title, int fps) {
-		Window.width = width;
-		Window.height = height;
+		Window.width = width / 2;
+		Window.height = height / 2;
+		Window.actuallHeight = height;
+		Window.actuallWidth = width;
 		Window.title = title;
 		fpsCap = fps;
 		create();
@@ -55,14 +58,11 @@ public class Window {
 	        GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 3);
 	        GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
 	        GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
+	        GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
 
 	        GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 	        
-	        if(!isFullscreen) {
-	            window = GLFW.glfwCreateWindow(width, height, title, (isFullscreen) ? GLFW.glfwGetPrimaryMonitor() : 0, window);
-	        }else {
-	            window = GLFW.glfwCreateWindow(vidmode.width(), vidmode.height(), title, (isFullscreen) ? GLFW.glfwGetPrimaryMonitor() : 0, window);
-	        }
+            window = GLFW.glfwCreateWindow(actuallWidth, actuallHeight, title, (isFullscreen) ? GLFW.glfwGetPrimaryMonitor() : 0, window);
 	        if(window == 0) {
 	            System.err.println("Error: Couldnt initilize window");
 	            System.exit(-1);
@@ -109,11 +109,6 @@ public class Window {
 		
 		oldX = newX;
 		oldY = newY;
-	}
-	
-	@Deprecated
-	public static float getFrameTimeSeconds() {
-		return (float) Window.getTime();
 	}
 	
 	public static void swapBuffers() {

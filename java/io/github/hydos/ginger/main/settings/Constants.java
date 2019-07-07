@@ -12,6 +12,9 @@ public class Constants {
 	public static float terrainSize = 100;
 	public static float terrainMaxHeight = 10;
 	
+	//FPS/UPS
+	public static final double NS = 1000000000/60.0;
+	
 	
 	
 }

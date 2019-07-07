@@ -199,5 +199,4 @@ public class MasterRenderer {
 		texture.add(guiTexture);
 		guiRenderer.render(texture);
 	}
-	
 }
