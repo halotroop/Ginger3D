@@ -11,7 +11,7 @@ import io.github.hydos.ginger.engine.mathEngine.vectors.Vector3f;
 
 public class OBJFileLoader {
 	
-	private static final String RES_LOC = "/models/";
+	private static final String RES_LOC = "models/";
 
 	public static ModelData loadOBJ(String objFileName) {
 		String objFile = RES_LOC + objFileName;

@@ -50,6 +50,12 @@
       </properties>
     </profile>
   </profiles>
+  <repositories>
+    <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
+    </repository>
+  </repositories>
   <properties>
     <lwjgl.version>3.2.2</lwjgl.version>
     <maven.compiler.source>1.8</maven.compiler.source>
