@@ -185,7 +185,7 @@ public class Example {
 					button.hide(guis);
 				}
 				
-//				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
+				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
 				
 				masterRenderer.renderGuis(guis);
 				TextMaster.render();
