@@ -11,10 +11,11 @@ import io.github.hydos.ginger.engine.mathEngine.vectors.Vector3f;
 
 public class OBJFileLoader {
 	
-	private static final String RES_LOC = "models/";
+	private static final String RES_LOC = "/models/";
 
 	public static ModelData loadOBJ(String objFileName) {
 		String objFile = RES_LOC + objFileName;
+		System.out.println(objFile);
 		InputStreamReader isr = new InputStreamReader(Class.class.getResourceAsStream(objFile));
 		BufferedReader reader = new BufferedReader(isr);
 		String line;
