@@ -3,7 +3,7 @@ package io.github.hydos.ginger.UI;
 import io.github.hydos.ginger.UI.canvases.WelcomeScreen;
 import io.github.hydos.ginger.UI.enums.UIColourType;
 import io.github.hydos.ginger.engine.elements.GuiTexture;
-import io.github.hydos.ginger.engine.mathEngine.vectors.Vector2f;
+import io.github.hydos.ginger.engine.math.vectors.Vector2f;
 import io.github.hydos.ginger.engine.utils.Loader;
 
 public class UIManager {
