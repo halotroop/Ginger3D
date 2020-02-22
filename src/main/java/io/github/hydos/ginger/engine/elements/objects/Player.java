@@ -9,11 +9,6 @@ import io.github.hydos.ginger.engine.terrain.Terrain;
 import io.github.hydos.ginger.main.settings.Constants;
 
 public class Player extends Entity{
-	
-//	private static float RUN_SPEED = 0.3f;
-//	private static float TURN_SPEED = 0.7f;
-//	public static float GRAVITY = -0.04f;
-//	private static float JUMP_POWER = 0.3f;
 
 	private static float terrainHeight = 0;
 	
