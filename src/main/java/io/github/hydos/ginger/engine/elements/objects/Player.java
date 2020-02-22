@@ -8,7 +8,7 @@ import io.github.hydos.ginger.engine.render.models.TexturedModel;
 import io.github.hydos.ginger.engine.terrain.Terrain;
 import io.github.hydos.ginger.main.settings.Constants;
 
-public class RenderPlayer extends Entity{
+public class Player extends Entity{
 	
 //	private static float RUN_SPEED = 0.3f;
 //	private static float TURN_SPEED = 0.7f;
@@ -24,7 +24,7 @@ public class RenderPlayer extends Entity{
 	
 	private boolean isInAir = false;
 	
-	public RenderPlayer(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale) {
+	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale) {
 		super(model, position, rotX, rotY, rotZ, scale);
 	}
 

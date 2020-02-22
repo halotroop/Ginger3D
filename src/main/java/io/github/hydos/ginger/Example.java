@@ -10,7 +10,7 @@ import io.github.hydos.ginger.engine.elements.GuiTexture;
 import io.github.hydos.ginger.engine.elements.buttons.TextureButton;
 import io.github.hydos.ginger.engine.elements.objects.Entity;
 import io.github.hydos.ginger.engine.elements.objects.Light;
-import io.github.hydos.ginger.engine.elements.objects.RenderPlayer;
+import io.github.hydos.ginger.engine.elements.objects.Player;
 import io.github.hydos.ginger.engine.font.FontType;
 import io.github.hydos.ginger.engine.font.GUIText;
 import io.github.hydos.ginger.engine.font.TextMaster;
@@ -64,7 +64,7 @@ public class Example {
 		TexturedModel tModel = ModelLoader.loadModel("stall.obj", "stallTexture.png");
 		tModel.getTexture().setReflectivity(1f);
 		tModel.getTexture().setShineDamper(7f);
-		RenderPlayer entity = new RenderPlayer(tModel, new Vector3f(0,0,-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f));
+		Player entity = new Player(tModel, new Vector3f(0,0,-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f));
 		Constants.movementSpeed = 0.000005f;
 		Constants.turnSpeed = 0.00002f;
 		Constants.gravity = -0.000000000005f;

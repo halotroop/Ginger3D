@@ -3,7 +3,7 @@ package io.github.hydos.ginger.engine.cameras;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWScrollCallback;
 
-import io.github.hydos.ginger.engine.elements.objects.RenderPlayer;
+import io.github.hydos.ginger.engine.elements.objects.Player;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.math.vectors.Vector3f;
 
@@ -18,15 +18,15 @@ public class ThirdPersonCamera {
 	private float roll;
 
 
-	private RenderPlayer player;
+	private Player player;
 
 
-	public ThirdPersonCamera(RenderPlayer player) {
+	public ThirdPersonCamera(Player player) {
 		this.player = player;
 
 	}
 
-	public ThirdPersonCamera(Vector3f vector3f, RenderPlayer player) {
+	public ThirdPersonCamera(Vector3f vector3f, Player player) {
 		this.position = vector3f;
 		this.player = player;
 
