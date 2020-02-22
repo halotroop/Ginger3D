@@ -1,5 +1,7 @@
 package io.github.hydos.ginger.engine.obj;
 
+import org.lwjgl.assimp.AIScene;
+
 public class ModelData {
 
 	private float[] vertices;
@@ -15,6 +17,10 @@ public class ModelData {
 		this.normals = normals;
 		this.indices = indices;
 		this.furthestPoint = furthestPoint;
+	}
+
+	public ModelData(AIScene scene) {
+		
 	}
 
 	public float[] getVertices() {

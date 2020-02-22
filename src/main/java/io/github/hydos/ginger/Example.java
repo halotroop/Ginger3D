@@ -54,7 +54,7 @@ public class Example {
 	public void main(String[] args) {
 		
 		
-		Window.create(2000, 1200, "Ginger Example", 60);
+		Window.create(800, 1200, "Ginger Example", 60);
 		
 		GingerMain.init();
 		

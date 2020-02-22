@@ -35,11 +35,6 @@ public class Image {
                 throw new RuntimeException("Failed to read image information: " + stbi_failure_reason());
             }
 
-//            System.out.println("Image width: " + w.get(0));
-//            System.out.println("Image height: " + h.get(0));
-//            System.out.println("Image components: " + comp.get(0));
-//            System.out.println("Image HDR: " + stbi_is_hdr_from_memory(imageBuffer));
-
             // Decode the image
             img = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
             if (img == null) {
