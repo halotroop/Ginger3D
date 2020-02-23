@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
 
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -12,7 +13,6 @@ import org.lwjgl.opengl.GL20;
 import io.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import io.github.hydos.ginger.engine.math.vectors.Vector2f;
 import io.github.hydos.ginger.engine.math.vectors.Vector3f;
-import io.github.hydos.ginger.engine.math.vectors.Vector4f;
 
 public abstract class ShaderProgram {
 	

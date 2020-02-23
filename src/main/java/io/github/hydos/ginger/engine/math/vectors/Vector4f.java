@@ -43,6 +43,7 @@ import java.nio.FloatBuffer;
  * $Id$
  */
 
+@Deprecated
 public class Vector4f extends Vector implements Serializable, ReadableVector4f, WritableVector4f {
 
     private static final long serialVersionUID = 1L;

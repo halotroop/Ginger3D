@@ -1,10 +1,11 @@
 package io.github.hydos.ginger.engine.shadow;
 
+import org.joml.Vector4f;
+
 import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import io.github.hydos.ginger.engine.math.vectors.Vector3f;
-import io.github.hydos.ginger.engine.math.vectors.Vector4f;
 import io.github.hydos.ginger.engine.render.MasterRenderer;
 
 /**
@@ -61,7 +62,8 @@ public class ShadowBox {
 	 */
 	protected void update() {
 		Matrix4f rotation = calculateCameraRotationMatrix();
-		Vector3f forwardVector = new Vector3f(Matrix4f.transform(rotation, FORWARD, null));
+		Vector4f forwardVector4F = Matrix4f.transform(rotation, FORWARD, null);
+		Vector3f forwardVector = new Vector3f(forwardVector4F.x, forwardVector4F.y, forwardVector4F.z);
 
 		Vector3f toFar = new Vector3f(forwardVector);
 		toFar.scale(SHADOW_DISTANCE);
@@ -118,7 +120,9 @@ public class ShadowBox {
 		Vector4f cen = new Vector4f(x, y, z, 1);
 		Matrix4f invertedLight = new Matrix4f();
 		Matrix4f.invert(lightViewMatrix, invertedLight);
-		return new Vector3f(Matrix4f.transform(invertedLight, cen, null));
+		
+		Vector4f processedCenter = Matrix4f.transform(invertedLight, cen, null);
+		return new Vector3f(processedCenter.x, processedCenter.y, processedCenter.z);
 	}
 
 	/**
@@ -160,7 +164,8 @@ public class ShadowBox {
 	 */
 	private Vector4f[] calculateFrustumVertices(Matrix4f rotation, Vector3f forwardVector,
 			Vector3f centerNear, Vector3f centerFar) {
-		Vector3f upVector = new Vector3f(Matrix4f.transform(rotation, UP, null));
+		Vector4f upVector4F = Matrix4f.transform(rotation, UP, null);
+		Vector3f upVector = new Vector3f(upVector4F.x, upVector4F.y, upVector4F.z);
 		Vector3f rightVector = Vector3f.cross(forwardVector, upVector, null);
 		Vector3f downVector = new Vector3f(-upVector.x, -upVector.y, -upVector.z);
 		Vector3f leftVector = new Vector3f(-rightVector.x, -rightVector.y, -rightVector.z);

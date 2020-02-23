@@ -3,6 +3,7 @@ package io.github.hydos.ginger;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 
 import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
@@ -17,7 +18,6 @@ import io.github.hydos.ginger.engine.font.TextMaster;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.math.vectors.Vector2f;
 import io.github.hydos.ginger.engine.math.vectors.Vector3f;
-import io.github.hydos.ginger.engine.math.vectors.Vector4f;
 import io.github.hydos.ginger.engine.obj.ModelLoader;
 import io.github.hydos.ginger.engine.obj.normals.NormalMappedObjLoader;
 import io.github.hydos.ginger.engine.particle.ParticleMaster;
@@ -77,9 +77,6 @@ public class Example {
         
         GUIText text = new GUIText("german", 3, font, new Vector2f(0,0), 1f, true);
         text.setColour(0, 1, 0);
-        text.setBorderWidth(0.7f);
-        text.setBorderEdge(0.4f);
-        text.setOffset(new Vector2f(0.003f, 0.003f));
                 
         ParticleMaster.init(masterRenderer.getProjectionMatrix());
         

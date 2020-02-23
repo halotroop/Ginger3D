@@ -3,6 +3,7 @@ package io.github.hydos.ginger.engine.render.renderers;
 import java.util.List;
 import java.util.Map;
 
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -14,7 +15,6 @@ import io.github.hydos.ginger.engine.elements.objects.Light;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.math.Maths;
 import io.github.hydos.ginger.engine.math.matrixes.Matrix4f;
-import io.github.hydos.ginger.engine.math.vectors.Vector4f;
 import io.github.hydos.ginger.engine.render.MasterRenderer;
 import io.github.hydos.ginger.engine.render.models.RawModel;
 import io.github.hydos.ginger.engine.render.models.TexturedModel;

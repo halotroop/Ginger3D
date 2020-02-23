@@ -2,10 +2,11 @@ package io.github.hydos.ginger.engine.particle;
 
 import java.util.Random;
 
+import org.joml.Vector4f;
+
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import io.github.hydos.ginger.engine.math.vectors.Vector3f;
-import io.github.hydos.ginger.engine.math.vectors.Vector4f;
 
 public class ParticleSystem {
 
@@ -127,7 +128,7 @@ public class ParticleSystem {
 		} else if (coneDirection.z == -1) {
 			direction.z *= -1;
 		}
-		return new Vector3f(direction);
+		return new Vector3f(direction.x, direction.y, direction.z);
 	}
 	
 	private Vector3f generateRandomUnitVector() {

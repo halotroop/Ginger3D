@@ -34,9 +34,10 @@ package io.github.hydos.ginger.engine.math.matrixes;
 import java.io.Serializable;
 import java.nio.FloatBuffer;
 
+import org.joml.Vector4f;
+
 import io.github.hydos.ginger.engine.math.vectors.Vector2f;
 import io.github.hydos.ginger.engine.math.vectors.Vector3f;
-import io.github.hydos.ginger.engine.math.vectors.Vector4f;
 
 /**
  * Holds a 4x4 float matrix.

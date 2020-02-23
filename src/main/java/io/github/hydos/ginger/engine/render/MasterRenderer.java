@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
@@ -14,7 +15,6 @@ import io.github.hydos.ginger.engine.elements.objects.Entity;
 import io.github.hydos.ginger.engine.elements.objects.Light;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.math.matrixes.Matrix4f;
-import io.github.hydos.ginger.engine.math.vectors.Vector4f;
 import io.github.hydos.ginger.engine.render.models.TexturedModel;
 import io.github.hydos.ginger.engine.render.renderers.EntityRenderer;
 import io.github.hydos.ginger.engine.render.renderers.GuiRenderer;
