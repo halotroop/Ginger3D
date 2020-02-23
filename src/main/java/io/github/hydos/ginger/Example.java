@@ -61,7 +61,7 @@ public class Example {
         Window.setBackgroundColour(0.2f, 0.2f, 0.8f);
 		
         
-		TexturedModel tModel = ModelLoader.loadModel("Zebra.obj", "stallTexture.png");
+		TexturedModel tModel = ModelLoader.loadModel("stall.obj", "stallTexture.png");
 		tModel.getTexture().setReflectivity(1f);
 		tModel.getTexture().setShineDamper(7f);
 		Player entity = new Player(tModel, new Vector3f(0,0,-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f));
@@ -86,7 +86,7 @@ public class Example {
         
 
 		
-		TexturedModel dragonMdl = ModelLoader.loadModel("dragon.obj", "stallTexture.png");
+		TexturedModel dragonMdl = ModelLoader.loadModel("Zebra.obj", "stallTexture.png");
 		dragonMdl.getTexture().setReflectivity(4f); 
 		dragonMdl.getTexture().setShineDamper(2f);
 		

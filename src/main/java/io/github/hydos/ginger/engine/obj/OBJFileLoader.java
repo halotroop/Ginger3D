@@ -80,15 +80,11 @@ public class OBJFileLoader {
 			float y = vertex.getPosition().y;
 			float z = vertex.getPosition().z;
 		
-			verticies[i] = x;
-			i++;
-			verticies[i] = y;
-			i++;	
-			verticies[i] = z;
-			i++;
-			textureCoords[j] = vertex.getTextureIndex().x;
-			j++;
-			textureCoords[j] = vertex.getTextureIndex().y;
+			verticies[i++] = x;
+			verticies[i++] = y;
+			verticies[i++] = z;
+			textureCoords[j++] = vertex.getTextureIndex().x;
+			textureCoords[j++] = vertex.getTextureIndex().y;
 		}
 		
 		return new ModelData(verticies, textureCoords, new float[normals.sizeof()], indicesList, i);
