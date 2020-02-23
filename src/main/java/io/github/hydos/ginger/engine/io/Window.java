@@ -89,8 +89,6 @@ public class Window {
 	}
 	
 	public static void update() {
-		for(int i = 0; i < GLFW.GLFW_KEY_LAST; i++) keys[i] = isKeyDown(i);
-		for(int i = 0; i < GLFW.GLFW_MOUSE_BUTTON_LAST; i++) mouseButtons[i] = isMouseDown(i);
 		IntBuffer widthBuffer = BufferUtils.createIntBuffer(1);
 		IntBuffer heightBuffer = BufferUtils.createIntBuffer(1);
 		GLFW.glfwGetWindowSize(window, widthBuffer, heightBuffer);

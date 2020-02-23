@@ -20,6 +20,10 @@ public class OBJFileLoader {
 		try {
 			scene = Assimp.aiImportFile(resourceLocation + filePath, Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate);
 			
+			if (scene == null) {
+				  throw new IllegalStateException(Assimp.aiGetErrorString());
+			}
+			
 			AIMesh mesh = AIMesh.create(scene.mMeshes().get(0));
 			int vertexCount = mesh.mNumVertices();
 			
