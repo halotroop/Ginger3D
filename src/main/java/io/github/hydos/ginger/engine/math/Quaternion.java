@@ -42,11 +42,12 @@ package io.github.hydos.ginger.engine.math;
 
 import java.nio.FloatBuffer;
 
+import org.joml.Vector4f;
+
 import io.github.hydos.ginger.engine.math.matrixes.Matrix3f;
 import io.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import io.github.hydos.ginger.engine.math.vectors.ReadableVector4f;
 import io.github.hydos.ginger.engine.math.vectors.Vector;
-import io.github.hydos.ginger.engine.math.vectors.Vector4f;
 
 public class Quaternion extends Vector implements ReadableVector4f {
 	private static final long serialVersionUID = 1L;
