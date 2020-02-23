@@ -83,7 +83,7 @@ public class Terrain {
 	private RawModel generateTerrain(String heightMap){
 		BufferedImage image = null;
 		try {
-			image = ImageIO.read(Class.class.getResourceAsStream("/textures/terrain/" + heightMap));
+			image = ImageIO.read(Terrain.class.getResourceAsStream("/textures/terrain/" + heightMap));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

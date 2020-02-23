@@ -16,7 +16,7 @@ public class NormalMappedObjLoader {
 
 	public static RawModel loadOBJ(String objFileName) {
 		BufferedReader isr = null;
-		isr = new BufferedReader(new InputStreamReader(Class.class.getResourceAsStream("/models/" + objFileName)));
+		isr = new BufferedReader(new InputStreamReader(NormalMappedObjLoader.class.getResourceAsStream("/models/" + objFileName)));
 		BufferedReader reader = new BufferedReader(isr);
 		String line;
 		List<VertexNM> vertices = new ArrayList<VertexNM>();

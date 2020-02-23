@@ -134,7 +134,7 @@ public class MetaFile {
 	 */
 	private void openFile(String file) {
 		try {
-			reader = new BufferedReader(new InputStreamReader(Class.class.getResourceAsStream("/fonts/" + file)));
+			reader = new BufferedReader(new InputStreamReader(MetaFile.class.getResourceAsStream("/fonts/" + file)));
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println("Couldn't read font meta file!");
