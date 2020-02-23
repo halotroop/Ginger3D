@@ -26,7 +26,7 @@ public class IOUtil {
         ByteBuffer buffer;
             try (
             		
-                InputStream source = Class.class.getResourceAsStream(resource);
+                InputStream source = IOUtil.class.getResourceAsStream(resource);
                 
             		ReadableByteChannel rbc = Channels.newChannel(source)
             ) {

@@ -49,11 +49,11 @@ public class Image {
 	
 	public static Image createImage(String imagePath) {
 		ByteBuffer img;
-        ByteBuffer imageBuffer;
+        ByteBuffer imageBuffer = null;
         try {
             imageBuffer = IOUtil.ioResourceToByteBuffer(imagePath, 8 * 1024);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
         try (MemoryStack stack = stackPush()) {
