@@ -1,5 +1,7 @@
 package io.github.hydos.ginger;
 
+import java.util.*;
+
 import io.github.hydos.ginger.engine.api.*;
 import io.github.hydos.ginger.engine.cameras.Camera;
 import io.github.hydos.ginger.engine.elements.GuiTexture;
@@ -9,16 +11,15 @@ import io.github.hydos.ginger.engine.font.*;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.math.vectors.*;
 import io.github.hydos.ginger.engine.obj.ModelLoader;
-import io.github.hydos.ginger.engine.obj.normals.NormalMappedObjLoader;
 import io.github.hydos.ginger.engine.obj.shapes.StaticCube;
 import io.github.hydos.ginger.engine.particle.*;
 import io.github.hydos.ginger.engine.render.MasterRenderer;
 import io.github.hydos.ginger.engine.render.models.TexturedModel;
-import io.github.hydos.ginger.engine.render.texture.ModelTexture;
 import io.github.hydos.ginger.engine.terrain.*;
 import io.github.hydos.ginger.engine.utils.Loader;
 import io.github.hydos.ginger.main.GingerMain;
 import io.github.hydos.ginger.main.settings.Constants;
+import io.github.hydos.litecraft.Block;
 
 public class Example extends Game{
 	
@@ -36,10 +37,16 @@ public class Example extends Game{
 		GingerMain.init();
 		
         Window.setBackgroundColour(0.2f, 0.2f, 0.8f);
-		
-        StaticCube.scaleCube(6);
+        
+		//TODO: block register class to register blockzz
+		//TODO: could also probally pull the mesh from 1 place to lower memory usage in the future
 		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
-		dirtModel.getTexture().setReflectivity(10f);
+		TexturedModel grassModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
+		
+        
+        
+        
+        StaticCube.scaleCube(6);
 		Player player = new Player(dirtModel, new Vector3f(0,0,-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f));
 		Camera camera = new Camera(new Vector3f(0,0.1f,0), player);
 		ginger3D = new Ginger();
@@ -47,8 +54,39 @@ public class Example extends Game{
 		data = new GameData(player, camera);
 		data.handleGuis = false;
 		ginger3D.setup(new MasterRenderer(data.camera), data);
+		
+		
+		float blockSpacing = 1.2f;
+		float blockLineSpacing = 1.2f;
+		float blockUpwardsSpacing = 1.2f;
+		
+		//TODO: rename entity class to object class because not just entities
+		List<Block> chunk = new ArrayList<Block>();
+        //Basic chunk generation
+		TexturedModel activeModel = dirtModel;
+		for(int k = 0; k<8;k++) {
+			if(k == 8) {
+				activeModel = grassModel;
+			}
+			for(int i = 0; i<8;i++) {
+				for(int j = 0; j<8;j++) {
+					chunk.add(new Block(activeModel, new Vector3f(blockLineSpacing*i, blockUpwardsSpacing*k, blockSpacing*j)));
+				}
+			}
+		}
+		
+		//add chunk to "entity" render list
+		for(Block b: chunk) {
+			data.entities.add(b);
+		}
 
-        
+		
+		
+		
+		//idk 
+		
+		
+		
         FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
         
         GUIText text = new GUIText("LiteCraft", 3, font, new Vector2f(0,0), 1f, true);
@@ -84,7 +122,9 @@ public class Example extends Game{
 				system.generateParticles(new Vector3f(0,-2,0));
 				
 				if(isInWorld) {
-					ginger3D.render(this);
+					ginger3D.renderWithoutTerrain(this);
+//					TODO: dynamic text
+//					text.textString = "" + (data.entities.size() + data.flatTerrains.size());
 				}
 				ginger3D.renderOverlays(this);
 				

@@ -6,7 +6,7 @@ import java.util.Map;
 import org.lwjgl.opengl.GL11;
 
 import io.github.hydos.ginger.engine.cameras.Camera;
-import io.github.hydos.ginger.engine.elements.objects.Entity;
+import io.github.hydos.ginger.engine.elements.objects.RenderObject;
 import io.github.hydos.ginger.engine.elements.objects.Light;
 import io.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import io.github.hydos.ginger.engine.math.vectors.Vector2f;
@@ -66,7 +66,7 @@ public class ShadowMapMasterRenderer {
 	 * @param sun
 	 *            - the light acting as the sun in the scene.
 	 */
-	public void render(Map<TexturedModel, List<Entity>> entities, Light sun) {
+	public void render(Map<TexturedModel, List<RenderObject>> entities, Light sun) {
 		shadowBox.update();
 		Vector3f sunPosition = sun.getPosition();
 		Vector3f lightDirection = new Vector3f(-sunPosition.x, -sunPosition.y, -sunPosition.z);

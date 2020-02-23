@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL13;
 
 import io.github.hydos.ginger.engine.cameras.Camera;
 import io.github.hydos.ginger.engine.elements.GuiTexture;
-import io.github.hydos.ginger.engine.elements.objects.Entity;
+import io.github.hydos.ginger.engine.elements.objects.RenderObject;
 import io.github.hydos.ginger.engine.elements.objects.Light;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.math.matrixes.Matrix4f;
@@ -46,8 +46,8 @@ public class MasterRenderer {
 	
 	private ShadowMapMasterRenderer shadowMapRenderer;
 	
-	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
-	private Map<TexturedModel, List<Entity>> normalMapEntities = new HashMap<TexturedModel, List<Entity>>();
+	private Map<TexturedModel, List<RenderObject>> entities = new HashMap<TexturedModel, List<RenderObject>>();
+	private Map<TexturedModel, List<RenderObject>> normalMapEntities = new HashMap<TexturedModel, List<RenderObject>>();
 	
 	public static final float FOV = 80f;
 	public static final float NEAR_PLANE = 0.1f;
@@ -86,7 +86,7 @@ public class MasterRenderer {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, shadowMapRenderer.getShadowMap());
 	}
 	
-	public void renderScene(List<Entity> entities, List<Entity> normalEntities, List<Terrain> terrains, List<Light> lights, Camera camera, Vector4f clipPlane) {
+	public void renderScene(List<RenderObject> entities, List<RenderObject> normalEntities, List<Terrain> terrains, List<Light> lights, Camera camera, Vector4f clipPlane) {
 		prepare();
 		renderEntities(entities, camera, lights);
 		renderNormalEntities(normalEntities, lights, camera, clipPlane);
@@ -96,8 +96,8 @@ public class MasterRenderer {
 		
 	}
 	
-	private void renderNormalEntities(List<Entity> normalEntities, List<Light> lights, Camera camera, Vector4f clipPlane) {
-		for(Entity entity: normalEntities) {
+	private void renderNormalEntities(List<RenderObject> normalEntities, List<Light> lights, Camera camera, Vector4f clipPlane) {
+		for(RenderObject entity: normalEntities) {
 			processEntityWithNormal(entity);
 		}
 		normalRenderer.render(normalMapEntities, clipPlane, lights, camera);
@@ -116,8 +116,8 @@ public class MasterRenderer {
 		terrainShader.stop();		
 	}
 
-	private void renderEntities(List<Entity> entities, Camera camera, List<Light> lights) {
-		for(Entity entity: entities) {
+	private void renderEntities(List<RenderObject> entities, Camera camera, List<Light> lights) {
+		for(RenderObject entity: entities) {
 			processEntity(entity);
 		}
 		entityRenderer.prepare();
@@ -130,32 +130,32 @@ public class MasterRenderer {
 		this.entities.clear();
 	}
 	
-	private void processEntity(Entity entity) {
+	private void processEntity(RenderObject entity) {
 		TexturedModel entityModel = entity.getModel();
-		List<Entity> batch = entities.get(entityModel);
+		List<RenderObject> batch = entities.get(entityModel);
 		if(batch!=null) {
 			batch.add(entity);
 		}else {
-			List<Entity> newBatch = new ArrayList<Entity>();
+			List<RenderObject> newBatch = new ArrayList<RenderObject>();
 			newBatch.add(entity);
 			entities.put(entityModel, newBatch);
 		}
 	}
 	
-	private void processEntityWithNormal(Entity entity) {
+	private void processEntityWithNormal(RenderObject entity) {
 		TexturedModel entityModel = entity.getModel();
-		List<Entity> batch = normalMapEntities.get(entityModel);
+		List<RenderObject> batch = normalMapEntities.get(entityModel);
 		if(batch!=null) {
 			batch.add(entity);
 		}else {
-			List<Entity> newBatch = new ArrayList<Entity>();
+			List<RenderObject> newBatch = new ArrayList<RenderObject>();
 			newBatch.add(entity);
 			normalMapEntities.put(entityModel, newBatch);
 		}
 	}
 	
-	public void renderShadowMap(List<Entity> entityList, Light sun) {
-		for(Entity entity : entityList) {
+	public void renderShadowMap(List<RenderObject> entityList, Light sun) {
+		for(RenderObject entity : entityList) {
 			processEntity(entity);
 		}
 		shadowMapRenderer.render(entities, sun);
@@ -198,5 +198,15 @@ public class MasterRenderer {
 		List<GuiTexture> texture = new ArrayList<GuiTexture>();
 		texture.add(guiTexture);
 		guiRenderer.render(texture);
+	}
+
+	public void renderSceneNoTerrain(List<RenderObject> entities, List<RenderObject> normalEntities, List<Light> lights, Camera camera, Vector4f clipPlane) {
+
+		prepare();
+		renderEntities(entities, camera, lights);
+		renderNormalEntities(normalEntities, lights, camera, clipPlane);
+
+		skyboxRenderer.render(camera);
+		
 	}
 }

@@ -36,9 +36,21 @@ public class Ginger {
 	
 	public void render(Game game) {
 		GingerMain.preRenderScene(masterRenderer);
-		ParticleMaster.renderParticles(game.data.camera);
 		contrastFbo.bindFBO();
 		masterRenderer.renderScene(game.data.entities, game.data.normalMapEntities, game.data.flatTerrains, game.data.lights, game.data.camera, game.data.clippingPlane);
+		ParticleMaster.renderParticles(game.data.camera);
+		contrastFbo.unbindFBO();
+		PostProcessing.doPostProcessing(contrastFbo.colorTexture);
+		if(game.data.handleGuis) {
+			renderOverlays(game);
+		}
+	}
+	
+	public void renderWithoutTerrain(Game game) {
+		GingerMain.preRenderScene(masterRenderer);
+		contrastFbo.bindFBO();
+		masterRenderer.renderSceneNoTerrain(game.data.entities, game.data.normalMapEntities, game.data.lights, game.data.camera, game.data.clippingPlane);
+		ParticleMaster.renderParticles(game.data.camera);
 		contrastFbo.unbindFBO();
 		PostProcessing.doPostProcessing(contrastFbo.colorTexture);
 		if(game.data.handleGuis) {

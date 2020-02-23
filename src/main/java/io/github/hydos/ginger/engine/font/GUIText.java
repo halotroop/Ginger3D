@@ -72,6 +72,42 @@ public class GUIText {
 		TextMaster.removeText(this);
 	}
 
+	public void setTextString(String textString) {
+		this.textString = textString;
+	}
+
+	public void setFontSize(float fontSize) {
+		this.fontSize = fontSize;
+	}
+
+	public void setTextMeshVao(int textMeshVao) {
+		this.textMeshVao = textMeshVao;
+	}
+
+	public void setVertexCount(int vertexCount) {
+		this.vertexCount = vertexCount;
+	}
+
+	public void setColour(Vector3f colour) {
+		this.colour = colour;
+	}
+
+	public void setPosition(Vector2f position) {
+		this.position = position;
+	}
+
+	public void setLineMaxSize(float lineMaxSize) {
+		this.lineMaxSize = lineMaxSize;
+	}
+
+	public void setFont(FontType font) {
+		this.font = font;
+	}
+
+	public void setCenterText(boolean centerText) {
+		this.centerText = centerText;
+	}
+
 	/**
 	 * @return The font used by this text.
 	 */
@@ -184,6 +220,8 @@ public class GUIText {
 	protected String getTextString() {
 		return textString;
 	}
+	
+	
 
 	public Vector3f getOutlineColour() {
 		return outlineColour;

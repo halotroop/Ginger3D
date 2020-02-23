@@ -16,9 +16,9 @@ import io.github.hydos.ginger.engine.terrain.Terrain;
 public class GameData {
 	
 	public List<GuiTexture> guis;
-	public List<Entity> entities;
+	public List<RenderObject> entities;
 	public List<Light> lights;
-	public List<Entity> normalMapEntities;
+	public List<RenderObject> normalMapEntities;
 	public List<Terrain> flatTerrains;
 	public Player player;
 	public Camera camera;
@@ -28,9 +28,9 @@ public class GameData {
 	public GameData(Player player, Camera camera) {
 		clippingPlane = new Vector4f(0, -1, 0, 100000);
 		guis = new ArrayList<GuiTexture>();
-		entities = new ArrayList<Entity>();
+		entities = new ArrayList<RenderObject>();
 		lights = new ArrayList<Light>();
-		normalMapEntities = new ArrayList<Entity>();
+		normalMapEntities = new ArrayList<RenderObject>();
 		flatTerrains = new ArrayList<Terrain>();
 		this.player = player;
 		this.camera = camera;

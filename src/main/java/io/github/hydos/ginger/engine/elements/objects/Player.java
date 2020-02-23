@@ -8,7 +8,7 @@ import io.github.hydos.ginger.engine.render.models.TexturedModel;
 import io.github.hydos.ginger.engine.terrain.Terrain;
 import io.github.hydos.ginger.main.settings.Constants;
 
-public class Player extends Entity{
+public class Player extends RenderObject{
 
 	private static float terrainHeight = 0;
 	

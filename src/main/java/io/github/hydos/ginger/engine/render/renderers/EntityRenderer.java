@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import io.github.hydos.ginger.engine.elements.objects.Entity;
+import io.github.hydos.ginger.engine.elements.objects.RenderObject;
 import io.github.hydos.ginger.engine.math.Maths;
 import io.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import io.github.hydos.ginger.engine.render.MasterRenderer;
@@ -28,11 +28,11 @@ public class EntityRenderer {
 		shader.stop();
 	}
 	
-	public void render(Map<TexturedModel,List<Entity>> entities) {
+	public void render(Map<TexturedModel,List<RenderObject>> entities) {
 		for(TexturedModel model: entities.keySet()) {
 			prepareTexturedModel(model);
-			List<Entity> batch = entities.get(model);
-			for(Entity entity:batch) {
+			List<RenderObject> batch = entities.get(model);
+			for(RenderObject entity:batch) {
 				prepareInstance(entity);
 				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 			}
@@ -65,7 +65,7 @@ public class EntityRenderer {
 		GL30.glBindVertexArray(0);
 	}
 	
-	private void prepareInstance(Entity entity) {
+	private void prepareInstance(RenderObject entity) {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
 

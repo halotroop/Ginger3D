@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import io.github.hydos.ginger.engine.elements.objects.Entity;
+import io.github.hydos.ginger.engine.elements.objects.RenderObject;
 import io.github.hydos.ginger.engine.math.Maths;
 import io.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import io.github.hydos.ginger.engine.render.MasterRenderer;
@@ -40,7 +40,7 @@ public class ShadowMapEntityRenderer {
 	 * @param entities
 	 *            - the entities to be rendered to the shadow map.
 	 */
-	protected void render(Map<TexturedModel, List<Entity>> entities) {
+	protected void render(Map<TexturedModel, List<RenderObject>> entities) {
 		for (TexturedModel model : entities.keySet()) {
 			RawModel rawModel = model.getRawModel();
 			bindModel(rawModel);
@@ -49,7 +49,7 @@ public class ShadowMapEntityRenderer {
 			if(model.getTexture().isTransparent()) {
 				MasterRenderer.disableCulling();
 			}
-			for (Entity entity : entities.get(model)) {
+			for (RenderObject entity : entities.get(model)) {
 				prepareInstance(entity);
 				GL11.glDrawElements(GL11.GL_TRIANGLES, rawModel.getVertexCount(),
 						GL11.GL_UNSIGNED_INT, 0);
@@ -86,7 +86,7 @@ public class ShadowMapEntityRenderer {
 	 * @param entity
 	 *            - the entity to be prepared for rendering.
 	 */
-	private void prepareInstance(Entity entity) {
+	private void prepareInstance(RenderObject entity) {
 		Matrix4f modelMatrix = Maths.createTransformationMatrix(entity.getPosition(),
 				entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
 		Matrix4f mvpMatrix = Matrix4f.mul(projectionViewMatrix, modelMatrix, null);
