@@ -2,7 +2,7 @@ package io.github.hydos.ginger.engine.render.tools;
 
 import org.joml.Vector4f;
 
-import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
+import io.github.hydos.ginger.engine.cameras.Camera;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.math.Maths;
 import io.github.hydos.ginger.engine.math.matrixes.Matrix4f;
@@ -19,12 +19,12 @@ public class MousePicker {
 
 	private Matrix4f projectionMatrix;
 	private Matrix4f viewMatrix;
-	private ThirdPersonCamera camera;
+	private Camera camera;
 	
 	private Terrain terrain;
 	private Vector3f currentTerrainPoint;
 
-	public MousePicker(ThirdPersonCamera cam, Matrix4f projection, Terrain terrain) {
+	public MousePicker(Camera cam, Matrix4f projection, Terrain terrain) {
 		camera = cam;
 		projectionMatrix = projection;
 		viewMatrix = Maths.createViewMatrix(camera);

@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL31;
 
-import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
+import io.github.hydos.ginger.engine.cameras.Camera;
 import io.github.hydos.ginger.engine.math.Maths;
 import io.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import io.github.hydos.ginger.engine.math.vectors.Vector3f;
@@ -50,7 +50,7 @@ public class ParticleRenderer {
 		shader.stop();
 	}
 	
-	public void render(Map<ParticleTexture, List<Particle>> particles, ThirdPersonCamera camera){
+	public void render(Map<ParticleTexture, List<Particle>> particles, Camera camera){
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		prepare();
 		for(ParticleTexture texture : particles.keySet()) {

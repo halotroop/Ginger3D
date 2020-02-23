@@ -2,7 +2,7 @@ package io.github.hydos.ginger.engine.shadow;
 
 import org.joml.Vector4f;
 
-import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
+import io.github.hydos.ginger.engine.cameras.Camera;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import io.github.hydos.ginger.engine.math.vectors.Vector3f;
@@ -31,7 +31,7 @@ public class ShadowBox {
 	private float minY, maxY;
 	private float minZ, maxZ;
 	private Matrix4f lightViewMatrix;
-	private ThirdPersonCamera cam;
+	private Camera cam;
 
 	private float farHeight, farWidth, nearHeight, nearWidth;
 
@@ -48,7 +48,7 @@ public class ShadowBox {
 	 * @param camera
 	 *            - the in-game camera.
 	 */
-	protected ShadowBox(Matrix4f lightViewMatrix, ThirdPersonCamera camera) {
+	protected ShadowBox(Matrix4f lightViewMatrix, Camera camera) {
 		this.lightViewMatrix = lightViewMatrix;
 		this.cam = camera;
 		calculateWidthsAndHeights();

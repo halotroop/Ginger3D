@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
+import io.github.hydos.ginger.engine.cameras.Camera;
 import io.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import io.github.hydos.ginger.engine.render.renderers.ParticleRenderer;
 
@@ -21,7 +21,7 @@ public class ParticleMaster {
 		
 	}
 	
-	public static void update(ThirdPersonCamera camera) {
+	public static void update(Camera camera) {
 		Iterator<Entry<ParticleTexture, List<Particle>>> mapIterator = particles.entrySet().iterator();
 		while(mapIterator.hasNext()) {
 			List<Particle> list = mapIterator.next().getValue();
@@ -40,7 +40,7 @@ public class ParticleMaster {
 		}
 	}
 	
-	public static void renderParticles(ThirdPersonCamera camera) {
+	public static void renderParticles(Camera camera) {
 		particleRenderer.render(particles, camera);
 	}
 	

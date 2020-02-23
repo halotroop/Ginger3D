@@ -9,7 +9,7 @@ import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
-import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
+import io.github.hydos.ginger.engine.cameras.Camera;
 import io.github.hydos.ginger.engine.elements.GuiTexture;
 import io.github.hydos.ginger.engine.elements.objects.Entity;
 import io.github.hydos.ginger.engine.elements.objects.Light;
@@ -53,7 +53,7 @@ public class MasterRenderer {
 	public static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000f;
 	
-	public MasterRenderer(ThirdPersonCamera camera) {
+	public MasterRenderer(Camera camera) {
 		createProjectionMatrix();
 		entityShader = new StaticShader();
 		entityRenderer = new EntityRenderer(entityShader, projectionMatrix);
@@ -86,7 +86,7 @@ public class MasterRenderer {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, shadowMapRenderer.getShadowMap());
 	}
 	
-	public void renderScene(List<Entity> entities, List<Entity> normalEntities, List<Terrain> terrains, List<Light> lights, ThirdPersonCamera camera, Vector4f clipPlane) {
+	public void renderScene(List<Entity> entities, List<Entity> normalEntities, List<Terrain> terrains, List<Light> lights, Camera camera, Vector4f clipPlane) {
 		prepare();
 		renderEntities(entities, camera, lights);
 		renderNormalEntities(normalEntities, lights, camera, clipPlane);
@@ -96,7 +96,7 @@ public class MasterRenderer {
 		
 	}
 	
-	private void renderNormalEntities(List<Entity> normalEntities, List<Light> lights, ThirdPersonCamera camera, Vector4f clipPlane) {
+	private void renderNormalEntities(List<Entity> normalEntities, List<Light> lights, Camera camera, Vector4f clipPlane) {
 		for(Entity entity: normalEntities) {
 			processEntityWithNormal(entity);
 		}
@@ -107,7 +107,7 @@ public class MasterRenderer {
 		guiRenderer.render(guis);
 	}
 	
-	private void renderTerrains(List<Terrain> terrains, List<Light> lights, ThirdPersonCamera camera) {
+	private void renderTerrains(List<Terrain> terrains, List<Light> lights, Camera camera) {
 		terrainShader.start();
 		terrainShader.loadSkyColour(Window.getColour());
 		terrainShader.loadLights(lights);
@@ -116,7 +116,7 @@ public class MasterRenderer {
 		terrainShader.stop();		
 	}
 
-	private void renderEntities(List<Entity> entities, ThirdPersonCamera camera, List<Light> lights) {
+	private void renderEntities(List<Entity> entities, Camera camera, List<Light> lights) {
 		for(Entity entity: entities) {
 			processEntity(entity);
 		}

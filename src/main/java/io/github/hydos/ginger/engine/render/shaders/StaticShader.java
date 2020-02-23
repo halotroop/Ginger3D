@@ -2,7 +2,7 @@ package io.github.hydos.ginger.engine.render.shaders;
 
 import java.util.List;
 
-import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
+import io.github.hydos.ginger.engine.cameras.Camera;
 import io.github.hydos.ginger.engine.elements.objects.Light;
 import io.github.hydos.ginger.engine.math.Maths;
 import io.github.hydos.ginger.engine.math.matrixes.Matrix4f;
@@ -65,7 +65,7 @@ public class StaticShader extends ShaderProgram{
 		super.loadMatrix(location_projectionMatrix, matrix);
 	}
 	
-	public void loadViewMatrix(ThirdPersonCamera camera) {
+	public void loadViewMatrix(Camera camera) {
 		Matrix4f matrix = Maths.createViewMatrix(camera);
 		super.loadMatrix(location_viewMatrix, matrix);
 	}

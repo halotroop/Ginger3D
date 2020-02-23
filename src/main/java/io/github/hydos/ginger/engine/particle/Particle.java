@@ -1,6 +1,6 @@
 package io.github.hydos.ginger.engine.particle;
 
-import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
+import io.github.hydos.ginger.engine.cameras.Camera;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.math.vectors.Vector2f;
 import io.github.hydos.ginger.engine.math.vectors.Vector3f;
@@ -70,7 +70,7 @@ public class Particle {
 		return blend;
 	}
 
-	public boolean update(ThirdPersonCamera camera) {
+	public boolean update(Camera camera) {
 		float time = (float) Window.getTime() / 1000000;
 		velocity.y += Constants.gravity * gravityEffect * time;
 		Vector3f change = new Vector3f(velocity);

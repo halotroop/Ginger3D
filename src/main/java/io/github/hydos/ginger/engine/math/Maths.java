@@ -1,6 +1,6 @@
 package io.github.hydos.ginger.engine.math;
 
-import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
+import io.github.hydos.ginger.engine.cameras.Camera;
 import io.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import io.github.hydos.ginger.engine.math.vectors.Vector2f;
 import io.github.hydos.ginger.engine.math.vectors.Vector3f;
@@ -18,7 +18,7 @@ public class Maths {
 		return matrix;
 	}
      
-    public static Matrix4f createViewMatrix(ThirdPersonCamera camera) {
+    public static Matrix4f createViewMatrix(Camera camera) {
         Matrix4f viewMatrix = new Matrix4f();
         viewMatrix.setIdentity();
         Matrix4f.rotate((float) Math.toRadians(camera.getPitch()), new Vector3f(1, 0, 0), viewMatrix, viewMatrix);

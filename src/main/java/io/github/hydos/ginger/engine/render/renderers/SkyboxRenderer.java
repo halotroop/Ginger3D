@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
+import io.github.hydos.ginger.engine.cameras.Camera;
 import io.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import io.github.hydos.ginger.engine.render.models.RawModel;
 import io.github.hydos.ginger.engine.render.shaders.SkyboxShader;
@@ -75,7 +75,7 @@ public class SkyboxRenderer {
 		shader.stop();
 	}
 	
-	public void render(ThirdPersonCamera camera) {
+	public void render(Camera camera) {
 		shader.start();
 		shader.loadViewMatrix(camera);
 		GL30.glBindVertexArray(cube.getVaoID());

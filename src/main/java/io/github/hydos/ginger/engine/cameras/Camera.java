@@ -7,7 +7,7 @@ import io.github.hydos.ginger.engine.elements.objects.Player;
 import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.math.vectors.Vector3f;
 
-public class ThirdPersonCamera {
+public class Camera {
 
 	private float distanceFromPlayer = 5;
 	private float angleAroundPlayer = 0;
@@ -21,12 +21,12 @@ public class ThirdPersonCamera {
 	private Player player;
 
 
-	public ThirdPersonCamera(Player player) {
+	public Camera(Player player) {
 		this.player = player;
 
 	}
 
-	public ThirdPersonCamera(Vector3f vector3f, Player player) {
+	public Camera(Vector3f vector3f, Player player) {
 		this.position = vector3f;
 		this.player = player;
 

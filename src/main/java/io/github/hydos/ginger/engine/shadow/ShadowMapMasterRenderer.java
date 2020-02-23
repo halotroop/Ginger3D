@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 
-import io.github.hydos.ginger.engine.cameras.ThirdPersonCamera;
+import io.github.hydos.ginger.engine.cameras.Camera;
 import io.github.hydos.ginger.engine.elements.objects.Entity;
 import io.github.hydos.ginger.engine.elements.objects.Light;
 import io.github.hydos.ginger.engine.math.matrixes.Matrix4f;
@@ -44,7 +44,7 @@ public class ShadowMapMasterRenderer {
 	 * @param camera
 	 *            - the camera being used in the scene.
 	 */
-	public ShadowMapMasterRenderer(ThirdPersonCamera camera) {
+	public ShadowMapMasterRenderer(Camera camera) {
 		shader = new ShadowShader();
 		shadowBox = new ShadowBox(lightViewMatrix, camera);
 		shadowFbo = new ShadowFrameBuffer(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);

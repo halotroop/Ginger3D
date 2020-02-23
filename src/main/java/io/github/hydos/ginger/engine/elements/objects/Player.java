@@ -25,19 +25,22 @@ public class Player extends Entity{
 
 	public void move(Terrain t) {
 		checkInputs();
-		super.increaseRotation(0, (float) ((currentTurn) * Window.getTime() ), 0);
-		float distance = (float) ((currentSpeed) * (Window.getTime()));
-		float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
-		float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
-		super.increasePosition(dx, 0, dz);
-		super.increasePosition(0, (float) (upwardsSpeed * (Window.getTime())), 0);
-		terrainHeight = t.getHeightOfTerrain(super.getPosition().x, super.getPosition().z);
-		upwardsSpeed += Constants.gravity * Window.getTime();
-		if(super.getPosition().y < terrainHeight) {
-			isInAir = false;
-			upwardsSpeed = 0;
-			super.getPosition().y = terrainHeight;
+		if(t != null) {
+			super.increaseRotation(0, (float) ((currentTurn) * Window.getTime() ), 0);
+			float distance = (float) ((currentSpeed) * (Window.getTime()));
+			float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
+			float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
+			super.increasePosition(dx, 0, dz);
+			super.increasePosition(0, (float) (upwardsSpeed * (Window.getTime())), 0);
+			terrainHeight = t.getHeightOfTerrain(super.getPosition().x, super.getPosition().z);
+			upwardsSpeed += Constants.gravity * Window.getTime();
+			if(super.getPosition().y < terrainHeight) {
+				isInAir = false;
+				upwardsSpeed = 0;
+				super.getPosition().y = terrainHeight;
+			}
 		}
+
 		
 	}
 	
