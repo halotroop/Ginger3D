@@ -13,7 +13,7 @@ import io.github.hydos.ginger.engine.math.vectors.Vector3f;
 
 public class OBJFileLoader {
 	
-	public static String resourceLocation = "/models/";
+	public static String resourceLocation = "C:/Users/Hayden/Desktop/Ginger3D/src/main/resources/models/";
 	
 	public static ModelData loadModel(String filePath, String texturePath) {
 		AIScene scene = null;
@@ -21,7 +21,7 @@ public class OBJFileLoader {
 			scene = Assimp.aiImportFile(resourceLocation + filePath, Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate);
 			
 			if (scene == null) {
-				  throw new IllegalStateException(Assimp.aiGetErrorString());
+				return new ModelData(new float[0], new float[0], new float[0], new int[0], 1F);
 			}
 			
 			AIMesh mesh = AIMesh.create(scene.mMeshes().get(0));
@@ -65,14 +65,12 @@ public class OBJFileLoader {
 			System.err.println("Couldnt load scene file!");
 			e.printStackTrace();
 		}
-		
-		
 		return new ModelData(new float[0], new float[0], new float[0], new int[0], 1F);
 	}
 
 	private static ModelData parseMeshData(Vertex[] vertexList, int[] indicesList, Buffer normals) {
-		float[] verticies = new float[vertexList.length];
-		float[] textureCoords = new float[vertexList.length];
+		float[] verticies = new float[vertexList.length*3];
+		float[] textureCoords = new float[vertexList.length*2];
 		//texture coords where stored in the vertices so there should be as many as there are vertices
 		
 		int j = 0;
@@ -81,10 +79,11 @@ public class OBJFileLoader {
 			float x = vertex.getPosition().x;
 			float y = vertex.getPosition().y;
 			float z = vertex.getPosition().z;
+		
 			verticies[i] = x;
 			i++;
 			verticies[i] = y;
-			i++;			
+			i++;	
 			verticies[i] = z;
 			i++;
 			textureCoords[j] = vertex.getTextureIndex().x;
@@ -92,7 +91,7 @@ public class OBJFileLoader {
 			textureCoords[j] = vertex.getTextureIndex().y;
 		}
 		
-		return new ModelData(verticies, textureCoords, null, indicesList, i);
+		return new ModelData(verticies, textureCoords, new float[normals.sizeof()], indicesList, i);
 	}
 
 }
