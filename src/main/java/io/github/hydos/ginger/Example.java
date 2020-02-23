@@ -41,7 +41,7 @@ public class Example extends Game{
 		//TODO: block register class to register blockzz
 		//TODO: could also probally pull the mesh from 1 place to lower memory usage in the future
 		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
-		TexturedModel grassModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
+		TexturedModel grassModel = ModelLoader.loadGenericCube("block/cubes/soil/gravel.png");
 		
         
         
@@ -56,16 +56,16 @@ public class Example extends Game{
 		ginger3D.setup(new MasterRenderer(data.camera), data);
 		
 		
-		float blockSpacing = 1.2f;
-		float blockLineSpacing = 1.2f;
-		float blockUpwardsSpacing = 1.2f;
+		float blockSpacing = 1f;
+		float blockLineSpacing = 1f;
+		float blockUpwardsSpacing = 1f;
 		
 		//TODO: rename entity class to object class because not just entities
 		List<Block> chunk = new ArrayList<Block>();
         //Basic chunk generation
 		TexturedModel activeModel = dirtModel;
 		for(int k = 0; k<8;k++) {
-			if(k == 8) {
+			if(k == 7) {
 				activeModel = grassModel;
 			}
 			for(int i = 0; i<8;i++) {
@@ -91,9 +91,7 @@ public class Example extends Game{
         
         GUIText text = new GUIText("LiteCraft", 3, font, new Vector2f(0,0), 1f, true);
         text.setColour(0, 0, 0);        
-        
-		Terrain terrain = handleFlatTerrain();
-		
+        		
 		Light sun = new Light(new Vector3f(100,105,-100), new Vector3f(1.3f, 1.3f, 1.3f), new Vector3f(0.0001f, 0.0001f, 0.0001f));
 		data.lights.add(sun);
 
@@ -117,7 +115,7 @@ public class Example extends Game{
 				ginger3D.masterRenderer.renderShadowMap(data.entities, sun);
 				
 				camera.move();
-				player.move(terrain);
+				player.move(null);
 				
 				system.generateParticles(new Vector3f(0,-2,0));
 				
@@ -157,18 +155,18 @@ public class Example extends Game{
 		
 	}
 	
-	private Terrain handleFlatTerrain() {
-		TerrainTexture backgroundTexture = Loader.loadTerrainTexture("grass.png");
-		TerrainTexture rTexture = Loader.loadTerrainTexture("mud.png");
-		TerrainTexture gTexture = Loader.loadTerrainTexture("grassFlowers.png");
-		TerrainTexture bTexture = Loader.loadTerrainTexture("path.png");
-		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
-		
-		TerrainTexture blendMap = Loader.loadTerrainTexture("blendMap.png");
-		
-		Terrain terrain = new Terrain(-0.5f, -0.5f, texturePack, blendMap, "heightmap.png");
-		data.flatTerrains.add(terrain);
-		return terrain;
-	}
-	
+//	private Terrain handleFlatTerrain() {
+//		TerrainTexture backgroundTexture = Loader.loadTerrainTexture("grass.png");
+//		TerrainTexture rTexture = Loader.loadTerrainTexture("mud.png");
+//		TerrainTexture gTexture = Loader.loadTerrainTexture("grassFlowers.png");
+//		TerrainTexture bTexture = Loader.loadTerrainTexture("path.png");
+//		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+//		
+//		TerrainTexture blendMap = Loader.loadTerrainTexture("blendMap.png");
+//		
+//		Terrain terrain = new Terrain(-0.5f, -0.5f, texturePack, blendMap, "heightmap.png");
+//		data.flatTerrains.add(terrain);
+//		return terrain;
+//	}
+//	
 }
