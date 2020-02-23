@@ -22,6 +22,7 @@ public class Ginger {
 		this.masterRenderer = masterRenderer;
 		picker = new MousePicker(data.camera, masterRenderer.getProjectionMatrix(), null);
 		PostProcessing.init();
+        ParticleMaster.init(masterRenderer.getProjectionMatrix());
 	}
 	
 	public void update(GameData data) {
@@ -33,14 +34,20 @@ public class Ginger {
 		ParticleMaster.update(data.camera);
 	}
 	
-	public void render(GameData data, Game game) {
+	public void render(Game game) {
 		GingerMain.preRenderScene(masterRenderer);
-		ParticleMaster.renderParticles(data.camera);
+		ParticleMaster.renderParticles(game.data.camera);
 		contrastFbo.bindFBO();
-		masterRenderer.renderScene(data.entities, data.normalMapEntities, data.flatTerrains, data.lights, data.camera, data.clippingPlane);
+		masterRenderer.renderScene(game.data.entities, game.data.normalMapEntities, game.data.flatTerrains, game.data.lights, game.data.camera, game.data.clippingPlane);
 		contrastFbo.unbindFBO();
 		PostProcessing.doPostProcessing(contrastFbo.colorTexture);
-		masterRenderer.renderGuis(data.guis);
+		if(game.data.handleGuis) {
+			renderOverlays(game);
+		}
+	}
+	
+	public void renderOverlays(Game game) {
+		masterRenderer.renderGuis(game.data.guis);
 		TextMaster.render();
 	}
 	

@@ -29,79 +29,43 @@ public class Example extends Game{
 		Constants.gravity = -0.000000000005f;
 		Constants.jumpPower = 0.000005f;
 		
-		Window.create(1200, 800, "Simple Ginger Example", 60);
+		Window.create(1200, 800, "Horse Game 1.0.0", 60);
 		
 		GingerMain.init();
 		
         Window.setBackgroundColour(0.2f, 0.2f, 0.8f);
 		
         
-		TexturedModel tModel = ModelLoader.loadModel("stall.obj", "stallTexture.png");
+		TexturedModel tModel = ModelLoader.loadModel("Zebra.obj", "stallTexture.png");
 		tModel.getTexture().setReflectivity(1f);
 		tModel.getTexture().setShineDamper(7f);
 		Player player = new Player(tModel, new Vector3f(0,0,-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f));
 		Camera camera = new Camera(new Vector3f(0,0.1f,0), player);
 		ginger3D = new Ginger();
 		data = new GameData(player, camera);
+		data.handleGuis = false;
 		ginger3D.setup(new MasterRenderer(data.camera), data);
 
         
         FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
         
-        GUIText text = new GUIText("german", 3, font, new Vector2f(0,0), 1f, true);
-        text.setColour(0, 1, 0);
-                
-        ParticleMaster.init(ginger3D.masterRenderer.getProjectionMatrix());
+        GUIText text = new GUIText("Horse Game", 3, font, new Vector2f(0,0), 1f, true);
+        text.setColour(0, 1, 0);        
         
-        
-
-		
-		TexturedModel dragonMdl = ModelLoader.loadModel("Zebra.obj", "stallTexture.png");
-		dragonMdl.getTexture().setReflectivity(4f); 
-		dragonMdl.getTexture().setShineDamper(2f);
-		
-
+		Terrain terrain = handleFlatTerrain();
 		
 		Light sun = new Light(new Vector3f(100,105,-100), new Vector3f(1.3f, 1.3f, 1.3f), new Vector3f(0.0001f, 0.0001f, 0.0001f));
 		data.lights.add(sun);
-	
-		TexturedModel tgrass = ModelLoader.loadModel("grass.obj", "grass.png");
-		tgrass.getTexture().setTransparency(true);
-		tgrass.getTexture().useFakeLighting(true);
-		
-		TerrainTexture backgroundTexture = Loader.loadTerrainTexture("grass.png");
-		TerrainTexture rTexture = Loader.loadTerrainTexture("mud.png");
-		TerrainTexture gTexture = Loader.loadTerrainTexture("grassFlowers.png");
-		TerrainTexture bTexture = Loader.loadTerrainTexture("path.png");
-		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
-		
-		TerrainTexture blendMap = Loader.loadTerrainTexture("blendMap.png");
-		
-		Terrain terrain = new Terrain(-0.5f, -0.5f, texturePack, blendMap, "heightmap.png");
-		
-		Entity dragon = new Entity(dragonMdl, new Vector3f(3,terrain.getHeightOfTerrain(3, -3),-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f));
-		
-		Entity grassEntity = new Entity(tgrass, new Vector3f(-3,terrain.getHeightOfTerrain(-3, -3),-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f));
-		data.entities.add(grassEntity);		
-		
-		TexturedModel barrelModel = new TexturedModel(NormalMappedObjLoader.loadOBJ("barrel.obj"), new ModelTexture("barrel.png"));
-		barrelModel.getTexture().setNormalMap(new ModelTexture("modelNormals/barrelNormal.png").getTextureID());
-		barrelModel.getTexture().setShineDamper(10f);
-		barrelModel.getTexture().setReflectivity(0.5f);
-		
-		Entity barrel = new Entity(barrelModel, new Vector3f(1,terrain.getHeightOfTerrain(1, 1),1), 0, 0, 0, new Vector3f(0.25f,0.25f,0.25f));
-		data.normalMapEntities.add(barrel);
-		data.entities.add(player);
-		data.entities.add(dragon);
-	
-		data.flatTerrains.add(terrain);
+
+		data.entities.add(player);	
 		
 		ParticleSystem system = setupParticles();
 		
-		TextureButton button = new TextureButton("/textures/guis/ginger.png", new Vector2f(0.8f, 0), new Vector2f(0.1f, 0.1f));
-		button.show(data.guis);
+		boolean isInWorld = false;
 		
-		Window.lockMouse();
+		TextureButton playButton = new TextureButton("/textures/guis/purpur.png", new Vector2f(0, 0), new Vector2f(0.25f, 0.1f));
+		playButton.show(data.guis);
+		
 		
 		while(!Window.closed()) {
 			
@@ -115,15 +79,16 @@ public class Example extends Game{
 				
 				system.generateParticles(new Vector3f(0,-2,0));
 				
-				ginger3D.render(data, this);
+				if(isInWorld) {
+					ginger3D.render(this);
+				}
+				ginger3D.renderOverlays(this);
 				
-				dragon.increaseRotation(0,1,0);
-				barrel.increaseRotation(0, 1, 0);
-				
-				button.update();
-				if(button.isClicked()) {
-					System.out.println("click");
-					button.hide(data.guis);
+				playButton.update();
+				if(playButton.isClicked()) {
+					Window.lockMouse();
+					playButton.hide(data.guis);
+					isInWorld = true;
 				}
 				
 				ginger3D.postRender();
@@ -146,6 +111,20 @@ public class Example extends Game{
 		system.setScaleError(1f);
 		return system;
 		
+	}
+	
+	private Terrain handleFlatTerrain() {
+		TerrainTexture backgroundTexture = Loader.loadTerrainTexture("grass.png");
+		TerrainTexture rTexture = Loader.loadTerrainTexture("mud.png");
+		TerrainTexture gTexture = Loader.loadTerrainTexture("grassFlowers.png");
+		TerrainTexture bTexture = Loader.loadTerrainTexture("path.png");
+		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+		
+		TerrainTexture blendMap = Loader.loadTerrainTexture("blendMap.png");
+		
+		Terrain terrain = new Terrain(-0.5f, -0.5f, texturePack, blendMap, "heightmap.png");
+		data.flatTerrains.add(terrain);
+		return terrain;
 	}
 	
 }

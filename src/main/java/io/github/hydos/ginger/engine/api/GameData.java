@@ -23,6 +23,7 @@ public class GameData {
 	public Player player;
 	public Camera camera;
 	public Vector4f clippingPlane;
+	public boolean handleGuis = true;
 	
 	public GameData(Player player, Camera camera) {
 		clippingPlane = new Vector4f(0, -1, 0, 100000);
