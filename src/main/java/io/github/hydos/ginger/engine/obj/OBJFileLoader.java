@@ -15,13 +15,13 @@ public class OBJFileLoader {
 	
 	public static String resourceLocation = "C:/Users/Hayden/Desktop/Ginger3D/src/main/resources/models/";
 	
-	public static ModelData loadModel(String filePath, String texturePath) {
+	public static Mesh loadModel(String filePath, String texturePath) {
 		AIScene scene = null;
 		try {
 			scene = Assimp.aiImportFile(resourceLocation + filePath, Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate);
 			
 			if (scene == null) {
-				return new ModelData(new float[0], new float[0], new float[0], new int[0], 1F);
+				return new Mesh(new float[0], new float[0], new float[0], new int[0], 1F);
 			}
 			
 			AIMesh mesh = AIMesh.create(scene.mMeshes().get(0));
@@ -65,10 +65,10 @@ public class OBJFileLoader {
 			System.err.println("Couldnt load scene file!");
 			e.printStackTrace();
 		}
-		return new ModelData(new float[0], new float[0], new float[0], new int[0], 1F);
+		return new Mesh(new float[0], new float[0], new float[0], new int[0], 1F);
 	}
 
-	private static ModelData parseMeshData(Vertex[] vertexList, int[] indicesList, Buffer normals) {
+	private static Mesh parseMeshData(Vertex[] vertexList, int[] indicesList, Buffer normals) {
 		float[] verticies = new float[vertexList.length*3];
 		float[] textureCoords = new float[vertexList.length*2];
 		//texture coords where stored in the vertices so there should be as many as there are vertices
@@ -91,7 +91,7 @@ public class OBJFileLoader {
 
 		}
 		
-		return new ModelData(verticies, textureCoords, new float[normals.sizeof()], indicesList, i);
+		return new Mesh(verticies, textureCoords, new float[normals.sizeof()], indicesList, i);
 	}
 
 }

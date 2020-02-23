@@ -2,6 +2,7 @@ package io.github.hydos.ginger;
 
 import io.github.hydos.ginger.engine.api.*;
 import io.github.hydos.ginger.engine.cameras.Camera;
+import io.github.hydos.ginger.engine.elements.GuiTexture;
 import io.github.hydos.ginger.engine.elements.buttons.TextureButton;
 import io.github.hydos.ginger.engine.elements.objects.*;
 import io.github.hydos.ginger.engine.font.*;
@@ -9,6 +10,7 @@ import io.github.hydos.ginger.engine.io.Window;
 import io.github.hydos.ginger.engine.math.vectors.*;
 import io.github.hydos.ginger.engine.obj.ModelLoader;
 import io.github.hydos.ginger.engine.obj.normals.NormalMappedObjLoader;
+import io.github.hydos.ginger.engine.obj.shapes.StaticCube;
 import io.github.hydos.ginger.engine.particle.*;
 import io.github.hydos.ginger.engine.render.MasterRenderer;
 import io.github.hydos.ginger.engine.render.models.TexturedModel;
@@ -29,19 +31,19 @@ public class Example extends Game{
 		Constants.gravity = -0.000000000005f;
 		Constants.jumpPower = 0.000005f;
 		
-		Window.create(1200, 800, "Horse Game 1.0.0", 60);
+		Window.create(1200, 800, "LiteCraft", 60);
 		
 		GingerMain.init();
 		
         Window.setBackgroundColour(0.2f, 0.2f, 0.8f);
 		
-        
-		TexturedModel tModel = ModelLoader.loadModel("Zebra.obj", "stallTexture.png");
-		tModel.getTexture().setReflectivity(1f);
-		tModel.getTexture().setShineDamper(7f);
-		Player player = new Player(tModel, new Vector3f(0,0,-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f));
+        StaticCube.scaleCube(6);
+		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
+		dirtModel.getTexture().setReflectivity(10f);
+		Player player = new Player(dirtModel, new Vector3f(0,0,-3),0,180f,0, new Vector3f(0.2f, 0.2f, 0.2f));
 		Camera camera = new Camera(new Vector3f(0,0.1f,0), player);
 		ginger3D = new Ginger();
+		
 		data = new GameData(player, camera);
 		data.handleGuis = false;
 		ginger3D.setup(new MasterRenderer(data.camera), data);
@@ -49,8 +51,8 @@ public class Example extends Game{
         
         FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
         
-        GUIText text = new GUIText("Horse Game", 3, font, new Vector2f(0,0), 1f, true);
-        text.setColour(0, 1, 0);        
+        GUIText text = new GUIText("LiteCraft", 3, font, new Vector2f(0,0), 1f, true);
+        text.setColour(0, 0, 0);        
         
 		Terrain terrain = handleFlatTerrain();
 		
@@ -66,6 +68,8 @@ public class Example extends Game{
 		TextureButton playButton = new TextureButton("/textures/guis/purpur.png", new Vector2f(0, 0), new Vector2f(0.25f, 0.1f));
 		playButton.show(data.guis);
 		
+		GuiTexture title = new GuiTexture(Loader.loadTextureDirectly("/textures/guis/title.png"), new Vector2f(0, 0.8F), new Vector2f(0.25f, 0.1f));
+		data.guis.add(title);
 		
 		while(!Window.closed()) {
 			

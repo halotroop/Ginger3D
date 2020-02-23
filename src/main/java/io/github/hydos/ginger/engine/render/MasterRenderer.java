@@ -49,7 +49,7 @@ public class MasterRenderer {
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	private Map<TexturedModel, List<Entity>> normalMapEntities = new HashMap<TexturedModel, List<Entity>>();
 	
-	public static final float FOV = 70f;
+	public static final float FOV = 80f;
 	public static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000f;
 	
@@ -73,8 +73,8 @@ public class MasterRenderer {
 	}
 	
 	public static void enableCulling() {
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glCullFace(GL11.GL_BACK);
+//		GL11.glEnable(GL11.GL_CULL_FACE);
+//		GL11.glCullFace(GL11.GL_BACK);
 	}
 	
 	public static void disableCulling() {
