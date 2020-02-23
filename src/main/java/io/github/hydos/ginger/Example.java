@@ -138,7 +138,7 @@ public class Example {
 		system.setSpeedError(0);
 		system.setScaleError(1f);
 		
-		Fbo fbo = new Fbo(Window.width, Window.height, Fbo.DEPTH_RENDER_BUFFER);
+		Fbo fbo = new Fbo();
 		PostProcessing.init();
 		
 		while(!Window.closed()) {
@@ -154,7 +154,6 @@ public class Example {
 				
 				camera.move();
 				entity.move(terrain);
-				text.setOutlineColour(new Vector3f(colour, colour /2, colour / 3));
 				
 				Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 				if(terrainPoint!=null) {
@@ -169,21 +168,18 @@ public class Example {
 				barrel.increaseRotation(0, 1, 0);
 				
 				GingerMain.preRenderScene(masterRenderer);
-				
-				fbo.bindFrameBuffer();
-				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
 				ParticleMaster.renderParticles(camera);
-				fbo.unbindFrameBuffer();
-				PostProcessing.doPostProcessing(fbo.getColourTexture());
+				fbo.bindFBO();
+				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
+				fbo.unbindFBO();
+				PostProcessing.doPostProcessing(fbo.colorTexture);
 //				TODO: get fbo's working
 				button.update();
 				if(button.isClicked()) {
 					System.out.println("click");
 					button.hide(guis);
 				}
-				
-				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
-				
+//				masterRenderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
 				masterRenderer.renderGuis(guis);
 				TextMaster.render();
 				
@@ -193,7 +189,6 @@ public class Example {
 		}
 		Window.stop();
 		PostProcessing.cleanUp();
-		fbo.cleanUp();
 		ParticleMaster.cleanUp();
 		masterRenderer.cleanUp();
 		TextMaster.cleanUp();

@@ -21,7 +21,7 @@ import io.github.hydos.ginger.engine.render.models.TexturedModel;
  */
 public class ShadowMapMasterRenderer {
 
-	private static final int SHADOW_MAP_SIZE = 5120;
+	private static final int SHADOW_MAP_SIZE = 5120*2;
 
 	private ShadowFrameBuffer shadowFbo;
 	private ShadowShader shader;
