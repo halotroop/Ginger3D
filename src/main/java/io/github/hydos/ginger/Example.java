@@ -54,7 +54,7 @@ public class Example {
 	public void main(String[] args) {
 		
 		
-		Window.create(800, 1200, "Ginger Example", 60);
+		Window.create(1200, 800, "Ginger Example", 60);
 		
 		GingerMain.init();
 		
@@ -75,7 +75,7 @@ public class Example {
         
         FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
         
-        GUIText text = new GUIText("hi, this is some sample text", 3, font, new Vector2f(0,0), 1f, true);
+        GUIText text = new GUIText("german", 3, font, new Vector2f(0,0), 1f, true);
         text.setColour(0, 1, 0);
         text.setBorderWidth(0.7f);
         text.setBorderEdge(0.4f);

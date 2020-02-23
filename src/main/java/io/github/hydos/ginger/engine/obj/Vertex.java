@@ -1,14 +1,13 @@
 package io.github.hydos.ginger.engine.obj;
 
+import io.github.hydos.ginger.engine.math.vectors.Vector2f;
 import io.github.hydos.ginger.engine.math.vectors.Vector3f;
 
 public class Vertex {
-	
-	private static final int NO_INDEX = -1;
-	
+		
 	private Vector3f position;
-	private int textureIndex = NO_INDEX;
-	private int normalIndex = NO_INDEX;
+	private Vector2f textureIndex = null;
+	private Vector3f normalIndex = null;
 	private Vertex duplicateVertex = null;
 	private int index;
 	private float length;
@@ -17,6 +16,12 @@ public class Vertex {
 		this.index = index;
 		this.position = position;
 		this.length = position.length();
+	}
+	
+	public Vertex(Vector3f position, Vector3f normal, Vector2f textureCoord) {
+		this.position = position;
+		this.normalIndex = normal;
+		this.textureIndex = textureCoord;
 	}
 	
 	public int getIndex(){
@@ -28,18 +33,18 @@ public class Vertex {
 	}
 	
 	public boolean isSet(){
-		return textureIndex!=NO_INDEX && normalIndex!=NO_INDEX;
+		return textureIndex!=null && normalIndex!=null;
 	}
 	
-	public boolean hasSameTextureAndNormal(int textureIndexOther,int normalIndexOther){
+	public boolean hasSameTextureAndNormal(Vector2f textureIndexOther,Vector3f normalIndexOther){
 		return textureIndexOther==textureIndex && normalIndexOther==normalIndex;
 	}
 	
-	public void setTextureIndex(int textureIndex){
+	public void setTextureIndex(Vector2f textureIndex){
 		this.textureIndex = textureIndex;
 	}
 	
-	public void setNormalIndex(int normalIndex){
+	public void setNormalIndex(Vector3f normalIndex){
 		this.normalIndex = normalIndex;
 	}
 
@@ -47,11 +52,11 @@ public class Vertex {
 		return position;
 	}
 
-	public int getTextureIndex() {
+	public Vector2f getTextureIndex() {
 		return textureIndex;
 	}
 
-	public int getNormalIndex() {
+	public Vector3f getNormalIndex() {
 		return normalIndex;
 	}
 
