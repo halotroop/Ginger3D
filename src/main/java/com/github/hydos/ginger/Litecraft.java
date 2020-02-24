@@ -1,19 +1,27 @@
 package com.github.hydos.ginger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.github.halotroop.litecraft.Block;
-import com.github.hydos.ginger.engine.api.*;
+import com.github.halotroop.litecraft.types.block.Block;
+import com.github.halotroop.litecraft.types.block.BlockEntity;
+import com.github.hydos.ginger.engine.api.Game;
+import com.github.hydos.ginger.engine.api.GameData;
+import com.github.hydos.ginger.engine.api.Ginger;
 import com.github.hydos.ginger.engine.cameras.Camera;
 import com.github.hydos.ginger.engine.elements.GuiTexture;
 import com.github.hydos.ginger.engine.elements.buttons.TextureButton;
-import com.github.hydos.ginger.engine.elements.objects.*;
-import com.github.hydos.ginger.engine.font.*;
+import com.github.hydos.ginger.engine.elements.objects.Light;
+import com.github.hydos.ginger.engine.elements.objects.Player;
+import com.github.hydos.ginger.engine.font.FontType;
+import com.github.hydos.ginger.engine.font.GUIText;
 import com.github.hydos.ginger.engine.io.Window;
-import com.github.hydos.ginger.engine.math.vectors.*;
+import com.github.hydos.ginger.engine.math.vectors.Vector2f;
+import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 import com.github.hydos.ginger.engine.obj.ModelLoader;
 import com.github.hydos.ginger.engine.obj.shapes.StaticCube;
-import com.github.hydos.ginger.engine.particle.*;
+import com.github.hydos.ginger.engine.particle.ParticleSystem;
+import com.github.hydos.ginger.engine.particle.ParticleTexture;
 import com.github.hydos.ginger.engine.render.MasterRenderer;
 import com.github.hydos.ginger.engine.render.models.TexturedModel;
 import com.github.hydos.ginger.engine.utils.Loader;
@@ -60,21 +68,21 @@ public class Litecraft extends Game{
 		float blockUpwardsSpacing = 1f;
 		
 		//TODO: rename entity class to object class because not just entities
-		List<Block> chunk = new ArrayList<Block>();
-		TexturedModel activeModel = dirtModel;
+		List<BlockEntity> chunk = new ArrayList<BlockEntity>();
+		Block block = Block.DIRT;
 		for(int k = 0; k<8;k++) {
 			if(k == 7) {
-				activeModel = grassModel;
+				block = Block.GRASS;
 			}
 			for(int i = 0; i<8;i++) {
 				for(int j = 0; j<8;j++) {
-					chunk.add(new Block(activeModel, new Vector3f(blockLineSpacing*i, blockUpwardsSpacing*k, blockSpacing*j)));
+					chunk.add(new BlockEntity(block, new Vector3f(blockLineSpacing*i, blockUpwardsSpacing*k, blockSpacing*j)));
 				}
 			}
 		}
 		
 		//add chunk to "entity" render list
-		for(Block b: chunk) {
+		for(BlockEntity b: chunk) {
 			data.entities.add(b);
 		}
 
