@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.api;
+package com.github.hydos.ginger.engine.api.game;
 
 import java.util.*;
 

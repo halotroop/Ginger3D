@@ -26,6 +26,7 @@ public class GUIText {
 	private FontType font;
 
 	private boolean centerText = false;
+	public String textID;
 
 	/**
 	 * Creates a new text, loads the text's quads into a VAO, and adds the text

@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.main;
+package com.github.hydos.ginger.engine.api;
 
 import com.github.hydos.ginger.engine.font.TextMaster;
 import com.github.hydos.ginger.engine.obj.ModelLoader;
@@ -7,7 +7,7 @@ import com.github.hydos.ginger.engine.render.MasterRenderer;
 import com.github.hydos.ginger.engine.render.models.*;
 import com.github.hydos.ginger.engine.render.texture.ModelTexture;
 
-public class GingerMain {
+public class GingerUtils {
 		
 	public static void init() {
         TextMaster.init();
