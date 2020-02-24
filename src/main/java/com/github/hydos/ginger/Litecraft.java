@@ -20,7 +20,7 @@ import com.github.hydos.ginger.engine.utils.Loader;
 import com.github.hydos.ginger.main.GingerMain;
 import com.github.hydos.ginger.main.settings.Constants;
 
-public class Example extends Game{
+public class Litecraft extends Game{
 	
 	private Ginger ginger3D;
 	
