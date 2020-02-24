@@ -20,10 +20,7 @@ public class MasterRenderer {
 	
 	private StaticShader entityShader;
 	private EntityRenderer entityRenderer;
-	
-	private TerrainShader terrainShader;
-	private TerrainRenderer terrainRenderer;
-	
+		
 	private GuiShader guiShader;
 	private GuiRenderer guiRenderer;
 	
@@ -53,10 +50,7 @@ public class MasterRenderer {
 		guiRenderer = new GuiRenderer(guiShader);
 		
 		normalRenderer = new NormalMappingRenderer(projectionMatrix);
-		
-		terrainShader = new TerrainShader();
-		terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
-		
+				
 		shadowMapRenderer = new ShadowMapMasterRenderer(camera);
 
 	}
@@ -73,7 +67,8 @@ public class MasterRenderer {
 	public void prepare() {
 		GL13.glActiveTexture(GL13.GL_TEXTURE5);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, shadowMapRenderer.getShadowMap());
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);	
 	}
 	
 	public void renderScene(List<RenderObject> entities, List<RenderObject> normalEntities, List<Terrain> terrains, List<Light> lights, Camera camera, Vector4f clipPlane) {
@@ -97,13 +92,7 @@ public class MasterRenderer {
 		guiRenderer.render(guis);
 	}
 	
-	private void renderTerrains(List<Terrain> terrains, List<Light> lights, Camera camera) {
-		terrainShader.start();
-		terrainShader.loadSkyColour(Window.getColour());
-		terrainShader.loadLights(lights);
-		terrainShader.loadViewMatrix(camera);
-		terrainRenderer.render(terrains, shadowMapRenderer.getToShadowMapSpaceMatrix());
-		terrainShader.stop();		
+	private void renderTerrains(List<Terrain> terrains, List<Light> lights, Camera camera) {	
 	}
 
 	private void renderEntities(List<RenderObject> entities, Camera camera, List<Light> lights) {
@@ -158,7 +147,6 @@ public class MasterRenderer {
 	
 	public void cleanUp() {
 		entityShader.cleanUp();
-		terrainShader.cleanUp();
 		guiRenderer.cleanUp();
 		shadowMapRenderer.cleanUp();
 		normalRenderer.cleanUp();
