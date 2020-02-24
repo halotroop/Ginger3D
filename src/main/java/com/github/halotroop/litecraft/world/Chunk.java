@@ -10,7 +10,7 @@ import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 
-public class Chunk
+public class Chunk implements TileAccess
 {
 	public Chunk(int chunkX, int chunkY, int chunkZ)
 	{
@@ -29,6 +29,7 @@ public class Chunk
 	public final int chunkX, chunkY, chunkZ;
 	private final int chunkStartX, chunkStartY, chunkStartZ;
 
+	@Override
 	public void setBlock(int x, int y, int z, Block block)
 	{
 		if (x > 7) x = 7;
@@ -46,6 +47,7 @@ public class Chunk
 		}
 	}
 
+	@Override
 	public Block getBlock(int x, int y, int z)
 	{
 		long hash = posHash(x, y, z);
@@ -84,6 +86,14 @@ public class Chunk
 		}
 
 		this.render = render;
+	}
+
+	public void render()
+	{
+		if (this.render) {
+			// TODO @hydos pls do this
+			// TODO @hydos culling good
+		}
 	}
 
 	public boolean doRender()
