@@ -1,16 +1,11 @@
 package com.github.hydos.ginger.engine.io;
 
 
-import java.nio.DoubleBuffer;
-import java.nio.IntBuffer;
+import java.nio.*;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWImage;
-import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GLCapabilities;
+import org.lwjgl.glfw.*;
+import org.lwjgl.opengl.*;
 
 import com.github.hydos.ginger.engine.math.vectors.*;
 import com.github.hydos.ginger.engine.render.texture.Image;

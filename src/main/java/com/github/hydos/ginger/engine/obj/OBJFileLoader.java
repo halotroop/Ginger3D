@@ -1,14 +1,9 @@
 package com.github.hydos.ginger.engine.obj;
 
-import org.lwjgl.assimp.AIFace;
-import org.lwjgl.assimp.AIMesh;
-import org.lwjgl.assimp.AIScene;
-import org.lwjgl.assimp.AIVector3D;
+import org.lwjgl.assimp.*;
 import org.lwjgl.assimp.AIVector3D.Buffer;
 
 import com.github.hydos.ginger.engine.math.vectors.*;
-
-import org.lwjgl.assimp.Assimp;
 
 
 public class OBJFileLoader {

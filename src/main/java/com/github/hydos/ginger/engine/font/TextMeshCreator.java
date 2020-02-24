@@ -1,7 +1,6 @@
 package com.github.hydos.ginger.engine.font;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class TextMeshCreator {
 

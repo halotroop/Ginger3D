@@ -7,9 +7,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.nio.ByteBuffer;
 
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.*;
 import org.lwjgl.system.Callback;
 
 import com.github.hydos.ginger.engine.io.Window;

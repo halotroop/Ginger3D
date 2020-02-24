@@ -1,19 +1,10 @@
 package com.github.hydos.ginger.engine.utils;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.*;
+import java.util.*;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL14;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL33;
+import org.lwjgl.opengl.*;
 
 import com.github.hydos.ginger.engine.io.Window;
 import com.github.hydos.ginger.engine.render.models.RawModel;

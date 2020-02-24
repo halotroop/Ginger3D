@@ -1,7 +1,7 @@
-package io.github.halotroop.litecraft.types.block;
+package com.github.halotroop.litecraft.types.block;
 
-import io.github.hydos.ginger.engine.obj.ModelLoader;
-import io.github.hydos.ginger.engine.render.models.TexturedModel;
+import com.github.hydos.ginger.engine.obj.ModelLoader;
+import com.github.hydos.ginger.engine.render.models.TexturedModel;
 
 public class Block
 {

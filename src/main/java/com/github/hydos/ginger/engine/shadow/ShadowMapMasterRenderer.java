@@ -1,7 +1,6 @@
 package com.github.hydos.ginger.engine.shadow;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.lwjgl.opengl.GL11;
 

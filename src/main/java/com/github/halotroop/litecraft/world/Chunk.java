@@ -1,10 +1,11 @@
-package io.github.halotroop.litecraft.world;
+package com.github.halotroop.litecraft.world;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.halotroop.litecraft.types.block.Block;
-import io.github.halotroop.litecraft.types.block.BlockEntity;
+import com.github.halotroop.litecraft.types.block.*;
+import com.github.hydos.ginger.engine.math.vectors.Vector3f;
+
 import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 
@@ -45,7 +46,7 @@ public class Chunk
 		if (render && !this.render) // if it has been changed to true
 		{
 			this.blocks.forEach((coord, block) -> {
-				if (block.visible) this.blockEntities.add(new BlockEntity(block, new))
+				if (block.visible) this.blockEntities.add(new BlockEntity(block, new Vector3f(0,0,0)));
 			});
 		}
 		else if (this.render) // else if it has been changed to false

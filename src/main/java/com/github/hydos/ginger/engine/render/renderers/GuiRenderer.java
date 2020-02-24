@@ -2,10 +2,7 @@ package com.github.hydos.ginger.engine.render.renderers;
 
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.*;
 
 import com.github.hydos.ginger.engine.elements.GuiTexture;
 import com.github.hydos.ginger.engine.math.Maths;

@@ -1,15 +1,10 @@
 package com.github.hydos.ginger.engine.render.renderers;
 
 import java.nio.FloatBuffer;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL31;
+import org.lwjgl.opengl.*;
 
 import com.github.hydos.ginger.engine.cameras.Camera;
 import com.github.hydos.ginger.engine.math.Maths;

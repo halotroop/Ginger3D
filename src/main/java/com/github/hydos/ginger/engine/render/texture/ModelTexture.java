@@ -1,8 +1,6 @@
 package com.github.hydos.ginger.engine.render.texture;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL14;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.*;
 
 public class ModelTexture {
     private int textureID = GL11.glGenTextures();

@@ -1,14 +1,11 @@
 package com.github.hydos.ginger.engine.render.shaders;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.FloatBuffer;
 
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.*;
 
 import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import com.github.hydos.ginger.engine.math.vectors.*;

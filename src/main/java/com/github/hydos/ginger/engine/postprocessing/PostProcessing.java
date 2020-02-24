@@ -1,8 +1,6 @@
 package com.github.hydos.ginger.engine.postprocessing;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.*;
 
 import com.github.hydos.ginger.engine.render.models.RawModel;
 import com.github.hydos.ginger.engine.utils.Loader;

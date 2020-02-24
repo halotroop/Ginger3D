@@ -1,9 +1,6 @@
 package com.github.hydos.ginger.engine.render.renderers;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.*;
 
 import com.github.hydos.ginger.engine.cameras.Camera;
 import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;

@@ -1,7 +1,6 @@
 package com.github.hydos.ginger.engine.obj.normals;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 
