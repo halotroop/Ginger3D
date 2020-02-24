@@ -3,25 +3,33 @@ package com.github.halotroop.litecraft.world;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.halotroop.litecraft.types.block.*;
+import com.github.halotroop.litecraft.types.block.Block;
+import com.github.halotroop.litecraft.types.block.BlockEntity;
 import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 
-public class Chunk
+public class Chunk implements TileAccess
 {
 	public Chunk(int chunkX, int chunkY, int chunkZ)
 	{
 		this.chunkX = chunkX;
+		this.chunkY = chunkY;
+		this.chunkZ = chunkZ;
+		this.chunkStartX = chunkX << 3;
+		this.chunkStartY = chunkY << 3;
+		this.chunkStartZ = chunkZ << 3;
 	}
 
 	private final Long2ObjectMap<Block> blocks = new Long2ObjectArrayMap<>();
 	private final List<BlockEntity> blockEntities = new ArrayList<>();
 	private boolean render = false;
-	
-	public final int chunkX;
 
+	public final int chunkX, chunkY, chunkZ;
+	private final int chunkStartX, chunkStartY, chunkStartZ;
+
+	@Override
 	public void setBlock(int x, int y, int z, Block block)
 	{
 		if (x > 7) x = 7;
@@ -33,21 +41,39 @@ public class Chunk
 
 		long hash = posHash(x, y, z);
 		this.blocks.put(hash, block);
+
+		if (this.render) {
+			this.blockEntities.add(new BlockEntity(block, new Vector3f(this.chunkStartX + x, this.chunkStartY + y, this.chunkStartZ + z)));
+		}
 	}
 
+	@Override
 	public Block getBlock(int x, int y, int z)
 	{
 		long hash = posHash(x, y, z);
 		return this.blocks.get(hash);
 	}
-	
+
 	public void setRender(boolean render)
 	{
 		if (render && !this.render) // if it has been changed to true
 		{
-			this.blocks.forEach((coord, block) -> {
-				if (block.visible) this.blockEntities.add(new BlockEntity(block, new Vector3f(0,0,0)));
-			});
+			for (int x = 0; x < 8; ++x)
+			{
+				for (int y = 0; y < 8; ++y)
+				{
+					for (int z = 0; z < 8; ++z)
+					{
+						long hash = posHash(x, y, z);
+						Block block = this.blocks.get(hash);
+						if (block.visible) this.blockEntities.add(new BlockEntity(block,
+							new Vector3f(
+								this.chunkStartX + x,
+								this.chunkStartY + y,
+								this.chunkStartZ + z)));
+					}
+				}
+			}
 		}
 		else if (this.render) // else if it has been changed to false
 		{
@@ -60,6 +86,14 @@ public class Chunk
 		}
 
 		this.render = render;
+	}
+
+	public void render()
+	{
+		if (this.render) {
+			// TODO @hydos pls do this
+			// TODO @hydos culling good
+		}
 	}
 
 	public boolean doRender()
