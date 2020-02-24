@@ -175,7 +175,7 @@ public class Window {
 	}
 	
 	public static void setIcon(String path) {
-		Image icon = Image.createImage("/res/textures/" + path);
+		Image icon = Image.createImage(path);
 		GLFWImage iconImage = GLFWImage.malloc();
 		iconBuffer = GLFWImage.malloc(1);
 		iconImage.set(icon.getWidth(), icon.getHeight(), icon.getImage());
