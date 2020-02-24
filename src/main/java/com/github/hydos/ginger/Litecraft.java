@@ -109,7 +109,6 @@ public class Litecraft extends Game{
 
 	private ParticleSystem setupParticles() {
 		ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("particles/smoke.png"), 8);
-		
 
 		system = new ParticleSystem(particleTexture, 100, 10f, 0.3f, 4, 3f);
 		system.randomizeRotation();
@@ -118,7 +117,6 @@ public class Litecraft extends Game{
 		system.setSpeedError(0);
 		system.setScaleError(1f);
 		return system;
-		
 	}
 
 
@@ -130,8 +128,6 @@ public class Litecraft extends Game{
 		
 		data.camera.move();
 		data.player.move(null);
-		
-		system.generateParticles(new Vector3f(0,-2,0));
 		
 		if(isInWorld) {
 			ginger3D.renderWithoutTerrain(this);
