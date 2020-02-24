@@ -1,5 +1,6 @@
 package com.github.halotroop.litecraft.types.block;
 
+import com.github.hydos.ginger.engine.elements.objects.RenderObject;
 import com.github.hydos.ginger.engine.obj.ModelLoader;
 import com.github.hydos.ginger.engine.render.models.TexturedModel;
 
