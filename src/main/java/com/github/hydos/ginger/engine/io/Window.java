@@ -39,6 +39,7 @@ public class Window {
 		Window.title = title;
 		fpsCap = fps;
 		create();
+		setIcon();
 	}
 	
 	 public static void create() {
@@ -174,8 +175,8 @@ public class Window {
 		backgroundColour = new Vector3f(r,g,b);
 	}
 	
-	public static void setIcon(String path) {
-		Image icon = Image.createImage(path);
+	private static void setIcon() {
+		Image icon = Image.createImage("/icon.png");
 		GLFWImage iconImage = GLFWImage.malloc();
 		iconBuffer = GLFWImage.malloc(1);
 		iconImage.set(icon.getWidth(), icon.getHeight(), icon.getImage());

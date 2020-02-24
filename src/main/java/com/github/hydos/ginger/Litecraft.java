@@ -77,8 +77,6 @@ public class Litecraft extends Game{
 			data.entities.add(b);
 		}
 		
-		Window.setIcon("/textures/grass.png");
-		
 		
         FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
         
