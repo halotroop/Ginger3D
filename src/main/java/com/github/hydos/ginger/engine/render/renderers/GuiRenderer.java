@@ -7,11 +7,12 @@ import org.lwjgl.opengl.*;
 import com.github.hydos.ginger.engine.elements.GuiTexture;
 import com.github.hydos.ginger.engine.math.Maths;
 import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
+import com.github.hydos.ginger.engine.render.Renderer;
 import com.github.hydos.ginger.engine.render.models.RawModel;
 import com.github.hydos.ginger.engine.render.shaders.GuiShader;
 import com.github.hydos.ginger.engine.utils.Loader;
 
-public class GuiRenderer {
+public class GuiRenderer extends Renderer{
 	
 	private final RawModel quad;
 	

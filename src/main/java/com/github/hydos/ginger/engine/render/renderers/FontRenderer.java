@@ -5,9 +5,10 @@ import java.util.*;
 import org.lwjgl.opengl.*;
 
 import com.github.hydos.ginger.engine.font.*;
+import com.github.hydos.ginger.engine.render.Renderer;
 import com.github.hydos.ginger.engine.render.shaders.FontShader;
 
-public class FontRenderer {
+public class FontRenderer  extends Renderer{
 
 	private FontShader shader;
 

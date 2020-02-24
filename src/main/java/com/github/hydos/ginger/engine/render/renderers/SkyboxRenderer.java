@@ -4,12 +4,13 @@ import org.lwjgl.opengl.*;
 
 import com.github.hydos.ginger.engine.cameras.Camera;
 import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
+import com.github.hydos.ginger.engine.render.Renderer;
 import com.github.hydos.ginger.engine.render.models.RawModel;
 import com.github.hydos.ginger.engine.render.shaders.SkyboxShader;
 import com.github.hydos.ginger.engine.utils.Loader;
 
-public class SkyboxRenderer {
-	
+public class SkyboxRenderer extends Renderer{
+	//TODO: use these vertices for cubes
 	private static final float SIZE = 50f;
 	
 	private static final float[] VERTICES = {        

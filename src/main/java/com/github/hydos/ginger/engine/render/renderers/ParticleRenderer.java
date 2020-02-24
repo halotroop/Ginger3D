@@ -11,11 +11,12 @@ import com.github.hydos.ginger.engine.math.Maths;
 import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 import com.github.hydos.ginger.engine.particle.*;
+import com.github.hydos.ginger.engine.render.Renderer;
 import com.github.hydos.ginger.engine.render.models.RawModel;
 import com.github.hydos.ginger.engine.render.shaders.ParticleShader;
 import com.github.hydos.ginger.engine.utils.Loader;
 
-public class ParticleRenderer {
+public class ParticleRenderer extends Renderer{
 	
 	private static final float[] VERTICES = {-0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f};
 	private static final int MAX_INSTANCES = 10000;

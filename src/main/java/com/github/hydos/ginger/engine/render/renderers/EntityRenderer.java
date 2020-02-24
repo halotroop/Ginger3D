@@ -7,12 +7,12 @@ import org.lwjgl.opengl.*;
 import com.github.hydos.ginger.engine.elements.objects.RenderObject;
 import com.github.hydos.ginger.engine.math.Maths;
 import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
-import com.github.hydos.ginger.engine.render.MasterRenderer;
+import com.github.hydos.ginger.engine.render.*;
 import com.github.hydos.ginger.engine.render.models.*;
 import com.github.hydos.ginger.engine.render.shaders.StaticShader;
 import com.github.hydos.ginger.engine.render.texture.ModelTexture;
 
-public class EntityRenderer {
+public class EntityRenderer extends Renderer{
 	
 	private StaticShader shader;
 	
