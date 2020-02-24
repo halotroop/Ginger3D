@@ -180,6 +180,7 @@ public class Window {
 		iconBuffer = GLFWImage.malloc(1);
 		iconImage.set(icon.getWidth(), icon.getHeight(), icon.getImage());
 		iconBuffer.put(0, iconImage);
+		GLFW.glfwSetWindowIcon(window, iconBuffer);
 	}
 	
 	public static void showIcon() {
