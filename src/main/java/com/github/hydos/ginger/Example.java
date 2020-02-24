@@ -2,6 +2,7 @@ package com.github.hydos.ginger;
 
 import java.util.*;
 
+import com.github.halotroop.litecraft.Block;
 import com.github.hydos.ginger.engine.api.*;
 import com.github.hydos.ginger.engine.cameras.Camera;
 import com.github.hydos.ginger.engine.elements.GuiTexture;
@@ -18,7 +19,6 @@ import com.github.hydos.ginger.engine.render.models.TexturedModel;
 import com.github.hydos.ginger.engine.utils.Loader;
 import com.github.hydos.ginger.main.GingerMain;
 import com.github.hydos.ginger.main.settings.Constants;
-import com.github.hydos.litecraft.Block;
 
 public class Example extends Game{
 	

@@ -1,4 +1,4 @@
-package com.github.hydos.litecraft;
+package com.github.halotroop.litecraft;
 
 import com.github.hydos.ginger.engine.elements.objects.RenderObject;
 import com.github.hydos.ginger.engine.math.vectors.Vector3f;
