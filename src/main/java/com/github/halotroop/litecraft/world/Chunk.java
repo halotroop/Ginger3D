@@ -7,6 +7,7 @@ import com.github.halotroop.litecraft.types.block.Block;
 import com.github.halotroop.litecraft.types.block.BlockEntity;
 import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 
@@ -23,7 +24,8 @@ public class Chunk implements TileAccess
 	}
 
 	private final Long2ObjectMap<Block> blocks = new Long2ObjectArrayMap<>();
-	private final List<BlockEntity> blockEntities = new ArrayList<>();
+	private final Long2ObjectMap<BlockEntity> blockEntities = new Long2ObjectArrayMap<>();
+
 	private boolean render = false;
 
 	public final int chunkX, chunkY, chunkZ;
@@ -43,7 +45,8 @@ public class Chunk implements TileAccess
 		this.blocks.put(hash, block);
 
 		if (this.render) {
-			this.blockEntities.add(new BlockEntity(block, new Vector3f(this.chunkStartX + x, this.chunkStartY + y, this.chunkStartZ + z)));
+			// TODO remove current block entity from game data when this class is integrated with the game
+			this.blockEntities.put(hash, new BlockEntity(block, new Vector3f(this.chunkStartX + x, this.chunkStartY + y, this.chunkStartZ + z)));
 		}
 	}
 
@@ -66,7 +69,7 @@ public class Chunk implements TileAccess
 					{
 						long hash = posHash(x, y, z);
 						Block block = this.blocks.get(hash);
-						if (block.visible) this.blockEntities.add(new BlockEntity(block,
+						if (block.visible) this.blockEntities.put(hash, new BlockEntity(block,
 							new Vector3f(
 								this.chunkStartX + x,
 								this.chunkStartY + y,
