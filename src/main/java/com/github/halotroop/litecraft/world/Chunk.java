@@ -77,6 +77,20 @@ public class Chunk implements TileAccess
 		}
 	}
 
+	public static Chunk generateChunk(int chunkX, int chunkY, int chunkZ) {
+		Chunk result = new Chunk(chunkX, chunkY, chunkZ);
+
+		for (int x = 0; x < 7; ++x) {
+			for (int z = 0; z < 7; ++z) {
+				for (int y = 0; y < 7; ++y) {
+					result.setBlock(x, y, z, y == 7 ? Block.GRASS : Block.DIRT);
+				}
+			}
+		}
+
+		return result;
+	}
+
 	public void setRender(boolean render)
 	{
 		if (render && !this.render) // if it has been changed to true
