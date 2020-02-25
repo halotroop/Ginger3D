@@ -38,7 +38,7 @@ public class Ginger {
 		while(!Window.closed()) {
 			
 			if(Window.isUpdating()) {
-				gingerRegister.game.update();
+				gingerRegister.game.render();
 			}
 		}
 		

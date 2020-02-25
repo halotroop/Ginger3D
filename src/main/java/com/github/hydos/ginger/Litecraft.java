@@ -122,7 +122,7 @@ public class Litecraft extends Game{
 	int oldWindowHeight = Window.height;
 	
 	@Override
-	public void update() {
+	public void render() {
 		ginger3D.update(data);
 		
 		if(oldWindowHeight != Window.height || oldWindowWidth != Window.width) {

@@ -6,7 +6,7 @@ public abstract class Game {
 	
 	public Game() {}
 	
-	public abstract void update();
+	public abstract void render();
 
 	public abstract void exit();
 
