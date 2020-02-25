@@ -32,12 +32,30 @@ public class Litecraft extends Game{
 	{
 		public void onTick(float deltaTime)
 		{
+			data.camera.move();
+			data.player.move(null);
 			
+			GUIText text = ginger3D.gingerRegister.texts.get(0);
+			
+			TextureButton playButton = ginger3D.gingerRegister.guiButtons.get(0);
+			
+			boolean isClicked = playButton.isClicked();
+			
+			playButton.update();
+					
+			text.setText(isClicked + "");
+			
+			if(isClicked) {
+				Window.lockMouse();
+				playButton.hide(data.guis);
+				isInWorld = true;
+			}
 		};
 	};
 	
 	public Litecraft() {
 		timer = new Timer(20);
+		timer.addTickListener(tickListener);
 		Constants.movementSpeed = 0.000005f;
 		Constants.turnSpeed = 0.00002f;
 		Constants.gravity = -0.000000000005f;
@@ -117,6 +135,8 @@ public class Litecraft extends Game{
 	public void render() {
 		ginger3D.update(data);
 		
+		timer.tick();
+		
 		if(oldWindowHeight != Window.height || oldWindowWidth != Window.width) {
 			System.out.println("Windows size changed");
 			ginger3D.contrastFbo.resizeFBOs();
@@ -127,29 +147,12 @@ public class Litecraft extends Game{
 		
 		ginger3D.masterRenderer.renderShadowMap(data.entities, data.lights.get(0));
 		
-		data.camera.move();
-		data.player.move(null);
+
 		
 		if(isInWorld) {
 			ginger3D.renderWithoutTerrain(this);
 		}
-		
-		GUIText text = ginger3D.gingerRegister.texts.get(0);
-		
-		TextureButton playButton = ginger3D.gingerRegister.guiButtons.get(0);
-		
-		boolean isClicked = playButton.isClicked();
-		
-		playButton.update();
-				
-		text.setText(isClicked + "");
 		ginger3D.renderOverlays(this);
-		
-		if(isClicked) {
-			Window.lockMouse();
-			playButton.hide(data.guis);
-			isInWorld = true;
-		}
 		
 		ginger3D.postRender();
 	}
