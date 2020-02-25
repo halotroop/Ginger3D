@@ -26,7 +26,7 @@ public class Ginger {
 	public void setup(MasterRenderer masterRenderer, Game game) {
 		gingerRegister = new GingerRegister();
 		gingerRegister.registerGame(game);
-		contrastFbo = new Fbo();
+		contrastFbo = new Fbo(new ContrastChanger());
 		this.masterRenderer = masterRenderer;
 		picker = new MousePicker(game.data.camera, masterRenderer.getProjectionMatrix(), null);
 		PostProcessing.init();

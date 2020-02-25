@@ -14,6 +14,7 @@ public class ContrastChanger extends FboCallbackHandler{
 		renderer = new ImageRenderer();
 	}
 	
+	@Override
 	public void render(int texture) {
 		shader.start();
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -22,9 +23,9 @@ public class ContrastChanger extends FboCallbackHandler{
 		shader.stop();
 	}
 	
+	@Override
 	public void cleanUp() {
 		renderer.cleanUp();
 		shader.cleanUp();
 	}
-	
 }
