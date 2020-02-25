@@ -40,6 +40,13 @@ public class Chunk implements TileAccess
 		return this.blocks.get(hash);
 	}
 
+	public BlockEntity getBlockEntityAndEnableRendering(int x, int y, int z)
+	{
+		this.setRender(true);
+		long hash = posHash(x, y, z);
+		return this.blockEntities.get(hash);
+	}
+
 	public void render()
 	{
 		if (this.render)
