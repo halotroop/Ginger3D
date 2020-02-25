@@ -5,6 +5,7 @@ import java.util.*;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.*;
 
+import com.github.halotroop.litecraft.world.World;
 import com.github.hydos.ginger.engine.cameras.Camera;
 import com.github.hydos.ginger.engine.elements.GuiTexture;
 import com.github.hydos.ginger.engine.elements.objects.*;
@@ -162,10 +163,11 @@ public class MasterRenderer
 		skyboxRenderer.render(camera);
 	}
 
-	public void renderSceneNoTerrain(List<RenderObject> entities, List<RenderObject> normalEntities, List<Light> lights, Camera camera, Vector4f clipPlane)
+	public void renderSceneNoTerrain(List<RenderObject> entities, List<RenderObject> normalEntities, List<Light> lights, Camera camera, Vector4f clipPlane, World world)
 	{
 		prepare();
 		renderEntities(entities, camera, lights);
+		world.render(entityRenderer);
 		renderNormalEntities(normalEntities, lights, camera, clipPlane);
 		skyboxRenderer.render(camera);
 	}

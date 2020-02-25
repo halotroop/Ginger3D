@@ -2,6 +2,7 @@ package com.github.hydos.ginger.engine.api;
 
 import com.github.halotroop.litecraft.logic.Timer;
 import com.github.halotroop.litecraft.logic.Timer.TickListener;
+import com.github.halotroop.litecraft.world.World;
 import com.github.hydos.ginger.engine.api.game.*;
 import com.github.hydos.ginger.engine.elements.buttons.TextureButton;
 import com.github.hydos.ginger.engine.font.*;
@@ -74,11 +75,11 @@ public class Ginger
 		TextMaster.render();
 	}
 
-	public void renderWithoutTerrain(Game game)
+	public void renderWithoutTerrain(Game game, World world)
 	{
 		GingerUtils.preRenderScene(masterRenderer);
 		contrastFbo.bindFBO();
-		masterRenderer.renderSceneNoTerrain(game.data.entities, game.data.normalMapEntities, game.data.lights, game.data.camera, game.data.clippingPlane);
+		masterRenderer.renderSceneNoTerrain(game.data.entities, game.data.normalMapEntities, game.data.lights, game.data.camera, game.data.clippingPlane, world);
 		ParticleMaster.renderParticles(game.data.camera);
 		contrastFbo.unbindFBO();
 		PostProcessing.doPostProcessing(contrastFbo.colorTexture);
