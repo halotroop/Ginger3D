@@ -38,6 +38,7 @@ public class Litecraft extends Game{
 	
 	public Litecraft() {
 		super();
+		timer = new Timer(20);
 		Constants.movementSpeed = 0.000005f;
 		Constants.turnSpeed = 0.00002f;
 		Constants.gravity = -0.000000000005f;
