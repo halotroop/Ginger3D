@@ -64,7 +64,6 @@ public class Ginger {
 	
 	public void update(GameData data) {
 		data.camera.move();
-		data.player.move(null);
 		Window.update();
 		GingerUtils.update();
 		picker.update();

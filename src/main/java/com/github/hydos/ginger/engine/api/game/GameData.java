@@ -24,7 +24,7 @@ public class GameData {
 	public Camera camera;
 	public Vector4f clippingPlane;
 	public boolean handleGuis = true;
-	public int tickSpeed = 0;
+	public int tickSpeed = 20;
 	
 	public GameData(Player player, Camera camera, int tickSpeed) {
 		clippingPlane = new Vector4f(0, -1, 0, 100000);

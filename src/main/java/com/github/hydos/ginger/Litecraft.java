@@ -2,8 +2,6 @@ package com.github.hydos.ginger;
 
 import java.util.*;
 
-import com.github.halotroop.litecraft.logic.Timer;
-import com.github.halotroop.litecraft.logic.Timer.TickListener;
 import com.github.halotroop.litecraft.types.block.*;
 import com.github.hydos.ginger.engine.api.*;
 import com.github.hydos.ginger.engine.api.game.*;
@@ -28,7 +26,7 @@ public class Litecraft extends Game{
 	private boolean isInWorld = false;
 	
 	public Litecraft() {
-		Constants.movementSpeed = 0.000005f;
+		Constants.movementSpeed = 0.00005f;
 		Constants.turnSpeed = 0.00002f;
 		Constants.gravity = -0.000000000005f;
 		Constants.jumpPower = 0.000005f;
@@ -137,7 +135,6 @@ public class Litecraft extends Game{
 	@Override
 	public void update()
 	{
-		data.camera.move();
 		data.player.move(null);
 		
 		GUIText text = ginger3D.gingerRegister.texts.get(0);
