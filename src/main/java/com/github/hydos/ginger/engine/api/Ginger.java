@@ -63,7 +63,7 @@ public class Ginger
 		masterRenderer.renderScene(game.data.entities, game.data.normalMapEntities, game.data.flatTerrains, game.data.lights, game.data.camera, game.data.clippingPlane);
 		ParticleMaster.renderParticles(game.data.camera);
 		contrastFbo.unbindFBO();
-		PostProcessing.doPostProcessing(contrastFbo.colorTexture);
+		contrastFbo.handler.render(contrastFbo.colorTexture);
 		if (game.data.handleGuis)
 		{ renderOverlays(game); }
 	}

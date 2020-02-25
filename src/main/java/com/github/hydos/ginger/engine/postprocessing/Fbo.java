@@ -20,7 +20,7 @@ public class Fbo
 	boolean destroyed;
 	Object lock = new Object();
 	/* cool ginger feature which handles fbos once they need to be rendered */
-	FboCallbackHandler handler;
+	public FboCallbackHandler handler;
 	/* Multisampled FBO objects */
 	public int multisampledColorRenderBuffer;
 	int multisampledDepthRenderBuffer;
