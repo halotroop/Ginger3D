@@ -102,7 +102,6 @@ public class Litecraft extends Game
 		TextureButton playButton = ginger3D.gingerRegister.guiButtons.get(0);
 		boolean isClicked = playButton.isClicked();
 		playButton.update();
-		text.setText(isClicked + "");
 		if (isClicked)
 		{
 			Window.lockMouse();
