@@ -3,20 +3,19 @@ package com.github.halotroop.litecraft.world;
 import java.util.*;
 
 import com.github.halotroop.litecraft.types.block.*;
-import com.github.hydos.ginger.engine.elements.objects.RenderObject;
 import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 import com.github.hydos.ginger.engine.render.renderers.ObjectRenderer;
 
 import it.unimi.dsi.fastutil.longs.*;
 
-public class Chunk implements TileAccess
+public class Chunk implements BlockAccess
 {
 	/** @param x in-chunk x coordinate.
 	 * @param  y in-chunk y coordinate.
 	 * @param  z in-chunk z coordinate.
 	 * @return   creates a long that represents a coordinate, for use as a key in maps. */
 	private static long posHash(int x, int y, int z)
-	{ return ((long) x & 0b111) | (((long) y & 0b111) << 3) | (((long) z & 0b111) << 6); }
+	{ return ((long) x & MAX_POS) | (((long) y & MAX_POS) << POS_SHIFT) | (((long) z & MAX_POS) << DOUBLE_SHIFT); }
 	
 	List<BlockEntity> renderList;
 	private final Long2ObjectMap<Block> blocks = new Long2ObjectArrayMap<>();
@@ -57,9 +56,9 @@ public class Chunk implements TileAccess
 		renderList.clear();
 		if (render)
 		{
-			for(int i = 0; i < 8; i++) {
-				for(int j = 0; j < 8; j++) {
-					for(int k = 0; k < 8; k++) {
+			for(int i = 0; i < CHUNK_SIZE; i++) {
+				for(int j = 0; j < CHUNK_SIZE; j++) {
+					for(int k = 0; k < CHUNK_SIZE; k++) {
 						BlockEntity block = getBlockEntity(i, j, k);
 						renderList.add(block);
 					}
@@ -74,14 +73,14 @@ public class Chunk implements TileAccess
 	@Override
 	public void setBlock(int x, int y, int z, Block block)
 	{
-		if (x > 7)
-			x = 7;
+		if (x > MAX_POS)
+			x = MAX_POS;
 		else if (x < 0) x = 0;
-		if (y > 7)
-			y = 7;
+		if (y > MAX_POS)
+			y = MAX_POS;
 		else if (y < 0) y = 0;
-		if (z > 7)
-			z = 7;
+		if (z > MAX_POS)
+			z = MAX_POS;
 		else if (z < 0) z = 0;
 		long hash = posHash(x, y, z);
 		this.blocks.put(hash, block);
@@ -95,9 +94,9 @@ public class Chunk implements TileAccess
 	public static Chunk generateChunk(int chunkX, int chunkY, int chunkZ) {
 		Chunk result = new Chunk(chunkX, chunkY, chunkZ);
 
-		for (int x = 0; x < 8; ++x) {
-			for (int z = 0; z < 8; ++z) {
-				for (int y = 0; y < 8; ++y) {
+		for (int x = 0; x < CHUNK_SIZE; ++x) {
+			for (int z = 0; z < CHUNK_SIZE; ++z) {
+				for (int y = 0; y < CHUNK_SIZE; ++y) {
 					result.setBlock(x, y, z, y == 7 ? Block.GRASS : Block.DIRT);
 				}
 			}
@@ -110,11 +109,11 @@ public class Chunk implements TileAccess
 	{
 		if (render && !this.render) // if it has been changed to true
 		{
-			for (int x = 0; x < 8; ++x)
+			for (int x = 0; x < CHUNK_SIZE; ++x)
 			{
-				for (int y = 0; y < 8; ++y)
+				for (int y = 0; y < CHUNK_SIZE; ++y)
 				{
-					for (int z = 0; z < 8; ++z)
+					for (int z = 0; z < CHUNK_SIZE; ++z)
 					{
 						long hash = posHash(x, y, z);
 						Block block = this.blocks.get(hash);

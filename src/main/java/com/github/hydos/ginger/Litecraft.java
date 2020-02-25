@@ -44,16 +44,14 @@ public class Litecraft extends Game
 		data.handleGuis = false;
 		ginger3D.setup(new MasterRenderer(camera), this);
 		//YeS?
-		world = new World();
+		world = new World(0L);
 
 		for(int i = 0; i<10;i++) {
 			for(int k = 0; k<10;k++) {
-				Chunk exampleManualChunk = Chunk.generateChunk(i, -1, k);
+				Chunk exampleManualChunk = world.getChunk(i, -1, k);
 				exampleManualChunk.setRender(true);
-				world.chunks.add(exampleManualChunk);
 			}
 		}
-
 
 		FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
 		ginger3D.setGlobalFont(font);
