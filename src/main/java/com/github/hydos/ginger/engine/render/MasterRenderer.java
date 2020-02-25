@@ -29,7 +29,7 @@ public class MasterRenderer
 		//		GL11.glCullFace(GL11.GL_BACK);
 	}
 	private StaticShader entityShader;
-	private EntityRenderer entityRenderer;
+	public ObjectRenderer entityRenderer;
 	private GuiShader guiShader;
 	private GuiRenderer guiRenderer;
 	private SkyboxRenderer skyboxRenderer;
@@ -45,7 +45,7 @@ public class MasterRenderer
 	{
 		createProjectionMatrix();
 		entityShader = new StaticShader();
-		entityRenderer = new EntityRenderer(entityShader, projectionMatrix);
+		entityRenderer = new ObjectRenderer(entityShader, projectionMatrix);
 		skyboxRenderer = new SkyboxRenderer(projectionMatrix);
 		guiShader = new GuiShader();
 		guiRenderer = new GuiRenderer(guiShader);

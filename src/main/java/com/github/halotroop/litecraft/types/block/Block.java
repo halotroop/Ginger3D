@@ -7,7 +7,7 @@ public class Block
 {
 	public static class Properties
 	{ // add properties to this builder!
-		private boolean visible = false;
+		private boolean visible = true;
 
 		public Properties visible(boolean visible)
 		{

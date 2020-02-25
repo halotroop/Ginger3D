@@ -4,7 +4,10 @@ import java.util.*;
 
 import org.lwjgl.opengl.*;
 
+import com.github.halotroop.litecraft.types.block.BlockEntity;
+import com.github.hydos.ginger.engine.api.GingerRegister;
 import com.github.hydos.ginger.engine.elements.objects.RenderObject;
+import com.github.hydos.ginger.engine.io.Window;
 import com.github.hydos.ginger.engine.math.Maths;
 import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import com.github.hydos.ginger.engine.render.*;
@@ -12,11 +15,11 @@ import com.github.hydos.ginger.engine.render.models.*;
 import com.github.hydos.ginger.engine.render.shaders.StaticShader;
 import com.github.hydos.ginger.engine.render.texture.ModelTexture;
 
-public class EntityRenderer extends Renderer
+public class ObjectRenderer extends Renderer
 {
 	private StaticShader shader;
 
-	public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix)
+	public ObjectRenderer(StaticShader shader, Matrix4f projectionMatrix)
 	{
 		this.shader = shader;
 		shader.start();
@@ -77,4 +80,24 @@ public class EntityRenderer extends Renderer
 		GL20.glDisableVertexAttribArray(2);
 		GL30.glBindVertexArray(0);
 	}
+
+	public void render(List<BlockEntity> renderList)
+	{ 
+		prepare();
+		shader.start();
+		shader.loadSkyColour(Window.getColour());
+		shader.loadViewMatrix(GingerRegister.getInstance().game.data.camera);
+		for (RenderObject entity : renderList)
+		{
+			if(entity.getModel() != null) {
+				TexturedModel model = entity.getModel();
+				prepareTexturedModel(model);
+				prepareInstance(entity);
+				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+				unbindTexturedModel();
+			}
+		}
+		shader.stop();
+	}
+
 }

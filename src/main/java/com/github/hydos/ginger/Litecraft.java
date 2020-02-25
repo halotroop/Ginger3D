@@ -1,11 +1,9 @@
 package com.github.hydos.ginger;
 
-import com.github.halotroop.litecraft.types.block.Block;
 import com.github.halotroop.litecraft.world.Chunk;
 import com.github.hydos.ginger.engine.api.*;
 import com.github.hydos.ginger.engine.api.game.*;
 import com.github.hydos.ginger.engine.cameras.Camera;
-import com.github.hydos.ginger.engine.elements.GuiTexture;
 import com.github.hydos.ginger.engine.elements.buttons.TextureButton;
 import com.github.hydos.ginger.engine.elements.objects.*;
 import com.github.hydos.ginger.engine.font.*;
@@ -26,8 +24,8 @@ public class Litecraft extends Game
 
 	//temp stuff to test out fbo fixes
 	int oldWindowWidth = Window.width;
-
 	int oldWindowHeight = Window.height;
+	
 	public Litecraft()
 	{
 		Constants.movementSpeed = 0.00005f;
@@ -46,21 +44,9 @@ public class Litecraft extends Game
 		data.handleGuis = false;
 		ginger3D.setup(new MasterRenderer(camera), this);
 		//YeS?
-		exampleManualChunk = new Chunk(0, 0, 0);
-		Block block = Block.DIRT;
-		for (int k = 0; k < 8; k++)
-		{
-			if (k == 7)
-			{ block = Block.GRASS; }
-			for (int i = 0; i < 8; i++)
-			{
-				for (int j = 0; j < 8; j++)
-				{ 
-					exampleManualChunk.setBlock(j, k, i, block);
-				}
-			}
-		}
-		
+		exampleManualChunk = Chunk.generateChunk(0, 0, 0);
+		exampleManualChunk.setRender(true);
+
 		FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
 		ginger3D.setGlobalFont(font);
 		ginger3D.registerText("LiteCraft", 3, new Vector2f(0, 0), 1f, true, "PLAYBUTTON");
@@ -69,8 +55,8 @@ public class Litecraft extends Game
 		data.entities.add(player);
 		TextureButton playButton = ginger3D.registerButton("/textures/guis/purpur.png", new Vector2f(0, 0), new Vector2f(0.25f, 0.1f));
 		playButton.show(data.guis);
-		GuiTexture title = new GuiTexture(Loader.loadTextureDirectly("/textures/guis/title.png"), new Vector2f(0, 0.8F), new Vector2f(0.25f, 0.1f));
-		data.guis.add(title);
+//		GuiTexture title = new GuiTexture(Loader.loadTextureDirectly("/textures/guis/title.png"), new Vector2f(0, 0.8F), new Vector2f(0.25f, 0.1f));
+//		data.guis.add(title);
 		//start the game loop
 		ginger3D.startGame();
 	}
@@ -93,6 +79,7 @@ public class Litecraft extends Game
 		ginger3D.masterRenderer.renderShadowMap(data.entities, data.lights.get(0));
 		if (isInWorld)
 		{ ginger3D.renderWithoutTerrain(this); }
+		exampleManualChunk.render(ginger3D.masterRenderer.entityRenderer);
 		ginger3D.renderOverlays(this);
 		ginger3D.postRender();
 	}

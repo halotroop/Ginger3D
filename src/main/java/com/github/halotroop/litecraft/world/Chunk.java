@@ -1,7 +1,11 @@
 package com.github.halotroop.litecraft.world;
 
+import java.util.*;
+
 import com.github.halotroop.litecraft.types.block.*;
+import com.github.hydos.ginger.engine.elements.objects.RenderObject;
 import com.github.hydos.ginger.engine.math.vectors.Vector3f;
+import com.github.hydos.ginger.engine.render.renderers.ObjectRenderer;
 
 import it.unimi.dsi.fastutil.longs.*;
 
@@ -13,7 +17,8 @@ public class Chunk implements TileAccess
 	 * @return   creates a long that represents a coordinate, for use as a key in maps. */
 	private static long posHash(int x, int y, int z)
 	{ return ((long) x & 0b111) | (((long) y & 0b111) << 3) | (((long) z & 0b111) << 6); }
-
+	
+	List<BlockEntity> renderList;
 	private final Long2ObjectMap<Block> blocks = new Long2ObjectArrayMap<>();
 	private final Long2ObjectMap<BlockEntity> blockEntities = new Long2ObjectArrayMap<>();
 	private boolean render = false;
@@ -22,6 +27,7 @@ public class Chunk implements TileAccess
 
 	public Chunk(int chunkX, int chunkY, int chunkZ)
 	{
+		renderList = new ArrayList<BlockEntity>();
 		this.chunkX = chunkX;
 		this.chunkY = chunkY;
 		this.chunkZ = chunkZ;
@@ -40,19 +46,28 @@ public class Chunk implements TileAccess
 		return this.blocks.get(hash);
 	}
 
-	public BlockEntity getBlockEntityAndEnableRendering(int x, int y, int z)
+	public BlockEntity getBlockEntity(int x, int y, int z)
 	{
-		this.setRender(true);
 		long hash = posHash(x, y, z);
 		return this.blockEntities.get(hash);
 	}
 
-	public void render()
+	public void render(ObjectRenderer renderer)
 	{
-		if (this.render)
+		renderList.clear();
+		if (render)
 		{
-			// TODO @hydos pls do this
-			// TODO @hydos culling good
+			for(int i = 0; i < 8; i++) {
+				for(int j = 0; j < 8; j++) {
+					for(int k = 0; k < 8; k++) {
+						BlockEntity block = getBlockEntity(i, j, k);
+						renderList.add(block);
+					}
+				}
+			}
+			
+			renderer.prepare();
+			renderer.render(renderList);
 		}
 	}
 
@@ -80,9 +95,9 @@ public class Chunk implements TileAccess
 	public static Chunk generateChunk(int chunkX, int chunkY, int chunkZ) {
 		Chunk result = new Chunk(chunkX, chunkY, chunkZ);
 
-		for (int x = 0; x < 7; ++x) {
-			for (int z = 0; z < 7; ++z) {
-				for (int y = 0; y < 7; ++y) {
+		for (int x = 0; x < 8; ++x) {
+			for (int z = 0; z < 8; ++z) {
+				for (int y = 0; y < 8; ++y) {
 					result.setBlock(x, y, z, y == 7 ? Block.GRASS : Block.DIRT);
 				}
 			}
