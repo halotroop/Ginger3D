@@ -9,6 +9,7 @@ public class RenderObject
 	private Vector3f position;
 	private float rotX = 0, rotY = 0, rotZ = 0;
 	private Vector3f scale;
+	public boolean isVisible = true;
 
 	public RenderObject(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale)
 	{

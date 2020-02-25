@@ -3,7 +3,7 @@ package com.github.hydos.ginger;
 import com.github.halotroop.litecraft.world.*;
 import com.github.hydos.ginger.engine.api.*;
 import com.github.hydos.ginger.engine.api.game.*;
-import com.github.hydos.ginger.engine.cameras.Camera;
+import com.github.hydos.ginger.engine.cameras.*;
 import com.github.hydos.ginger.engine.elements.buttons.TextureButton;
 import com.github.hydos.ginger.engine.elements.objects.*;
 import com.github.hydos.ginger.engine.font.*;
@@ -38,7 +38,10 @@ public class Litecraft extends Game
 		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/gravel.png");
 		StaticCube.scaleCube(1);
 		Player player = new Player(dirtModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
-		Camera camera = new Camera(new Vector3f(0, 0.1f, 0), player);
+		Camera camera = new FirstPersonCamera(player);
+		
+		player.isVisible = false;
+		
 		ginger3D = new Ginger();
 		data = new GameData(player, camera, 30);
 		data.handleGuis = false;
@@ -55,7 +58,7 @@ public class Litecraft extends Game
 
 		FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
 		ginger3D.setGlobalFont(font);
-		GUIText titleText = ginger3D.registerText("LiteCraft", 3, new Vector2f(0, 0), 1f, true, "PLAYBUTTON");
+		GUIText titleText = ginger3D.registerText("LiteCraft PRE-ALPHA build 1", 3, new Vector2f(0, 0), 1f, true, "PLAYBUTTON");
 		titleText.setBorderWidth(0.5f);
 		
 		Light sun = new Light(new Vector3f(100, 105, -100), new Vector3f(1.3f, 1.3f, 1.3f), new Vector3f(0.0001f, 0.0001f, 0.0001f));

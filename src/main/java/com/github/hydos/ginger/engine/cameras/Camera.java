@@ -13,7 +13,7 @@ public class Camera
 	private Vector3f position = new Vector3f(0, 0, 0);
 	private float pitch, yaw;
 	private float roll;
-	private Player player;
+	public Player player;
 
 	public Camera(Player player)
 	{ this.player = player; }

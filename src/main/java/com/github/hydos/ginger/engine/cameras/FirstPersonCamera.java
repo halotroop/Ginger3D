@@ -1,21 +1,18 @@
 package com.github.hydos.ginger.engine.cameras;
 
-import org.lwjgl.glfw.GLFW;
-
-import com.github.hydos.ginger.engine.io.Window;
+import com.github.hydos.ginger.engine.elements.objects.Player;
 import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 
-public class FirstPersonCamera
+public class FirstPersonCamera extends Camera
 {
 	private Vector3f position = new Vector3f(0, 0, 0);
 	private float pitch, yaw;
 	private float roll;
 
-	public FirstPersonCamera()
-	{}
-
-	public FirstPersonCamera(Vector3f vector3f)
-	{ this.position = vector3f; }
+	public FirstPersonCamera(Player player)
+	{
+		super(player);
+	}
 
 	public float getPitch()
 	{ return pitch; }
@@ -31,21 +28,13 @@ public class FirstPersonCamera
 
 	public void move()
 	{
-		if (Window.isKeyDown(GLFW.GLFW_KEY_W))
-		{ position.z -= 0.05f; }
-		if (Window.isKeyDown(GLFW.GLFW_KEY_A))
-		{ position.x -= 0.05f; }
-		if (Window.isKeyDown(GLFW.GLFW_KEY_S))
-		{ position.z -= -0.05f; }
-		if (Window.isKeyDown(GLFW.GLFW_KEY_D))
-		{ position.x += 0.05f; }
-		if (Window.isKeyDown(GLFW.GLFW_KEY_SPACE))
-		{ position.y += 0.05f; }
-		if (Window.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT))
-		{ position.y -= 0.05f; }
-		if (Window.isKeyDown(GLFW.GLFW_KEY_LEFT))
-		{ yaw -= 0.5f; }
-		if (Window.isKeyDown(GLFW.GLFW_KEY_RIGHT))
-		{ yaw += 0.5f; }
+		position.x = player.getPosition().x;
+		position.z = player.getPosition().z;
+		position.y = player.getPosition().y;
+		
+		roll = player.getRotX();
+		yaw = -player.getRotY() + 180;
+		pitch = player.getRotZ();
+		
 	}
 }

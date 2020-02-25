@@ -82,7 +82,7 @@ public class Window
 
 	public static float getFloatTime()
 	{
-		float f = (System.nanoTime() / (float) 1000000000);
+		float f = (System.nanoTime() / (long) 1000000000);
 		return f;
 	}
 
@@ -109,7 +109,7 @@ public class Window
 
 	public static double getTime()
 	{
-		double f = (double) System.nanoTime() / (double) 1000000000;
+		double f = (double) System.nanoTime() / (long) 1000000000;
 		return f;
 	}
 

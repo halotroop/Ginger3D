@@ -12,6 +12,7 @@ import com.github.hydos.ginger.engine.particle.ParticleMaster;
 import com.github.hydos.ginger.engine.postprocessing.*;
 import com.github.hydos.ginger.engine.render.MasterRenderer;
 import com.github.hydos.ginger.engine.render.tools.MousePicker;
+import com.github.hydos.ginger.engine.screen.Screen;
 import com.github.hydos.ginger.engine.utils.Loader;
 
 public class Ginger
@@ -37,6 +38,11 @@ public class Ginger
 		masterRenderer.cleanUp();
 		TextMaster.cleanUp();
 		Loader.cleanUp();
+	}
+	
+	public void openScreen(Screen screen)
+	{
+		
 	}
 
 	public void postRender()
