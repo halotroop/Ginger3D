@@ -11,7 +11,7 @@ import com.github.hydos.ginger.main.settings.Constants;
 public class Player extends RenderObject
 {
 	private static float terrainHeight = 0;
-	private float currentSpeed = 0;
+	private double currentSpeed = 0;
 	private float currentTurn = 0;
 	private float upwardsSpeed = 0;
 	private boolean isInAir = false;
