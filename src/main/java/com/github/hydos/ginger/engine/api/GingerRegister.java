@@ -6,11 +6,14 @@ import com.github.hydos.ginger.engine.api.game.Game;
 import com.github.hydos.ginger.engine.elements.buttons.TextureButton;
 import com.github.hydos.ginger.engine.font.GUIText;
 import com.github.hydos.ginger.engine.postprocessing.Fbo;
+import com.github.hydos.ginger.engine.render.MasterRenderer;
+import com.github.hydos.ginger.engine.screen.Screen;
 
 /** Used if a game wants to access engine variables safely */
 public class GingerRegister
 {
 	private static GingerRegister INSTANCE;
+	public MasterRenderer masterRenderer;
 	public static GingerRegister getInstance()
 	{ return INSTANCE; }
 	public List<GUIText> texts;
@@ -18,6 +21,7 @@ public class GingerRegister
 	public List<Fbo> fbos;
 
 	public Game game;
+	public Screen currentScreen;
 
 	public GingerRegister()
 	{ INSTANCE = this; }

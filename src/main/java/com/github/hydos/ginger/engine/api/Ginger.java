@@ -17,7 +17,6 @@ import com.github.hydos.ginger.engine.utils.Loader;
 
 public class Ginger
 {
-	public MasterRenderer masterRenderer;
 	public GingerRegister gingerRegister;
 	public MousePicker picker;
 	public FontType globalFont;
@@ -35,14 +34,14 @@ public class Ginger
 		Window.stop();
 		PostProcessing.cleanUp();
 		ParticleMaster.cleanUp();
-		masterRenderer.cleanUp();
+		gingerRegister.masterRenderer.cleanUp();
 		TextMaster.cleanUp();
 		Loader.cleanUp();
 	}
 	
 	public void openScreen(Screen screen)
 	{
-		
+		gingerRegister.currentScreen = screen;
 	}
 
 	public void postRender()
@@ -65,27 +64,30 @@ public class Ginger
 
 	public void render(Game game)
 	{
-		GingerUtils.preRenderScene(masterRenderer);
+		GingerUtils.preRenderScene(gingerRegister.masterRenderer);
 		contrastFbo.bindFBO();
-		masterRenderer.renderScene(game.data.entities, game.data.normalMapEntities, game.data.flatTerrains, game.data.lights, game.data.camera, game.data.clippingPlane);
+		gingerRegister.masterRenderer.renderScene(game.data.entities, game.data.normalMapEntities, game.data.flatTerrains, game.data.lights, game.data.camera, game.data.clippingPlane);
 		ParticleMaster.renderParticles(game.data.camera);
 		contrastFbo.unbindFBO();
 		contrastFbo.handler.render(contrastFbo.colorTexture);
 		if (game.data.handleGuis)
 		{ renderOverlays(game); }
+		if(gingerRegister.currentScreen != null) {
+			gingerRegister.currentScreen.render();
+		}
 	}
 
 	public void renderOverlays(Game game)
 	{
-		masterRenderer.renderGuis(game.data.guis);
+		gingerRegister.masterRenderer.renderGuis(game.data.guis);
 		TextMaster.render();
 	}
 
 	public void renderWithoutTerrain(Game game, World world)
 	{
-		GingerUtils.preRenderScene(masterRenderer);
+		GingerUtils.preRenderScene(gingerRegister.masterRenderer);
 		contrastFbo.bindFBO();
-		masterRenderer.renderSceneNoTerrain(game.data.entities, game.data.normalMapEntities, game.data.lights, game.data.camera, game.data.clippingPlane, world);
+		gingerRegister.masterRenderer.renderSceneNoTerrain(game.data.entities, game.data.normalMapEntities, game.data.lights, game.data.camera, game.data.clippingPlane, world);
 		ParticleMaster.renderParticles(game.data.camera);
 		contrastFbo.unbindFBO();
 		PostProcessing.doPostProcessing(contrastFbo.colorTexture);
@@ -103,7 +105,7 @@ public class Ginger
 		timer = new Timer(game.data.tickSpeed);
 		timer.addTickListener(gameTickListener);
 		contrastFbo = new Fbo(new ContrastChanger());
-		this.masterRenderer = masterRenderer;
+		gingerRegister.masterRenderer = masterRenderer;
 		picker = new MousePicker(game.data.camera, masterRenderer.getProjectionMatrix(), null);
 		PostProcessing.init();
 		ParticleMaster.init(masterRenderer.getProjectionMatrix());
