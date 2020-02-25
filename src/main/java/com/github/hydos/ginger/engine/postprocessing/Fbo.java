@@ -17,7 +17,7 @@ public class Fbo {
 	long window;
     int width = 1024;
     int height = 768;
-    boolean resetFramebuffer;
+    public boolean resetFramebuffer;
     boolean destroyed;
     Object lock = new Object();
 
@@ -45,6 +45,8 @@ public class Fbo {
 	
 	public void createFBO() {
 		this.window = Window.window;
+		this.width = Window.width;
+		this.height = Window.height;
         /* Create multisampled FBO */
         multisampledColorRenderBuffer = glGenRenderbuffers();
         multisampledDepthRenderBuffer = glGenRenderbuffers();

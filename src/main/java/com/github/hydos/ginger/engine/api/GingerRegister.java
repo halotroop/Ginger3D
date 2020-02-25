@@ -5,6 +5,7 @@ import java.util.*;
 import com.github.hydos.ginger.engine.api.game.Game;
 import com.github.hydos.ginger.engine.elements.buttons.TextureButton;
 import com.github.hydos.ginger.engine.font.GUIText;
+import com.github.hydos.ginger.engine.postprocessing.Fbo;
 
 /**
  * Used if a game wants to access engine variables safely
@@ -15,7 +16,9 @@ public class GingerRegister {
 	
 	public List<GUIText> texts;
 	public List<TextureButton> guiButtons;
-
+	public List<Fbo> fbos;
+	
+	
 	public Game game;
 	
 	public GingerRegister() {
@@ -28,9 +31,7 @@ public class GingerRegister {
 	}
 
 	public GUIText retrieveText(String string) {
-		GUIText lastText = null;
 		for(GUIText text: texts) {
-			lastText = text;
 			if(string.equalsIgnoreCase(string)) {
 				return text;
 			}

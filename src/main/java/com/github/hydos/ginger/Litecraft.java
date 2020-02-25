@@ -117,10 +117,21 @@ public class Litecraft extends Game{
 		return system;
 	}
 
-
+	//temp stuff to test out fbo fixes
+	int oldWindowWidth = Window.width;
+	int oldWindowHeight = Window.height;
+	
 	@Override
 	public void update() {
 		ginger3D.update(data);
+		
+		if(oldWindowHeight != Window.height || oldWindowWidth != Window.width) {
+			System.out.println("Windows size changed");
+			ginger3D.contrastFbo.resizeFBOs();
+		}
+		
+		oldWindowWidth = Window.width;
+		oldWindowHeight = Window.height;
 		
 		ginger3D.masterRenderer.renderShadowMap(data.entities, data.lights.get(0));
 		
@@ -138,9 +149,7 @@ public class Litecraft extends Game{
 		boolean isClicked = playButton.isClicked();
 		
 		playButton.update();
-		
-		if(text == null) {System.out.println("Yes is null crusty foss time");}
-		
+				
 		text.setText(isClicked + "");
 		ginger3D.renderOverlays(this);
 		
