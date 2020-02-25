@@ -56,7 +56,7 @@ public class Window
 		GLFW.glfwMakeContextCurrent(window);
 		glContext = GL.createCapabilities();
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GLFW.glfwSetWindowPos(window, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2);
+		GLFW.glfwSetWindowPos(window, (vidmode.width() - actuallWidth) / 2, (vidmode.height() - actuallHeight) / 2);
 		GLFW.glfwShowWindow(window);
 		time = getTime();
 		getCurrentTime();

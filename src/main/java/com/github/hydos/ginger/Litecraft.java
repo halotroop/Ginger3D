@@ -55,7 +55,9 @@ public class Litecraft extends Game
 
 		FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
 		ginger3D.setGlobalFont(font);
-		ginger3D.registerText("LiteCraft", 3, new Vector2f(0, 0), 1f, true, "PLAYBUTTON");
+		GUIText titleText = ginger3D.registerText("LiteCraft", 3, new Vector2f(0, 0), 1f, true, "PLAYBUTTON");
+		titleText.setBorderWidth(0.5f);
+		
 		Light sun = new Light(new Vector3f(100, 105, -100), new Vector3f(1.3f, 1.3f, 1.3f), new Vector3f(0.0001f, 0.0001f, 0.0001f));
 		data.lights.add(sun);
 		data.entities.add(player);
@@ -64,6 +66,8 @@ public class Litecraft extends Game
 		//		GuiTexture title = new GuiTexture(Loader.loadTextureDirectly("/textures/guis/title.png"), new Vector2f(0, 0.8F), new Vector2f(0.25f, 0.1f));
 		//		data.guis.add(title);
 		//start the game loop
+		oldWindowWidth = Window.width;
+		oldWindowHeight = Window.height;
 		ginger3D.startGame();
 	}
 
@@ -77,7 +81,6 @@ public class Litecraft extends Game
 		ginger3D.update(data);
 		if (oldWindowHeight != Window.height || oldWindowWidth != Window.width)
 		{
-			System.out.println("Windows size changed");
 			ginger3D.contrastFbo.resizeFBOs();
 		}
 		oldWindowWidth = Window.width;
@@ -97,7 +100,6 @@ public class Litecraft extends Game
 		TextureButton playButton = ginger3D.gingerRegister.guiButtons.get(0);
 		boolean isClicked = playButton.isClicked();
 		playButton.update();
-		text.setText(isClicked + "");
 		if (isClicked)
 		{
 			Window.lockMouse();
