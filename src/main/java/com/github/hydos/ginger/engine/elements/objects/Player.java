@@ -31,14 +31,14 @@ public class Player extends RenderObject{
 		float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
 		super.increasePosition(dx, 0, dz);
 		if(t != null) {
-			super.increasePosition(0, (float) (upwardsSpeed * (Window.getTime())), 0);
 			terrainHeight = t.getHeightOfTerrain(super.getPosition().x, super.getPosition().z);
-			upwardsSpeed += Constants.gravity * Window.getTime();
-			if(super.getPosition().y < terrainHeight) {
-				isInAir = false;
-				upwardsSpeed = 0;
-				super.getPosition().y = terrainHeight;
-			}
+		}
+		super.increasePosition(0, (float) (upwardsSpeed * (Window.getTime())), 0);
+		upwardsSpeed += Constants.gravity * Window.getTime();
+		if(super.getPosition().y < terrainHeight) {
+			isInAir = false;
+			upwardsSpeed = 0;
+			super.getPosition().y = terrainHeight;
 		}
 
 		
@@ -55,20 +55,20 @@ public class Player extends RenderObject{
 		if(Window.isKeyDown(GLFW.GLFW_KEY_W)) {
 			this.currentSpeed = Constants.movementSpeed;
 		}
-		else if(Window.isKeyDown(GLFW.GLFW_KEY_S)) {
+		else if(Window.isKeyPressed(GLFW.GLFW_KEY_S)) {
 			this.currentSpeed = -Constants.movementSpeed;
 		}else {
 			this.currentSpeed = 0;
 		}
 		
-		if(Window.isKeyDown(GLFW.GLFW_KEY_A)) {
+		if(Window.isKeyPressed(GLFW.GLFW_KEY_A)) {
 			this.currentTurn = Constants.turnSpeed;
 
 		}
 		else if(Window.isKeyDown(GLFW.GLFW_KEY_D)) {
 			this.currentTurn = -Constants.turnSpeed;
 		}
-		if(Window.isKeyReleased(68) || Window.isKeyReleased(65)){
+		if(!Window.isKeyDown(68) || !Window.isKeyDown(65)){
 			this.currentTurn = 0;
 		}
 		

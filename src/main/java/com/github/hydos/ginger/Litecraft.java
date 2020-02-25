@@ -28,8 +28,8 @@ public class Litecraft extends Game{
 	public Litecraft() {
 		Constants.movementSpeed = 0.00005f;
 		Constants.turnSpeed = 0.00002f;
-		Constants.gravity = -0.000000000005f;
-		Constants.jumpPower = 0.000005f;
+		Constants.gravity = -0.0000000005f;
+		Constants.jumpPower = 0.00005f;
 		
 		Window.create(1200, 800, "LiteCraft", 60);
 		
@@ -45,7 +45,7 @@ public class Litecraft extends Game{
 		Camera camera = new Camera(new Vector3f(0,0.1f,0), player);
 		ginger3D = new Ginger();
 		
-		data = new GameData(player, camera, 20);
+		data = new GameData(player, camera, 40);
 		data.handleGuis = false;
 		ginger3D.setup(new MasterRenderer(camera), this);
 		
