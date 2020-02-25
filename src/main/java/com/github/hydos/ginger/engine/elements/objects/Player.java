@@ -61,7 +61,7 @@ public class Player extends RenderObject{
 			this.currentSpeed = 0;
 		}
 		
-		if(Window.isKeyPressed(GLFW.GLFW_KEY_A)) {
+		if(Window.isKeyDown(GLFW.GLFW_KEY_A)) {
 			this.currentTurn = Constants.turnSpeed;
 
 		}

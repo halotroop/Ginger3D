@@ -45,7 +45,7 @@ public class Litecraft extends Game{
 		Camera camera = new Camera(new Vector3f(0,0.1f,0), player);
 		ginger3D = new Ginger();
 		
-		data = new GameData(player, camera, 40);
+		data = new GameData(player, camera, 30);
 		data.handleGuis = false;
 		ginger3D.setup(new MasterRenderer(camera), this);
 		
