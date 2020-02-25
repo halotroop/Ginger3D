@@ -2,6 +2,8 @@ package com.github.hydos.ginger;
 
 import java.util.*;
 
+import com.github.halotroop.litecraft.logic.Timer;
+import com.github.halotroop.litecraft.logic.Timer.TickListener;
 import com.github.halotroop.litecraft.types.block.*;
 import com.github.hydos.ginger.engine.api.*;
 import com.github.hydos.ginger.engine.api.game.*;
@@ -14,7 +16,6 @@ import com.github.hydos.ginger.engine.io.Window;
 import com.github.hydos.ginger.engine.math.vectors.*;
 import com.github.hydos.ginger.engine.obj.ModelLoader;
 import com.github.hydos.ginger.engine.obj.shapes.StaticCube;
-import com.github.hydos.ginger.engine.particle.*;
 import com.github.hydos.ginger.engine.render.MasterRenderer;
 import com.github.hydos.ginger.engine.render.models.TexturedModel;
 import com.github.hydos.ginger.engine.utils.Loader;
@@ -26,7 +27,14 @@ public class Litecraft extends Game{
 	
 	private boolean isInWorld = false;
 	
-	private ParticleSystem system;
+	Timer timer;
+	TickListener tickListener = new TickListener()
+	{
+		public void onTick(float deltaTime)
+		{
+			
+		};
+	};
 	
 	public Litecraft() {
 		super();
@@ -88,10 +96,7 @@ public class Litecraft extends Game{
 		Light sun = new Light(new Vector3f(100,105,-100), new Vector3f(1.3f, 1.3f, 1.3f), new Vector3f(0.0001f, 0.0001f, 0.0001f));
 		data.lights.add(sun);
 
-		data.entities.add(player);	
-		
-		system = setupParticles();
-		
+		data.entities.add(player);
 		
 		TextureButton playButton = ginger3D.registerButton("/textures/guis/purpur.png", new Vector2f(0, 0), new Vector2f(0.25f, 0.1f));
 		playButton.show(data.guis);
@@ -102,19 +107,6 @@ public class Litecraft extends Game{
 		
 		//start the game loop
 		ginger3D.startGame();
-	}
-
-
-	private ParticleSystem setupParticles() {
-		ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("particles/smoke.png"), 8);
-
-		system = new ParticleSystem(particleTexture, 100, 10f, 0.3f, 4, 3f);
-		system.randomizeRotation();
-		system.setDirection(new Vector3f(0,0.001f,0), 0.00001f);
-		system.setLifeError(0);
-		system.setSpeedError(0);
-		system.setScaleError(1f);
-		return system;
 	}
 
 	//temp stuff to test out fbo fixes
