@@ -69,7 +69,7 @@ public class Particle
 	public boolean update(Camera camera)
 	{
 		float time = (float) Window.getTime() / 1000000;
-		velocity.y += Constants.gravity * gravityEffect * time;
+		velocity.y += Constants.gravity.y() * gravityEffect * time;
 		Vector3f change = new Vector3f(velocity);
 		change.scale(time);
 		Vector3f.add(change, position, position);

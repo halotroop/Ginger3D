@@ -68,7 +68,7 @@ public class Player extends RenderObject
 		if (t != null)
 		{ terrainHeight = t.getHeightOfTerrain(super.getPosition().x, super.getPosition().z); }
 		super.increasePosition(0, (float) (upwardsSpeed * (Window.getTime())), 0);
-		upwardsSpeed += Constants.gravity * Window.getTime();
+		upwardsSpeed += Constants.gravity.y() * Window.getTime();
 		if (super.getPosition().y < terrainHeight)
 		{
 			isInAir = false;
