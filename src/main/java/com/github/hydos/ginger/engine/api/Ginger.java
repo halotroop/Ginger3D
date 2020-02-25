@@ -1,5 +1,7 @@
 package com.github.hydos.ginger.engine.api;
 
+import com.github.halotroop.litecraft.logic.Timer;
+import com.github.halotroop.litecraft.logic.Timer.TickListener;
 import com.github.hydos.ginger.engine.api.game.*;
 import com.github.hydos.ginger.engine.elements.buttons.TextureButton;
 import com.github.hydos.ginger.engine.font.*;
@@ -23,11 +25,26 @@ public class Ginger {
 	
 	public Fbo contrastFbo;
 	
+	Timer timer;
+	
+	TickListener gameTickListener = new TickListener()
+	{
+		public void onTick(float deltaTime)
+		{
+			gingerRegister.game.update();
+		};
+	};
+	
 	public void setup(MasterRenderer masterRenderer, Game game) {
 		gingerRegister = new GingerRegister();
 		gingerRegister.registerGame(game);
+		
+		timer = new Timer(game.data.tickSpeed);
+		timer.addTickListener(gameTickListener);
+		
 		contrastFbo = new Fbo(new ContrastChanger());
 		this.masterRenderer = masterRenderer;
+		
 		picker = new MousePicker(game.data.camera, masterRenderer.getProjectionMatrix(), null);
 		PostProcessing.init();
         ParticleMaster.init(masterRenderer.getProjectionMatrix());
@@ -38,6 +55,7 @@ public class Ginger {
 		while(!Window.closed()) {
 			
 			if(Window.isUpdating()) {
+				timer.tick();
 				gingerRegister.game.render();
 			}
 		}

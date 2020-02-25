@@ -24,8 +24,9 @@ public class GameData {
 	public Camera camera;
 	public Vector4f clippingPlane;
 	public boolean handleGuis = true;
+	public int tickSpeed = 0;
 	
-	public GameData(Player player, Camera camera) {
+	public GameData(Player player, Camera camera, int tickSpeed) {
 		clippingPlane = new Vector4f(0, -1, 0, 100000);
 		guis = new ArrayList<GuiTexture>();
 		entities = new ArrayList<RenderObject>();
@@ -34,6 +35,7 @@ public class GameData {
 		flatTerrains = new ArrayList<Terrain>();
 		this.player = player;
 		this.camera = camera;
+		this.tickSpeed = tickSpeed;
 	}
 
 }

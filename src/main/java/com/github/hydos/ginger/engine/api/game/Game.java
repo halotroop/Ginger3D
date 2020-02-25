@@ -10,4 +10,6 @@ public abstract class Game {
 
 	public abstract void exit();
 
+	public abstract void update();
+
 }
