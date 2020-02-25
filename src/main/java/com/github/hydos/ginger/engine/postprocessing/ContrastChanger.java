@@ -2,7 +2,9 @@ package com.github.hydos.ginger.engine.postprocessing;
 
 import org.lwjgl.opengl.*;
 
-public class ContrastChanger {
+import com.github.hydos.ginger.engine.fbo.FboCallbackHandler;
+
+public class ContrastChanger extends FboCallbackHandler{
 	
 	private ImageRenderer renderer;
 	private ContrastShader shader;
