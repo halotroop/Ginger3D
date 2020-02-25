@@ -1,8 +1,7 @@
 package com.github.hydos.ginger;
 
-import java.util.*;
-
-import com.github.halotroop.litecraft.types.block.*;
+import com.github.halotroop.litecraft.types.block.Block;
+import com.github.halotroop.litecraft.world.Chunk;
 import com.github.hydos.ginger.engine.api.*;
 import com.github.hydos.ginger.engine.api.game.*;
 import com.github.hydos.ginger.engine.cameras.Camera;
@@ -21,6 +20,7 @@ import com.github.hydos.ginger.main.settings.Constants;
 
 public class Litecraft extends Game
 {
+	private Chunk exampleManualChunk;
 	private Ginger ginger3D;
 	private boolean isInWorld = false;
 
@@ -45,10 +45,8 @@ public class Litecraft extends Game
 		data = new GameData(player, camera, 30);
 		data.handleGuis = false;
 		ginger3D.setup(new MasterRenderer(camera), this);
-		float blockSpacing = 1f;
-		float blockLineSpacing = 1f;
-		float blockUpwardsSpacing = 1f;
-		List<BlockEntity> chunk = new ArrayList<BlockEntity>();
+		//YeS?
+		exampleManualChunk = new Chunk(0, 0, 0);
 		Block block = Block.DIRT;
 		for (int k = 0; k < 8; k++)
 		{
@@ -57,12 +55,12 @@ public class Litecraft extends Game
 			for (int i = 0; i < 8; i++)
 			{
 				for (int j = 0; j < 8; j++)
-				{ chunk.add(new BlockEntity(block, new Vector3f(blockLineSpacing * i, blockUpwardsSpacing * k, blockSpacing * j))); }
+				{ 
+					exampleManualChunk.setBlock(j, k, i, block);
+				}
 			}
 		}
-		//add chunk to "entity" render list
-		for (BlockEntity b : chunk)
-		{ data.entities.add(b); }
+		
 		FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
 		ginger3D.setGlobalFont(font);
 		ginger3D.registerText("LiteCraft", 3, new Vector2f(0, 0), 1f, true, "PLAYBUTTON");
