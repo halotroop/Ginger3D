@@ -116,12 +116,6 @@ public class Window
 	public static boolean isKeyDown(int keycode)
 	{ return GLFW.glfwGetKey(window, keycode) == 1; }
 
-	public static boolean isKeyPressed(int keyCode)
-	{ return isKeyDown(keyCode) && !keys[keyCode]; }
-
-	public static boolean isKeyReleased(int keyCode)
-	{ return !isKeyDown(keyCode) && keys[keyCode]; }
-
 	public static boolean isMouseDown(int mouseButton)
 	{ return GLFW.glfwGetMouseButton(window, mouseButton) == 1; }
 

@@ -29,13 +29,13 @@ public class Litecraft extends Game
 	public Litecraft()
 	{
 		Constants.movementSpeed = 0.00005f;
-		Constants.turnSpeed = 0.00002f;
+		Constants.turnSpeed = 0.00006f;
 		Constants.gravity = -0.0000000005f;
 		Constants.jumpPower = 0.00005f;
 		Window.create(1200, 800, "LiteCraft", 60);
 		GingerUtils.init();
-		Window.setBackgroundColour(0.2f, 0.2f, 0.8f);
-		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
+		Window.setBackgroundColour(0.2f, 0.2f, 0.6f);
+		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/gravel.png");
 		StaticCube.scaleCube(1);
 		Player player = new Player(dirtModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
 		Camera camera = new Camera(new Vector3f(0, 0.1f, 0), player);

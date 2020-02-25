@@ -25,7 +25,7 @@ public class Player extends RenderObject
 		{
 			this.currentSpeed = Constants.movementSpeed;
 		}
-		else if (Window.isKeyPressed(GLFW.GLFW_KEY_S))
+		else if (Window.isKeyDown(GLFW.GLFW_KEY_S))
 		{
 			this.currentSpeed = -Constants.movementSpeed;
 		}
@@ -39,8 +39,6 @@ public class Player extends RenderObject
 		}
 		else if (Window.isKeyDown(GLFW.GLFW_KEY_D))
 		{ this.currentTurn = -Constants.turnSpeed; }
-		if (!Window.isKeyDown(68) || !Window.isKeyDown(65))
-		{ this.currentTurn = 0; }
 		if (Window.isKeyDown(GLFW.GLFW_KEY_SPACE))
 		{
 			jump();
