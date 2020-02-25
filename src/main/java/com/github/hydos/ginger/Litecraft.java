@@ -1,6 +1,6 @@
 package com.github.hydos.ginger;
 
-import com.github.halotroop.litecraft.world.Chunk;
+import com.github.halotroop.litecraft.world.*;
 import com.github.hydos.ginger.engine.api.*;
 import com.github.hydos.ginger.engine.api.game.*;
 import com.github.hydos.ginger.engine.cameras.Camera;
@@ -18,14 +18,14 @@ import com.github.hydos.ginger.main.settings.Constants;
 
 public class Litecraft extends Game
 {
-	private Chunk exampleManualChunk;
+	private World world;
 	private Ginger ginger3D;
 	private boolean isInWorld = false;
 
 	//temp stuff to test out fbo fixes
 	int oldWindowWidth = Window.width;
 	int oldWindowHeight = Window.height;
-	
+
 	public Litecraft()
 	{
 		Constants.movementSpeed = 0.00005f;
@@ -44,8 +44,14 @@ public class Litecraft extends Game
 		data.handleGuis = false;
 		ginger3D.setup(new MasterRenderer(camera), this);
 		//YeS?
-		exampleManualChunk = Chunk.generateChunk(0, 0, 0);
-		exampleManualChunk.setRender(true);
+		world = new World(0L);
+
+		for(int i = 0; i<10;i++) {
+			for(int k = 0; k<10;k++) {
+				Chunk exampleManualChunk = world.getChunk(i, -1, k);
+				exampleManualChunk.setRender(true);
+			}
+		}
 
 		FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
 		ginger3D.setGlobalFont(font);
@@ -55,8 +61,8 @@ public class Litecraft extends Game
 		data.entities.add(player);
 		TextureButton playButton = ginger3D.registerButton("/textures/guis/purpur.png", new Vector2f(0, 0), new Vector2f(0.25f, 0.1f));
 		playButton.show(data.guis);
-//		GuiTexture title = new GuiTexture(Loader.loadTextureDirectly("/textures/guis/title.png"), new Vector2f(0, 0.8F), new Vector2f(0.25f, 0.1f));
-//		data.guis.add(title);
+		//		GuiTexture title = new GuiTexture(Loader.loadTextureDirectly("/textures/guis/title.png"), new Vector2f(0, 0.8F), new Vector2f(0.25f, 0.1f));
+		//		data.guis.add(title);
 		//start the game loop
 		ginger3D.startGame();
 	}
@@ -78,8 +84,7 @@ public class Litecraft extends Game
 		oldWindowHeight = Window.height;
 		ginger3D.masterRenderer.renderShadowMap(data.entities, data.lights.get(0));
 		if (isInWorld)
-		{ ginger3D.renderWithoutTerrain(this); }
-		exampleManualChunk.render(ginger3D.masterRenderer.entityRenderer);
+		{ ginger3D.renderWithoutTerrain(this, world); }
 		ginger3D.renderOverlays(this);
 		ginger3D.postRender();
 	}

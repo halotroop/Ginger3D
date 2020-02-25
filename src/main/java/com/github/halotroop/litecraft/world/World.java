@@ -1,16 +1,17 @@
 package com.github.halotroop.litecraft.world;
 
 import com.github.halotroop.litecraft.types.block.Block;
+import com.github.hydos.ginger.engine.render.renderers.ObjectRenderer;
 
 import it.unimi.dsi.fastutil.longs.*;
 
 public class World implements BlockAccess
 {
-	private final Long2ObjectMap<Chunk> chunks = new Long2ObjectArrayMap<>();
+	private final Long2ObjectMap<Chunk> chunks;
 
 	public World(long seed)
 	{
-		// TODO world stuff
+		chunks = new Long2ObjectArrayMap<>();
 	}
 
 	public Chunk getChunk(int chunkX, int chunkY, int chunkZ)
@@ -26,4 +27,18 @@ public class World implements BlockAccess
 	@Override
 	public void setBlock(int x, int y, int z, Block block)
 	{ this.getChunk(x >> POS_SHIFT, y >> POS_SHIFT, z >> POS_SHIFT).setBlock(x & MAX_POS, y & MAX_POS, z & MAX_POS, block); }
+
+	public void optimiseChunks()
+	{ this.chunks.forEach((pos, chunk) -> optimiseChunk(chunk)); }
+
+	//used for model combining and culling
+	public Chunk optimiseChunk(Chunk chunk)
+	{
+		//TODO: use this
+
+		return null;
+	}
+
+	public void render(ObjectRenderer entityRenderer)
+	{ this.chunks.forEach((pos, chunk) -> chunk.render(entityRenderer)); }
 }
