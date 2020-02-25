@@ -15,11 +15,12 @@ import com.github.hydos.ginger.engine.render.models.*;
 import com.github.hydos.ginger.engine.render.shaders.NormalMappingShader;
 import com.github.hydos.ginger.engine.render.texture.ModelTexture;
 
-public class NormalMappingRenderer extends Renderer{
-
+public class NormalMappingRenderer extends Renderer
+{
 	private NormalMappingShader shader;
 
-	public NormalMappingRenderer(Matrix4f projectionMatrix) {
+	public NormalMappingRenderer(Matrix4f projectionMatrix)
+	{
 		this.shader = new NormalMappingShader();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -27,13 +28,55 @@ public class NormalMappingRenderer extends Renderer{
 		shader.stop();
 	}
 
-	public void render(Map<TexturedModel, List<RenderObject>> entities, Vector4f clipPlane, List<Light> lights, Camera camera) {
+	public void cleanUp()
+	{ shader.cleanUp(); }
+
+	private void prepare(Vector4f clipPlane, List<Light> lights, Camera camera)
+	{
+		shader.loadClipPlane(clipPlane);
+		//need to be public variables in MasterRenderer
+		shader.loadSkyColour(Window.getColour());
+		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+		shader.loadLights(lights, viewMatrix);
+		shader.loadViewMatrix(viewMatrix);
+	}
+
+	private void prepareInstance(RenderObject entity)
+	{
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),
+			entity.getRotY(), entity.getRotZ(), entity.getScale());
+		shader.loadTransformationMatrix(transformationMatrix);
+		shader.loadOffset(0, 0);
+	}
+
+	private void prepareTexturedModel(TexturedModel model)
+	{
+		RawModel rawModel = model.getRawModel();
+		GL30.glBindVertexArray(rawModel.getVaoID());
+		GL20.glEnableVertexAttribArray(0);
+		GL20.glEnableVertexAttribArray(1);
+		GL20.glEnableVertexAttribArray(2);
+		GL20.glEnableVertexAttribArray(3);
+		ModelTexture texture = model.getTexture();
+		if (texture.isTransparent())
+		{ MasterRenderer.disableCulling(); }
+		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
+		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getNormalMap());
+	}
+
+	public void render(Map<TexturedModel, List<RenderObject>> entities, Vector4f clipPlane, List<Light> lights, Camera camera)
+	{
 		shader.start();
 		prepare(clipPlane, lights, camera);
-		for (TexturedModel model : entities.keySet()) {
+		for (TexturedModel model : entities.keySet())
+		{
 			prepareTexturedModel(model);
 			List<RenderObject> batch = entities.get(model);
-			for (RenderObject entity : batch) {
+			for (RenderObject entity : batch)
+			{
 				prepareInstance(entity);
 				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 			}
@@ -42,30 +85,9 @@ public class NormalMappingRenderer extends Renderer{
 		shader.stop();
 		entities.clear();
 	}
-	
-	public void cleanUp(){
-		shader.cleanUp();
-	}
 
-	private void prepareTexturedModel(TexturedModel model) {
-		RawModel rawModel = model.getRawModel();
-		GL30.glBindVertexArray(rawModel.getVaoID());
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glEnableVertexAttribArray(1);
-		GL20.glEnableVertexAttribArray(2);
-		GL20.glEnableVertexAttribArray(3);
-		ModelTexture texture = model.getTexture();
-		if (texture.isTransparent()) {
-			MasterRenderer.disableCulling();
-		}
-		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
-		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getNormalMap());
-	}
-
-	private void unbindTexturedModel() {
+	private void unbindTexturedModel()
+	{
 		MasterRenderer.enableCulling();
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
@@ -73,22 +95,4 @@ public class NormalMappingRenderer extends Renderer{
 		GL20.glDisableVertexAttribArray(3);
 		GL30.glBindVertexArray(0);
 	}
-
-	private void prepareInstance(RenderObject entity) {
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),
-				entity.getRotY(), entity.getRotZ(), entity.getScale());
-		shader.loadTransformationMatrix(transformationMatrix);
-		shader.loadOffset(0, 0);
-	}
-
-	private void prepare(Vector4f clipPlane, List<Light> lights, Camera camera) {
-		shader.loadClipPlane(clipPlane);
-		//need to be public variables in MasterRenderer
-		shader.loadSkyColour(Window.getColour());
-		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
-		
-		shader.loadLights(lights, viewMatrix);
-		shader.loadViewMatrix(viewMatrix);
-	}
-
 }

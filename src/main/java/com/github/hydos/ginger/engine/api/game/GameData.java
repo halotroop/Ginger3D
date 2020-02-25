@@ -13,8 +13,8 @@ import com.github.hydos.ginger.engine.terrain.Terrain;
  * Used for storing essential engine game data so main class isn't messy
  * Also in general used with Game Class
  */
-public class GameData {
-	
+public class GameData
+{
 	public List<GuiTexture> guis;
 	public List<RenderObject> entities;
 	public List<Light> lights;
@@ -25,8 +25,9 @@ public class GameData {
 	public Vector4f clippingPlane;
 	public boolean handleGuis = true;
 	public int tickSpeed = 20;
-	
-	public GameData(Player player, Camera camera, int tickSpeed) {
+
+	public GameData(Player player, Camera camera, int tickSpeed)
+	{
 		clippingPlane = new Vector4f(0, -1, 0, 100000);
 		guis = new ArrayList<GuiTexture>();
 		entities = new ArrayList<RenderObject>();
@@ -37,5 +38,4 @@ public class GameData {
 		this.camera = camera;
 		this.tickSpeed = tickSpeed;
 	}
-
 }

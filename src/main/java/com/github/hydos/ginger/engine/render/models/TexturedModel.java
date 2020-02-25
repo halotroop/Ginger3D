@@ -2,21 +2,20 @@ package com.github.hydos.ginger.engine.render.models;
 
 import com.github.hydos.ginger.engine.render.texture.ModelTexture;
 
-public class TexturedModel {
-	
+public class TexturedModel
+{
 	private RawModel rawModel;
 	private ModelTexture texture;
-	
-	public TexturedModel(RawModel model, ModelTexture texture) {
+
+	public TexturedModel(RawModel model, ModelTexture texture)
+	{
 		this.rawModel = model;
 		this.texture = texture;
 	}
 
-	public RawModel getRawModel() {
-		return rawModel;
-	}
+	public RawModel getRawModel()
+	{ return rawModel; }
 
-	public ModelTexture getTexture() {
-		return texture;
-	}
+	public ModelTexture getTexture()
+	{ return texture; }
 }

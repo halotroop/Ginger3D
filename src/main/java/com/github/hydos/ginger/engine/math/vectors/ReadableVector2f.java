@@ -31,16 +31,12 @@
  */
 package com.github.hydos.ginger.engine.math.vectors;
 
-/**
- * @author foo
- */
-public interface ReadableVector2f extends ReadableVector {
-    /**
-     * @return x
-     */
-    float getX();
-    /**
-     * @return y
-     */
-    float getY();
+/** @author foo */
+public interface ReadableVector2f extends ReadableVector
+{
+	/** @return x */
+	float getX();
+
+	/** @return y */
+	float getY();
 }

@@ -5,11 +5,11 @@ package tk.valoeghese.gateways.client.io;
  */
 public final class InitialPressHandler implements KeyListener
 {
+	private boolean activatedPreviously = false;
+
+	private final KeyCallback callback;
 	public InitialPressHandler(KeyCallback callback)
 	{ this.callback = callback; }
-
-	private boolean activatedPreviously = false;
-	private final KeyCallback callback;
 
 	@Override
 	public void listen(boolean active)

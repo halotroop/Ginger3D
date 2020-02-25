@@ -10,11 +10,11 @@ public class Input
 	private static final Map<Keybind, List<KeyCallback>> CALLBACKS = new HashMap<>();
 	private static final Map<Keybind, List<KeyListener>> LISTENERS = new HashMap<>();
 
-	public static void addPressCallback(Keybind key, KeyCallback callback)
-	{ CALLBACKS.computeIfAbsent(key, listener -> new ArrayList<>()).add(callback); }
-
 	public static void addListener(Keybind key, KeyListener callback)
 	{ LISTENERS.computeIfAbsent(key, listener -> new ArrayList<>()).add(callback); }
+
+	public static void addPressCallback(Keybind key, KeyCallback callback)
+	{ CALLBACKS.computeIfAbsent(key, listener -> new ArrayList<>()).add(callback); }
 
 	public static void invokeAllListeners()
 	{

@@ -8,9 +8,14 @@ import java.util.*;
  */
 public class Timer
 {
+	public interface TickListener
+	{
+		void onTick(float deltaTime);
+	}
 	private double lastTick;
 	private double nextTick;
 	private int tickRate;
+
 	private Set<TickListener> tickListeners = new HashSet<>();
 
 	public Timer(int tickRate)
@@ -19,20 +24,20 @@ public class Timer
 	public void addTickListener(TickListener listener)
 	{ tickListeners.add(listener); }
 
-	public void removeTickListener(TickListener listener)
-	{ tickListeners.remove(listener); }
-
-	public void setTickRate(int tickRate)
-	{ this.tickRate = tickRate; }
-
 	public int getTickRate()
 	{ return tickRate; }
+
+	public void removeTickListener(TickListener listener)
+	{ tickListeners.remove(listener); }
 
 	public void reset()
 	{
 		lastTick = 0;
 		nextTick = 0;
 	}
+
+	public void setTickRate(int tickRate)
+	{ this.tickRate = tickRate; }
 
 	public boolean tick()
 	{
@@ -53,10 +58,5 @@ public class Timer
 			return true;
 		}
 		return false;
-	}
-
-	public interface TickListener
-	{
-		void onTick(float deltaTime);
 	}
 }

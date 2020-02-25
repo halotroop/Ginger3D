@@ -13,97 +13,23 @@ import com.github.hydos.ginger.engine.render.MasterRenderer;
 import com.github.hydos.ginger.engine.render.tools.MousePicker;
 import com.github.hydos.ginger.engine.utils.Loader;
 
-public class Ginger {
-	
+public class Ginger
+{
 	public MasterRenderer masterRenderer;
-	
 	public GingerRegister gingerRegister;
-	
 	public MousePicker picker;
-	
 	public FontType globalFont;
-	
 	public Fbo contrastFbo;
-	
 	Timer timer;
-	
 	TickListener gameTickListener = new TickListener()
 	{
+		@Override
 		public void onTick(float deltaTime)
-		{
-			gingerRegister.game.update();
-		};
+		{ gingerRegister.game.update(); };
 	};
-	
-	public void setup(MasterRenderer masterRenderer, Game game) {
-		gingerRegister = new GingerRegister();
-		gingerRegister.registerGame(game);
-		
-		timer = new Timer(game.data.tickSpeed);
-		timer.addTickListener(gameTickListener);
-		
-		contrastFbo = new Fbo(new ContrastChanger());
-		this.masterRenderer = masterRenderer;
-		
-		picker = new MousePicker(game.data.camera, masterRenderer.getProjectionMatrix(), null);
-		PostProcessing.init();
-        ParticleMaster.init(masterRenderer.getProjectionMatrix());
-        
-	}
-	
-	public void startGame() {
-		while(!Window.closed()) {
-			
-			if(Window.isUpdating()) {
-				timer.tick();
-				gingerRegister.game.render();
-			}
-		}
-		
-	}
-	
-	public void update(GameData data) {
-		data.camera.move();
-		Window.update();
-		GingerUtils.update();
-		picker.update();
-		ParticleMaster.update(data.camera);
-	}
-	
-	public void render(Game game) {
-		GingerUtils.preRenderScene(masterRenderer);
-		contrastFbo.bindFBO();
-		masterRenderer.renderScene(game.data.entities, game.data.normalMapEntities, game.data.flatTerrains, game.data.lights, game.data.camera, game.data.clippingPlane);
-		ParticleMaster.renderParticles(game.data.camera);
-		contrastFbo.unbindFBO();
-		PostProcessing.doPostProcessing(contrastFbo.colorTexture);
-		if(game.data.handleGuis) {
-			renderOverlays(game);
-		}
-	}
-	
-	public void renderWithoutTerrain(Game game) {
-		GingerUtils.preRenderScene(masterRenderer);
-		contrastFbo.bindFBO();
-		masterRenderer.renderSceneNoTerrain(game.data.entities, game.data.normalMapEntities, game.data.lights, game.data.camera, game.data.clippingPlane);
-		ParticleMaster.renderParticles(game.data.camera);
-		contrastFbo.unbindFBO();
-		PostProcessing.doPostProcessing(contrastFbo.colorTexture);
-		if(game.data.handleGuis) {
-			renderOverlays(game);
-		}
-	}
-	
-	public void renderOverlays(Game game) {
-		masterRenderer.renderGuis(game.data.guis);
-		TextMaster.render();
-	}
-	
-	public void postRender() {
-		Window.swapBuffers();
-	}
-	
-	public void cleanup() {
+
+	public void cleanup()
+	{
 		Window.stop();
 		PostProcessing.cleanUp();
 		ParticleMaster.cleanUp();
@@ -112,21 +38,88 @@ public class Ginger {
 		Loader.cleanUp();
 	}
 
-	public void setGlobalFont(FontType font) {
-		this.globalFont = font;
+	public void postRender()
+	{ Window.swapBuffers(); }
+
+	public TextureButton registerButton(String resourceLocation, Vector2f position, Vector2f scale)
+	{
+		TextureButton button = new TextureButton(resourceLocation, position, scale);
+		gingerRegister.registerButton(button);
+		return button;
 	}
 
-	public GUIText registerText(String string, int textSize, Vector2f vector2f, float maxLineLength, boolean centered, String id) {
+	public GUIText registerText(String string, int textSize, Vector2f vector2f, float maxLineLength, boolean centered, String id)
+	{
 		GUIText text = new GUIText(string, textSize, globalFont, vector2f, maxLineLength, false);
 		text.textID = id;
 		gingerRegister.registerText(text);
 		return text;
 	}
-	
-	public TextureButton registerButton(String resourceLocation, Vector2f position, Vector2f scale) {
-		TextureButton button = new TextureButton(resourceLocation, position, scale);
-		gingerRegister.registerButton(button);
-		return button;
+
+	public void render(Game game)
+	{
+		GingerUtils.preRenderScene(masterRenderer);
+		contrastFbo.bindFBO();
+		masterRenderer.renderScene(game.data.entities, game.data.normalMapEntities, game.data.flatTerrains, game.data.lights, game.data.camera, game.data.clippingPlane);
+		ParticleMaster.renderParticles(game.data.camera);
+		contrastFbo.unbindFBO();
+		PostProcessing.doPostProcessing(contrastFbo.colorTexture);
+		if (game.data.handleGuis)
+		{ renderOverlays(game); }
 	}
-	
+
+	public void renderOverlays(Game game)
+	{
+		masterRenderer.renderGuis(game.data.guis);
+		TextMaster.render();
+	}
+
+	public void renderWithoutTerrain(Game game)
+	{
+		GingerUtils.preRenderScene(masterRenderer);
+		contrastFbo.bindFBO();
+		masterRenderer.renderSceneNoTerrain(game.data.entities, game.data.normalMapEntities, game.data.lights, game.data.camera, game.data.clippingPlane);
+		ParticleMaster.renderParticles(game.data.camera);
+		contrastFbo.unbindFBO();
+		PostProcessing.doPostProcessing(contrastFbo.colorTexture);
+		if (game.data.handleGuis)
+		{ renderOverlays(game); }
+	}
+
+	public void setGlobalFont(FontType font)
+	{ this.globalFont = font; }
+
+	public void setup(MasterRenderer masterRenderer, Game game)
+	{
+		gingerRegister = new GingerRegister();
+		gingerRegister.registerGame(game);
+		timer = new Timer(game.data.tickSpeed);
+		timer.addTickListener(gameTickListener);
+		contrastFbo = new Fbo(new ContrastChanger());
+		this.masterRenderer = masterRenderer;
+		picker = new MousePicker(game.data.camera, masterRenderer.getProjectionMatrix(), null);
+		PostProcessing.init();
+		ParticleMaster.init(masterRenderer.getProjectionMatrix());
+	}
+
+	public void startGame()
+	{
+		while (!Window.closed())
+		{
+			if (Window.isUpdating())
+			{
+				timer.tick();
+				gingerRegister.game.render();
+			}
+		}
+	}
+
+	public void update(GameData data)
+	{
+		data.camera.move();
+		Window.update();
+		GingerUtils.update();
+		picker.update();
+		ParticleMaster.update(data.camera);
+	}
 }
