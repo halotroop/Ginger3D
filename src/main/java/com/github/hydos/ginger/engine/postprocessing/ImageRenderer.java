@@ -7,7 +7,7 @@ public class ImageRenderer {
 	private Fbo fbo;
 
 	protected ImageRenderer(int width, int height) {
-		this.fbo = new Fbo();
+		this.fbo = new Fbo(new ContrastChanger());
 	}
 
 	protected ImageRenderer() {}
