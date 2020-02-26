@@ -1,6 +1,7 @@
 package com.github.hydos.ginger.engine.cameras;
 
 import com.github.hydos.ginger.engine.elements.objects.Player;
+import com.github.hydos.ginger.engine.io.Window;
 import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 
 public class FirstPersonCamera extends Camera
@@ -34,7 +35,7 @@ public class FirstPersonCamera extends Camera
 		position.y = player.getPosition().y;
 		
 		roll = player.getRotX();
-		yaw = -player.getRotY() + 180;
-		pitch = player.getRotZ();
+		yaw = -player.getRotY() + 180 + Window.getNormalizedMouseCoordinates().getX() * 8;
+		pitch = player.getRotZ() + -Window.getNormalizedMouseCoordinates().getY() * 8;
 	}
 }
