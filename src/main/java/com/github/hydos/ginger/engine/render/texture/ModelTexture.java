@@ -24,6 +24,7 @@ public class ModelTexture
 
 	public ModelTexture(String file)
 	{
+		// TODO: Add a missing texture placholder in case of null file.
 		texture = Image.createImage("/textures/" + file);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.textureID);
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, 10241, 9729.0f);

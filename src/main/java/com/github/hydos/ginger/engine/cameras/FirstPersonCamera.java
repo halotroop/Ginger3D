@@ -12,6 +12,7 @@ public class FirstPersonCamera extends Camera
 	public FirstPersonCamera(Player player)
 	{
 		super(player);
+		player.isVisible = false;
 	}
 
 	public float getPitch()
@@ -35,6 +36,5 @@ public class FirstPersonCamera extends Camera
 		roll = player.getRotX();
 		yaw = -player.getRotY() + 180;
 		pitch = player.getRotZ();
-		
 	}
 }

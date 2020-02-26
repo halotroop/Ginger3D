@@ -7,9 +7,9 @@ import com.github.hydos.ginger.engine.math.vectors.*;
 
 public class OBJFileLoader
 {
-	public static String resourceLocation = "C:/Users/Hayden/Desktop/Ginger3D/src/main/resources/models/";
+	public static String resourceLocation = "~/Desktop/Ginger3D/src/main/resources/models/";
 
-	public static Mesh loadModel(String filePath, String texturePath)
+	public static Mesh loadModel(String filePath)
 	{
 		AIScene scene = null;
 		try
