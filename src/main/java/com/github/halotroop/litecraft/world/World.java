@@ -1,6 +1,6 @@
 package com.github.halotroop.litecraft.world;
 
-import java.util.*;
+import java.util.Random;
 
 import com.github.halotroop.litecraft.types.block.Block;
 import com.github.halotroop.litecraft.world.gen.*;
@@ -17,6 +17,7 @@ public class World implements BlockAccess, WorldGenConstants
 	private final Long2ObjectMap<Chunk> chunks;
 	private final WorldModifier[] worldModifiers;
 	private final ChunkGenerator chunkGenerator;
+	private final BlockAccess genBlockAccess;
 
 	private final long seed;
 	public Player player;
@@ -27,6 +28,7 @@ public class World implements BlockAccess, WorldGenConstants
 		this.seed = seed;
 		this.chunkGenerator = dim.createChunkGenerator(seed);
 		this.worldModifiers = dim.getWorldModifierArray();
+		this.genBlockAccess = new GenWorld(this);
 
 		for (int i = (0 - (size/2)); i < (size/2); i++)
 			for (int k = (0 - (size/2)); k < (size/2); k++)
@@ -54,11 +56,14 @@ public class World implements BlockAccess, WorldGenConstants
 
 		for (WorldModifier modifier : this.worldModifiers)
 		{
-			modifier.modifyWorld(rand, chunkStartX, chunkStartY, chunkStartZ);
+			modifier.modifyWorld(this.genBlockAccess, rand, chunkStartX, chunkStartY, chunkStartZ);
 		}
 	}
 
-	Chunk getPartiallyGeneratedChunk(int chunkX, int chunkY, int chunkZ)
+	/**
+	 * @return a chunk that has not neccesarily gone through chunk populating. Used in chunk populating to prevent infinite recursion.
+	 */
+	Chunk getGenChunk(int chunkX, int chunkY, int chunkZ)
 	{ return this.chunks.computeIfAbsent(posHash(chunkX, chunkY, chunkZ), pos -> this.chunkGenerator.generateChunk(chunkX, chunkY, chunkZ)); }
 
 	private static long posHash(int chunkX, int chunkY, int chunkZ)

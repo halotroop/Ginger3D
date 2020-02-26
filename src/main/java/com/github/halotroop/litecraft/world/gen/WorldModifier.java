@@ -2,6 +2,8 @@ package com.github.halotroop.litecraft.world.gen;
 
 import java.util.Random;
 
+import com.github.halotroop.litecraft.world.BlockAccess;
+
 public interface WorldModifier {
-	void modifyWorld(Random rand, int chunkStartX, int chunkStartY, int chunkStartZ);
+	void modifyWorld(BlockAccess world, Random rand, int chunkStartX, int chunkStartY, int chunkStartZ);
 }
