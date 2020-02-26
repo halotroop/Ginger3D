@@ -5,16 +5,14 @@ import com.github.hydos.ginger.engine.render.models.TexturedModel;
 
 public class Block
 {
+	public static final Block AIR = new Block(new Properties().visible(false));
+	public static final Block DIRT = new Block("block/cubes/soil/dirt.png", new Properties());
+	public static final Block STONE = new Block("block/cubes/stone/basic/gneiss.png", new Properties());
+	
 	public static class Properties
 	{ // add properties to this builder!
 		private boolean visible = true;
 		private boolean fullCube = true;
-
-		public Properties visible(boolean visible)
-		{
-			this.visible = visible;
-			return this;
-		}
 
 		public Properties fullCube(boolean fullCube)
 		{
@@ -27,13 +25,19 @@ public class Block
 
 		public boolean isVisible()
 		{ return visible; }
-	}
 
-	public static final Block AIR = new Block(new Properties().visible(false));
-	public static final Block DIRT = new Block("block/cubes/soil/dirt.png", new Properties());
-	public static final Block STONE = new Block("block/cubes/stone/cobblestone.png", new Properties());
+		public Properties visible(boolean visible)
+		{
+			this.visible = visible;
+			return this;
+		}
+	}
+	
 	public final TexturedModel model;
 	public final boolean visible;
+
+	protected Block(Properties properties)
+	{ this((TexturedModel) null, properties); }
 
 	protected Block(String texture, Properties properties)
 	{ this(ModelLoader.loadGenericCube(texture), properties); }
@@ -43,7 +47,4 @@ public class Block
 		this.model = model;
 		this.visible = properties.visible;
 	}
-
-	protected Block(Properties properties)
-	{ this((TexturedModel) null, properties); }
 }
