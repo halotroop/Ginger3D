@@ -6,6 +6,7 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import java.io.IOException;
 import java.nio.*;
 
+import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
 import com.github.hydos.ginger.engine.render.tools.IOUtil;
@@ -34,19 +35,22 @@ public class Image
 			img = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
 			if (img == null)
 			{ throw new RuntimeException("Failed to load image: " + stbi_failure_reason()); }
-			return new Image(w.get(0), h.get(0), img);
+			return new Image(w.get(0), h.get(0), img, comp);
 		}
 	}
 
 	private ByteBuffer image;
 
 	private int width, height;
+	
+	private IntBuffer comp;
 
-	Image(int width, int heigh, ByteBuffer image)
+	Image(int width, int heigh, ByteBuffer image, IntBuffer comp)
 	{
 		this.image = image;
 		this.height = heigh;
 		this.width = width;
+		this.comp = comp;
 	}
 
 	public Image(String imagePath)
@@ -77,6 +81,7 @@ public class Image
 			this.image = img;
 			this.width = w.get(0);
 			this.height = h.get(0);
+			this.comp = comp;
 		}
 	}
 
@@ -87,4 +92,8 @@ public class Image
 
 	public int getWidth()
 	{ return width; }
+
+	public IntBuffer getComp() {
+		return comp;
+	}
 }

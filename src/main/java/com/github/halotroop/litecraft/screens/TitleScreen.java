@@ -43,8 +43,9 @@ public class TitleScreen extends Screen
 		playButton.update();
 		if (playButton.isClicked())
 		{
+			buildText.remove();
 			Window.lockMouse();
-			playButton.hide(elements);
+			playButton.hide(Litecraft.getInstance().data.guis);
 			Litecraft.getInstance().onPlayButtonClick();//TODO: add world gui so it takes u to world creation place
 			//TODO: also add a texture to be rendered behind the gui as an option
 		}

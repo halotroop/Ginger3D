@@ -3,15 +3,14 @@ package com.github.halotroop.litecraft;
 import java.util.Random;
 
 import com.github.halotroop.litecraft.screens.TitleScreen;
-import com.github.halotroop.litecraft.world.*;
+import com.github.halotroop.litecraft.world.World;
 import com.github.hydos.ginger.engine.api.*;
 import com.github.hydos.ginger.engine.api.game.*;
-import com.github.hydos.ginger.engine.cameras.Camera;
-import com.github.hydos.ginger.engine.elements.buttons.TextureButton;
+import com.github.hydos.ginger.engine.cameras.*;
 import com.github.hydos.ginger.engine.elements.objects.*;
-import com.github.hydos.ginger.engine.font.*;
+import com.github.hydos.ginger.engine.font.FontType;
 import com.github.hydos.ginger.engine.io.Window;
-import com.github.hydos.ginger.engine.math.vectors.*;
+import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 import com.github.hydos.ginger.engine.obj.ModelLoader;
 import com.github.hydos.ginger.engine.obj.shapes.StaticCube;
 import com.github.hydos.ginger.engine.render.MasterRenderer;
@@ -42,7 +41,10 @@ public class Litecraft extends Game
 		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/stone/brick/stonebrick.png");
 		StaticCube.scaleCube(1);
 		Player player = new Player(dirtModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
-		Camera camera = new Camera(new Vector3f(0, 0.1f, 0), player);
+
+		Camera camera = new FirstPersonCamera(player);
+		
+		player.isVisible = false;
 		ginger3D = new Ginger();
 		data = new GameData(player, camera, 30);
 		data.handleGuis = false;
