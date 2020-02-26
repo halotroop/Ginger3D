@@ -2,6 +2,7 @@ package com.github.halotroop.litecraft;
 
 import java.util.Random;
 
+import com.github.halotroop.litecraft.screens.TitleScreen;
 import com.github.halotroop.litecraft.world.*;
 import com.github.hydos.ginger.engine.api.*;
 import com.github.hydos.ginger.engine.api.game.*;
@@ -22,6 +23,7 @@ public class Litecraft extends Game
 {
 	private World world;
 	private Ginger ginger3D;
+	private static Litecraft INSTANCE;
 
 	//temp stuff to test out fbo fixes
 	int oldWindowWidth = Window.width;
@@ -29,6 +31,7 @@ public class Litecraft extends Game
 
 	public Litecraft()
 	{
+		INSTANCE = this;
 		Constants.movementSpeed = 0.00005f;
 		Constants.turnSpeed = 0.00006f;
 		Constants.gravity = new org.joml.Vector3f(0, -0.0000000005f, 0);
@@ -47,14 +50,11 @@ public class Litecraft extends Game
 
 		FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
 		ginger3D.setGlobalFont(font);
-		GUIText titleText = ginger3D.registerText("LiteCraft", 3, new Vector2f(0, 0), 1f, true, "PLAYBUTTON");
-		titleText.setBorderWidth(0.5f);
 		
 		Light sun = new Light(new Vector3f(100, 105, -100), new Vector3f(1.3f, 1.3f, 1.3f), new Vector3f(0.0001f, 0.0001f, 0.0001f));
 		data.lights.add(sun);
 		data.entities.add(player);
-		TextureButton playButton = ginger3D.registerButton("/textures/guis/purpur.png", new Vector2f(0, 0), new Vector2f(0.25f, 0.1f));
-		playButton.show(data.guis);
+
 		//		GuiTexture title = new GuiTexture(Loader.loadTextureDirectly("/textures/guis/title.png"), new Vector2f(0, 0.8F), new Vector2f(0.25f, 0.1f));
 		//		data.guis.add(title);
 		oldWindowWidth = Window.width;
@@ -70,6 +70,9 @@ public class Litecraft extends Game
 	@Override
 	public void render()
 	{
+		if(ginger3D.gingerRegister.currentScreen == null) {
+			ginger3D.openScreen(new TitleScreen());
+		}
 		ginger3D.update(data);
 		if (oldWindowHeight != Window.height || oldWindowWidth != Window.width)
 		{
@@ -79,7 +82,7 @@ public class Litecraft extends Game
 		oldWindowHeight = Window.height;
 		ginger3D.gingerRegister.masterRenderer.renderShadowMap(data.entities, data.lights.get(0));
 		if (this.world != null)
-		{ ginger3D.renderWithoutTerrain(this, this.world); }
+		{ ginger3D.renderWorld(this, this.world); }
 		ginger3D.renderOverlays(this);
 		ginger3D.postRender();
 	}
@@ -88,16 +91,16 @@ public class Litecraft extends Game
 	public void update()
 	{
 		data.player.updateMovement();
-		TextureButton playButton = ginger3D.gingerRegister.guiButtons.get(0);
-		playButton.update();
-		if (playButton.isClicked())
+	}
+
+	public static Litecraft getInstance() {
+		return INSTANCE;
+	}
+
+	public void onPlayButtonClick() {
+		if (world == null)
 		{
-			Window.lockMouse();
-			playButton.hide(data.guis);
-			if (world == null)
-			{
-				world = new World((long) new Random().nextInt(), 10);
-			}
-		}
+			world = new World((long) new Random().nextInt(), 10);
+		}		
 	}
 }

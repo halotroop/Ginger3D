@@ -17,6 +17,8 @@ import com.github.hydos.ginger.engine.utils.Loader;
 
 public class Ginger
 {
+	private static Ginger INSTANCE;
+	
 	public GingerRegister gingerRegister;
 	public MousePicker picker;
 	public FontType globalFont;
@@ -26,7 +28,12 @@ public class Ginger
 	{
 		@Override
 		public void onTick(float deltaTime)
-		{ gingerRegister.game.update(); };
+		{ 
+			gingerRegister.game.update(); 
+			if(gingerRegister.currentScreen != null) {
+				gingerRegister.currentScreen.tick();
+			}
+		};
 	};
 
 	public void cleanup()
@@ -62,28 +69,16 @@ public class Ginger
 		return text;
 	}
 
-	public void render(Game game)
-	{
-		GingerUtils.preRenderScene(gingerRegister.masterRenderer);
-		contrastFbo.bindFBO();
-		gingerRegister.masterRenderer.renderScene(game.data.entities, game.data.normalMapEntities, game.data.flatTerrains, game.data.lights, game.data.camera, game.data.clippingPlane);
-		ParticleMaster.renderParticles(game.data.camera);
-		contrastFbo.unbindFBO();
-		contrastFbo.handler.render(contrastFbo.colorTexture);
-		if (game.data.handleGuis)
-		{ renderOverlays(game); }
-		if(gingerRegister.currentScreen != null) {
-			gingerRegister.currentScreen.render();
-		}
-	}
-
 	public void renderOverlays(Game game)
 	{
 		gingerRegister.masterRenderer.renderGuis(game.data.guis);
+		if(gingerRegister.currentScreen != null) {
+			gingerRegister.masterRenderer.renderGuis(gingerRegister.currentScreen.elements);
+		}
 		TextMaster.render();
 	}
 
-	public void renderWithoutTerrain(Game game, World world)
+	public void renderWorld(Game game, World world)
 	{
 		GingerUtils.preRenderScene(gingerRegister.masterRenderer);
 		contrastFbo.bindFBO();
@@ -93,6 +88,7 @@ public class Ginger
 		PostProcessing.doPostProcessing(contrastFbo.colorTexture);
 		if (game.data.handleGuis)
 		{ renderOverlays(game); }
+
 	}
 
 	public void setGlobalFont(FontType font)
@@ -100,6 +96,7 @@ public class Ginger
 
 	public void setup(MasterRenderer masterRenderer, Game game)
 	{
+		INSTANCE = this;
 		gingerRegister = new GingerRegister();
 		gingerRegister.registerGame(game);
 		timer = new Timer(game.data.tickSpeed);
@@ -130,5 +127,9 @@ public class Ginger
 		GingerUtils.update();
 		picker.update();
 		ParticleMaster.update(data.camera);
+	}
+
+	public static Ginger getInstance() {
+		return INSTANCE;
 	}
 }

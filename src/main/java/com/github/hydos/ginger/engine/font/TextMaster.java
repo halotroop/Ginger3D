@@ -2,6 +2,7 @@ package com.github.hydos.ginger.engine.font;
 
 import java.util.*;
 
+import com.github.hydos.ginger.engine.api.*;
 import com.github.hydos.ginger.engine.render.renderers.FontRenderer;
 import com.github.hydos.ginger.engine.utils.Loader;
 
@@ -41,4 +42,14 @@ public class TextMaster
 
 	public static void render()
 	{ renderer.render(texts); }
+
+	public static void render(GUIText buildText) 
+	{
+		Map<FontType, List<GUIText>> oldTexts = texts;
+		List<GUIText> oldFontText = texts.get(Ginger.getInstance().globalFont);
+		oldFontText.add(buildText);
+		texts.clear();
+		texts.put(Ginger.getInstance().globalFont, oldFontText);
+		texts = oldTexts;
+	}
 }
