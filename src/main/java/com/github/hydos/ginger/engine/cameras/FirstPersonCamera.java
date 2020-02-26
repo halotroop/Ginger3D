@@ -30,9 +30,7 @@ public class FirstPersonCamera extends Camera
 
 	public void move()
 	{
-		
-		var jdk = 13;
-		
+				
 		position.x = player.getPosition().x;
 		position.z = player.getPosition().z;
 		position.y = player.getPosition().y;
