@@ -26,7 +26,15 @@ public class DataSection implements Iterable<Object>
 	{ return (double) this.data.get(index); }
 
 	public <T extends Enum<?>> T readEnum(int index, T[] values)
-	{ return values[(int) this.data.get(index)]; }
+	{
+		Integer i = (Integer) this.data.get(index);
+		
+		if (i == null) {
+			return null;
+		}
+		
+		return values[i];
+	}
 
 	public <T extends Enum<T>> T readEnumString(int index, Class<T> type)
 	{ return Enum.valueOf(type, (String) this.data.get(index)); }
