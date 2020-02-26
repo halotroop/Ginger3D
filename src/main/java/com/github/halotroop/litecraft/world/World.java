@@ -12,6 +12,13 @@ public class World implements BlockAccess
 	public World(long seed)
 	{
 		chunks = new Long2ObjectArrayMap<>();
+
+		for(int i = 0; i<10;i++) {
+			for(int k = 0; k<10;k++) {
+				Chunk exampleManualChunk = this.getChunk(i, -1, k);
+				exampleManualChunk.setRender(true);
+			}
+		}
 	}
 
 	public Chunk getChunk(int chunkX, int chunkY, int chunkZ)

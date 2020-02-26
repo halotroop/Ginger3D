@@ -1,5 +1,7 @@
 package com.github.halotroop.litecraft;
 
+import java.util.Random;
+
 import com.github.halotroop.litecraft.world.*;
 import com.github.hydos.ginger.engine.api.*;
 import com.github.hydos.ginger.engine.api.game.*;
@@ -43,15 +45,6 @@ public class Litecraft extends Game
 		data = new GameData(player, camera, 30);
 		data.handleGuis = false;
 		ginger3D.setup(new MasterRenderer(camera), this);
-		//YeS?
-		world = new World(0L);
-
-		for(int i = 0; i<10;i++) {
-			for(int k = 0; k<10;k++) {
-				Chunk exampleManualChunk = world.getChunk(i, -1, k);
-				exampleManualChunk.setRender(true);
-			}
-		}
 
 		FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
 		ginger3D.setGlobalFont(font);
@@ -65,9 +58,9 @@ public class Litecraft extends Game
 		playButton.show(data.guis);
 		//		GuiTexture title = new GuiTexture(Loader.loadTextureDirectly("/textures/guis/title.png"), new Vector2f(0, 0.8F), new Vector2f(0.25f, 0.1f));
 		//		data.guis.add(title);
-		//start the game loop
 		oldWindowWidth = Window.width;
 		oldWindowHeight = Window.height;
+		//start the game loop
 		ginger3D.startGame();
 	}
 
@@ -86,8 +79,8 @@ public class Litecraft extends Game
 		oldWindowWidth = Window.width;
 		oldWindowHeight = Window.height;
 		ginger3D.gingerRegister.masterRenderer.renderShadowMap(data.entities, data.lights.get(0));
-		if (isInWorld)
-		{ ginger3D.renderWithoutTerrain(this, world); }
+		if (this.world != null)
+		{ ginger3D.renderWithoutTerrain(this, this.world); }
 		ginger3D.renderOverlays(this);
 		ginger3D.postRender();
 	}
@@ -96,15 +89,13 @@ public class Litecraft extends Game
 	public void update()
 	{
 		data.player.move(null);
-		GUIText text = ginger3D.gingerRegister.texts.get(0);
 		TextureButton playButton = ginger3D.gingerRegister.guiButtons.get(0);
-		boolean isClicked = playButton.isClicked();
 		playButton.update();
-		if (isClicked)
+		if (playButton.isClicked())
 		{
 			Window.lockMouse();
 			playButton.hide(data.guis);
-			isInWorld = true;
+			world = new World((long) new Random().nextInt());
 		}
 	}
 }
