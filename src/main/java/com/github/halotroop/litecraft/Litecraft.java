@@ -36,7 +36,7 @@ public class Litecraft extends Game
 		Window.create(1200, 800, "LiteCraft", 60);
 		GingerUtils.init();
 		Window.setBackgroundColour(0.2f, 0.2f, 0.6f);
-		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/stone/brick/brick.png");
+		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/stone/brick/stonebrick.png");
 		StaticCube.scaleCube(1);
 		Player player = new Player(dirtModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
 		Camera camera = new Camera(new Vector3f(0, 0.1f, 0), player);
