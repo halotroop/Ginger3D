@@ -122,8 +122,8 @@ public class Ginger
 
 	public void update(GameData data)
 	{
-		data.camera.move();
 		Window.update();
+		data.camera.move();
 		GingerUtils.update();
 		picker.update();
 		ParticleMaster.update(data.camera);

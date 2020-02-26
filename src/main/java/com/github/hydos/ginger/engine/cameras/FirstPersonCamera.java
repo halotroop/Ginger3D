@@ -35,7 +35,7 @@ public class FirstPersonCamera extends Camera
 		position.y = player.getPosition().y;
 		
 		roll = player.getRotX();
-		yaw = -player.getRotY() + 180 + Window.getNormalizedMouseCoordinates().getX() * 8;
-		pitch = player.getRotZ() + -Window.getNormalizedMouseCoordinates().getY() * 8;
+		yaw = -player.getRotY() + 180 + Window.getNormalizedMouseCoordinates().getX() * 70;
+		pitch = player.getRotZ() + -Window.getNormalizedMouseCoordinates().getY() * 70;
 	}
 }
