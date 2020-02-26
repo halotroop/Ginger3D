@@ -10,8 +10,8 @@
 	<description>A voxel game implementation of the Ginger3D engine by hYdos</description>
 	<url>http://maven.apache.org</url>
 	<properties>
-        <maven.compiler.target>1.11</maven.compiler.target>
-        <maven.compiler.source>1.11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
 		<lwjgl.version>3.2.3</lwjgl.version>
 		<joml.version>1.9.20</joml.version>
 	</properties>
