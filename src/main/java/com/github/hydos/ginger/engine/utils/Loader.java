@@ -125,8 +125,7 @@ public class Loader
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, 10241, 9729.0f);
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, 10240, 9729.0f);
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, texture.getWidth(), texture.getHeight(), 0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, texture.getImage());
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, texture.getWidth(), texture.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, texture.getImage());
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 		if (Window.glContext.GL_EXT_texture_filter_anisotropic)
@@ -136,6 +135,7 @@ public class Loader
 		}
 		else
 			System.out.println("anisotropic not supported!");
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		return textureID;
 	}
 

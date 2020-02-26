@@ -10,7 +10,9 @@ import com.github.hydos.ginger.engine.math.vectors.*;
 import com.github.hydos.ginger.engine.render.models.RawModel;
 import com.github.hydos.ginger.engine.utils.Loader;
 import com.github.hydos.ginger.main.settings.Constants;
-
+/*
+ * wtf
+ */
 @Deprecated
 public class Terrain
 {
