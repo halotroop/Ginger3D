@@ -83,8 +83,7 @@ public class World implements BlockAccess, WorldGenConstants
 	//used for model combining and culling
 	public Chunk optimiseChunk(Chunk chunk)
 	{
-		//TODO: use this
-		return null;
+		return chunk;
 	}
 
 	public void render(ObjectRenderer entityRenderer)
