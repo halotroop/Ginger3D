@@ -116,7 +116,7 @@ public class Litecraft extends Game
 	public void onPlayButtonClick() {
 		if (world == null)
 		{
-			world = new World((long) new Random().nextInt(), 10, Dimension.OVERWORLD);
+			world = new World(new Random().nextLong(), 10, Dimension.OVERWORLD);
 		}		
 	}
 }

@@ -30,7 +30,8 @@ public class World implements BlockAccess, WorldGenConstants
 
 		for (int i = (0 - (size/2)); i < (size/2); i++)
 			for (int k = (0 - (size/2)); k < (size/2); k++)
-				this.getChunk(i, -1, k).setRender(true);
+				for (int y = -2; y < 0; ++y)
+					this.getChunk(i, y, k).setRender(true);
 
 		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
 		this.player = new Player(dirtModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
