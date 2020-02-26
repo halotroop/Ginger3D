@@ -10,7 +10,6 @@ import com.github.hydos.ginger.main.settings.Constants;
 
 public class Player extends RenderObject
 {
-	private static float terrainHeight = 0;
 	private double currentSpeed = 0;
 	private float currentTurn = 0;
 	private float upwardsSpeed = 0;
@@ -57,7 +56,7 @@ public class Player extends RenderObject
 		}
 	}
 
-	public void move(Terrain t)
+	public void updateMovement()
 	{
 		checkInputs();
 		super.increaseRotation(0, (float) ((currentTurn) * Window.getTime()), 0);
@@ -65,15 +64,11 @@ public class Player extends RenderObject
 		float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
 		float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
 		super.increasePosition(dx, 0, dz);
-		if (t != null)
-		{ terrainHeight = t.getHeightOfTerrain(super.getPosition().x, super.getPosition().z); }
 		super.increasePosition(0, (float) (upwardsSpeed * (Window.getTime())), 0);
 		upwardsSpeed += Constants.gravity.y() * Window.getTime();
-		if (super.getPosition().y < terrainHeight)
-		{
-			isInAir = false;
-			upwardsSpeed = 0;
-			super.getPosition().y = terrainHeight;
-		}
+		
+		isInAir = false;
+		upwardsSpeed = 0;
+		super.getPosition().y = 0;
 	}
 }

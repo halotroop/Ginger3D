@@ -88,14 +88,15 @@ public class Litecraft extends Game
 	@Override
 	public void update()
 	{
-		data.player.move(null);
+		data.player.updateMovement();
 		TextureButton playButton = ginger3D.gingerRegister.guiButtons.get(0);
 		playButton.update();
 		if (playButton.isClicked())
 		{
 			Window.lockMouse();
 			playButton.hide(data.guis);
-			world = new World((long) new Random().nextInt());
+			if (world == null)
+				world = new World((long) new Random().nextInt(), 10);
 		}
 	}
 }

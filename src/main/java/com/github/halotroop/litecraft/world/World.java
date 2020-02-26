@@ -9,16 +9,13 @@ public class World implements BlockAccess
 {
 	private final Long2ObjectMap<Chunk> chunks;
 
-	public World(long seed)
+	public World(long seed, int size)
 	{
 		chunks = new Long2ObjectArrayMap<>();
-
-		for(int i = 0; i<10;i++) {
-			for(int k = 0; k<10;k++) {
-				Chunk exampleManualChunk = this.getChunk(i, -1, k);
-				exampleManualChunk.setRender(true);
-			}
-		}
+		
+		for (int i = (0 - (size/2)); i < (size/2); i++)
+			for (int k = (0 - (size/2)); k < (size/2); k++)
+				this.getChunk(i, -1, k).setRender(true);
 	}
 
 	public Chunk getChunk(int chunkX, int chunkY, int chunkZ)
@@ -42,7 +39,6 @@ public class World implements BlockAccess
 	public Chunk optimiseChunk(Chunk chunk)
 	{
 		//TODO: use this
-
 		return null;
 	}
 
