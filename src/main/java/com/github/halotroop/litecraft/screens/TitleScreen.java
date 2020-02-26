@@ -11,7 +11,6 @@ import com.github.hydos.ginger.engine.screen.Screen;
  */
 public class TitleScreen extends Screen
 {
-	
 	List<GuiTexture> elements;
 	
 	public TitleScreen()
@@ -31,7 +30,4 @@ public class TitleScreen extends Screen
 	{
 		
 	}
-	
-	
-	
 }
