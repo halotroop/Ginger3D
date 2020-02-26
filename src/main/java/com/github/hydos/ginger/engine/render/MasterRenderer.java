@@ -24,11 +24,13 @@ public class MasterRenderer
 	private static final float FAR_PLANE = 1000f;
 	public static void disableCulling()
 	{ GL11.glDisable(GL11.GL_CULL_FACE); }
+	
 	public static void enableCulling()
 	{
-		//		GL11.glEnable(GL11.GL_CULL_FACE);
-		//		GL11.glCullFace(GL11.GL_BACK);
+//		GL11.glEnable(GL11.GL_CULL_FACE);
+//		GL11.glCullFace(GL11.GL_BACK);
 	}
+	
 	private StaticShader entityShader;
 	public ObjectRenderer entityRenderer;
 	private GuiShader guiShader;

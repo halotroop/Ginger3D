@@ -33,10 +33,12 @@ public class Player extends RenderObject
 		}
 		if (Window.isKeyDown(GLFW.GLFW_KEY_A))
 		{
-			this.currentTurn = Constants.turnSpeed;
+			this.currentTurn = (float) Constants.movementSpeed;
 		}
 		else if (Window.isKeyDown(GLFW.GLFW_KEY_D))
-		{ this.currentTurn = -Constants.turnSpeed; }
+		{
+			this.currentTurn = (float) -Constants.movementSpeed;
+		}
 		if (Window.isKeyDown(GLFW.GLFW_KEY_SPACE))
 		{
 			jump();
@@ -55,7 +57,7 @@ public class Player extends RenderObject
 	public void updateMovement()
 	{
 		checkInputs();
-		super.increaseRotation(0, (float) ((currentTurn) * Window.getTime()), 0);
+//		super.increaseRotation(0, (float) ((currentTurn) * Window.getTime()), 0);
 		float distance = (float) ((currentSpeed) * (Window.getTime()));
 		float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
 		float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
