@@ -11,6 +11,7 @@ import com.github.hydos.ginger.engine.render.models.RawModel;
 import com.github.hydos.ginger.engine.utils.Loader;
 import com.github.hydos.ginger.main.settings.Constants;
 
+@Deprecated
 public class Terrain
 {
 	private static final float MAX_PIXEL_COLOUR = 256 * 256 * 256;

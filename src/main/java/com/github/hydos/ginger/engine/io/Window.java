@@ -16,7 +16,6 @@ public class Window
 	private static String title;
 	public static long window;
 	private static Vector3f backgroundColour = new Vector3f(0.2f, 0.2f, 0.2f);
-	private static boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
 	private static boolean[] mouseButtons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
 	private static GLFWImage.Buffer iconBuffer = null;
 	private static double fpsCap, time, processedTime = 0;

@@ -54,9 +54,9 @@ public class Ginger
 		return button;
 	}
 
-	public GUIText registerText(String string, int textSize, Vector2f vector2f, float maxLineLength, boolean centered, String id)
+	public GUIText registerText(String string, int textSize, Vector2f position, float maxLineLength, boolean centered, String id)
 	{
-		GUIText text = new GUIText(string, textSize, globalFont, vector2f, maxLineLength, false);
+		GUIText text = new GUIText(string, textSize, globalFont, position, maxLineLength, false);
 		text.textID = id;
 		gingerRegister.registerText(text);
 		return text;

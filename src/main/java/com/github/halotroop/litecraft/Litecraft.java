@@ -22,7 +22,6 @@ public class Litecraft extends Game
 {
 	private World world;
 	private Ginger ginger3D;
-	private boolean isInWorld = false;
 
 	//temp stuff to test out fbo fixes
 	int oldWindowWidth = Window.width;
@@ -96,7 +95,9 @@ public class Litecraft extends Game
 			Window.lockMouse();
 			playButton.hide(data.guis);
 			if (world == null)
+			{
 				world = new World((long) new Random().nextInt(), 10);
+			}
 		}
 	}
 }

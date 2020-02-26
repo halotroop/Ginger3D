@@ -1,6 +1,10 @@
 package com.github.halotroop.litecraft.world;
 
 import com.github.halotroop.litecraft.types.block.Block;
+import com.github.hydos.ginger.engine.elements.objects.Player;
+import com.github.hydos.ginger.engine.math.vectors.Vector3f;
+import com.github.hydos.ginger.engine.obj.ModelLoader;
+import com.github.hydos.ginger.engine.render.models.TexturedModel;
 import com.github.hydos.ginger.engine.render.renderers.ObjectRenderer;
 
 import it.unimi.dsi.fastutil.longs.*;
@@ -8,6 +12,7 @@ import it.unimi.dsi.fastutil.longs.*;
 public class World implements BlockAccess
 {
 	private final Long2ObjectMap<Chunk> chunks;
+	public Player player;
 
 	public World(long seed, int size)
 	{
@@ -16,6 +21,9 @@ public class World implements BlockAccess
 		for (int i = (0 - (size/2)); i < (size/2); i++)
 			for (int k = (0 - (size/2)); k < (size/2); k++)
 				this.getChunk(i, -1, k).setRender(true);
+		
+		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
+		this.player = new Player(dirtModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
 	}
 
 	public Chunk getChunk(int chunkX, int chunkY, int chunkZ)

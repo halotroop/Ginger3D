@@ -5,7 +5,6 @@ import org.lwjgl.glfw.GLFW;
 import com.github.hydos.ginger.engine.io.Window;
 import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 import com.github.hydos.ginger.engine.render.models.TexturedModel;
-import com.github.hydos.ginger.engine.terrain.Terrain;
 import com.github.hydos.ginger.main.settings.Constants;
 
 public class Player extends RenderObject
@@ -41,9 +40,6 @@ public class Player extends RenderObject
 		if (Window.isKeyDown(GLFW.GLFW_KEY_SPACE))
 		{
 			jump();
-		}
-		else
-		{
 		}
 	}
 

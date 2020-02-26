@@ -97,7 +97,7 @@ public class Chunk implements BlockAccess
 		for (int x = 0; x < CHUNK_SIZE; ++x) {
 			for (int z = 0; z < CHUNK_SIZE; ++z) {
 				for (int y = 0; y < CHUNK_SIZE; ++y) {
-					result.setBlock(x, y, z, y == 7 ? Block.GRASS : Block.DIRT);
+					result.setBlock(x, y, z, y == 7 ? Block.DIRT : Block.STONE);
 				}
 			}
 		}
