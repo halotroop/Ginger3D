@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.github.halotroop.litecraft.screens.TitleScreen;
 import com.github.halotroop.litecraft.world.World;
+import com.github.halotroop.litecraft.world.gen.Dimension;
 import com.github.hydos.ginger.engine.api.*;
 import com.github.hydos.ginger.engine.api.game.*;
 import com.github.hydos.ginger.engine.cameras.*;
@@ -17,6 +18,8 @@ import com.github.hydos.ginger.engine.render.MasterRenderer;
 import com.github.hydos.ginger.engine.render.models.TexturedModel;
 import com.github.hydos.ginger.engine.utils.Loader;
 import com.github.hydos.ginger.main.settings.Constants;
+
+import tk.valoeghese.gateways.client.io.*;
 
 public class Litecraft extends Game
 {
@@ -36,6 +39,11 @@ public class Litecraft extends Game
 		Constants.gravity = new org.joml.Vector3f(0, -0.0000000005f, 0);
 		Constants.jumpPower = 0.00005f;
 		Window.create(1200, 800, "LiteCraft", 60);
+		KeyCallbackHandler.trackWindow(Window.window);
+		MouseCallbackHandler.trackWindow(Window.window);
+
+		setupKeybinds();
+
 		GingerUtils.init();
 		Window.setBackgroundColour(0.2f, 0.2f, 0.6f);
 		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/stone/brick/stonebrick.png");
@@ -43,7 +51,7 @@ public class Litecraft extends Game
 		Player player = new Player(dirtModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
 
 		Camera camera = new FirstPersonCamera(player);
-		
+
 		player.isVisible = false;
 		ginger3D = new Ginger();
 		data = new GameData(player, camera, 30);
@@ -52,7 +60,7 @@ public class Litecraft extends Game
 
 		FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
 		ginger3D.setGlobalFont(font);
-		
+
 		Light sun = new Light(new Vector3f(100, 105, -100), new Vector3f(1.3f, 1.3f, 1.3f), new Vector3f(0.0001f, 0.0001f, 0.0001f));
 		data.lights.add(sun);
 		data.entities.add(player);
@@ -63,6 +71,11 @@ public class Litecraft extends Game
 		oldWindowHeight = Window.height;
 		//start the game loop
 		ginger3D.startGame();
+	}
+
+	private void setupKeybinds()
+	{
+		Input.addPressCallback(Keybind.EXIT, this::exit);
 	}
 
 	@Override
@@ -92,6 +105,7 @@ public class Litecraft extends Game
 	@Override
 	public void update()
 	{
+		Input.invokeAllListeners();
 		data.player.updateMovement();
 	}
 
@@ -102,7 +116,7 @@ public class Litecraft extends Game
 	public void onPlayButtonClick() {
 		if (world == null)
 		{
-			world = new World((long) new Random().nextInt(), 10);
+			world = new World((long) new Random().nextInt(), 10, Dimension.OVERWORLD);
 		}		
 	}
 }

@@ -3,12 +3,13 @@ package com.github.halotroop.litecraft.world;
 import java.util.*;
 
 import com.github.halotroop.litecraft.types.block.*;
+import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 import com.github.hydos.ginger.engine.render.renderers.ObjectRenderer;
 
 import it.unimi.dsi.fastutil.longs.*;
 
-public class Chunk implements BlockAccess
+public class Chunk implements BlockAccess, WorldGenConstants
 {
 	/** @param x in-chunk x coordinate.
 	 * @param  y in-chunk y coordinate.
@@ -22,7 +23,8 @@ public class Chunk implements BlockAccess
 	private final Long2ObjectMap<BlockEntity> blockEntities = new Long2ObjectArrayMap<>();
 	private boolean render = false;
 	public final int chunkX, chunkY, chunkZ;
-	private final int chunkStartX, chunkStartY, chunkStartZ;
+	public final int chunkStartX, chunkStartY, chunkStartZ;
+	private boolean fullyGenerated = false;
 
 	public Chunk(int chunkX, int chunkY, int chunkZ)
 	{
@@ -30,13 +32,16 @@ public class Chunk implements BlockAccess
 		this.chunkX = chunkX;
 		this.chunkY = chunkY;
 		this.chunkZ = chunkZ;
-		this.chunkStartX = chunkX << 3;
-		this.chunkStartY = chunkY << 3;
-		this.chunkStartZ = chunkZ << 3;
+		this.chunkStartX = chunkX << POS_SHIFT;
+		this.chunkStartY = chunkY << POS_SHIFT;
+		this.chunkStartZ = chunkZ << POS_SHIFT;
 	}
 
 	public boolean doRender()
 	{ return this.render; }
+
+	public void setFullyGenerated(boolean fullyGenerated)
+	{ this.fullyGenerated = fullyGenerated; }
 
 	@Override
 	public Block getBlock(int x, int y, int z)
@@ -91,20 +96,6 @@ public class Chunk implements BlockAccess
 		}
 	}
 
-	public static Chunk generateChunk(int chunkX, int chunkY, int chunkZ) {
-		Chunk result = new Chunk(chunkX, chunkY, chunkZ);
-
-		for (int x = 0; x < CHUNK_SIZE; ++x) {
-			for (int z = 0; z < CHUNK_SIZE; ++z) {
-				for (int y = 0; y < CHUNK_SIZE; ++y) {
-					result.setBlock(x, y, z, y == 7 ? Block.DIRT : Block.STONE);
-				}
-			}
-		}
-
-		return result;
-	}
-
 	public void setRender(boolean render)
 	{
 		if (render && !this.render) // if it has been changed to true
@@ -134,4 +125,7 @@ public class Chunk implements BlockAccess
 		}
 		this.render = render;
 	}
+
+	public boolean isFullyGenerated()
+	{ return this.fullyGenerated; }
 }

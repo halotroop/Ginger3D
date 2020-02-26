@@ -1,6 +1,9 @@
 package com.github.halotroop.litecraft.world;
 
+import java.util.*;
+
 import com.github.halotroop.litecraft.types.block.Block;
+import com.github.halotroop.litecraft.world.gen.*;
 import com.github.hydos.ginger.engine.elements.objects.Player;
 import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 import com.github.hydos.ginger.engine.obj.ModelLoader;
@@ -9,28 +12,56 @@ import com.github.hydos.ginger.engine.render.renderers.ObjectRenderer;
 
 import it.unimi.dsi.fastutil.longs.*;
 
-public class World implements BlockAccess
+public class World implements BlockAccess, WorldGenConstants
 {
 	private final Long2ObjectMap<Chunk> chunks;
+	private final WorldModifier[] worldModifiers;
+	private final ChunkGenerator chunkGenerator;
+
+	private final long seed;
 	public Player player;
 
-	public World(long seed, int size)
+	public World(long seed, int size, Dimension<?> dim)
 	{
-		chunks = new Long2ObjectArrayMap<>();
-		
+		this.chunks = new Long2ObjectArrayMap<>();
+		this.seed = seed;
+		this.chunkGenerator = dim.createChunkGenerator(seed);
+		this.worldModifiers = dim.getWorldModifierArray();
+
 		for (int i = (0 - (size/2)); i < (size/2); i++)
 			for (int k = (0 - (size/2)); k < (size/2); k++)
 				this.getChunk(i, -1, k).setRender(true);
-		
+
 		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
 		this.player = new Player(dirtModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
 	}
 
 	public Chunk getChunk(int chunkX, int chunkY, int chunkZ)
-	{ return this.chunks.computeIfAbsent(posHash(chunkX, chunkY, chunkZ), pos -> Chunk.generateChunk(chunkX, chunkY, chunkZ)); }
+	{
+		Chunk chunk = this.chunks.computeIfAbsent(posHash(chunkX, chunkY, chunkZ), pos -> this.chunkGenerator.generateChunk(chunkX, chunkY, chunkZ));
 
-	private static long posHash(int x, int y, int z)
-	{ return ((long) x & 0x3FF) | (((long) y & 0x3FF) << 10) | (((long) z & 0x3FF) << 20); }
+		if (chunk.isFullyGenerated()) return chunk;
+
+		this.populateChunk(chunkX, chunkY, chunkZ, chunk.chunkStartX, chunk.chunkStartY, chunk.chunkStartZ);
+		chunk.setFullyGenerated(true);
+		return chunk;
+	}
+
+	private void populateChunk(int chunkX, int chunkY, int chunkZ, int chunkStartX, int chunkStartY, int chunkStartZ)
+	{
+		Random rand = new Random(this.seed + 5828671L * (long) chunkX + -47245139L * (long) chunkY + 8972357 * (long) chunkZ);
+
+		for (WorldModifier modifier : this.worldModifiers)
+		{
+			modifier.modifyWorld(rand, chunkStartX, chunkStartY, chunkStartZ);
+		}
+	}
+
+	Chunk getPartiallyGeneratedChunk(int chunkX, int chunkY, int chunkZ)
+	{ return this.chunks.computeIfAbsent(posHash(chunkX, chunkY, chunkZ), pos -> this.chunkGenerator.generateChunk(chunkX, chunkY, chunkZ)); }
+
+	private static long posHash(int chunkX, int chunkY, int chunkZ)
+	{ return ((long) chunkX & 0x3FF) | (((long) chunkY & 0x3FF) << 10) | (((long) chunkZ & 0x3FF) << 20); }
 
 	@Override
 	public Block getBlock(int x, int y, int z)

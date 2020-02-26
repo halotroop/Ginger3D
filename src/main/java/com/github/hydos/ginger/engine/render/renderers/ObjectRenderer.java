@@ -92,7 +92,7 @@ public class ObjectRenderer extends Renderer
 		shader.loadViewMatrix(GingerRegister.getInstance().game.data.camera);
 		for (RenderObject entity : renderList)
 		{
-			if(entity.getModel() != null) {
+			if (entity != null && entity.getModel() != null) {
 				TexturedModel model = entity.getModel();
 				prepareTexturedModel(model);
 				prepareInstance(entity);
