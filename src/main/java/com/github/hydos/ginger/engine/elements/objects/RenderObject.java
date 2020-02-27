@@ -6,7 +6,7 @@ import com.github.hydos.ginger.engine.render.models.TexturedModel;
 public class RenderObject
 {
 	private TexturedModel model;
-	private Vector3f position;
+	public Vector3f position;
 	private float rotX = 0, rotY = 0, rotZ = 0;
 	private Vector3f scale;
 	public boolean isVisible = true;
@@ -19,6 +19,18 @@ public class RenderObject
 		this.rotY = rotY;
 		this.rotZ = rotZ;
 		this.scale = scale;
+	}
+	
+	public void x(float x) {
+		this.position.x = x;
+	}
+	
+	public void y(float y) {
+		this.position.y = y;
+	}
+	
+	public void z(float z) {
+		this.position.z = z;
 	}
 
 	public TexturedModel getModel()

@@ -41,7 +41,7 @@ public class Litecraft extends Game
 	public Litecraft()
 	{
 		INSTANCE = this;
-		Constants.movementSpeed = 0.00005f;
+		Constants.movementSpeed = 0.5f;
 		Constants.turnSpeed = 0.00006f;
 		Constants.gravity = new org.joml.Vector3f(0, -0.0000000005f, 0);
 		Constants.jumpPower = 0.00005f;
