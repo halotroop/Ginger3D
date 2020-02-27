@@ -16,6 +16,7 @@ public final class Keybind
 	public static final Keybind SELECT_1 = new Keybind(GLFW.GLFW_KEY_2, false);
 	public static final Keybind SELECT_2 = new Keybind(GLFW.GLFW_KEY_3, false);
 	public static final Keybind EXIT = new Keybind(GLFW.GLFW_KEY_ESCAPE, false);
+	public static final Keybind FULLSCREEN = new Keybind(GLFW.GLFW_KEY_F11, false);
 	public int value;
 	public boolean mouse;
 

@@ -137,11 +137,11 @@ public class World implements BlockAccess, WorldGenConstants
 	public void unloadAllChunks()
 	{
 		LongList chunkPositions = new LongArrayList();
-
-		this.chunks.forEach((pos, chunk) -> { // for every chunk in memory
-			chunkPositions.add((long) pos); // add pos to chunk positions list for removal later
-			this.save.saveChunk(chunk); // save chunk
-		});
+		if (this.chunks != null)
+			this.chunks.forEach((pos, chunk) -> { // for every chunk in memory
+				chunkPositions.add((long) pos); // add pos to chunk positions list for removal later
+				this.save.saveChunk(chunk); // save chunk
+			});
 
 		chunkPositions.forEach((LongConsumer) (pos -> this.chunks.remove(pos))); // remove all chunks
 	}

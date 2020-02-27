@@ -11,6 +11,9 @@ import com.github.hydos.ginger.engine.render.texture.Image;
 
 public class Window
 {
+	public static boolean isFullscreen()
+	{ return fullscreen; }
+
 	public static int width;
 	public static int height;
 	private static String title;
@@ -19,7 +22,7 @@ public class Window
 	private static boolean[] mouseButtons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
 	private static GLFWImage.Buffer iconBuffer = null;
 	private static double fpsCap, time, processedTime = 0;
-	private static boolean isFullscreen = false;
+	private static boolean fullscreen = false;
 	public static double dy = 0;
 	public static double dx = 0;
 	static double oldX = 0;
@@ -46,7 +49,7 @@ public class Window
 		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
 		GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-		window = GLFW.glfwCreateWindow(actuallWidth, actuallHeight, title, (isFullscreen) ? GLFW.glfwGetPrimaryMonitor() : 0, window);
+		window = GLFW.glfwCreateWindow(actuallWidth, actuallHeight, title, (fullscreen) ? GLFW.glfwGetPrimaryMonitor() : 0, window);
 		if (window == 0)
 		{
 			System.err.println("Error: Couldnt initilize window");
@@ -188,6 +191,9 @@ public class Window
 		oldY = newY;
 	}
 
-	public void setFullscreen(boolean t)
-	{ Window.isFullscreen = t; }
+	public static void fullscreen()
+	{
+		Window.fullscreen = !Window.isFullscreen();
+		
+	}
 }

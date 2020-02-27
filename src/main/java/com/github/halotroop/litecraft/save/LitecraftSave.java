@@ -96,7 +96,7 @@ public final class LitecraftSave
 				e.printStackTrace();
 			}
 
-			World world = new World(seed, 2, dim, this); // create new world with seed read from file or 0, if it could not be read
+			World world = new World(seed, 10, dim, this); // create new world with seed read from file or 0, if it could not be read
 			world.spawnPlayer(); // spawn player in world
 			return world;
 		}

@@ -78,12 +78,16 @@ public class Litecraft extends Game
 	}
 
 	private void setupKeybinds()
-	{ Input.addPressCallback(Keybind.EXIT, this::exit); }
+	{
+		Input.addPressCallback(Keybind.EXIT, this::exit);
+		Input.addPressCallback(Keybind.FULLSCREEN, Window::fullscreen);
+	}
 
 	@Override
 	public void exit()
 	{
-		this.world.unloadAllChunks();
+		if (this.world != null)
+			this.world.unloadAllChunks();
 		ginger3D.cleanup(); 
 		System.exit(0);
 	}
@@ -120,9 +124,9 @@ public class Litecraft extends Game
 	@Override
 	public void tick()
 	{
+		tps++;
 		Input.invokeAllListeners();
 		data.player.updateMovement();
-		tps++;
 		if (Window.isKeyDown(GLFW.GLFW_KEY_TAB))
 			ginger3D.gingerRegister.wireframe = !ginger3D.gingerRegister.wireframe;
 	}
