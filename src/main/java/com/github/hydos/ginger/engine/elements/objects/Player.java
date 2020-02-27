@@ -9,36 +9,39 @@ import com.github.hydos.ginger.main.settings.Constants;
 
 public class Player extends RenderObject
 {
-	private double currentSpeed = 0;
-	private float currentTurn = 0;
-	private float upwardsSpeed = 0;
 	private boolean isInAir = false;
+	private double upwardsSpeed;
 
 	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale)
 	{ super(model, position, rotX, rotY, rotZ, scale); }
 
 	private void checkInputs()
 	{
+		float ry = getRotY();
 		if (Window.isKeyDown(GLFW.GLFW_KEY_W))
 		{
-			this.currentSpeed = Constants.movementSpeed;
+			position.z -= Math.cos(ry) * Constants.movementSpeed;
+			position.x += Math.sin(ry) * Constants.movementSpeed;
 		}
-		else if (Window.isKeyDown(GLFW.GLFW_KEY_S))
-		{
-			this.currentSpeed = -Constants.movementSpeed;
-		}
-		else
-		{
-			this.currentSpeed = 0;
-		}
+		
 		if (Window.isKeyDown(GLFW.GLFW_KEY_A))
 		{
-			this.currentTurn = (float) Constants.movementSpeed;
+			position.z -= Math.cos(ry) * Constants.movementSpeed;
+			position.x -= Math.sin(ry) * Constants.movementSpeed;	
 		}
-		else if (Window.isKeyDown(GLFW.GLFW_KEY_D))
+		
+		if (Window.isKeyDown(GLFW.GLFW_KEY_S))
 		{
-			this.currentTurn = (float) -Constants.movementSpeed;
+			position.z += Math.cos(ry) * Constants.movementSpeed;
+			position.x -= Math.sin(ry) * Constants.movementSpeed;
 		}
+		
+		if (Window.isKeyDown(GLFW.GLFW_KEY_D))
+		{
+			position.z += Math.cos(ry) * Constants.movementSpeed;
+			position.x += Math.sin(ry) * Constants.movementSpeed;
+		}
+		
 		if (Window.isKeyDown(GLFW.GLFW_KEY_SPACE))
 		{
 			jump();
@@ -57,14 +60,8 @@ public class Player extends RenderObject
 	public void updateMovement()
 	{
 		checkInputs();
-//		super.increaseRotation(0, (float) ((currentTurn) * Window.getTime()), 0);
-		float distance = (float) ((currentSpeed) * (Window.getTime()));
-		float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
-		float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
-		super.increasePosition(dx, 0, dz);
 		super.increasePosition(0, (float) (upwardsSpeed * (Window.getTime())), 0);
 		upwardsSpeed += Constants.gravity.y() * Window.getTime();
-		
 		isInAir = false;
 		upwardsSpeed = 0;
 		super.getPosition().y = 0;

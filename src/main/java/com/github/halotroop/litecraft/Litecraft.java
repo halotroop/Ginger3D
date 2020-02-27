@@ -41,7 +41,7 @@ public class Litecraft extends Game
 	public Litecraft()
 	{
 		INSTANCE = this;
-		Constants.movementSpeed = 0.00005f;
+		Constants.movementSpeed = 0.5f;
 		Constants.turnSpeed = 0.00006f;
 		Constants.gravity = new org.joml.Vector3f(0, -0.0000000005f, 0);
 		Constants.jumpPower = 0.00005f;
@@ -61,7 +61,7 @@ public class Litecraft extends Game
 
 		player.isVisible = false;
 		ginger3D = new Ginger();
-		data = new GameData(player, camera, 30);
+		data = new GameData(player, camera, 20);
 		data.handleGuis = false;
 		ginger3D.setup(new MasterRenderer(camera), this);
 
@@ -146,7 +146,7 @@ public class Litecraft extends Game
 	public void onPlayButtonClick() {
 		if (world == null)
 		{
-			world = new World(new Random().nextLong(), 10, Dimension.OVERWORLD);
+			world = new World(new Random().nextLong(), 2, Dimension.OVERWORLD);
 		}		
 	}
 }
