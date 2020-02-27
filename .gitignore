@@ -85,3 +85,5 @@ local.properties
 
 .project
 /target/
+out/
+.idea/
