@@ -22,6 +22,7 @@ public class GingerRegister
 
 	public Game game;
 	public Screen currentScreen;
+	public boolean wireframe = false;
 
 	public GingerRegister()
 	{ INSTANCE = this; }

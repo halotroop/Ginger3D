@@ -3,7 +3,7 @@ package com.github.halotroop.litecraft.world;
 import java.util.*;
 
 import com.github.halotroop.litecraft.types.block.*;
-import com.github.halotroop.litecraft.world.block.BlockAccess;
+import com.github.halotroop.litecraft.world.block.*;
 import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 import com.github.hydos.ginger.engine.render.renderers.ObjectRenderer;
@@ -57,7 +57,7 @@ public class Chunk implements BlockAccess, WorldGenConstants
 		return this.blockEntities.get(hash);
 	}
 
-	public void render(ObjectRenderer renderer)
+	public void render(BlockRenderer blockRenderer)
 	{
 		renderList.clear();
 		if (render)
@@ -71,8 +71,7 @@ public class Chunk implements BlockAccess, WorldGenConstants
 				}
 			}
 			
-			renderer.prepare();
-			renderer.render(renderList);
+			blockRenderer.render(renderList);
 		}
 	}
 

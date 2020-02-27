@@ -4,6 +4,7 @@ import com.github.hydos.ginger.engine.obj.Mesh;
 
 public class StaticCube
 {
+	//@formatter:off
 	public static float[] vertices =
 	{
 			
@@ -95,19 +96,25 @@ public class StaticCube
 			23, 21, 22
 		
 	};
+	//@formatter:on
+
 	private static Mesh mesh = null;
 
-	public static Mesh getCube()
+	public static Mesh getCube() 
 	{
-		if (mesh == null)
-		{ mesh = new Mesh(vertices, textureCoords, new float[vertices.length], indices, vertices.length); }
+		if (mesh == null) 
+		{
+			mesh = new Mesh(vertices, textureCoords, new float[vertices.length], indices, vertices.length);
+		}
 		return mesh;
 	}
 
-	public static void scaleCube(float multiplier)
+	public static void scaleCube(float multiplier) 
 	{
 		for (int i = 0; i < vertices.length; i++)
-		{ vertices[i] = vertices[i] * multiplier; }
+		{
+			vertices[i] = vertices[i] * multiplier;
+		}
 		mesh = new Mesh(vertices, textureCoords, new float[vertices.length], indices, vertices.length);
 	}
 }

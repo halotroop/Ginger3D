@@ -27,53 +27,47 @@ public class BlockRenderer extends Renderer
 		shader.stop();
 	}
 
-	private void prepareInstance(RenderObject entity)
+	private void prepBlockInstance(RenderObject entity)
 	{
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 
-	private void prepareTexturedModel(TexturedModel model)
+	private void prepareModel(TexturedModel model)
 	{
 		RawModel rawModel = model.getRawModel();
 		GL30.glBindVertexArray(rawModel.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
-		ModelTexture texture = model.getTexture();
-		if (texture.isTransparent())
-		{
-			MasterRenderer.disableCulling();
-		}
-		else
-		{
-			MasterRenderer.enableCulling();
-		}
+	}
+	
+	private void prepTexture(ModelTexture texture, int textureID) {
 		shader.loadFakeLightingVariable(texture.isUseFakeLighting());
 		shader.loadShine(texture.getShineDamper(), texture.getReflectivity());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
 	}
 
 	public void render(Map<TexturedModel, List<RenderObject>> entities)
 	{
 		for (TexturedModel model : entities.keySet())
 		{
-			prepareTexturedModel(model);
+			prepareModel(model);
 			List<RenderObject> batch = entities.get(model);
 			for (RenderObject entity : batch)
 			{
 				if(entity.isVisible) {
-					prepareInstance(entity);
+					prepBlockInstance(entity);
 					GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 				}
 
 			}
-			unbindTexturedModel();
+			unbindModel();
 		}
 	}
 
-	private void unbindTexturedModel()
+	private void unbindModel()
 	{
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
@@ -86,16 +80,26 @@ public class BlockRenderer extends Renderer
 		shader.start();
 		shader.loadSkyColour(Window.getColour());
 		shader.loadViewMatrix(GingerRegister.getInstance().game.data.camera);
+		TexturedModel model = renderList.get(0).getModel();
+		prepareModel(model);
+		if(GingerRegister.getInstance().wireframe) 
+		{
+			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE );
+		}
 		for (RenderObject entity : renderList)
 		{
 			if (entity != null && entity.getModel() != null) {
-				TexturedModel model = entity.getModel();
-				prepareTexturedModel(model);
-				prepareInstance(entity);
+				prepTexture(entity.getModel().getTexture(), entity.getModel().getTexture().getTextureID());
+				prepBlockInstance(entity);
 				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-				unbindTexturedModel();
+				
 			}
 		}
+		if(GingerRegister.getInstance().wireframe) 
+		{
+			GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK,GL11.GL_FILL );
+		}
+		unbindModel();
 		shader.stop();
 	}
 

@@ -6,6 +6,7 @@ import org.joml.Vector4f;
 import org.lwjgl.opengl.*;
 
 import com.github.halotroop.litecraft.world.World;
+import com.github.halotroop.litecraft.world.block.BlockRenderer;
 import com.github.hydos.ginger.engine.cameras.Camera;
 import com.github.hydos.ginger.engine.elements.GuiTexture;
 import com.github.hydos.ginger.engine.elements.objects.*;
@@ -31,6 +32,7 @@ public class MasterRenderer
 //		GL11.glCullFace(GL11.GL_BACK);
 	}
 	
+	public BlockRenderer blockRenderer;
 	private StaticShader entityShader;
 	public ObjectRenderer entityRenderer;
 	private GuiShader guiShader;
@@ -48,6 +50,7 @@ public class MasterRenderer
 	{
 		createProjectionMatrix();
 		entityShader = new StaticShader();
+		blockRenderer = new BlockRenderer(entityShader, projectionMatrix);
 		entityRenderer = new ObjectRenderer(entityShader, projectionMatrix);
 		skyboxRenderer = new SkyboxRenderer(projectionMatrix);
 		guiShader = new GuiShader();
@@ -169,7 +172,7 @@ public class MasterRenderer
 	{
 		prepare();
 		renderEntities(entities, camera, lights);
-		world.render(entityRenderer);
+		world.render(blockRenderer);
 		renderNormalEntities(normalEntities, lights, camera, clipPlane);
 		skyboxRenderer.render(camera);
 	}

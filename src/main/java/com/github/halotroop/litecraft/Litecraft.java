@@ -2,6 +2,8 @@ package com.github.halotroop.litecraft;
 
 import java.util.Random;
 
+import org.lwjgl.glfw.GLFW;
+
 import com.github.halotroop.litecraft.screens.TitleScreen;
 import com.github.halotroop.litecraft.world.World;
 import com.github.halotroop.litecraft.world.gen.Dimension;
@@ -86,7 +88,10 @@ public class Litecraft extends Game
 
 	@Override
 	public void exit()
-	{ ginger3D.cleanup(); }
+	{
+		ginger3D.cleanup(); 
+		System.exit(0);
+	}
 
 	@Override
 	public void render()
@@ -127,6 +132,11 @@ public class Litecraft extends Game
 		Input.invokeAllListeners();
 		data.player.updateMovement();
 		tps++;
+		
+		if(Window.isKeyDown(GLFW.GLFW_KEY_TAB)) {
+			ginger3D.gingerRegister.wireframe = !ginger3D.gingerRegister.wireframe;
+		}
+		
 	}
 
 	public static Litecraft getInstance() {
