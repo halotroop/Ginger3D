@@ -1,18 +1,24 @@
 package com.github.halotroop.litecraft.types.block;
 
+import java.util.*;
+
 import com.github.hydos.ginger.engine.obj.ModelLoader;
 import com.github.hydos.ginger.engine.render.models.TexturedModel;
 
 public class Block
 {
-	public static final Block AIR = new Block(new Properties().visible(false));
-	public static final Block DIRT = new Block("block/cubes/soil/dirt.png", new Properties());
-	public static final Block STONE = new Block("block/cubes/stone/basic/gneiss.png", new Properties());
-	
+	public static final Block AIR = new Block(new Properties("air").visible(false));
+	public static final Block DIRT = new Block("block/cubes/soil/dirt.png", new Properties("dirt"));
+	public static final Block STONE = new Block("block/cubes/stone/basic/gneiss.png", new Properties("stone"));
+
 	public static class Properties
 	{ // add properties to this builder!
 		private boolean visible = true;
 		private boolean fullCube = true;
+		private final String identifier;
+
+		public Properties(String identifier)
+		{ this.identifier = identifier; }
 
 		public Properties fullCube(boolean fullCube)
 		{
@@ -20,21 +26,22 @@ public class Block
 			return this;
 		}
 
-		public boolean isFullCube()
-		{ return fullCube; }
-
-		public boolean isVisible()
-		{ return visible; }
-
 		public Properties visible(boolean visible)
 		{
 			this.visible = visible;
 			return this;
 		}
 	}
-	
+
 	public final TexturedModel model;
-	public final boolean visible;
+	private final boolean visible, fullCube;
+	public final String identifier;
+
+	public boolean isFullCube()
+	{ return this.fullCube; }
+
+	public boolean isVisible()
+	{ return this.visible; }
 
 	protected Block(Properties properties)
 	{ this((TexturedModel) null, properties); }
@@ -46,5 +53,15 @@ public class Block
 	{
 		this.model = model;
 		this.visible = properties.visible;
+		this.fullCube = properties.fullCube;
+		this.identifier = properties.identifier;
+		IDENTIFIER_TO_BLOCK.put(this.identifier, this);
 	}
+
+	public static final Block getBlock(String identifier)
+	{
+		return IDENTIFIER_TO_BLOCK.get(identifier);
+	}
+
+	private static final Map<String, Block> IDENTIFIER_TO_BLOCK = new HashMap<>();
 }
