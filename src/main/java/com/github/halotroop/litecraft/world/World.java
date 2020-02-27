@@ -1,7 +1,9 @@
 package com.github.halotroop.litecraft.world;
 
 import java.util.Random;
+import java.util.function.LongConsumer;
 
+import com.github.halotroop.litecraft.save.LitecraftSave;
 import com.github.halotroop.litecraft.types.block.Block;
 import com.github.halotroop.litecraft.world.block.BlockRenderer;
 import com.github.halotroop.litecraft.world.gen.*;
@@ -18,37 +20,71 @@ public class World implements BlockAccess, WorldGenConstants
 	private final WorldModifier[] worldModifiers;
 	private final ChunkGenerator chunkGenerator;
 	private final BlockAccess genBlockAccess;
+	private final LitecraftSave save;
 
 	private final long seed;
+	private final int dimension;
 
 	public Player player;
 
-	public World(long seed, int size, Dimension<?> dim)
+	// This will likely become the main public constructor after we add dynamic chunkloading
+	private World(long seed, Dimension<?> dim, LitecraftSave save)
 	{
 		this.chunks = new Long2ObjectArrayMap<>();
 		this.seed = seed;
 		this.chunkGenerator = dim.createChunkGenerator(seed);
 		this.worldModifiers = dim.getWorldModifierArray();
 		this.genBlockAccess = new GenWorld(this);
+		this.save = save;
+		this.dimension = dim.id;
+	}
+
+	public void spawnPlayer()
+	{
+		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
+		this.player = new Player(dirtModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
+	}
+
+	// this constructor will likely not be neccesary when we have dynamic chunkloading
+	public World(long seed, int size, Dimension<?> dim, LitecraftSave save)
+	{
+		this(seed, dim, save);
 
 		for (int i = (0 - (size/2)); i < (size/2); i++)
 			for (int k = (0 - (size/2)); k < (size/2); k++)
 				for (int y = -2; y < 0; ++y)
 					this.getChunk(i, y, k).setRender(true);
-
-		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
-		this.player = new Player(dirtModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
 	}
 
 	public Chunk getChunk(int chunkX, int chunkY, int chunkZ)
 	{
-		Chunk chunk = this.chunks.computeIfAbsent(posHash(chunkX, chunkY, chunkZ), pos -> this.chunkGenerator.generateChunk(chunkX, chunkY, chunkZ));
+		Chunk chunk = this.chunks.computeIfAbsent(posHash(chunkX, chunkY, chunkZ), pos -> {
+			Chunk readChunk = save.readChunk(chunkX, chunkY, chunkZ, this.dimension);
+			return readChunk == null ? this.chunkGenerator.generateChunk(chunkX, chunkY, chunkZ) : readChunk;
+		});
 
 		if (chunk.isFullyGenerated()) return chunk;
 
 		this.populateChunk(chunkX, chunkY, chunkZ, chunk.chunkStartX, chunk.chunkStartY, chunk.chunkStartZ);
 		chunk.setFullyGenerated(true);
 		return chunk;
+	}
+
+	/**
+	 * @return whether the chunk was unloaded without errors. Will often, but not always, be equal to whether the chunk was already in memory.
+	 */
+	public boolean unloadChunk(int chunkX, int chunkY, int chunkZ)
+	{
+		long posHash = posHash(chunkX, chunkY, chunkZ);
+		Chunk chunk = this.chunks.get(posHash);
+
+		// If the chunk is not in memory, it does not need to be unloaded
+		if (chunk == null) return false;
+
+		// Otherwise save the chunk
+		boolean result = this.save.saveChunk(chunk);
+		this.chunks.remove(posHash);
+		return result;
 	}
 
 	private void populateChunk(int chunkX, int chunkY, int chunkZ, int chunkStartX, int chunkStartY, int chunkStartZ)
@@ -90,4 +126,16 @@ public class World implements BlockAccess, WorldGenConstants
 
 	public void render(BlockRenderer blockRenderer)
 	{ this.chunks.forEach((pos, chunk) -> chunk.render(blockRenderer)); }
+
+	public void unloadAllChunks()
+	{
+		LongList chunkPositions = new LongArrayList();
+
+		this.chunks.forEach((pos, chunk) -> { // for every chunk in memory
+			chunkPositions.add((long) pos); // add pos to chunk positions list for removal later
+			this.save.saveChunk(chunk); // save chunk
+		});
+
+		chunkPositions.forEach((LongConsumer) (pos -> this.chunks.remove(pos))); // remove all chunks
+	}
 }

@@ -4,9 +4,11 @@ import java.util.Random;
 
 import org.lwjgl.glfw.GLFW;
 
+import com.github.halotroop.litecraft.save.LitecraftSave;
 import com.github.halotroop.litecraft.screens.TitleScreen;
+import com.github.halotroop.litecraft.types.block.*;
 import com.github.halotroop.litecraft.world.World;
-import com.github.halotroop.litecraft.world.gen.Dimension;
+import com.github.halotroop.litecraft.world.gen.*;
 import com.github.hydos.ginger.engine.api.*;
 import com.github.hydos.ginger.engine.api.game.*;
 import com.github.hydos.ginger.engine.cameras.*;
@@ -26,6 +28,7 @@ import tk.valoeghese.gateways.client.io.*;
 public class Litecraft extends Game
 {
 	private World world;
+	private LitecraftSave save;
 	private Ginger ginger3D;
 	private static Litecraft INSTANCE;
 
@@ -50,6 +53,8 @@ public class Litecraft extends Game
 		MouseCallbackHandler.trackWindow(Window.window);
 
 		setupKeybinds();
+
+		Block b = Blocks.AIR; // make sure blocks are initialised
 
 		GingerUtils.init();
 		Window.setBackgroundColour(0.2f, 0.2f, 0.6f);
@@ -89,6 +94,7 @@ public class Litecraft extends Game
 	@Override
 	public void exit()
 	{
+		this.world.unloadAllChunks();
 		ginger3D.cleanup(); 
 		System.exit(0);
 	}
@@ -146,7 +152,8 @@ public class Litecraft extends Game
 	public void onPlayButtonClick() {
 		if (world == null)
 		{
-			world = new World(new Random().nextLong(), 2, Dimension.OVERWORLD);
+			this.save = new LitecraftSave("test", false);
+			this.world = this.save.getWorldOrCreate(Dimensions.OVERWORLD);
 		}		
 	}
 }

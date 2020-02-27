@@ -30,8 +30,9 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 	public final int chunkX, chunkY, chunkZ;
 	public final int chunkStartX, chunkStartY, chunkStartZ;
 	private boolean fullyGenerated = false;
+	public final int dimension;
 
-	public Chunk(int chunkX, int chunkY, int chunkZ)
+	public Chunk(int chunkX, int chunkY, int chunkZ, int dimension)
 	{
 		renderList = new ArrayList<BlockEntity>();
 		this.chunkX = chunkX;
@@ -40,6 +41,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		this.chunkStartX = chunkX << POS_SHIFT;
 		this.chunkStartY = chunkY << POS_SHIFT;
 		this.chunkStartZ = chunkZ << POS_SHIFT;
+		this.dimension = dimension;
 	}
 
 	public boolean doRender()
