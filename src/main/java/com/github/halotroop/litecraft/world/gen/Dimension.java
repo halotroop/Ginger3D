@@ -2,8 +2,6 @@ package com.github.halotroop.litecraft.world.gen;
 
 import java.util.*;
 
-import com.github.halotroop.litecraft.world.Chunk;
-
 public abstract class Dimension<T extends ChunkGenerator>
 {
 	public List<WorldModifier> worldModifiers = new ArrayList<>();

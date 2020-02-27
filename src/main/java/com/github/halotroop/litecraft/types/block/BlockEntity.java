@@ -1,7 +1,5 @@
 package com.github.halotroop.litecraft.types.block;
 
-import java.util.*;
-
 import com.github.halotroop.litecraft.world.Chunk;
 import com.github.hydos.ginger.engine.elements.objects.RenderObject;
 import com.github.hydos.ginger.engine.math.vectors.Vector3f;

@@ -6,7 +6,6 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import java.io.IOException;
 import java.nio.*;
 
-import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
 import com.github.hydos.ginger.engine.render.tools.IOUtil;

@@ -2,7 +2,7 @@ package com.github.hydos.ginger.engine.font;
 
 import java.util.*;
 
-import com.github.hydos.ginger.engine.api.*;
+import com.github.hydos.ginger.engine.api.Ginger;
 import com.github.hydos.ginger.engine.render.renderers.FontRenderer;
 import com.github.hydos.ginger.engine.utils.Loader;
 

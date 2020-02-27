@@ -11,7 +11,7 @@ import com.github.hydos.ginger.engine.elements.objects.RenderObject;
 import com.github.hydos.ginger.engine.io.Window;
 import com.github.hydos.ginger.engine.math.Maths;
 import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
-import com.github.hydos.ginger.engine.render.*;
+import com.github.hydos.ginger.engine.render.Renderer;
 import com.github.hydos.ginger.engine.render.models.*;
 import com.github.hydos.ginger.engine.render.shaders.StaticShader;
 import com.github.hydos.ginger.engine.render.texture.ModelTexture;

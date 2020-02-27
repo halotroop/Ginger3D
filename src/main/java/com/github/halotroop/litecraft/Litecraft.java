@@ -2,7 +2,7 @@ package com.github.halotroop.litecraft;
 
 import java.util.Random;
 
-import org.joml.*;
+import org.joml.Vector4i;
 import org.lwjgl.glfw.GLFW;
 
 import com.github.halotroop.litecraft.screens.TitleScreen;

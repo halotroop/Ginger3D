@@ -9,7 +9,6 @@ import com.github.hydos.ginger.engine.elements.objects.Player;
 import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 import com.github.hydos.ginger.engine.obj.ModelLoader;
 import com.github.hydos.ginger.engine.render.models.TexturedModel;
-import com.github.hydos.ginger.engine.render.renderers.ObjectRenderer;
 
 import it.unimi.dsi.fastutil.longs.*;
 
