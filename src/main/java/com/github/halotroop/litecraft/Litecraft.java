@@ -61,7 +61,7 @@ public class Litecraft extends Game
 
 		player.isVisible = false;
 		ginger3D = new Ginger();
-		data = new GameData(player, camera, 30);
+		data = new GameData(player, camera, 20);
 		data.handleGuis = false;
 		ginger3D.setup(new MasterRenderer(camera), this);
 
@@ -146,7 +146,7 @@ public class Litecraft extends Game
 	public void onPlayButtonClick() {
 		if (world == null)
 		{
-			world = new World(new Random().nextLong(), 10, Dimension.OVERWORLD);
+			world = new World(new Random().nextLong(), 2, Dimension.OVERWORLD);
 		}		
 	}
 }
