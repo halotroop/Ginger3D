@@ -1,4 +1,4 @@
-package com.github.halotroop.litecraft.world.block;
+package com.github.halotroop.litecraft.world;
 
 import com.github.halotroop.litecraft.types.block.Block;
 

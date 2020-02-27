@@ -1,7 +1,6 @@
 package com.github.halotroop.litecraft.world;
 
 import com.github.halotroop.litecraft.types.block.Block;
-import com.github.halotroop.litecraft.world.block.BlockAccess;
 import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 
 final class GenWorld implements BlockAccess, WorldGenConstants
