@@ -20,7 +20,7 @@ public class World implements BlockAccess, WorldGenConstants
 	private final BlockAccess genBlockAccess;
 
 	private final long seed;
-	
+
 	public Player player;
 
 	public World(long seed, int size, Dimension<?> dim)
