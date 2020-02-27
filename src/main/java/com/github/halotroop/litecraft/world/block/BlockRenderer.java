@@ -4,6 +4,7 @@ import java.util.*;
 
 import org.lwjgl.opengl.*;
 
+import com.github.halotroop.litecraft.Litecraft;
 import com.github.halotroop.litecraft.types.block.BlockEntity;
 import com.github.hydos.ginger.engine.api.GingerRegister;
 import com.github.hydos.ginger.engine.elements.objects.RenderObject;
@@ -40,6 +41,7 @@ public class BlockRenderer extends Renderer
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
+		Litecraft.getInstance().binds++;
 	}
 	
 	private void prepTexture(ModelTexture texture, int textureID) {
