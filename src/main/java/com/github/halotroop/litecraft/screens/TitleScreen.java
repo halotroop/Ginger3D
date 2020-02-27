@@ -41,9 +41,9 @@ public class TitleScreen extends Screen
 	public void tick()
 	{
 		playButton.update();
+		buildText.setText("Fps: " + Litecraft.getInstance().realFPS);
 		if (playButton.isClicked())
 		{
-			buildText.remove();
 			Window.lockMouse();
 			playButton.hide(Litecraft.getInstance().data.guis);
 			Litecraft.getInstance().onPlayButtonClick();//TODO: add world gui so it takes u to world creation place

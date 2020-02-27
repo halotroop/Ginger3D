@@ -29,7 +29,7 @@ public class Ginger
 		@Override
 		public void onTick(float deltaTime)
 		{ 
-			gingerRegister.game.update(); 
+			gingerRegister.game.tick(); 
 			if(gingerRegister.currentScreen != null) {
 				gingerRegister.currentScreen.tick();
 			}

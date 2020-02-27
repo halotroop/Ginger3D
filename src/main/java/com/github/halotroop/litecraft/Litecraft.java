@@ -30,6 +30,11 @@ public class Litecraft extends Game
 	//temp stuff to test out fbo fixes
 	int oldWindowWidth = Window.width;
 	int oldWindowHeight = Window.height;
+	
+	public int realFPS = 0;
+	
+	private int fps, ups, tps;
+	private long frameTimer;
 
 	public Litecraft()
 	{
@@ -65,10 +70,11 @@ public class Litecraft extends Game
 		data.lights.add(sun);
 		data.entities.add(player);
 
-		//		GuiTexture title = new GuiTexture(Loader.loadTextureDirectly("/textures/guis/title.png"), new Vector2f(0, 0.8F), new Vector2f(0.25f, 0.1f));
-		//		data.guis.add(title);
 		oldWindowWidth = Window.width;
 		oldWindowHeight = Window.height;
+		
+		frameTimer = System.currentTimeMillis();
+		
 		//start the game loop
 		ginger3D.startGame();
 	}
@@ -85,6 +91,19 @@ public class Litecraft extends Game
 	@Override
 	public void render()
 	{
+		ups++;
+		fps++;
+		//FPS stuff sorry if i forget to remove whitespace
+		if (System.currentTimeMillis() > frameTimer + 1000) // wait for one second
+		{
+			realFPS = fps;
+			fps = 0;
+			ups = 0;
+			tps = 0;
+			frameTimer += 1000; // reset the wait time
+		}
+		
+		
 		if(ginger3D.gingerRegister.currentScreen == null) {
 			ginger3D.openScreen(new TitleScreen());
 		}
@@ -103,10 +122,11 @@ public class Litecraft extends Game
 	}
 
 	@Override
-	public void update()
+	public void tick()
 	{
 		Input.invokeAllListeners();
 		data.player.updateMovement();
+		tps++;
 	}
 
 	public static Litecraft getInstance() {

@@ -3,6 +3,7 @@ package com.github.halotroop.litecraft.world;
 import java.util.*;
 
 import com.github.halotroop.litecraft.types.block.*;
+import com.github.halotroop.litecraft.world.block.BlockAccess;
 import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 import com.github.hydos.ginger.engine.render.renderers.ObjectRenderer;

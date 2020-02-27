@@ -11,5 +11,5 @@ public abstract class Game
 
 	public abstract void render();
 
-	public abstract void update();
+	public abstract void tick();
 }
