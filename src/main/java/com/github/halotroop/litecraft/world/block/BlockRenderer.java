@@ -4,13 +4,14 @@ import java.util.*;
 
 import org.lwjgl.opengl.*;
 
+import com.github.halotroop.litecraft.Litecraft;
 import com.github.halotroop.litecraft.types.block.BlockEntity;
 import com.github.hydos.ginger.engine.api.GingerRegister;
 import com.github.hydos.ginger.engine.elements.objects.RenderObject;
 import com.github.hydos.ginger.engine.io.Window;
 import com.github.hydos.ginger.engine.math.Maths;
 import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
-import com.github.hydos.ginger.engine.render.*;
+import com.github.hydos.ginger.engine.render.Renderer;
 import com.github.hydos.ginger.engine.render.models.*;
 import com.github.hydos.ginger.engine.render.shaders.StaticShader;
 import com.github.hydos.ginger.engine.render.texture.ModelTexture;
@@ -40,6 +41,7 @@ public class BlockRenderer extends Renderer
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
+		Litecraft.getInstance().binds++;
 	}
 	
 	private void prepTexture(ModelTexture texture, int textureID) {
@@ -90,6 +92,7 @@ public class BlockRenderer extends Renderer
 		{
 			if (entity != null && entity.getModel() != null) {
 				prepTexture(entity.getModel().getTexture(), entity.getModel().getTexture().getTextureID());
+				GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 				prepBlockInstance(entity);
 				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 				

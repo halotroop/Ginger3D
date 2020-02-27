@@ -1,5 +1,6 @@
 package com.github.hydos.ginger.engine.api;
 
+import com.github.halotroop.litecraft.Litecraft;
 import com.github.halotroop.litecraft.logic.Timer;
 import com.github.halotroop.litecraft.logic.Timer.TickListener;
 import com.github.halotroop.litecraft.world.World;
@@ -112,12 +113,14 @@ public class Ginger
 	{
 		while (!Window.closed())
 		{
+			Litecraft.getInstance().ups++;
 			if (Window.isUpdating())
 			{
 				timer.tick();
 				gingerRegister.game.render();
 			}
 		}
+		Litecraft.getInstance().exit();
 	}
 
 	public void update(GameData data)
