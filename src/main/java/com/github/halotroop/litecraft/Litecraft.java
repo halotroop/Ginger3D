@@ -88,11 +88,10 @@ public class Litecraft extends Game
 		//FPS stuff sorry if i forget to remove whitespace
 		if (System.currentTimeMillis() > frameTimer + 1000) // wait for one second
 		{
-			this.dbgStats.set(fps, ups, tps, binds);
+			this.dbgStats.set(fps, ups, tps, 0);
 			this.fps = 0;
 			this.ups = 0;
 			this.tps = 0;
-			this.binds = 0;
 			this.frameTimer += 1000; // reset the wait time
 		}
 		if (ginger3D.gingerRegister.currentScreen == null)
@@ -107,6 +106,8 @@ public class Litecraft extends Game
 			ginger3D.renderWorld(this, this.world);
 		ginger3D.renderOverlays(this);
 		ginger3D.postRender();
+		dbgStats.w = binds;
+		this.binds = 0;
 	}
 
 	@Override
