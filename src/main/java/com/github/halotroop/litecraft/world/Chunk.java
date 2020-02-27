@@ -111,7 +111,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 					{
 						long hash = posHash(x, y, z);
 						Block block = this.blocks.get(hash);
-						if (block.visible) this.blockEntities.put(hash, new BlockEntity(block,
+						if (block.isVisible()) this.blockEntities.put(hash, new BlockEntity(block,
 								new Vector3f(
 										this.chunkStartX + x,
 										this.chunkStartY + y,
