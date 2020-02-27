@@ -85,5 +85,10 @@ local.properties
 
 .project
 /target/
+
+# idea
 out/
 .idea/
+*.iml
+*.ipr
+*.iws
