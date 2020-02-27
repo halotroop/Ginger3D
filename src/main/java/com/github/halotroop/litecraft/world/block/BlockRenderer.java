@@ -92,6 +92,7 @@ public class BlockRenderer extends Renderer
 		{
 			if (entity != null && entity.getModel() != null) {
 				prepTexture(entity.getModel().getTexture(), entity.getModel().getTexture().getTextureID());
+				GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 				prepBlockInstance(entity);
 				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 				
