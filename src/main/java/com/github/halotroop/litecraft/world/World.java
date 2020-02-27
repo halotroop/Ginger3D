@@ -125,7 +125,14 @@ public class World implements BlockAccess, WorldGenConstants
 	}
 
 	public void render(BlockRenderer blockRenderer)
-	{ this.chunks.forEach((pos, chunk) -> chunk.render(blockRenderer)); }
+	{
+		Chunk chunk = getChunk(0, -1, 0);
+		if(chunk!= null) {
+			blockRenderer.prepareModel(chunk.getBlockEntity(0, -2, 0).getModel());
+			this.chunks.forEach((pos, c) -> c.render(blockRenderer));
+			blockRenderer.unbindModel();
+		}
+	}
 
 	public void unloadAllChunks()
 	{

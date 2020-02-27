@@ -34,7 +34,7 @@ public class BlockRenderer extends Renderer
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 
-	private void prepareModel(TexturedModel model)
+	public void prepareModel(TexturedModel model)
 	{
 		RawModel rawModel = model.getRawModel();
 		GL30.glBindVertexArray(rawModel.getVaoID());
@@ -51,25 +51,7 @@ public class BlockRenderer extends Renderer
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
 	}
 
-	public void render(Map<TexturedModel, List<RenderObject>> entities)
-	{
-		for (TexturedModel model : entities.keySet())
-		{
-			prepareModel(model);
-			List<RenderObject> batch = entities.get(model);
-			for (RenderObject entity : batch)
-			{
-				if(entity.isVisible) {
-					prepBlockInstance(entity);
-					GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-				}
-
-			}
-			unbindModel();
-		}
-	}
-
-	private void unbindModel()
+	public void unbindModel()
 	{
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
@@ -83,7 +65,6 @@ public class BlockRenderer extends Renderer
 		shader.loadSkyColour(Window.getColour());
 		shader.loadViewMatrix(GingerRegister.getInstance().game.data.camera);
 		TexturedModel model = renderList.get(0).getModel();
-		prepareModel(model);
 		if(GingerRegister.getInstance().wireframe) 
 		{
 			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE );
@@ -92,7 +73,6 @@ public class BlockRenderer extends Renderer
 		{
 			if (entity != null && entity.getModel() != null) {
 				prepTexture(entity.getModel().getTexture(), entity.getModel().getTexture().getTextureID());
-				GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 				prepBlockInstance(entity);
 				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 				
@@ -102,8 +82,9 @@ public class BlockRenderer extends Renderer
 		{
 			GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK,GL11.GL_FILL );
 		}
-		unbindModel();
 		shader.stop();
 	}
+
+
 
 }
