@@ -20,7 +20,6 @@ public class Player extends RenderObject
 	public void move(RelativeDirection direction)
 	{
 		float ry = (float) Math.toRadians(GingerRegister.getInstance().game.data.camera.getYaw());
-		System.out.println(ry);
 		switch (direction)
 		{
 		case FORWARD:

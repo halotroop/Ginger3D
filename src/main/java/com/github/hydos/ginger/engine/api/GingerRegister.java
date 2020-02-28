@@ -61,6 +61,11 @@ public class GingerRegister
 		return null;
 	}
 
+	public void toggleWireframe()
+	{
+		this.wireframe = !this.wireframe;
+	}
+
 	public GUIText retrieveText(String string)
 	{
 		for (GUIText text : texts)

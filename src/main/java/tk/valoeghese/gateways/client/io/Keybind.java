@@ -27,8 +27,9 @@ public enum Keybind
 	SLOT_10(GLFW.GLFW_KEY_0, false), // Select the tenth item slot in the toolbar
 	EXIT(GLFW.GLFW_KEY_ESCAPE, false), // Save and exit the game // (Open the pause menu later)
 	DEBUG(GLFW.GLFW_KEY_F3, false), // Toggle debug text onscreen
-	FULLSCREEN(GLFW.GLFW_KEY_F11, false); // Toggle fullscreen mode
-	
+	FULLSCREEN(GLFW.GLFW_KEY_F11, false), // Toggle fullscreen mode
+	WIREFRAME(GLFW.GLFW_KEY_TAB, false); // Toggle wireframe
+
 	public int value;
 	public boolean mouse;
 

@@ -191,8 +191,15 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 			this.fullyGenerated = properties.readBoolean(0); // index 0 is the "fully generated" property
 		}
 		catch (Throwable e)
-		{ System.out.println("An exception occurred reading properties for a chunk! This could be a benign error due to updates to chunk properties.");}
+		{
+			if (exceptionOccuredReadingNotif){
+				System.out.println("An exception occurred reading properties for a chunk! This could be a benign error due to updates to chunk properties.");
+				exceptionOccuredReadingNotif = false;
+			}
+		}
 	}
+
+	private static boolean exceptionOccuredReadingNotif = true;
 
 	private int nextId; // for saving
 

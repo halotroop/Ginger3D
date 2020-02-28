@@ -55,7 +55,7 @@ public class Ginger
 		gingerRegister.game.data.entities.remove(Litecraft.getInstance().player); // remove the old player
 		gingerRegister.game.data.player = player; // set all the player variables
 		Litecraft.getInstance().player = player;
-		Litecraft.getInstance().camera.player = player;
+		Litecraft.getInstance().getCamera().player = player;
 		gingerRegister.game.data.entities.add(player); // add the new player
 	}
 	

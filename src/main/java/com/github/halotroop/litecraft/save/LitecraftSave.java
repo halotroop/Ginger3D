@@ -5,8 +5,10 @@ import java.util.Random;
 
 import org.joml.Vector3f;
 
+import com.github.halotroop.litecraft.Litecraft;
 import com.github.halotroop.litecraft.world.*;
 import com.github.halotroop.litecraft.world.gen.Dimension;
+import com.github.hydos.ginger.engine.cameras.Camera;
 import com.github.hydos.ginger.engine.elements.objects.Player;
 
 import tk.valoeghese.sod.*;
@@ -86,9 +88,13 @@ public final class LitecraftSave
 			try // try read the seed from the file
 			{
 				seed = properties.readLong(0); // seed is at index 0
-				playerX = playerData.readFloat(0); // player x/y/z is at index 1/2/3 respectively
+				playerX = playerData.readFloat(0); // player x/y/z is at index 0/1/2 respectively
 				playerY = playerData.readFloat(1);
 				playerZ = playerData.readFloat(2);
+				Camera camera = Litecraft.getInstance().getCamera(); // get camera
+				camera.setPitch(playerData.readFloat(3)); // read pitch, yaw, roll from 3/4/5
+				camera.setYaw(playerData.readFloat(4));
+				camera.setRoll(playerData.readFloat(5));
 			}
 			catch (Throwable e)
 			{
@@ -133,6 +139,10 @@ public final class LitecraftSave
 		playerData.writeFloat(playerPos.x); // default spawn player x/y/z
 		playerData.writeFloat(playerPos.y);
 		playerData.writeFloat(playerPos.z);
+		Camera camera = Litecraft.getInstance().getCamera();
+		playerData.writeFloat(camera.getPitch());
+		playerData.writeFloat(camera.getYaw());
+		playerData.writeFloat(camera.getRoll());
 		data.put("properties", properties); // add properties section to data
 		data.put("player", playerData); // add player section to data
 		data.write(globalDataFile); // write to file
