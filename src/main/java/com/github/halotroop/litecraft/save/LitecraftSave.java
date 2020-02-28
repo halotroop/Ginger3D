@@ -85,6 +85,7 @@ public final class LitecraftSave
 			DataSection playerData = data.get("player");
 			long seed = 0; // default seed if we cannot read it is 0
 			float playerX = 0, playerY = 0, playerZ = -3; // default player x/y/z
+			float playerYaw = 0.0f;
 			try // try read the seed from the file
 			{
 				seed = properties.readLong(0); // seed is at index 0
@@ -93,7 +94,8 @@ public final class LitecraftSave
 				playerZ = playerData.readFloat(2);
 				Camera camera = Litecraft.getInstance().getCamera(); // get camera
 				camera.setPitch(playerData.readFloat(3)); // read pitch, yaw, roll from 3/4/5
-				camera.setYaw(playerData.readFloat(4));
+				playerYaw = playerData.readFloat(4);
+				camera.setYaw(playerYaw);
 				camera.setRoll(playerData.readFloat(5));
 			}
 			catch (Throwable e)

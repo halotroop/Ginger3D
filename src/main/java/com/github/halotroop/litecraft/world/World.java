@@ -42,11 +42,12 @@ public class World implements BlockAccess, WorldGenConstants
 	public void spawnPlayer()
 	{ this.spawnPlayer(0, 0, -3); }
 
-	public void spawnPlayer(float x, float y, float z)
+	public Player spawnPlayer(float x, float y, float z)
 	{
 		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
 		this.player = new Player(dirtModel, new Vector3f(x, y, z), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
 		this.player.isVisible = false;
+		return this.player;
 	}
 
 	// this constructor will likely not be neccesary when we have dynamic chunkloading
