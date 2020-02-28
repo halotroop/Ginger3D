@@ -34,6 +34,7 @@ package com.github.hydos.ginger.engine.math.vectors;
 import java.nio.FloatBuffer;
 
 /** @author foo */
+@Deprecated
 public interface ReadableVector
 {
 	/** @return the length of the vector */

@@ -39,6 +39,7 @@ import java.nio.FloatBuffer;
  * @author  cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  *          $Id$ */
+@Deprecated
 public class Vector2f extends Vector implements Serializable, ReadableVector2f, WritableVector2f
 {
 	private static final long serialVersionUID = 1L;

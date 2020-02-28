@@ -36,6 +36,7 @@ package com.github.hydos.ginger.engine.math.vectors;
  * @author  $author$
  * @version $revision$
  *          $Id$ */
+@Deprecated
 public interface WritableVector3f extends WritableVector2f
 {
 	/** Set the X,Y,Z values

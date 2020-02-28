@@ -40,6 +40,7 @@ import java.nio.FloatBuffer;
  * @author  cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  *          $Id$ */
+@Deprecated
 public abstract class Matrix implements Serializable
 {
 	private static final long serialVersionUID = 1L;

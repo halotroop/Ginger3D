@@ -32,6 +32,7 @@
 package com.github.hydos.ginger.engine.math.vectors;
 
 /** @author foo */
+@Deprecated
 public interface ReadableVector2f extends ReadableVector
 {
 	/** @return x */

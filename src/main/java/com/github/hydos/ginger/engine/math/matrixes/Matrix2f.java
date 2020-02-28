@@ -41,6 +41,7 @@ import com.github.hydos.ginger.engine.math.vectors.Vector2f;
  * @author  cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  *          $Id$ */
+@Deprecated
 public class Matrix2f extends Matrix implements Serializable
 {
 	private static final long serialVersionUID = 1L;
