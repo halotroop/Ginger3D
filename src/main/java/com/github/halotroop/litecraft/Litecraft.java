@@ -54,7 +54,7 @@ public class Litecraft extends Game
 		KeyCallbackHandler.trackWindow(Window.window); // set up the gateways keybind key tracking
 		MouseCallbackHandler.trackWindow(Window.window);
 		setupKeybinds(); // set up keybind
-		@SuppressWarnings("unused") Block b = Blocks.AIR; // make sure blocks are initialised
+		Blocks.setup(); // make sure blocks are initialised
 		GingerUtils.init(); // set up ginger utilities
 		Window.setBackgroundColour(0.2f, 0.2f, 0.6f); // set the window refresh colour
 		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/stone/brick/stonebrick.png");

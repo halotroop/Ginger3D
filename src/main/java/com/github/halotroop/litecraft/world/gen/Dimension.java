@@ -22,7 +22,7 @@ public abstract class Dimension<T extends ChunkGenerator>
 	}
 
 	public WorldModifier[] getWorldModifierArray()
-	{ return this.worldModifiers.toArray(WorldModifier[]::new); }
+	{ return new WorldModifier[0]; }
 
 	public abstract T createChunkGenerator(long seed);
 
