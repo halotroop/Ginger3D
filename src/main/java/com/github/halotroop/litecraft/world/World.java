@@ -29,9 +29,11 @@ public class World implements BlockAccess, WorldGenConstants
 	int renderBound;
 	int renderBoundVertical;
 	private final BlockInstance dummy;
+	private DynamicChunkLoader chunkLoader;
 
 	public World(long seed, int renderSize, Dimension<?> dim, LitecraftSave save)
 	{
+		this.chunkLoader = new DynamicChunkLoader(0, 0, 0, this);
 		this.dummy = new BlockInstance(Blocks.ANDESITE, new Vector3f(0, 0, 0));
 		this.dummy.isVisible = false;
 		this.chunks = new Long2ObjectArrayMap<>();
@@ -183,8 +185,12 @@ public class World implements BlockAccess, WorldGenConstants
 
 	public void updateLoadedChunks(int chunkX, int chunkY, int chunkZ)
 	{
-		DynamicChunkLoader chunkLoader = new DynamicChunkLoader(chunkX, chunkY, chunkZ, this);
-		chunkLoader.start();
+		if(!chunkLoader.isAlive()) {
+			chunkLoader.chunkX = chunkX;
+			chunkLoader.chunkY = chunkY;
+			chunkLoader.chunkZ = chunkZ;         
+			chunkLoader.start();
+		}
 	}
 
 	private static final class GenerationWorld implements BlockAccess, WorldGenConstants

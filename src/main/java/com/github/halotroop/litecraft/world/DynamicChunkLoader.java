@@ -3,9 +3,11 @@ package com.github.halotroop.litecraft.world;
 import java.util.*;
 import java.util.function.LongConsumer;
 
+import com.github.hydos.multiThreading.GingerThread;
+
 import it.unimi.dsi.fastutil.longs.*;
 
-public class DynamicChunkLoader extends Thread{
+public class DynamicChunkLoader extends GingerThread{
 	
 	public int chunkX, chunkY, chunkZ;
 	public World world;
@@ -15,6 +17,7 @@ public class DynamicChunkLoader extends Thread{
 		this.chunkY = chunkY;
 		this.chunkZ = chunkZ;
 		this.world = world;
+		this.setName("DynamicChunk thread");
 	}
 	
 	@Override
@@ -23,7 +26,7 @@ public class DynamicChunkLoader extends Thread{
 		// loop over rendered area, adding chunks that are needed
 		for (int x = chunkX - this.world.renderBound; x < chunkX + this.world.renderBound; x++)
 			for (int z = chunkZ - this.world.renderBound; z < chunkZ + this.world.renderBound; z++)
-				for (int y = chunkY - this.world.renderBoundVertical; y < chunkY + this.world.renderBoundVertical; y++)
+				for (int y = chunkY - this.world.renderBound; y < chunkY + this.world.renderBound; y++)
 					toKeep.add(this.world.getChunkToLoad(x, y, z));
 		// list of keys to remove
 		LongList toRemove = new LongArrayList();
