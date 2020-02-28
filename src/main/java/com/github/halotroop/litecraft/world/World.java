@@ -6,7 +6,7 @@ import java.util.function.LongConsumer;
 import org.joml.Vector3f;
 
 import com.github.halotroop.litecraft.save.LitecraftSave;
-import com.github.halotroop.litecraft.types.block.Block;
+import com.github.halotroop.litecraft.types.block.*;
 import com.github.halotroop.litecraft.world.block.BlockRenderer;
 import com.github.halotroop.litecraft.world.dimension.Dimension;
 import com.github.halotroop.litecraft.world.gen.*;
@@ -26,6 +26,21 @@ public class World implements BlockAccess, WorldGenConstants
 	private final long seed;
 	private final int dimension;
 	public Player player;
+
+	public int findAir(int x, int z)
+	{
+		int y = SEA_LEVEL;
+		int attemptsRemaining = 255;
+
+		while (attemptsRemaining --> 0)
+		{
+			// DO NOT CHANGE TO y++
+			if (this.getBlock(x, ++y, z) == Blocks.AIR)
+				return y;
+		}
+
+		return -1; // if it fails, returns -1
+	}
 
 	// This will likely become the main public constructor after we add dynamic chunkloading
 	private World(long seed, Dimension<?> dim, LitecraftSave save)
@@ -152,6 +167,8 @@ public class World implements BlockAccess, WorldGenConstants
 
 	public long getSeed()
 	{ return this.seed; }
+
+	public static final int SEA_LEVEL = 0;
 
 	private static final class GenerationWorld implements BlockAccess, WorldGenConstants
 	{
