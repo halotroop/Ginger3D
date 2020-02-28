@@ -44,19 +44,21 @@ public class Litecraft extends Game
 	{
 		Litecraft.INSTANCE = this;
 		dbgStats = new Vector4i();
-		Constants.movementSpeed = 0.5f;
-		Constants.turnSpeed = 0.00006f;
-		Constants.gravity = new org.joml.Vector3f(0, -0.0000000005f, 0);
-		Constants.jumpPower = 0.00005f;
-		Window.create(1200, 800, "LiteCraft", 60);
-		KeyCallbackHandler.trackWindow(Window.window);
+		// set constants
+		Constants.movementSpeed = 0.5f; // movement speed
+		Constants.turnSpeed = 0.00006f; // turn speed
+		Constants.gravity = new Vector3f(0, -0.0000000005f, 0); // compute gravity as a vec3f
+		Constants.jumpPower = 0.00005f; // jump power
+		Window.create(1200, 800, "LiteCraft", 60); // create window
+		KeyCallbackHandler.trackWindow(Window.window); // set up the gateways keybind key tracking
 		MouseCallbackHandler.trackWindow(Window.window);
-		setupKeybinds();
+		setupKeybinds(); // set up keybind
 		@SuppressWarnings("unused") Block b = Blocks.AIR; // make sure blocks are initialised
-		GingerUtils.init();
-		Window.setBackgroundColour(0.2f, 0.2f, 0.6f);
+		GingerUtils.init(); // set up ginger utilities
+		Window.setBackgroundColour(0.2f, 0.2f, 0.6f); // set the window refresh colour
 		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/stone/brick/stonebrick.png");
 		StaticCube.scaleCube(1f);
+		// set up Ginger3D stuff
 		this.player = new Player(dirtModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
 		this.camera = new FirstPersonCamera(player);
 		this.player.isVisible = false;
