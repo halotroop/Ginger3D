@@ -30,7 +30,7 @@ public class OverworldChunkGenerator implements ChunkGenerator, WorldGenConstant
 			for (int z = 0; z < CHUNK_SIZE; z++)
 			{
 				double totalZ = chunk.chunkStartZ + z;
-				int height = (int) this.noise.sample(totalX, totalZ);
+				int height = (int) this.noise.sample(totalX, totalZ) - 10;
 				for (int y = 0; y < CHUNK_SIZE; y++)
 				{
 					double rockNoise = this.stoneNoise.sample(totalX / 160.0, (chunk.chunkStartY + y) / 50.0, totalZ / 160.0);
