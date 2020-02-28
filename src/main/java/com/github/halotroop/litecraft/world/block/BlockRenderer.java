@@ -37,8 +37,7 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 
 	public void prepareModel(TexturedModel model)
 	{
-		RawModel rawModel = model.getRawModel();
-		GL30.glBindVertexArray(rawModel.getVaoID());
+		GL30.glBindVertexArray(model.getRawModel().getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
