@@ -19,7 +19,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 	 * @param  y in-chunk y coordinate.
 	 * @param  z in-chunk z coordinate.
 	 * @return   creates a long that represents a coordinate, for use as a key in maps. */
-	private static long posHash(int x, int y, int z)
+	public static long posHash(int x, int y, int z)
 	{ return ((long) x & MAX_POS) | (((long) y & MAX_POS) << POS_SHIFT) | (((long) z & MAX_POS) << DOUBLE_SHIFT); }
 
 	private final Block[] blocks = new Block[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
@@ -187,7 +187,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		Object2IntMap<Block> palette = new Object2IntArrayMap<>(); // block to int id
 		DataSection paletteData = new DataSection();
 		DataSection blockData = new DataSection();
-		long posHash = 0L;
+//		long posHash = 0L; Why is this here?
 		nextId = 0;
 		ToIntFunction<Block> nextIdProvider = b -> nextId++;
 		for (int z = 0; z < CHUNK_SIZE; ++z) // z, y, x order for data saving and loading so we can use incremental pos hashes
@@ -198,7 +198,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 				{
 					Block b = blocks[x * CHUNK_SIZE * CHUNK_SIZE + z * CHUNK_SIZE + y];
 					blockData.writeInt(palette.computeIntIfAbsent(b, nextIdProvider));
-					++posHash;
+//					++posHash; and this
 				}
 			}
 		}
