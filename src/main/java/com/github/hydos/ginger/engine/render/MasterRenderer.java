@@ -1,8 +1,9 @@
 package com.github.hydos.ginger.engine.render;
 
+import java.lang.Math;
 import java.util.*;
 
-import org.joml.Vector4f;
+import org.joml.*;
 import org.lwjgl.opengl.*;
 
 import com.github.halotroop.litecraft.world.World;
@@ -11,7 +12,6 @@ import com.github.hydos.ginger.engine.cameras.Camera;
 import com.github.hydos.ginger.engine.elements.GuiTexture;
 import com.github.hydos.ginger.engine.elements.objects.*;
 import com.github.hydos.ginger.engine.io.Window;
-import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import com.github.hydos.ginger.engine.render.models.TexturedModel;
 import com.github.hydos.ginger.engine.render.renderers.*;
 import com.github.hydos.ginger.engine.render.shaders.*;
@@ -73,12 +73,12 @@ public class MasterRenderer
 		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))));
 		float x_scale = y_scale / aspectRatio;
 		float frustum_length = FAR_PLANE - NEAR_PLANE;
-		projectionMatrix.m00 = x_scale;
-		projectionMatrix.m11 = y_scale;
-		projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
-		projectionMatrix.m23 = -1;
-		projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
-		projectionMatrix.m33 = 0;
+		projectionMatrix._m00(x_scale);
+		projectionMatrix._m11(y_scale);
+		projectionMatrix._m22 (-((FAR_PLANE + NEAR_PLANE) / frustum_length));
+		projectionMatrix._m23(-1);
+		projectionMatrix._m32(-((2 * NEAR_PLANE * FAR_PLANE) / frustum_length));
+		projectionMatrix._m33(0);
 	}
 
 	public Matrix4f getProjectionMatrix()

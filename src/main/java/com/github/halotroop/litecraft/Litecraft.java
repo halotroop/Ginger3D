@@ -1,22 +1,18 @@
 package com.github.halotroop.litecraft;
 
-import java.util.Random;
-
-import org.joml.Vector4i;
+import org.joml.*;
 import org.lwjgl.glfw.GLFW;
 
 import com.github.halotroop.litecraft.save.LitecraftSave;
 import com.github.halotroop.litecraft.screens.TitleScreen;
-import com.github.halotroop.litecraft.types.block.*;
 import com.github.halotroop.litecraft.world.World;
-import com.github.halotroop.litecraft.world.gen.*;
+import com.github.halotroop.litecraft.world.gen.Dimensions;
 import com.github.hydos.ginger.engine.api.*;
 import com.github.hydos.ginger.engine.api.game.*;
 import com.github.hydos.ginger.engine.cameras.*;
 import com.github.hydos.ginger.engine.elements.objects.*;
 import com.github.hydos.ginger.engine.font.FontType;
 import com.github.hydos.ginger.engine.io.Window;
-import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 import com.github.hydos.ginger.engine.obj.ModelLoader;
 import com.github.hydos.ginger.engine.obj.shapes.StaticCube;
 import com.github.hydos.ginger.engine.render.MasterRenderer;
@@ -51,8 +47,6 @@ public class Litecraft extends Game
 		KeyCallbackHandler.trackWindow(Window.window);
 		MouseCallbackHandler.trackWindow(Window.window);
 		setupKeybinds();
-
-		Block b = Blocks.AIR; // make sure blocks are initialised
 
 		GingerUtils.init();
 		Window.setBackgroundColour(0.2f, 0.2f, 0.6f);

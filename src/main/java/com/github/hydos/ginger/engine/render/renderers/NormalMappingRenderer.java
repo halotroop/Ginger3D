@@ -2,14 +2,13 @@ package com.github.hydos.ginger.engine.render.renderers;
 
 import java.util.*;
 
-import org.joml.Vector4f;
+import org.joml.*;
 import org.lwjgl.opengl.*;
 
 import com.github.hydos.ginger.engine.cameras.Camera;
 import com.github.hydos.ginger.engine.elements.objects.*;
 import com.github.hydos.ginger.engine.io.Window;
 import com.github.hydos.ginger.engine.math.Maths;
-import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import com.github.hydos.ginger.engine.render.*;
 import com.github.hydos.ginger.engine.render.models.*;
 import com.github.hydos.ginger.engine.render.shaders.NormalMappingShader;

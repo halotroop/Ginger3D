@@ -26,7 +26,7 @@ public class OverworldChunkGenerator implements ChunkGenerator, WorldGenConstant
 			double totalX = x + chunk.chunkStartX;
 
 			for (int z = 0; z < CHUNK_SIZE; ++z) {
-				int height = (int) this.noise.sample(totalX, (double) (chunk.chunkStartZ + z));
+				int height = (int) this.noise.sample(totalX, chunk.chunkStartZ + z);
 
 				for (int y = 0; y < CHUNK_SIZE; ++y) {
 					int totalY = chunk.chunkStartY + y;

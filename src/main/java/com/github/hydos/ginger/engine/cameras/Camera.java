@@ -1,10 +1,10 @@
 package com.github.hydos.ginger.engine.cameras;
 
+import org.joml.Vector3f;
 import org.lwjgl.glfw.*;
 
 import com.github.hydos.ginger.engine.elements.objects.Player;
 import com.github.hydos.ginger.engine.io.Window;
-import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 
 public class Camera
 {

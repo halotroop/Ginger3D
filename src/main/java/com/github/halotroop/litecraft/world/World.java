@@ -3,12 +3,13 @@ package com.github.halotroop.litecraft.world;
 import java.util.Random;
 import java.util.function.LongConsumer;
 
+import org.joml.Vector3f;
+
 import com.github.halotroop.litecraft.save.LitecraftSave;
 import com.github.halotroop.litecraft.types.block.Block;
 import com.github.halotroop.litecraft.world.block.BlockRenderer;
 import com.github.halotroop.litecraft.world.gen.*;
 import com.github.hydos.ginger.engine.elements.objects.Player;
-import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 import com.github.hydos.ginger.engine.obj.ModelLoader;
 import com.github.hydos.ginger.engine.render.models.TexturedModel;
 
@@ -89,7 +90,7 @@ public class World implements BlockAccess, WorldGenConstants
 
 	private void populateChunk(int chunkX, int chunkY, int chunkZ, int chunkStartX, int chunkStartY, int chunkStartZ)
 	{
-		Random rand = new Random(this.seed + 5828671L * (long) chunkX + -47245139L * (long) chunkY + 8972357 * (long) chunkZ);
+		Random rand = new Random(this.seed + 5828671L * chunkX + -47245139L * chunkY + 8972357 * (long) chunkZ);
 
 		for (WorldModifier modifier : this.worldModifiers)
 		{

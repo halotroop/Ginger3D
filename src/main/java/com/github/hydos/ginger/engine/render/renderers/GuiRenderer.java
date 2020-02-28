@@ -2,11 +2,11 @@ package com.github.hydos.ginger.engine.render.renderers;
 
 import java.util.List;
 
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.*;
 
 import com.github.hydos.ginger.engine.elements.GuiTexture;
 import com.github.hydos.ginger.engine.math.Maths;
-import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import com.github.hydos.ginger.engine.render.Renderer;
 import com.github.hydos.ginger.engine.render.models.RawModel;
 import com.github.hydos.ginger.engine.render.shaders.GuiShader;

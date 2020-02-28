@@ -3,11 +3,12 @@ package com.github.halotroop.litecraft.world;
 import java.util.*;
 import java.util.function.ToIntFunction;
 
+import org.joml.Vector3f;
+
 import com.github.halotroop.litecraft.logic.DataStorage;
 import com.github.halotroop.litecraft.types.block.*;
 import com.github.halotroop.litecraft.world.block.BlockRenderer;
 import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
-import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 
 import it.unimi.dsi.fastutil.ints.*;
 import it.unimi.dsi.fastutil.longs.*;
@@ -68,15 +69,13 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		renderList.clear();
 		if (render)
 		{
-			for(int i = 0; i < CHUNK_SIZE; i++) {
-				for(int j = 0; j < CHUNK_SIZE; j++) {
-					for(int k = 0; k < CHUNK_SIZE; k++) {
+			for(int i = 0; i < CHUNK_SIZE; i++)
+				for(int j = 0; j < CHUNK_SIZE; j++)
+					for(int k = 0; k < CHUNK_SIZE; k++)
+					{
 						BlockEntity block = getBlockEntity(i, j, k);
 						renderList.add(block);
 					}
-				}
-			}
-
 			blockRenderer.render(renderList);
 		}
 	}

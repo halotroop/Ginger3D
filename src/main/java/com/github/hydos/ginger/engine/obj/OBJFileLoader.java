@@ -1,9 +1,8 @@
 package com.github.hydos.ginger.engine.obj;
 
+import org.joml.*;
 import org.lwjgl.assimp.*;
 import org.lwjgl.assimp.AIVector3D.Buffer;
-
-import com.github.hydos.ginger.engine.math.vectors.*;
 
 public class OBJFileLoader
 {
@@ -32,8 +31,7 @@ public class OBJFileLoader
 				if (mesh.mNumUVComponents().get(0) != 0)
 				{
 					AIVector3D texture = mesh.mTextureCoords(0).get(i);
-					meshTextureCoord.setX(texture.x());
-					meshTextureCoord.setY(texture.y());
+					meshTextureCoord.set(texture.x(),texture.y());
 				}
 				vertexList[i] = new Vertex(meshVertex, meshNormal, meshTextureCoord);
 			}

@@ -2,11 +2,11 @@ package com.github.hydos.ginger.engine.elements.buttons;
 
 import java.util.List;
 
+import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
 import com.github.hydos.ginger.engine.elements.GuiTexture;
 import com.github.hydos.ginger.engine.io.Window;
-import com.github.hydos.ginger.engine.math.vectors.Vector2f;
 import com.github.hydos.ginger.engine.utils.Loader;
 
 public class TextureButton

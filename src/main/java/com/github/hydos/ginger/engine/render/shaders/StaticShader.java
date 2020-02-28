@@ -2,11 +2,11 @@ package com.github.hydos.ginger.engine.render.shaders;
 
 import java.util.List;
 
+import org.joml.*;
+
 import com.github.hydos.ginger.engine.cameras.Camera;
 import com.github.hydos.ginger.engine.elements.objects.Light;
 import com.github.hydos.ginger.engine.math.Maths;
-import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
-import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 
 public class StaticShader extends ShaderProgram
 {

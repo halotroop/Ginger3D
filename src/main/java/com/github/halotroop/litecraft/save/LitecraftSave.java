@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.Random;
 
 import com.github.halotroop.litecraft.world.*;
-import com.github.halotroop.litecraft.world.gen.*;
+import com.github.halotroop.litecraft.world.gen.Dimension;
 
 import tk.valoeghese.sod.*;
 

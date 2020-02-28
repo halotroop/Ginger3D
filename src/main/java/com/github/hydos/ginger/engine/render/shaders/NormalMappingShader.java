@@ -2,11 +2,9 @@ package com.github.hydos.ginger.engine.render.shaders;
 
 import java.util.List;
 
-import org.joml.Vector4f;
+import org.joml.*;
 
 import com.github.hydos.ginger.engine.elements.objects.Light;
-import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
-import com.github.hydos.ginger.engine.math.vectors.*;
 
 public class NormalMappingShader extends ShaderProgram
 {
@@ -75,7 +73,7 @@ public class NormalMappingShader extends ShaderProgram
 	{
 		Vector3f position = light.getPosition();
 		Vector4f eyeSpacePos = new Vector4f(position.x, position.y, position.z, 1f);
-		Matrix4f.transform(viewMatrix, eyeSpacePos, eyeSpacePos);
+		viewMatrix.transform(eyeSpacePos);
 		return new Vector3f(eyeSpacePos.x, eyeSpacePos.y, eyeSpacePos.z);
 	}
 

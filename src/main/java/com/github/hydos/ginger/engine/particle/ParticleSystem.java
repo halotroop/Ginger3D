@@ -1,12 +1,11 @@
 package com.github.hydos.ginger.engine.particle;
 
+import java.lang.Math;
 import java.util.Random;
 
-import org.joml.Vector4f;
+import org.joml.*;
 
 import com.github.hydos.ginger.engine.io.Window;
-import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
-import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 
 public class ParticleSystem
 {
@@ -22,12 +21,12 @@ public class ParticleSystem
 		Vector4f direction = new Vector4f(x, y, z, 1);
 		if (coneDirection.x != 0 || coneDirection.y != 0 || (coneDirection.z != 1 && coneDirection.z != -1))
 		{
-			Vector3f rotateAxis = Vector3f.cross(coneDirection, new Vector3f(0, 0, 1), null);
-			rotateAxis.normalise();
-			float rotateAngle = (float) Math.acos(Vector3f.dot(coneDirection, new Vector3f(0, 0, 1)));
+			Vector3f rotateAxis = coneDirection.cross(new Vector3f(0, 0, 1));
+			rotateAxis.normalize();
+			float rotateAngle = (float) Math.acos(coneDirection.dot(new Vector3f(0, 0, 1)));
 			Matrix4f rotationMatrix = new Matrix4f();
 			rotationMatrix.rotate(-rotateAngle, rotateAxis);
-			Matrix4f.transform(rotationMatrix, direction, direction);
+			rotationMatrix.transform(direction);
 		}
 		else if (coneDirection.z == -1)
 		{ direction.z *= -1; }
@@ -63,8 +62,8 @@ public class ParticleSystem
 		{
 			velocity = generateRandomUnitVector();
 		}
-		velocity.normalise();
-		velocity.scale(generateValue(averageSpeed, speedError));
+		velocity.normalize();
+		velocity.mul(generateValue(averageSpeed, speedError));
 		float scale = generateValue(averageScale, scaleError);
 		float lifeLength = generateValue(averageLifeLength, lifeError);
 		new Particle(texture, new Vector3f(center), velocity, gravityComplient, lifeLength, generateRotation(), new Vector3f(scale, scale, scale));

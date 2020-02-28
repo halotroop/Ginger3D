@@ -1,8 +1,9 @@
 package com.github.hydos.ginger.engine.render.shaders;
 
+import org.joml.Matrix4f;
+
 import com.github.hydos.ginger.engine.cameras.Camera;
 import com.github.hydos.ginger.engine.math.Maths;
-import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 
 public class SkyboxShader extends ShaderProgram
 {
@@ -29,9 +30,9 @@ public class SkyboxShader extends ShaderProgram
 	public void loadViewMatrix(Camera camera)
 	{
 		Matrix4f matrix = Maths.createViewMatrix(camera);
-		matrix.m30 = 0;
-		matrix.m31 = 0;
-		matrix.m32 = 0;
+		matrix.m30(0);
+		matrix.m31(0);
+		matrix.m32(0);
 		super.loadMatrix(location_viewMatrix, matrix);
 	}
 }

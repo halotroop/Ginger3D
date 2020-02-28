@@ -1,5 +1,7 @@
 package com.github.hydos.ginger.engine.api;
 
+import org.joml.Vector2f;
+
 import com.github.halotroop.litecraft.Litecraft;
 import com.github.halotroop.litecraft.logic.Timer;
 import com.github.halotroop.litecraft.logic.Timer.TickListener;
@@ -8,7 +10,6 @@ import com.github.hydos.ginger.engine.api.game.*;
 import com.github.hydos.ginger.engine.elements.buttons.TextureButton;
 import com.github.hydos.ginger.engine.font.*;
 import com.github.hydos.ginger.engine.io.Window;
-import com.github.hydos.ginger.engine.math.vectors.Vector2f;
 import com.github.hydos.ginger.engine.particle.ParticleMaster;
 import com.github.hydos.ginger.engine.postprocessing.*;
 import com.github.hydos.ginger.engine.render.MasterRenderer;

@@ -1,12 +1,10 @@
 package com.github.hydos.ginger.engine.render.tools;
 
-import org.joml.Vector4f;
+import org.joml.*;
 
 import com.github.hydos.ginger.engine.cameras.Camera;
 import com.github.hydos.ginger.engine.io.Window;
 import com.github.hydos.ginger.engine.math.Maths;
-import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
-import com.github.hydos.ginger.engine.math.vectors.*;
 
 public class MousePicker
 {
@@ -72,7 +70,7 @@ public class MousePicker
 		Vector3f camPos = camera.getPosition();
 		Vector3f start = new Vector3f(camPos.x, camPos.y, camPos.z);
 		Vector3f scaledRay = new Vector3f(ray.x * distance, ray.y * distance, ray.z * distance);
-		return Vector3f.add(start, scaledRay, null);
+		return scaledRay.add(start);
 	}
 
 	private boolean intersectionInRange(float start, float finish, Vector3f ray)
@@ -91,23 +89,22 @@ public class MousePicker
 
 	private boolean isUnderGround(Vector3f testPoint)
 	{
-		float height = 0;
 		return false;
 	}
 
 	private Vector4f toEyeCoords(Vector4f clipCoords)
 	{
-		Matrix4f invertedProjection = Matrix4f.invert(projectionMatrix, null);
-		Vector4f eyeCoords = Matrix4f.transform(invertedProjection, clipCoords, null);
+		Matrix4f invertedProjection = projectionMatrix.invert();
+		Vector4f eyeCoords = invertedProjection.transform(clipCoords);
 		return new Vector4f(eyeCoords.x, eyeCoords.y, -1f, 0f);
 	}
 
 	private Vector3f toWorldCoords(Vector4f eyeCoords)
 	{
-		Matrix4f invertedView = Matrix4f.invert(viewMatrix, null);
-		Vector4f rayWorld = Matrix4f.transform(invertedView, eyeCoords, null);
+		Matrix4f invertedView = viewMatrix.invert();
+		Vector4f rayWorld = invertedView.transform(eyeCoords);
 		Vector3f mouseRay = new Vector3f(rayWorld.x, rayWorld.y, rayWorld.z);
-		mouseRay.normalise();
+		mouseRay.normalize();
 		return mouseRay;
 	}
 

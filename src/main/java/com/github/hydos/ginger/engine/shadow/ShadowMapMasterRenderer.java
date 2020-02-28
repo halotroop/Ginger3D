@@ -1,13 +1,13 @@
 package com.github.hydos.ginger.engine.shadow;
 
+import java.lang.Math;
 import java.util.*;
 
+import org.joml.*;
 import org.lwjgl.opengl.GL11;
 
 import com.github.hydos.ginger.engine.cameras.Camera;
 import com.github.hydos.ginger.engine.elements.objects.*;
-import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
-import com.github.hydos.ginger.engine.math.vectors.*;
 import com.github.hydos.ginger.engine.render.models.TexturedModel;
 
 /** This class is in charge of using all of the classes in the shadows package to
@@ -89,7 +89,7 @@ public class ShadowMapMasterRenderer
 	 * 
 	 * @return The to-shadow-map-space matrix. */
 	public Matrix4f getToShadowMapSpaceMatrix()
-	{ return Matrix4f.mul(offset, projectionViewMatrix, null); }
+	{ return projectionViewMatrix.mul(offset); }
 
 	/** Prepare for the shadow render pass. This first updates the dimensions of
 	 * the orthographic "view cuboid" based on the information that was
@@ -113,7 +113,7 @@ public class ShadowMapMasterRenderer
 	{
 		updateOrthoProjectionMatrix(box.getWidth(), box.getHeight(), box.getLength());
 		updateLightViewMatrix(lightDirection, box.getCenter());
-		Matrix4f.mul(projectionMatrix, lightViewMatrix, projectionViewMatrix);
+		projectionViewMatrix.mul(projectionMatrix, lightViewMatrix);
 		shadowFbo.bindFrameBuffer();
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
@@ -157,16 +157,15 @@ public class ShadowMapMasterRenderer
 	 *                  - the center of the "view cuboid" in world space. */
 	private void updateLightViewMatrix(Vector3f direction, Vector3f center)
 	{
-		direction.normalise();
+		direction.normalize();
 		center.negate();
-		lightViewMatrix.setIdentity();
+		lightViewMatrix.identity();
 		float pitch = (float) Math.acos(new Vector2f(direction.x, direction.z).length());
-		Matrix4f.rotate(pitch, new Vector3f(1, 0, 0), lightViewMatrix, lightViewMatrix);
+		lightViewMatrix.rotate(pitch, new Vector3f(1, 0, 0), lightViewMatrix);
 		float yaw = (float) Math.toDegrees(((float) Math.atan(direction.x / direction.z)));
 		yaw = direction.z > 0 ? yaw - 180 : yaw;
-		Matrix4f.rotate((float) -Math.toRadians(yaw), new Vector3f(0, 1, 0), lightViewMatrix,
-			lightViewMatrix);
-		Matrix4f.translate(center, lightViewMatrix, lightViewMatrix);
+		lightViewMatrix.rotate((float) -Math.toRadians(yaw), new Vector3f(0, 1, 0), lightViewMatrix);
+		lightViewMatrix.translate(center, lightViewMatrix);
 	}
 
 	/** Creates the orthographic projection matrix. This projection matrix
@@ -181,10 +180,10 @@ public class ShadowMapMasterRenderer
 	 *               - shadow box length. */
 	private void updateOrthoProjectionMatrix(float width, float height, float length)
 	{
-		projectionMatrix.setIdentity();
-		projectionMatrix.m00 = 2f / width;
-		projectionMatrix.m11 = 2f / height;
-		projectionMatrix.m22 = -2f / length;
-		projectionMatrix.m33 = 1;
+		projectionMatrix.identity();
+		projectionMatrix._m00(2f / width);
+		projectionMatrix._m11(2f / height);
+		projectionMatrix._m22(-2f / length);
+		projectionMatrix._m33(1);
 	}
 }
