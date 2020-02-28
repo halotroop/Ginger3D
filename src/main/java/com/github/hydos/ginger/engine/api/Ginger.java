@@ -83,7 +83,7 @@ public class Ginger
 	{
 		GingerUtils.preRenderScene(gingerRegister.masterRenderer);
 		contrastFbo.bindFBO();
-		gingerRegister.masterRenderer.renderSceneNoTerrain(game.data.entities, game.data.normalMapEntities, game.data.lights, game.data.camera, game.data.clippingPlane, world);
+		gingerRegister.masterRenderer.renderScene(game.data.entities, game.data.normalMapEntities, game.data.lights, game.data.camera, game.data.clippingPlane, world);
 		ParticleMaster.renderParticles(game.data.camera);
 		contrastFbo.unbindFBO();
 		PostProcessing.doPostProcessing(contrastFbo.colorTexture);
@@ -104,7 +104,7 @@ public class Ginger
 		timer.addTickListener(gameTickListener);
 		contrastFbo = new Fbo(new ContrastChanger());
 		gingerRegister.masterRenderer = masterRenderer;
-		picker = new MousePicker(game.data.camera, masterRenderer.getProjectionMatrix(), null);
+		picker = new MousePicker(game.data.camera, masterRenderer.getProjectionMatrix());
 		PostProcessing.init();
 		ParticleMaster.init(masterRenderer.getProjectionMatrix());
 	}
