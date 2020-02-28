@@ -44,7 +44,12 @@ public class Player extends RenderObject
 		
 		if (Window.isKeyDown(GLFW.GLFW_KEY_SPACE))
 		{
-			jump();
+//			jump();
+			position.y += Constants.movementSpeed;
+		}
+		if (Window.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT))
+		{
+			position.y -= Constants.movementSpeed;
 		}
 	}
 
@@ -64,6 +69,6 @@ public class Player extends RenderObject
 		upwardsSpeed += Constants.gravity.y() * Window.getTime();
 		isInAir = false;
 		upwardsSpeed = 0;
-		super.getPosition().y = 0;
+//		super.getPosition().y = 0;
 	}
 }

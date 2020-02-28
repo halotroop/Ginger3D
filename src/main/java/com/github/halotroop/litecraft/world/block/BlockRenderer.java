@@ -2,6 +2,7 @@ package com.github.halotroop.litecraft.world.block;
 
 import java.util.*;
 
+import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 import org.lwjgl.opengl.*;
 
 import com.github.halotroop.litecraft.Litecraft;
@@ -16,7 +17,7 @@ import com.github.hydos.ginger.engine.render.models.*;
 import com.github.hydos.ginger.engine.render.shaders.StaticShader;
 import com.github.hydos.ginger.engine.render.texture.ModelTexture;
 
-public class BlockRenderer extends Renderer
+public class BlockRenderer extends Renderer implements WorldGenConstants
 {
 	private StaticShader shader;
 
@@ -59,25 +60,34 @@ public class BlockRenderer extends Renderer
 		GL30.glBindVertexArray(0);
 	}
 
-	public void render(List<BlockEntity> renderList)
+	public void render(BlockEntity[] renderList)
 	{ 
 		shader.start();
 		shader.loadSkyColour(Window.getColour());
 		shader.loadViewMatrix(GingerRegister.getInstance().game.data.camera);
-		TexturedModel model = renderList.get(0).getModel();
+		TexturedModel model = renderList[0].getModel();
 		if(GingerRegister.getInstance().wireframe) 
 		{
 			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 		}
-		for (RenderObject entity : renderList)
+		for(int x = 0; x < CHUNK_SIZE; x++)
 		{
-			if (entity != null && entity.getModel() != null) {
-				prepTexture(entity.getModel().getTexture(), entity.getModel().getTexture().getTextureID());
-				prepBlockInstance(entity);
-				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-				
+			for (int y = 0; y < CHUNK_SIZE; y++)
+			{
+				for (int z = 0; z < CHUNK_SIZE; z++)
+				{
+					BlockEntity entity = renderList[x*64 + z*8 + y];
+					if (entity != null && entity.getModel() != null)
+					{
+						prepTexture(entity.getModel().getTexture(), entity.getModel().getTexture().getTextureID());
+						prepBlockInstance(entity);
+						GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+
+					}
+				}
 			}
 		}
+
 		if(GingerRegister.getInstance().wireframe) 
 		{
 			GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK,GL11.GL_FILL );

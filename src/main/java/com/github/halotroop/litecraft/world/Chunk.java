@@ -31,6 +31,8 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 	public final int chunkStartX, chunkStartY, chunkStartZ;
 	private boolean fullyGenerated = false;
 	public final int dimension;
+	private boolean dirty = true;
+	private BlockEntity[] renderedBlocks;
 
 	public Chunk(int chunkX, int chunkY, int chunkZ, int dimension)
 	{
@@ -65,22 +67,38 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 
 	public void render(BlockRenderer blockRenderer)
 	{
-		renderList.clear();
+
 		if (render)
 		{
-			for(int i = 0; i < CHUNK_SIZE; i++)
+			if (dirty)
 			{
-				for(int j = 0; j < CHUNK_SIZE; j++)
+				dirty = false;
+				renderedBlocks = new BlockEntity[512];
+				for(int x = 0; x < CHUNK_SIZE; x++)
 				{
-					for(int k = 0; k < CHUNK_SIZE; k++)
+					for(int y = 0; y < CHUNK_SIZE; y++)
 					{
-						BlockEntity block = getBlockEntity(i, j, k);
-						renderList.add(block);
+						for(int z = 0; z < CHUNK_SIZE; z++)
+						{
+							BlockEntity block = getBlockEntity(x, y, z);
+							if (x == 0 || x == CHUNK_SIZE-1 || z == 0 || z == CHUNK_SIZE-1 || y == 0 || y == CHUNK_SIZE-1)
+							{
+								renderedBlocks[x*64 + z*8 + y] = block;
+								continue;
+							}
+
+							if (getBlockEntity(x-1, y, z) == null || getBlockEntity(x+1, y, z) == null ||
+									getBlockEntity(x, y-1, z) == null || getBlockEntity(x, y+1, z) == null ||
+									getBlockEntity(x, y, z-1) == null || getBlockEntity(x, y, z+1) == null)
+							{
+								renderedBlocks[x*64 + z*8 + y] = block;
+							}
+						}
 					}
 				}
 			}
 
-			blockRenderer.render(renderList);
+			blockRenderer.render(renderedBlocks);
 		}
 	}
 
@@ -102,6 +120,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		{
 			this.blockEntities.put(hash, new BlockEntity(block, new Vector3f(this.chunkStartX + x, this.chunkStartY + y, this.chunkStartZ + z)));
 		}
+		dirty = true;
 	}
 
 	public void setRender(boolean render)
@@ -132,6 +151,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 			{ this.blockEntities.remove(i); }
 		}
 		this.render = render;
+		dirty = true;
 	}
 
 	public boolean isFullyGenerated()
@@ -211,5 +231,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 
 		data.put("palette", paletteData);
 		data.put("block", blockData);
+
+		dirty = true;
 	}
 }
