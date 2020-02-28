@@ -16,7 +16,6 @@ import com.github.hydos.ginger.engine.render.models.TexturedModel;
 import com.github.hydos.ginger.engine.render.renderers.*;
 import com.github.hydos.ginger.engine.render.shaders.*;
 import com.github.hydos.ginger.engine.shadow.ShadowMapMasterRenderer;
-import com.github.hydos.ginger.engine.terrain.Terrain;
 
 public class MasterRenderer
 {
@@ -159,16 +158,7 @@ public class MasterRenderer
 		normalRenderer.render(normalMapEntities, clipPlane, lights, camera);
 	}
 
-	public void renderScene(List<RenderObject> entities, List<RenderObject> normalEntities, List<Terrain> terrains, List<Light> lights, Camera camera, Vector4f clipPlane)
-	{
-		prepare();
-		renderEntities(entities, camera, lights);
-		renderNormalEntities(normalEntities, lights, camera, clipPlane);
-		renderTerrains(terrains, lights, camera);
-		skyboxRenderer.render(camera);
-	}
-
-	public void renderSceneNoTerrain(List<RenderObject> entities, List<RenderObject> normalEntities, List<Light> lights, Camera camera, Vector4f clipPlane, World world)
+	public void renderScene(List<RenderObject> entities, List<RenderObject> normalEntities, List<Light> lights, Camera camera, Vector4f clipPlane, World world)
 	{
 		prepare();
 		renderEntities(entities, camera, lights);
@@ -184,7 +174,4 @@ public class MasterRenderer
 		shadowMapRenderer.render(entities, sun);
 		entities.clear();
 	}
-
-	private void renderTerrains(List<Terrain> terrains, List<Light> lights, Camera camera)
-	{}
 }

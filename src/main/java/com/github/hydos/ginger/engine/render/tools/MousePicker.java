@@ -7,7 +7,6 @@ import com.github.hydos.ginger.engine.io.Window;
 import com.github.hydos.ginger.engine.math.Maths;
 import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import com.github.hydos.ginger.engine.math.vectors.*;
-import com.github.hydos.ginger.engine.terrain.Terrain;
 
 public class MousePicker
 {
@@ -17,15 +16,13 @@ public class MousePicker
 	private Matrix4f projectionMatrix;
 	private Matrix4f viewMatrix;
 	private Camera camera;
-	private Terrain terrain;
 	private Vector3f currentTerrainPoint;
 
-	public MousePicker(Camera cam, Matrix4f projection, Terrain terrain)
+	public MousePicker(Camera cam, Matrix4f projection)
 	{
 		camera = cam;
 		projectionMatrix = projection;
 		viewMatrix = Maths.createViewMatrix(camera);
-		this.terrain = terrain;
 	}
 
 	private Vector3f binarySearch(int count, float start, float finish, Vector3f ray)
@@ -33,16 +30,7 @@ public class MousePicker
 		float half = start + ((finish - start) / 2f);
 		if (count >= RECURSION_COUNT)
 		{
-			Vector3f endPoint = getPointOnRay(ray, half);
-			Terrain terrain = getTerrain(endPoint.getX(), endPoint.getZ());
-			if (terrain != null)
-			{
-				return endPoint;
-			}
-			else
-			{
-				return null;
-			}
+			return null;
 		}
 		if (intersectionInRange(start, half, ray))
 		{
@@ -87,9 +75,6 @@ public class MousePicker
 		return Vector3f.add(start, scaledRay, null);
 	}
 
-	private Terrain getTerrain(float worldX, float worldZ)
-	{ return terrain; }
-
 	private boolean intersectionInRange(float start, float finish, Vector3f ray)
 	{
 		Vector3f startPoint = getPointOnRay(ray, start);
@@ -106,18 +91,8 @@ public class MousePicker
 
 	private boolean isUnderGround(Vector3f testPoint)
 	{
-		Terrain terrain = getTerrain(testPoint.getX(), testPoint.getZ());
 		float height = 0;
-		if (terrain != null)
-		{ height = terrain.getHeightOfTerrain(testPoint.getX(), testPoint.getZ()); }
-		if (testPoint.y < height)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return false;
 	}
 
 	private Vector4f toEyeCoords(Vector4f clipCoords)
