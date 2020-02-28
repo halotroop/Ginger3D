@@ -16,6 +16,9 @@ public class Input
 	public static void addPressCallback(Keybind key, KeyCallback callback)
 	{ CALLBACKS.computeIfAbsent(key, listener -> new ArrayList<>()).add(callback); }
 
+	public static void addInitialPressCallback(Keybind key, KeyCallback callback)
+	{ addListener(key, new InitialPressHandler(callback)); }
+
 	public static void invokeAllListeners()
 	{
 		CALLBACKS.forEach((keybind, listeners) ->

@@ -8,6 +8,7 @@ import org.lwjgl.glfw.GLFW;
 import com.github.halotroop.litecraft.save.LitecraftSave;
 import com.github.halotroop.litecraft.screens.TitleScreen;
 import com.github.halotroop.litecraft.types.block.*;
+import com.github.halotroop.litecraft.util.RelativeDirection;
 import com.github.halotroop.litecraft.world.World;
 import com.github.halotroop.litecraft.world.gen.Dimensions;
 import com.github.hydos.ginger.engine.api.*;
@@ -81,7 +82,13 @@ public class Litecraft extends Game
 	private void setupKeybinds()
 	{
 		Input.addPressCallback(Keybind.EXIT, this::exit);
-		Input.addPressCallback(Keybind.FULLSCREEN, Window::fullscreen);
+		Input.addInitialPressCallback(Keybind.FULLSCREEN, Window::fullscreen);
+		Input.addPressCallback(Keybind.MOVE_FORWARDS, () -> this.movePlayer(RelativeDirection.FORWARD));
+		Input.addPressCallback(Keybind.MOVE_BACKWARDS, () -> this.movePlayer(RelativeDirection.BACKWARD));
+		Input.addPressCallback(Keybind.MOVE_LEFT, () -> this.movePlayer(RelativeDirection.LEFT));
+		Input.addPressCallback(Keybind.MOVE_RIGHT, () -> this.movePlayer(RelativeDirection.RIGHT));
+		Input.addPressCallback(Keybind.JUMP, () -> this.movePlayer(RelativeDirection.UP));
+		Input.addPressCallback(Keybind.SNEAK, () -> this.movePlayer(RelativeDirection.DOWN));
 	}
 
 	@Override
@@ -102,6 +109,10 @@ public class Litecraft extends Game
 		}
 		ginger3D.cleanup();
 		System.exit(0);
+	}
+
+	private void movePlayer(RelativeDirection direction) {
+		this.player.move(direction);
 	}
 
 	@Override

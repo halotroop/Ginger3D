@@ -1,8 +1,8 @@
 package com.github.hydos.ginger.engine.elements.objects;
 
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
 
+import com.github.halotroop.litecraft.util.RelativeDirection;
 import com.github.hydos.ginger.engine.io.Window;
 import com.github.hydos.ginger.engine.render.models.TexturedModel;
 import com.github.hydos.ginger.main.settings.Constants;
@@ -11,40 +11,42 @@ public class Player extends RenderObject
 {
 	private boolean isInAir = false;
 	private double upwardsSpeed;
+	private boolean noWeight = true; // because the force of gravity on an object's mass is called WEIGHT, not gravity
 
 	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale)
 	{ super(model, position, rotX, rotY, rotZ, scale); }
 
-	private void checkInputs()
+	public void move(RelativeDirection direction)
 	{
-		float ry = getRotY();
-		if (Window.isKeyDown(GLFW.GLFW_KEY_W))
+		float ry = this.getRotY();
+
+		switch (direction)
 		{
+		case FORWARD:
+		default:
 			position.z -= Math.cos(ry) * Constants.movementSpeed;
 			position.x += Math.sin(ry) * Constants.movementSpeed;
-		}
-		if (Window.isKeyDown(GLFW.GLFW_KEY_A))
-		{
+			break;
+		case LEFT:
 			position.z -= Math.cos(ry) * Constants.movementSpeed;
 			position.x -= Math.sin(ry) * Constants.movementSpeed;
-		}
-		if (Window.isKeyDown(GLFW.GLFW_KEY_S))
-		{
+			break;
+		case BACKWARD:
 			position.z += Math.cos(ry) * Constants.movementSpeed;
 			position.x -= Math.sin(ry) * Constants.movementSpeed;
-		}
-		if (Window.isKeyDown(GLFW.GLFW_KEY_D))
-		{
+			break;
+		case RIGHT:
 			position.z += Math.cos(ry) * Constants.movementSpeed;
 			position.x += Math.sin(ry) * Constants.movementSpeed;
+			break;
+		case UP:
+			if (this.noWeight) position.y += Constants.movementSpeed;
+			else this.jump();
+			break;
+		case DOWN:
+			position.y -= Constants.movementSpeed;
+			break;
 		}
-		if (Window.isKeyDown(GLFW.GLFW_KEY_SPACE))
-		{
-			//			jump();
-			position.y += Constants.movementSpeed;
-		}
-		if (Window.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT))
-		{ position.y -= Constants.movementSpeed; }
 	}
 
 	private void jump()
@@ -58,7 +60,6 @@ public class Player extends RenderObject
 
 	public void updateMovement()
 	{
-		checkInputs();
 		super.increasePosition(0, (float) (upwardsSpeed * (Window.getTime())), 0);
 		upwardsSpeed += Constants.gravity.y() * Window.getTime();
 		isInAir = false;
