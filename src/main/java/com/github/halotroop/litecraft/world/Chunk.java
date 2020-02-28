@@ -57,7 +57,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		return blocks[index(x, y, z)];
 	}
 
-	public BlockInstance getBlockEntity(int x, int y, int z)
+	public BlockInstance getBlockInstance(int x, int y, int z)
 	{
 		if (x > CHUNK_SIZE || y > CHUNK_SIZE || z > CHUNK_SIZE || x < 0 || y < 0 || z < 0)
 		{ throw new RuntimeException("Block [" + x + ", " + y + ", " + z + ", " + "] out of chunk bounds!"); }
@@ -78,16 +78,16 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 					{
 						for (int z = 0; z < CHUNK_SIZE; z++)
 						{
-							BlockInstance block = getBlockEntity(x, y, z);
+							BlockInstance block = getBlockInstance(x, y, z);
 							if (x == 0 || x == CHUNK_SIZE - 1 || z == 0 || z == CHUNK_SIZE - 1 || y == 0 || y == CHUNK_SIZE - 1)
 							{
 								renderedBlocks[index(x, y, z)] = block;
 								continue;
 							}
 							// check for air. Yes this is stupid, TODO fix this
-							if (getBlockEntity(x - 1, y, z).getModel() == null || getBlockEntity(x + 1, y, z).getModel() == null ||
-								getBlockEntity(x, y - 1, z).getModel() == null || getBlockEntity(x, y + 1, z).getModel() == null ||
-								getBlockEntity(x, y, z - 1).getModel() == null || getBlockEntity(x, y, z + 1).getModel() == null)
+							if (getBlockInstance(x - 1, y, z).getModel() == null || getBlockInstance(x + 1, y, z).getModel() == null ||
+								getBlockInstance(x, y - 1, z).getModel() == null || getBlockInstance(x, y + 1, z).getModel() == null ||
+								getBlockInstance(x, y, z - 1).getModel() == null || getBlockInstance(x, y, z + 1).getModel() == null)
 							{ renderedBlocks[index(x, y, z)] = block; }
 						}
 					}

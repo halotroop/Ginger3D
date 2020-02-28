@@ -27,9 +27,12 @@ public class World implements BlockAccess, WorldGenConstants
 	private final int dimension;
 	public Player player;
 	private final int renderSize;
+	private final BlockInstance dummy;
 
 	public World(long seed, int renderSize, Dimension<?> dim, LitecraftSave save)
 	{
+		this.dummy = new BlockInstance(Blocks.ANDESITE, new Vector3f(0, 0, 0));
+		this.dummy.isVisible = false;
 		this.chunks = new Long2ObjectArrayMap<>();
 		this.seed = seed;
 		this.chunkGenerator = dim.createChunkGenerator(seed);
@@ -152,13 +155,9 @@ public class World implements BlockAccess, WorldGenConstants
 
 	public void render(BlockRenderer blockRenderer)
 	{
-		Chunk chunk = getChunk(0, -1, 0);
-		if (chunk != null)
-		{
-			blockRenderer.prepareModel(chunk.getBlockEntity(0, 0, 0).getModel());
-			this.chunks.forEach((pos, c) -> c.render(blockRenderer));
-			blockRenderer.unbindModel();
-		}
+		blockRenderer.prepareModel(this.dummy.getModel());
+		this.chunks.forEach((pos, c) -> c.render(blockRenderer));
+		blockRenderer.unbindModel();
 	}
 
 	public void unloadAllChunks()
@@ -184,7 +183,7 @@ public class World implements BlockAccess, WorldGenConstants
 		// loop over rendered area, adding chunks that are needed
 		for (int x = -renderSize / 2; x < renderSize / 2; x++)
 			for (int z = -renderSize / 2; z < renderSize / 2; z++)
-				for (int y = -2; y < 2; ++y)
+				for (int y = -2; y < 1; ++y)
 					toKeep.add(this.getChunkToLoad(x, y, z));
 		// list of keys to remove
 		LongList toRemove = new LongArrayList();
