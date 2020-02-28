@@ -113,6 +113,7 @@ public class Litecraft extends Game
 	{
 		if (this.world != null)
 		{
+			System.out.println("Saving chunks...");
 			this.world.unloadAllChunks();
 			try
 			{

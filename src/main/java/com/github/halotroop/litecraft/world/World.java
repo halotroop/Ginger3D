@@ -26,7 +26,8 @@ public class World implements BlockAccess, WorldGenConstants
 	private final long seed;
 	private final int dimension;
 	public Player player;
-	private final int renderSize;
+	private int renderBound;
+	private int renderBoundVertical;
 	private final BlockInstance dummy;
 
 	public World(long seed, int renderSize, Dimension<?> dim, LitecraftSave save)
@@ -40,7 +41,10 @@ public class World implements BlockAccess, WorldGenConstants
 		this.genBlockAccess = new GenerationWorld(this);
 		this.save = save;
 		this.dimension = dim.id;
-		this.renderSize = renderSize;
+		this.renderBound = renderSize / 2;
+		this.renderBoundVertical = this.renderBound / 2;
+		if (this.renderBoundVertical < 2)
+			this.renderBoundVertical = 2;
 	}
 
 	public int findAir(int x, int z)
@@ -177,13 +181,13 @@ public class World implements BlockAccess, WorldGenConstants
 
 	public static final int SEA_LEVEL = 0;
 
-	public void updateLoadedChunks(int newChunkX, int newChunkY, int newChunkZ)
+	public void updateLoadedChunks(int chunkX, int chunkY, int chunkZ)
 	{
 		List<Chunk> toKeep = new ArrayList<>();
 		// loop over rendered area, adding chunks that are needed
-		for (int x = -renderSize / 2; x < renderSize / 2; x++)
-			for (int z = -renderSize / 2; z < renderSize / 2; z++)
-				for (int y = -2; y < 1; ++y)
+		for (int x = chunkX - this.renderBound; x < chunkX + this.renderBound; x++)
+			for (int z = chunkZ - this.renderBound; z < chunkZ + this.renderBound; z++)
+				for (int y = chunkY - this.renderBoundVertical; y < chunkY + this.renderBoundVertical; y++)
 					toKeep.add(this.getChunkToLoad(x, y, z));
 		// list of keys to remove
 		LongList toRemove = new LongArrayList();
