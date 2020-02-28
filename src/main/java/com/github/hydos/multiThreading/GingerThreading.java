@@ -17,6 +17,9 @@ public class GingerThreading
 			GingerThread yes = worldChunkThreadWaitlist.get(0);
 			if(!yes.finished) {
 				worldChunkThreadWaitlist.remove(0);
+				if(worldChunkThreadWaitlist.size() > 0) {
+					worldChunkThreadWaitlist.get(0).start();
+				}
 //				yes.stop();
 			}else {
 				if(!yes.isAlive() && !yes.started) {
@@ -24,8 +27,6 @@ public class GingerThreading
 				}
 			}
 		}
-		if(worldChunkThreadWaitlist.size() > 1) {
-			worldChunkThreadWaitlist.get(0).start();
-		}
+
 	}
 }

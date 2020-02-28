@@ -21,7 +21,7 @@ const vec4 plane = vec4(0, -1, 0, 15);
 uniform float useFakeLighting;
 
 const float density = 0.025;
-const float gradient = 3.0;
+const float gradient = 1.0;
 
 void main(void){
 
