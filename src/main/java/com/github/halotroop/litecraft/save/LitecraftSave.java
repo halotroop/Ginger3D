@@ -100,7 +100,7 @@ public final class LitecraftSave
 			{
 				System.out.println("Exception in reading save data! This may be benign, merely an artifact of an update to the contents of the world save data.");
 			}
-			World world = new World(seed, 2, dim, this); // create new world with seed read from file or 0, if it could not be read
+			World world = new World(seed, 5, dim, this); // create new world with seed read from file or 0, if it could not be read
 			world.spawnPlayer(playerX, playerY, playerZ); // spawn player in world
 			return world;
 		}
@@ -117,7 +117,7 @@ public final class LitecraftSave
 				// If this fails the world seed will not be consistent across saves
 				e.printStackTrace();
 			}
-			World world = new World(seed, 2, dim, this); // create new world with generated seed
+			World world = new World(seed, 5, dim, this); // create new world with generated seed
 			world.spawnPlayer(); // spawn player in world
 			return world;
 		}
