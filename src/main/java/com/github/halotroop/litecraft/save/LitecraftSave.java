@@ -5,6 +5,8 @@ import java.util.Random;
 
 import com.github.halotroop.litecraft.world.*;
 import com.github.halotroop.litecraft.world.gen.*;
+import com.github.hydos.ginger.engine.elements.objects.Player;
+import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 
 import tk.valoeghese.sod.*;
 
@@ -110,15 +112,7 @@ public final class LitecraftSave
 			try
 			{
 				globalDataFile.createNewFile(); // create world file
-				BinaryData data = new BinaryData(); // create empty binary data
-				DataSection properties = new DataSection(); // create empty data section for properties
-				properties.writeLong(seed); // write seed at index 0
-				DataSection playerData = new DataSection();
-				playerData.writeFloat(0); // default spawn player x/y/z
-				playerData.writeFloat(0);
-				playerData.writeFloat(-3);
-				data.put("properties", properties); // add properties section
-				data.write(globalDataFile); // write to file
+				this.writeGlobalData(globalDataFile, seed, new Vector3f(0, 0, -3)); // write global data with default player pos
 			}
 			catch (IOException e)
 			{
@@ -130,6 +124,28 @@ public final class LitecraftSave
 			world.spawnPlayer(); // spawn player in world
 			return world;
 		}
+	}
+
+	public void saveGlobalData(long seed, Player player) throws IOException
+	{
+		File globalDataFile = new File(this.file.getPath() + "/global_data.sod");
+		globalDataFile.createNewFile(); // create world file if it doesn't exist.
+
+		writeGlobalData(globalDataFile, seed, player.getPosition());
+	}
+
+	private void writeGlobalData(File globalDataFile, long seed, Vector3f playerPos) 
+	{
+		BinaryData data = new BinaryData(); // create empty binary data
+		DataSection properties = new DataSection(); // create empty data section for properties
+		properties.writeLong(seed); // write seed at index 0
+		DataSection playerData = new DataSection();
+		playerData.writeFloat(playerPos.x); // default spawn player x/y/z
+		playerData.writeFloat(playerPos.y);
+		playerData.writeFloat(playerPos.z);
+		data.put("properties", properties); // add properties section to data
+		data.put("player", playerData); // add player section to data
+		data.write(globalDataFile); // write to file
 	}
 
 	private static final String SAVE_DIR = "./saves/";

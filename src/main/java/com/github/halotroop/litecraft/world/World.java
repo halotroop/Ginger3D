@@ -152,6 +152,11 @@ public class World implements BlockAccess, WorldGenConstants
 		chunkPositions.forEach((LongConsumer) (pos -> this.chunks.remove(pos))); // remove all chunks
 	}
 
+	public long getSeed()
+	{
+		return this.seed;
+	}
+
 	private static final class GenerationWorld implements BlockAccess, WorldGenConstants
 	{
 		GenerationWorld(World parent)

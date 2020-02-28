@@ -1,5 +1,7 @@
 package com.github.halotroop.litecraft;
 
+import java.io.IOException;
+
 import org.joml.Vector4i;
 import org.lwjgl.glfw.GLFW;
 
@@ -30,6 +32,7 @@ public class Litecraft extends Game
 	private LitecraftSave save;
 	private Ginger ginger3D;
 	private static Litecraft INSTANCE;
+	private static Player player;
 	//temp stuff to test out fbo fixes
 	int oldWindowWidth = Window.width;
 	int oldWindowHeight = Window.height;
@@ -56,7 +59,7 @@ public class Litecraft extends Game
 		Window.setBackgroundColour(0.2f, 0.2f, 0.6f);
 		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/stone/brick/stonebrick.png");
 		StaticCube.scaleCube(1f);
-		Player player = new Player(dirtModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
+		player = new Player(dirtModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
 		Camera camera = new FirstPersonCamera(player);
 		player.isVisible = false;
 		ginger3D = new Ginger();
@@ -85,7 +88,18 @@ public class Litecraft extends Game
 	public void exit()
 	{
 		if (this.world != null)
+		{
 			this.world.unloadAllChunks();
+
+			try
+			{ this.save.saveGlobalData(this.world.getSeed(), this.player); }
+			catch (IOException e)
+			{
+				System.err.println("A critical error occurred while trying to save world data!");
+				e.printStackTrace();
+			}
+		}
+	
 		ginger3D.cleanup(); 
 		System.exit(0);
 	}
