@@ -19,7 +19,6 @@ public class Player extends RenderObject
 	public void move(RelativeDirection direction)
 	{
 		float ry = this.getRotY();
-
 		switch (direction)
 		{
 		case FORWARD:
@@ -64,6 +63,5 @@ public class Player extends RenderObject
 		upwardsSpeed += Constants.gravity.y() * Window.getTime();
 		isInAir = false;
 		upwardsSpeed = 0;
-		//		super.getPosition().y = 0;
 	}
 }
