@@ -57,7 +57,7 @@ public class World implements BlockAccess, WorldGenConstants
 		for (int i = (0 - (size / 2)); i < (size / 2); i++)
 			for (int k = (0 - (size / 2)); k < (size / 2); k++)
 				for (int y = -2; y < 0; ++y)
-					this.getChunk(i, y, k).setRender(true);
+					this.loadChunk(i, y, k).setRender(true);
 		System.out.println("Generated world in " + (System.currentTimeMillis() - time) + " milliseconds");
 	}
 
@@ -72,6 +72,15 @@ public class World implements BlockAccess, WorldGenConstants
 		this.populateChunk(chunkX, chunkY, chunkZ, chunk.chunkStartX, chunk.chunkStartY, chunk.chunkStartZ);
 		chunk.setFullyGenerated(true);
 		return chunk;
+	}
+
+	public Chunk loadChunk(int chunkX, int chunkY, int chunkZ)
+	{
+		return this.chunks.computeIfAbsent(posHash(chunkX, chunkY, chunkZ), pos ->
+		{
+			Chunk readChunk = save.readChunk(chunkX, chunkY, chunkZ, this.dimension);
+			return readChunk == null ? this.chunkGenerator.generateChunk(chunkX, chunkY, chunkZ) : readChunk;
+		});
 	}
 
 	/** @return whether the chunk was unloaded without errors. Will often, but not always, be equal to whether the chunk was already in memory. */

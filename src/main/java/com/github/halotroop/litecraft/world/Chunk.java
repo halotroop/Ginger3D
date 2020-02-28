@@ -184,6 +184,14 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 				}
 			}
 		}
+		//
+		DataSection properties = data.get("properties");
+		try
+		{
+			this.fullyGenerated = properties.readBoolean(0); // index 0 is the "fully generated" property
+		}
+		catch (Throwable e)
+		{ System.out.println("An exception occurred reading properties for a chunk! This could be a benign error due to updates to chunk properties.");}
 	}
 
 	private int nextId; // for saving
@@ -219,6 +227,10 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		//
 		data.put("palette", paletteData);
 		data.put("block", blockData);
+		//
+		DataSection properties = new DataSection();
+		properties.writeBoolean(this.fullyGenerated);
+		data.put("properties", properties);
 		dirty = true;
 	}
 }
