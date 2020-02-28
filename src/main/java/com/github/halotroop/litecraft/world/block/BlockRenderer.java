@@ -67,7 +67,7 @@ public class BlockRenderer extends Renderer
 		TexturedModel model = renderList.get(0).getModel();
 		if(GingerRegister.getInstance().wireframe) 
 		{
-			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE );
+			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 		}
 		for (RenderObject entity : renderList)
 		{
@@ -84,7 +84,4 @@ public class BlockRenderer extends Renderer
 		}
 		shader.stop();
 	}
-
-
-
 }

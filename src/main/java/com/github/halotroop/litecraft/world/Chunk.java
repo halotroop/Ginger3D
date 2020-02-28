@@ -34,7 +34,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 
 	public Chunk(int chunkX, int chunkY, int chunkZ, int dimension)
 	{
-		renderList = new ArrayList<BlockEntity>();
+		renderList = new ArrayList<>();
 		this.chunkX = chunkX;
 		this.chunkY = chunkY;
 		this.chunkZ = chunkZ;
@@ -68,9 +68,12 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		renderList.clear();
 		if (render)
 		{
-			for(int i = 0; i < CHUNK_SIZE; i++) {
-				for(int j = 0; j < CHUNK_SIZE; j++) {
-					for(int k = 0; k < CHUNK_SIZE; k++) {
+			for(int i = 0; i < CHUNK_SIZE; i++)
+			{
+				for(int j = 0; j < CHUNK_SIZE; j++)
+				{
+					for(int k = 0; k < CHUNK_SIZE; k++)
+					{
 						BlockEntity block = getBlockEntity(i, j, k);
 						renderList.add(block);
 					}
