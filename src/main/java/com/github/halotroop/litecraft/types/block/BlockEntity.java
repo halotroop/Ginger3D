@@ -17,7 +17,5 @@ public class BlockEntity extends RenderObject
 	public void processCulling(Chunk chunk) {
 		Vector3f southNeighbourBlockLocation = this.getPosition();
 		southNeighbourBlockLocation.x--;
-		
-		
 	}
 }

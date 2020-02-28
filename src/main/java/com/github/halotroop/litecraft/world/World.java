@@ -35,15 +35,19 @@ public class World implements BlockAccess, WorldGenConstants
 		this.seed = seed;
 		this.chunkGenerator = dim.createChunkGenerator(seed);
 		this.worldModifiers = dim.getWorldModifierArray();
-		this.genBlockAccess = new GenWorld(this);
+		this.genBlockAccess = new GenerationWorld(this);
 		this.save = save;
 		this.dimension = dim.id;
 	}
 
 	public void spawnPlayer()
+	{ this.spawnPlayer(0, 0, -3); }
+
+	public void spawnPlayer(float x, float y, float z)
 	{
 		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
-		this.player = new Player(dirtModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
+		this.player = new Player(dirtModel, new Vector3f(x, y, z), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
+		this.player.isVisible = false;
 	}
 
 	// this constructor will likely not be neccesary when we have dynamic chunkloading
@@ -51,10 +55,14 @@ public class World implements BlockAccess, WorldGenConstants
 	{
 		this(seed, dim, save);
 
+		long time = System.currentTimeMillis();
+		System.out.println("Generating world!");
 		for (int i = (0 - (size/2)); i < (size/2); i++)
 			for (int k = (0 - (size/2)); k < (size/2); k++)
 				for (int y = -2; y < 0; ++y)
 					this.getChunk(i, y, k).setRender(true);
+
+		System.out.println("Generated world in " + (System.currentTimeMillis() - time) + " milliseconds");
 	}
 
 	public Chunk getChunk(int chunkX, int chunkY, int chunkZ)
@@ -121,7 +129,6 @@ public class World implements BlockAccess, WorldGenConstants
 	//used for model combining and culling
 	public Chunk optimiseChunk(Chunk chunk)
 	{
-		
 		return chunk;
 	}
 
@@ -129,7 +136,7 @@ public class World implements BlockAccess, WorldGenConstants
 	{
 		Chunk chunk = getChunk(0, -1, 0);
 		if(chunk!= null) {
-			blockRenderer.prepareModel(chunk.getBlockEntity(0, -2, 0).getModel());
+			blockRenderer.prepareModel(chunk.getBlockEntity(0, 0, 0).getModel());
 			this.chunks.forEach((pos, c) -> c.render(blockRenderer));
 			blockRenderer.unbindModel();
 		}
@@ -145,5 +152,28 @@ public class World implements BlockAccess, WorldGenConstants
 			});
 
 		chunkPositions.forEach((LongConsumer) (pos -> this.chunks.remove(pos))); // remove all chunks
+	}
+
+	public long getSeed()
+	{
+		return this.seed;
+	}
+
+	private static final class GenerationWorld implements BlockAccess, WorldGenConstants
+	{
+		GenerationWorld(World parent)
+		{
+			this.parent = parent;
+		}
+
+		public final World parent;
+
+		@Override
+		public Block getBlock(int x, int y, int z)
+		{ return this.parent.getGenChunk(x >> POS_SHIFT, y >> POS_SHIFT, z >> POS_SHIFT).getBlock(x & MAX_POS, y & MAX_POS, z & MAX_POS); }
+
+		@Override
+		public void setBlock(int x, int y, int z, Block block)
+		{ this.parent.getGenChunk(x >> POS_SHIFT, y >> POS_SHIFT, z >> POS_SHIFT).setBlock(x & MAX_POS, y & MAX_POS, z & MAX_POS, block); }
 	}
 }

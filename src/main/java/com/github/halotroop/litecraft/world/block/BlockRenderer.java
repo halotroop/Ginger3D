@@ -1,12 +1,11 @@
 package com.github.halotroop.litecraft.world.block;
 
-import java.util.List;
-
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.*;
 
 import com.github.halotroop.litecraft.Litecraft;
 import com.github.halotroop.litecraft.types.block.BlockEntity;
+import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 import com.github.hydos.ginger.engine.api.GingerRegister;
 import com.github.hydos.ginger.engine.elements.objects.RenderObject;
 import com.github.hydos.ginger.engine.io.Window;
@@ -16,7 +15,7 @@ import com.github.hydos.ginger.engine.render.models.*;
 import com.github.hydos.ginger.engine.render.shaders.StaticShader;
 import com.github.hydos.ginger.engine.render.texture.ModelTexture;
 
-public class BlockRenderer extends Renderer
+public class BlockRenderer extends Renderer implements WorldGenConstants
 {
 	private StaticShader shader;
 
@@ -59,32 +58,37 @@ public class BlockRenderer extends Renderer
 		GL30.glBindVertexArray(0);
 	}
 
-	public void render(List<BlockEntity> renderList)
+	public void render(BlockEntity[] renderList)
 	{ 
 		shader.start();
 		shader.loadSkyColour(Window.getColour());
 		shader.loadViewMatrix(GingerRegister.getInstance().game.data.camera);
-		TexturedModel model = renderList.get(0).getModel();
+		TexturedModel model = renderList[0].getModel();
 		if(GingerRegister.getInstance().wireframe) 
 		{
-			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE );
+			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 		}
-		for (RenderObject entity : renderList)
+		for(int x = 0; x < CHUNK_SIZE; x++)
 		{
-			if (entity != null && entity.getModel() != null) {
-				prepTexture(entity.getModel().getTexture(), entity.getModel().getTexture().getTextureID());
-				prepBlockInstance(entity);
-				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-				
+			for (int y = 0; y < CHUNK_SIZE; y++)
+			{
+				for (int z = 0; z < CHUNK_SIZE; z++)
+				{
+					BlockEntity entity = renderList[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y];
+					if (entity != null && entity.getModel() != null)
+					{
+						prepTexture(entity.getModel().getTexture(), entity.getModel().getTexture().getTextureID());
+						prepBlockInstance(entity);
+						GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+					}
+				}
 			}
 		}
+
 		if(GingerRegister.getInstance().wireframe) 
 		{
-			GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK,GL11.GL_FILL );
+			GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK,GL11.GL_FILL);
 		}
 		shader.stop();
 	}
-
-
-
 }
