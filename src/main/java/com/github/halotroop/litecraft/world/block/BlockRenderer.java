@@ -76,13 +76,12 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 			{
 				for (int z = 0; z < CHUNK_SIZE; z++)
 				{
-					BlockEntity entity = renderList[x*64 + z*8 + y];
+					BlockEntity entity = renderList[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y];
 					if (entity != null && entity.getModel() != null)
 					{
 						prepTexture(entity.getModel().getTexture(), entity.getModel().getTexture().getTextureID());
 						prepBlockInstance(entity);
 						GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-
 					}
 				}
 			}
@@ -90,7 +89,7 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 
 		if(GingerRegister.getInstance().wireframe) 
 		{
-			GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK,GL11.GL_FILL );
+			GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK,GL11.GL_FILL);
 		}
 		shader.stop();
 	}

@@ -23,9 +23,8 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 	private static long posHash(int x, int y, int z)
 	{ return ((long) x & MAX_POS) | (((long) y & MAX_POS) << POS_SHIFT) | (((long) z & MAX_POS) << DOUBLE_SHIFT); }
 
-	List<BlockEntity> renderList;
-	private final Long2ObjectMap<Block> blocks = new Long2ObjectArrayMap<>();
-	private final Long2ObjectMap<BlockEntity> blockEntities = new Long2ObjectArrayMap<>();
+	private final Block[] blocks = new Block[CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE];
+	private BlockEntity[] blockEntities = new BlockEntity[CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE];
 	private boolean render = false;
 	public final int chunkX, chunkY, chunkZ;
 	public final int chunkStartX, chunkStartY, chunkStartZ;
@@ -36,7 +35,6 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 
 	public Chunk(int chunkX, int chunkY, int chunkZ, int dimension)
 	{
-		renderList = new ArrayList<>();
 		this.chunkX = chunkX;
 		this.chunkY = chunkY;
 		this.chunkZ = chunkZ;
@@ -55,14 +53,22 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 	@Override
 	public Block getBlock(int x, int y, int z)
 	{
-		long hash = posHash(x, y, z);
-		return this.blocks.get(hash);
+		if (x > CHUNK_SIZE || y > CHUNK_SIZE || z > CHUNK_SIZE || x < 0 || y < 0 || z < 0)
+		{
+			throw new RuntimeException("Block [" + x + ", " + y + ", " + z + ", " + "] out of chunk bounds!");
+		}
+
+		return blocks[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y];
 	}
 
 	public BlockEntity getBlockEntity(int x, int y, int z)
 	{
-		long hash = posHash(x, y, z);
-		return this.blockEntities.get(hash);
+		if (x > CHUNK_SIZE || y > CHUNK_SIZE || z > CHUNK_SIZE || x < 0 || y < 0 || z < 0)
+		{
+			throw new RuntimeException("Block [" + x + ", " + y + ", " + z + ", " + "] out of chunk bounds!");
+		}
+
+		return this.blockEntities[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y];
 	}
 
 	public void render(BlockRenderer blockRenderer)
@@ -73,7 +79,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 			if (dirty)
 			{
 				dirty = false;
-				renderedBlocks = new BlockEntity[512];
+				renderedBlocks = new BlockEntity[CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE];
 				for(int x = 0; x < CHUNK_SIZE; x++)
 				{
 					for(int y = 0; y < CHUNK_SIZE; y++)
@@ -83,15 +89,16 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 							BlockEntity block = getBlockEntity(x, y, z);
 							if (x == 0 || x == CHUNK_SIZE-1 || z == 0 || z == CHUNK_SIZE-1 || y == 0 || y == CHUNK_SIZE-1)
 							{
-								renderedBlocks[x*64 + z*8 + y] = block;
+								renderedBlocks[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y] = block;
 								continue;
 							}
 
+							// check for air. Yes this is stupid, TODO fix this
 							if (getBlockEntity(x-1, y, z) == null || getBlockEntity(x+1, y, z) == null ||
 									getBlockEntity(x, y-1, z) == null || getBlockEntity(x, y+1, z) == null ||
 									getBlockEntity(x, y, z-1) == null || getBlockEntity(x, y, z+1) == null)
 							{
-								renderedBlocks[x*64 + z*8 + y] = block;
+								renderedBlocks[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y] = block;
 							}
 						}
 					}
@@ -114,11 +121,10 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		if (z > MAX_POS)
 			z = MAX_POS;
 		else if (z < 0) z = 0;
-		long hash = posHash(x, y, z);
-		this.blocks.put(hash, block);
+		this.blocks[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y] = block;
 		if (this.render)
 		{
-			this.blockEntities.put(hash, new BlockEntity(block, new Vector3f(this.chunkStartX + x, this.chunkStartY + y, this.chunkStartZ + z)));
+			this.blockEntities[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y] =  new BlockEntity(block, new Vector3f(this.chunkStartX + x, this.chunkStartY + y, this.chunkStartZ + z));
 		}
 		dirty = true;
 	}
@@ -133,22 +139,19 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 				{
 					for (int z = 0; z < CHUNK_SIZE; ++z)
 					{
-						long hash = posHash(x, y, z);
-						Block block = this.blocks.get(hash);
-						if (block.isVisible()) this.blockEntities.put(hash, new BlockEntity(block,
+						Block block = this.blocks[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y];
+						if (block.isVisible()) this.blockEntities[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y] =  new BlockEntity(block,
 								new Vector3f(
 										this.chunkStartX + x,
 										this.chunkStartY + y,
-										this.chunkStartZ + z)));
+										this.chunkStartZ + z));
 					}
 				}
 			}
 		}
 		else if (this.render) // else if it has been changed to false
 		{
-			int length = blockEntities.size();
-			for (int i = length; i >= 0; --i)
-			{ this.blockEntities.remove(i); }
+			blockEntities = new BlockEntity[CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE];
 		}
 		this.render = render;
 		dirty = true;
@@ -189,7 +192,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 			{
 				for (int x = 0; x < CHUNK_SIZE; ++x)
 				{
-					this.blocks.put(posHash, palette.get(blockData.readInt((int) posHash)));
+					blocks[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y] = palette.get(blockData.readInt((int) posHash));
 					++posHash;
 				}
 			}
@@ -217,7 +220,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 			{
 				for (int x = 0; x < CHUNK_SIZE; ++x)
 				{
-					Block b = this.blocks.get(posHash);
+					Block b = blocks[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y];
 					blockData.writeInt(palette.computeIntIfAbsent(b, nextIdProvider));
 					++posHash;
 				}

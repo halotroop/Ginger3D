@@ -50,10 +50,14 @@ public class World implements BlockAccess, WorldGenConstants
 	{
 		this(seed, dim, save);
 
+		long time = System.currentTimeMillis();
+		System.out.println("Generating world!");
 		for (int i = (0 - (size/2)); i < (size/2); i++)
 			for (int k = (0 - (size/2)); k < (size/2); k++)
 				for (int y = -2; y < 0; ++y)
 					this.getChunk(i, y, k).setRender(true);
+
+		System.out.println("Generated world in " + (System.currentTimeMillis() - time) + " milliseconds");
 	}
 
 	public Chunk getChunk(int chunkX, int chunkY, int chunkZ)
@@ -120,7 +124,6 @@ public class World implements BlockAccess, WorldGenConstants
 	//used for model combining and culling
 	public Chunk optimiseChunk(Chunk chunk)
 	{
-		
 		return chunk;
 	}
 
@@ -128,7 +131,7 @@ public class World implements BlockAccess, WorldGenConstants
 	{
 		Chunk chunk = getChunk(0, -1, 0);
 		if(chunk!= null) {
-			blockRenderer.prepareModel(chunk.getBlockEntity(0, -2, 0).getModel());
+			blockRenderer.prepareModel(chunk.getBlockEntity(0, 0, 0).getModel());
 			this.chunks.forEach((pos, c) -> c.render(blockRenderer));
 			blockRenderer.unbindModel();
 		}
