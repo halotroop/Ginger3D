@@ -22,6 +22,7 @@ public class DynamicChunkLoader extends GingerThread{
 	
 	@Override
 	public void run() {
+		started = true;
 		List<Chunk> toKeep = new ArrayList<>();
 		// loop over rendered area, adding chunks that are needed
 		for (int x = chunkX - this.world.renderBound; x < chunkX + this.world.renderBound; x++)
@@ -50,6 +51,7 @@ public class DynamicChunkLoader extends GingerThread{
 			if (!alreadyRendering)
 				this.world.chunks.put(this.world.posHash(chunk.chunkX, chunk.chunkY, chunk.chunkZ), chunk);
 		});
+		this.finished = true;
 	}
 	
 }
