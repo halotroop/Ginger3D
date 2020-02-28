@@ -32,8 +32,8 @@ public class Litecraft extends Game
 	private LitecraftSave save;
 	private Ginger ginger3D;
 	private static Litecraft INSTANCE;
-	private Player player;
-	private Camera camera;
+	public Player player;
+	public Camera camera;
 	//temp stuff to test out fbo fixes
 	int oldWindowWidth = Window.width;
 	int oldWindowHeight = Window.height;
@@ -158,22 +158,13 @@ public class Litecraft extends Game
 	public static Litecraft getInstance()
 	{ return INSTANCE; }
 
-	public void setGingerPlayer(Player player)
-	{
-		this.data.entities.remove(this.player); // remove the old player
-		this.data.player = player; // set all the player variables
-		this.player = player;
-		this.camera.player = player;
-		this.data.entities.add(this.player); // add the new player
-	}
-
 	public void onPlayButtonClick()
 	{
 		if (world == null)
 		{
 			this.save = new LitecraftSave("test", false);
 			this.world = this.save.getWorldOrCreate(Dimensions.OVERWORLD);
-			this.setGingerPlayer(this.world.player);
+			ginger3D.setGingerPlayer(this.world.player);
 		}
 	}
 }

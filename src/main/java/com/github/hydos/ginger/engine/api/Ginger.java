@@ -8,6 +8,7 @@ import com.github.halotroop.litecraft.logic.Timer.TickListener;
 import com.github.halotroop.litecraft.world.World;
 import com.github.hydos.ginger.engine.api.game.*;
 import com.github.hydos.ginger.engine.elements.buttons.TextureButton;
+import com.github.hydos.ginger.engine.elements.objects.Player;
 import com.github.hydos.ginger.engine.font.*;
 import com.github.hydos.ginger.engine.io.Window;
 import com.github.hydos.ginger.engine.particle.ParticleMaster;
@@ -48,7 +49,16 @@ public class Ginger
 
 	public void openScreen(Screen screen)
 	{ gingerRegister.currentScreen = screen; }
-
+	
+	public void setGingerPlayer(Player player)
+	{
+		gingerRegister.game.data.entities.remove(Litecraft.getInstance().player); // remove the old player
+		gingerRegister.game.data.player = player; // set all the player variables
+		Litecraft.getInstance().player = player;
+		Litecraft.getInstance().camera.player = player;
+		gingerRegister.game.data.entities.add(player); // add the new player
+	}
+	
 	public void postRender()
 	{ Window.swapBuffers(); }
 
