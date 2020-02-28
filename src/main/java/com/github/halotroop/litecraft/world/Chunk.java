@@ -169,7 +169,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 			}
 		}
 		//
-		DataSection blockData = data.get("block");
+		IntArrayDataSection blockData = data.getIntArray("block");
 		int index = 0;
 		//
 		for (int z = 0; z < CHUNK_SIZE; ++z) // z, y, x order for data saving and loading so we can use incremental pos hashes
@@ -207,7 +207,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 	{
 		Object2IntMap<Block> palette = new Object2IntArrayMap<>(); // block to int id
 		DataSection paletteData = new DataSection();
-		DataSection blockData = new DataSection();
+		IntArrayDataSection blockData = new IntArrayDataSection();
 		int index = 0;
 		nextId = 0;
 		ToIntFunction<Block> nextIdProvider = b -> nextId++;
