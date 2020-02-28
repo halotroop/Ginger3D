@@ -27,17 +27,17 @@ public class Player extends RenderObject
 			position.z -= Math.cos(ry) * Constants.movementSpeed;
 			position.x += Math.sin(ry) * Constants.movementSpeed;
 			break;
-		case LEFT:
-			position.z -= Math.cos(ry) * Constants.movementSpeed;
-			position.x -= Math.sin(ry) * Constants.movementSpeed;
-			break;
 		case BACKWARD:
 			position.z += Math.cos(ry) * Constants.movementSpeed;
 			position.x -= Math.sin(ry) * Constants.movementSpeed;
 			break;
+		case LEFT:
+			position.z -= Math.cos(ry + 105) * Constants.movementSpeed;
+			position.x += Math.sin(ry + 105) * Constants.movementSpeed;
+			break;
 		case RIGHT:
-			position.z += Math.cos(ry) * Constants.movementSpeed;
-			position.x += Math.sin(ry) * Constants.movementSpeed;
+			position.z -= Math.cos(ry - 105) * Constants.movementSpeed;
+			position.x += Math.sin(ry - 105) * Constants.movementSpeed;
 			break;
 		case UP:
 			if (this.noWeight) position.y += Constants.movementSpeed;
