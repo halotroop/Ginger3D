@@ -18,7 +18,7 @@ import it.unimi.dsi.fastutil.longs.*;
 
 public class World implements BlockAccess, WorldGenConstants
 {
-	private final Long2ObjectMap<Chunk> chunks;
+	final Long2ObjectMap<Chunk> chunks;
 	private final WorldModifier[] worldModifiers;
 	private final ChunkGenerator chunkGenerator;
 	private final BlockAccess genBlockAccess;
@@ -26,8 +26,8 @@ public class World implements BlockAccess, WorldGenConstants
 	private final long seed;
 	private final int dimension;
 	public Player player;
-	private int renderBound;
-	private int renderBoundVertical;
+	int renderBound;
+	int renderBoundVertical;
 	private final BlockInstance dummy;
 
 	public World(long seed, int renderSize, Dimension<?> dim, LitecraftSave save)
@@ -112,7 +112,7 @@ public class World implements BlockAccess, WorldGenConstants
 	}
 
 	/** @return whether the chunk was unloaded without errors. Will often, but not always, be equal to whether the chunk was already in memory. */
-	private boolean unloadChunk(long posHash)
+	boolean unloadChunk(long posHash)
 	{
 		Chunk chunk = this.chunks.get(posHash);
 		// If the chunk is not in memory, it does not need to be unloaded
@@ -123,7 +123,7 @@ public class World implements BlockAccess, WorldGenConstants
 		return result;
 	}
 
-	private void populateChunk(Chunk chunk)
+	void populateChunk(Chunk chunk)
 	{
 		this.populateChunk(chunk.chunkX, chunk.chunkY, chunk.chunkZ, chunk.chunkStartX, chunk.chunkStartY, chunk.chunkStartZ);
 	}
@@ -139,7 +139,7 @@ public class World implements BlockAccess, WorldGenConstants
 	Chunk getGenChunk(int chunkX, int chunkY, int chunkZ)
 	{ return this.chunks.computeIfAbsent(posHash(chunkX, chunkY, chunkZ), pos -> this.chunkGenerator.generateChunk(chunkX, chunkY, chunkZ)); }
 
-	private static long posHash(int chunkX, int chunkY, int chunkZ)
+	long posHash(int chunkX, int chunkY, int chunkZ)
 	{ return ((long) chunkX & 0x3FF) | (((long) chunkY & 0x3FF) << 10) | (((long) chunkZ & 0x3FF) << 20); }
 
 	@Override
@@ -183,34 +183,8 @@ public class World implements BlockAccess, WorldGenConstants
 
 	public void updateLoadedChunks(int chunkX, int chunkY, int chunkZ)
 	{
-		List<Chunk> toKeep = new ArrayList<>();
-		// loop over rendered area, adding chunks that are needed
-		for (int x = chunkX - this.renderBound; x < chunkX + this.renderBound; x++)
-			for (int z = chunkZ - this.renderBound; z < chunkZ + this.renderBound; z++)
-				for (int y = chunkY - this.renderBoundVertical; y < chunkY + this.renderBoundVertical; y++)
-					toKeep.add(this.getChunkToLoad(x, y, z));
-		// list of keys to remove
-		LongList toRemove = new LongArrayList();
-		// check which loaded chunks are not neccesary
-		this.chunks.forEach((pos, chunk) ->
-		{
-			if (!toKeep.contains(chunk))
-				toRemove.add((long) pos);
-		});
-		// unload unneccesary chunks from chunk array
-		toRemove.forEach((LongConsumer) pos -> this.unloadChunk(pos));
-		// populate chunks to render if they are not rendered, then render them
-		toKeep.forEach(chunk -> {
-			if (!chunk.isFullyGenerated())
-			{
-				this.populateChunk(chunk);
-				chunk.setFullyGenerated(true);
-			}
-			boolean alreadyRendering = chunk.doRender(); // if it's already rendering then it's most likely in the map
-			chunk.setRender(true);
-			if (!alreadyRendering)
-				this.chunks.put(posHash(chunk.chunkX, chunk.chunkY, chunk.chunkZ), chunk);
-		});
+		DynamicChunkLoader chunkLoader = new DynamicChunkLoader(chunkX, chunkY, chunkZ, this);
+		chunkLoader.start();
 	}
 
 	private static final class GenerationWorld implements BlockAccess, WorldGenConstants
