@@ -2,20 +2,29 @@ package com.github.hydos.ginger.engine.elements.objects;
 
 import org.joml.Vector3f;
 
+import com.github.halotroop.litecraft.Litecraft;
 import com.github.halotroop.litecraft.util.RelativeDirection;
+import com.github.halotroop.litecraft.world.World;
+import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 import com.github.hydos.ginger.engine.api.GingerRegister;
 import com.github.hydos.ginger.engine.io.Window;
 import com.github.hydos.ginger.engine.render.models.TexturedModel;
 import com.github.hydos.ginger.main.settings.Constants;
 
-public class Player extends RenderObject
+public class Player extends RenderObject implements WorldGenConstants
 {
 	private boolean isInAir = false;
 	private double upwardsSpeed;
 	private boolean noWeight = true; // because the force of gravity on an object's mass is called WEIGHT, not gravity
+	private int chunkX, chunkY, chunkZ;
 
 	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale)
-	{ super(model, position, rotX, rotY, rotZ, scale); }
+	{
+		super(model, position, rotX, rotY, rotZ, scale);
+		this.chunkX = (int) position.x >> POS_SHIFT;
+		this.chunkY = (int) position.y >> POS_SHIFT;
+		this.chunkZ = (int) position.z >> POS_SHIFT;
+	}
 
 	public void move(RelativeDirection direction)
 	{
@@ -32,12 +41,12 @@ public class Player extends RenderObject
 			position.x -= Math.sin(ry) * Constants.movementSpeed;
 			break;
 		case LEFT:
-			ry -= NINETY_DEGREES;
+			ry -= RIGHT_ANGLE;
 			position.z -= Math.cos(ry) * Constants.movementSpeed;
 			position.x += Math.sin(ry) * Constants.movementSpeed;
 			break;
 		case RIGHT:
-			ry += NINETY_DEGREES;
+			ry += RIGHT_ANGLE;
 			position.z -= Math.cos(ry) * Constants.movementSpeed;
 			position.x += Math.sin(ry) * Constants.movementSpeed;
 			break;
@@ -51,7 +60,7 @@ public class Player extends RenderObject
 		}
 	}
 
-	private static final float NINETY_DEGREES = (float) (Math.PI / 2f);
+	private static final float RIGHT_ANGLE = (float) (Math.PI / 2f);
 
 	private void jump()
 	{
@@ -62,11 +71,32 @@ public class Player extends RenderObject
 		}
 	}
 
+	public int getChunkX()
+	{ return this.chunkX; }
+
+	public int getChunkY()
+	{ return this.chunkY; }
+
+	public int getChunkZ()
+	{ return this.chunkZ; }
+
 	public void updateMovement()
 	{
 		super.increasePosition(0, (float) (upwardsSpeed * (Window.getTime())), 0);
 		upwardsSpeed += Constants.gravity.y() * Window.getTime();
 		isInAir = false;
 		upwardsSpeed = 0;
+		
+		int newChunkX = (int) position.x >> POS_SHIFT;
+		int newChunkY = (int) position.y >> POS_SHIFT;
+		int newChunkZ = (int) position.z >> POS_SHIFT;
+		
+		if (newChunkX != this.chunkX || newChunkY != this.chunkY || newChunkZ != this.chunkZ)
+		{
+			Litecraft.getInstance().getWorld().updateLoadedChunks(newChunkX, newChunkY, newChunkZ);
+			this.chunkX = newChunkX;
+			this.chunkY = newChunkY;
+			this.chunkZ = newChunkZ;
+		}
 	}
 }

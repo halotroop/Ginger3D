@@ -1,6 +1,6 @@
 package com.github.halotroop.litecraft.world;
 
-import java.util.Random;
+import java.util.*;
 import java.util.function.LongConsumer;
 
 import org.joml.Vector3f;
@@ -26,9 +26,9 @@ public class World implements BlockAccess, WorldGenConstants
 	private final long seed;
 	private final int dimension;
 	public Player player;
+	private final int renderSize;
 
-	// This will likely become the main public constructor after we add dynamic chunkloading
-	private World(long seed, Dimension<?> dim, LitecraftSave save)
+	public World(long seed, int renderSize, Dimension<?> dim, LitecraftSave save)
 	{
 		this.chunks = new Long2ObjectArrayMap<>();
 		this.seed = seed;
@@ -37,36 +37,7 @@ public class World implements BlockAccess, WorldGenConstants
 		this.genBlockAccess = new GenerationWorld(this);
 		this.save = save;
 		this.dimension = dim.id;
-	}
-
-	public void spawnPlayer()
-	{
-		int y = this.findAir(0, 0);
-		if (y == -1)
-			y = 300; // yeet
-
-		this.spawnPlayer(0, y, -3);
-	}
-
-	public Player spawnPlayer(float x, float y, float z)
-	{
-		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
-		this.player = new Player(dirtModel, new Vector3f(x, y, z), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
-		this.player.isVisible = false;
-		return this.player;
-	}
-
-	// this constructor will likely not be neccesary when we have dynamic chunkloading
-	public World(long seed, int size, Dimension<?> dim, LitecraftSave save)
-	{
-		this(seed, dim, save);
-		long time = System.currentTimeMillis();
-		System.out.println("Generating world!");
-		for (int i = (0 - (size / 2)); i < (size / 2); i++)
-			for (int k = (0 - (size / 2)); k < (size / 2); k++)
-				for (int y = -2; y < 2; ++y)
-					this.loadChunk(i, y, k).setRender(true);
-		System.out.println("Generated world in " + (System.currentTimeMillis() - time) + " milliseconds");
+		this.renderSize = renderSize;
 	}
 
 	public int findAir(int x, int z)
@@ -84,6 +55,30 @@ public class World implements BlockAccess, WorldGenConstants
 		return -1; // if it fails, returns -1
 	}
 
+	public void spawnPlayer()
+	{
+		int y = this.findAir(0, 0);
+		if (y == -1)
+			y = 300; // yeet
+
+		this.spawnPlayer(0, y, -3);
+	}
+
+	public Player spawnPlayer(float x, float y, float z)
+	{
+		// Player model and stuff
+		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
+		this.player = new Player(dirtModel, new Vector3f(x, y, z), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
+		this.player.isVisible = false;
+		// Generate world around player
+		long time = System.currentTimeMillis();
+		System.out.println("Generating world!");
+		this.updateLoadedChunks(this.player.getChunkX(), this.player.getChunkY(), this.player.getChunkZ());
+		System.out.println("Generated world in " + (System.currentTimeMillis() - time) + " milliseconds");
+		// return player
+		return this.player;
+	}
+
 	public Chunk getChunk(int chunkX, int chunkY, int chunkZ)
 	{
 		Chunk chunk = this.chunks.computeIfAbsent(posHash(chunkX, chunkY, chunkZ), pos ->
@@ -97,19 +92,21 @@ public class World implements BlockAccess, WorldGenConstants
 		return chunk;
 	}
 
-	public Chunk loadChunk(int chunkX, int chunkY, int chunkZ)
+	public Chunk getChunkToLoad(int chunkX, int chunkY, int chunkZ)
 	{
-		return this.chunks.computeIfAbsent(posHash(chunkX, chunkY, chunkZ), pos ->
-		{
-			Chunk readChunk = save.readChunk(chunkX, chunkY, chunkZ, this.dimension);
-			return readChunk == null ? this.chunkGenerator.generateChunk(chunkX, chunkY, chunkZ) : readChunk;
-		});
+		// try get an already loaded chunk
+		Chunk result = this.chunks.get(posHash(chunkX, chunkY, chunkZ));
+		if (result != null)
+			return result;
+		// try read a chunk from memory
+		result = save.readChunk(chunkX, chunkY, chunkZ, this.dimension);
+		// if neither of those work, generate the chunk
+		return result == null ? this.chunkGenerator.generateChunk(chunkX, chunkY, chunkZ) : result;
 	}
 
 	/** @return whether the chunk was unloaded without errors. Will often, but not always, be equal to whether the chunk was already in memory. */
-	public boolean unloadChunk(int chunkX, int chunkY, int chunkZ)
+	private boolean unloadChunk(long posHash)
 	{
-		long posHash = posHash(chunkX, chunkY, chunkZ);
 		Chunk chunk = this.chunks.get(posHash);
 		// If the chunk is not in memory, it does not need to be unloaded
 		if (chunk == null) return false;
@@ -117,6 +114,11 @@ public class World implements BlockAccess, WorldGenConstants
 		boolean result = this.save.saveChunk(chunk);
 		this.chunks.remove(posHash);
 		return result;
+	}
+
+	private void populateChunk(Chunk chunk)
+	{
+		this.populateChunk(chunk.chunkX, chunk.chunkY, chunk.chunkZ, chunk.chunkStartX, chunk.chunkStartY, chunk.chunkStartZ);
 	}
 
 	private void populateChunk(int chunkX, int chunkY, int chunkZ, int chunkStartX, int chunkStartY, int chunkStartZ)
@@ -175,6 +177,38 @@ public class World implements BlockAccess, WorldGenConstants
 	{ return this.seed; }
 
 	public static final int SEA_LEVEL = 0;
+
+	public void updateLoadedChunks(int newChunkX, int newChunkY, int newChunkZ)
+	{
+		List<Chunk> toKeep = new ArrayList<>();
+		// loop over rendered area, adding chunks that are needed
+		for (int x = -renderSize / 2; x < renderSize / 2; x++)
+			for (int z = -renderSize / 2; z < renderSize / 2; z++)
+				for (int y = -2; y < 2; ++y)
+					toKeep.add(this.getChunkToLoad(x, y, z));
+		// list of keys to remove
+		LongList toRemove = new LongArrayList();
+		// check which loaded chunks are not neccesary
+		this.chunks.forEach((pos, chunk) ->
+		{
+			if (!toKeep.contains(chunk))
+				toRemove.add((long) pos);
+		});
+		// unload unneccesary chunks from chunk array
+		toRemove.forEach((LongConsumer) pos -> this.unloadChunk(pos));
+		// populate chunks to render if they are not rendered, then render them
+		toKeep.forEach(chunk -> {
+			if (!chunk.isFullyGenerated())
+			{
+				this.populateChunk(chunk);
+				chunk.setFullyGenerated(true);
+			}
+			boolean alreadyRendering = chunk.doRender(); // if it's already rendering then it's most likely in the map
+			chunk.setRender(true);
+			if (!alreadyRendering)
+				this.chunks.put(posHash(chunk.chunkX, chunk.chunkY, chunk.chunkZ), chunk);
+		});
+	}
 
 	private static final class GenerationWorld implements BlockAccess, WorldGenConstants
 	{

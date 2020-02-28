@@ -182,4 +182,9 @@ public class Litecraft extends Game
 			ginger3D.setGingerPlayer(this.world.player);
 		}
 	}
+
+	public World getWorld()
+	{
+		return this.world;
+	}
 }
