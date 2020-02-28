@@ -1,7 +1,5 @@
 package com.github.halotroop.litecraft;
 
-import java.util.Random;
-
 import org.joml.Vector4i;
 import org.lwjgl.glfw.GLFW;
 
@@ -9,7 +7,7 @@ import com.github.halotroop.litecraft.save.LitecraftSave;
 import com.github.halotroop.litecraft.screens.TitleScreen;
 import com.github.halotroop.litecraft.types.block.*;
 import com.github.halotroop.litecraft.world.World;
-import com.github.halotroop.litecraft.world.gen.*;
+import com.github.halotroop.litecraft.world.gen.Dimensions;
 import com.github.hydos.ginger.engine.api.*;
 import com.github.hydos.ginger.engine.api.game.*;
 import com.github.hydos.ginger.engine.cameras.*;

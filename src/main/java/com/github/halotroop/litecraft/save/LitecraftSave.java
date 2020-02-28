@@ -79,25 +79,28 @@ public final class LitecraftSave
 
 	public World getWorldOrCreate(Dimension<?> dim)
 	{
-		File worldFile = new File(this.file.getPath() + "/global_data.sod");
+		File globalDataFile = new File(this.file.getPath() + "/global_data.sod");
 
-		if (worldFile.isFile()) // load world
+		if (globalDataFile.isFile()) // load world
 		{
-			BinaryData data = BinaryData.read(worldFile); // read data from the world file
+			BinaryData data = BinaryData.read(globalDataFile); // read data from the world file
 			DataSection properties = data.get("properties"); // get the properties data section from the data that we have just read
+			DataSection playerData = data.get("player");
 			long seed = 0; // default seed if we cannot read it is 0
+			float playerX = 0, playerY = 0, playerZ = -3; // default player x/y/z
 
 			try // try read the seed from the file
 			{
 				seed = properties.readLong(0); // seed is at index 0
+				playerX = playerData.readFloat(1); // player x/y/z is at index 1/2/3 respectively
+				playerY = playerData.readFloat(2);
+				playerZ = playerData.readFloat(3);
 			}
 			catch (Throwable e)
-			{
-				e.printStackTrace();
-			}
+			{ e.printStackTrace(); }
 
 			World world = new World(seed, 10, dim, this); // create new world with seed read from file or 0, if it could not be read
-			world.spawnPlayer(); // spawn player in world
+			world.spawnPlayer(playerX, playerY, playerZ); // spawn player in world
 			return world;
 		}
 		else // create world
@@ -106,12 +109,16 @@ public final class LitecraftSave
 
 			try
 			{
-				worldFile.createNewFile(); // create world file
+				globalDataFile.createNewFile(); // create world file
 				BinaryData data = new BinaryData(); // create empty binary data
 				DataSection properties = new DataSection(); // create empty data section for properties
 				properties.writeLong(seed); // write seed at index 0
+				DataSection playerData = new DataSection();
+				playerData.writeFloat(0); // default spawn player x/y/z
+				playerData.writeFloat(0);
+				playerData.writeFloat(-3);
 				data.put("properties", properties); // add properties section
-				data.write(worldFile); // write to file
+				data.write(globalDataFile); // write to file
 			}
 			catch (IOException e)
 			{
