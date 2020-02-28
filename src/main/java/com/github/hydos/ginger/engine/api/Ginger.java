@@ -17,6 +17,7 @@ import com.github.hydos.ginger.engine.render.MasterRenderer;
 import com.github.hydos.ginger.engine.render.tools.MousePicker;
 import com.github.hydos.ginger.engine.screen.Screen;
 import com.github.hydos.ginger.engine.utils.Loader;
+import com.github.hydos.multiThreading.GingerThreading;
 
 public class Ginger
 {
@@ -25,6 +26,7 @@ public class Ginger
 	public MousePicker picker;
 	public FontType globalFont;
 	public Fbo contrastFbo;
+	public GingerThreading threading;
 	Timer timer;
 	TickListener gameTickListener = new TickListener()
 	{
@@ -104,6 +106,7 @@ public class Ginger
 	{
 		INSTANCE = this;
 		gingerRegister = new GingerRegister();
+		threading = new GingerThreading();
 		gingerRegister.registerGame(game);
 		timer = new Timer(game.data.tickSpeed);
 		timer.addTickListener(gameTickListener);
@@ -130,11 +133,12 @@ public class Ginger
 
 	public void update(GameData data)
 	{
-		Window.update();
+		threading.update();
 		data.camera.move();
 		GingerUtils.update();
 		picker.update();
 		ParticleMaster.update(data.camera);
+		Window.update();
 	}
 
 	public static Ginger getInstance()

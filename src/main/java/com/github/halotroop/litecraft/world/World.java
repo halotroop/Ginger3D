@@ -10,6 +10,7 @@ import com.github.halotroop.litecraft.types.block.*;
 import com.github.halotroop.litecraft.world.block.BlockRenderer;
 import com.github.halotroop.litecraft.world.dimension.Dimension;
 import com.github.halotroop.litecraft.world.gen.*;
+import com.github.hydos.ginger.engine.api.Ginger;
 import com.github.hydos.ginger.engine.elements.objects.Player;
 import com.github.hydos.ginger.engine.obj.ModelLoader;
 import com.github.hydos.ginger.engine.render.models.TexturedModel;
@@ -185,12 +186,7 @@ public class World implements BlockAccess, WorldGenConstants
 
 	public void updateLoadedChunks(int chunkX, int chunkY, int chunkZ)
 	{
-		if(!chunkLoader.isAlive()) {
-			chunkLoader.chunkX = chunkX;
-			chunkLoader.chunkY = chunkY;
-			chunkLoader.chunkZ = chunkZ;         
-			chunkLoader.start();
-		}
+		Ginger.getInstance().threading.registerChunkThreadToWaitlist(new DynamicChunkLoader(chunkX, chunkY, chunkZ, this));
 	}
 
 	private static final class GenerationWorld implements BlockAccess, WorldGenConstants

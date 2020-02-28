@@ -4,11 +4,28 @@ import java.util.*;
 
 public class GingerThreading
 {
-	public List<GingerThread> threads;
+	public List<GingerThread> worldChunkThreadWaitlist;
 
 	public GingerThreading()
-	{ threads = new ArrayList<GingerThread>(); }
+	{ worldChunkThreadWaitlist = new ArrayList<GingerThread>(); }
 
-	public void registerThread(GingerThread thread)
-	{ threads.add(thread); }
+	public void registerChunkThreadToWaitlist(GingerThread thread)
+	{ worldChunkThreadWaitlist.add(thread); }
+	
+	public void update() {
+		if(worldChunkThreadWaitlist.size() > 0) {
+			GingerThread yes = worldChunkThreadWaitlist.get(0);
+			if(!yes.finished) {
+				worldChunkThreadWaitlist.remove(0);
+//				yes.stop();
+			}else {
+				if(!yes.isAlive() && !yes.started) {
+					yes.start();
+				}
+			}
+		}
+		if(worldChunkThreadWaitlist.size() > 1) {
+			worldChunkThreadWaitlist.get(0).start();
+		}
+	}
 }
