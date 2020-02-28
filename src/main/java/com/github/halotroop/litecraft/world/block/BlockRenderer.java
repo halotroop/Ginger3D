@@ -66,7 +66,7 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 		shader.start();
 		shader.loadSkyColour(Window.getColour());
 		shader.loadViewMatrix(GingerRegister.getInstance().game.data.camera);
-		TexturedModel model = renderList[0].getModel();
+//		TexturedModel model = renderList[0].getModel();
 		if (GingerRegister.getInstance().wireframe)
 			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 		//
@@ -77,9 +77,10 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 					BlockInstance entity = renderList[Chunk.index(x, y, z)];
 					if (entity != null && entity.getModel() != null)
 					{
-						prepTexture(entity.getModel().getTexture(), entity.getModel().getTexture().getTextureID());
+						TexturedModel blockModel = entity.getModel();
+						prepTexture(blockModel.getTexture(), blockModel.getTexture().getTextureID());
 						prepBlockInstance(entity);
-						GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+						GL11.glDrawElements(GL11.GL_TRIANGLES, blockModel.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 					}
 				}
 		if (GingerRegister.getInstance().wireframe)

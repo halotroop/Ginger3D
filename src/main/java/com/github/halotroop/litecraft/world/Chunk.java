@@ -85,9 +85,9 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 								continue;
 							}
 							// check for air. Yes this is stupid, TODO fix this
-							if (getBlockEntity(x - 1, y, z) == null || getBlockEntity(x + 1, y, z) == null ||
-								getBlockEntity(x, y - 1, z) == null || getBlockEntity(x, y + 1, z) == null ||
-								getBlockEntity(x, y, z - 1) == null || getBlockEntity(x, y, z + 1) == null)
+							if (getBlockEntity(x - 1, y, z).getModel() == null || getBlockEntity(x + 1, y, z).getModel() == null ||
+								getBlockEntity(x, y - 1, z).getModel() == null || getBlockEntity(x, y + 1, z).getModel() == null ||
+								getBlockEntity(x, y, z - 1).getModel() == null || getBlockEntity(x, y, z + 1).getModel() == null)
 							{ renderedBlocks[index(x, y, z)] = block; }
 						}
 					}
