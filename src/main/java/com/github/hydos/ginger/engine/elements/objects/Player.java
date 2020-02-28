@@ -3,6 +3,7 @@ package com.github.hydos.ginger.engine.elements.objects;
 import org.joml.Vector3f;
 
 import com.github.halotroop.litecraft.util.RelativeDirection;
+import com.github.hydos.ginger.engine.api.GingerRegister;
 import com.github.hydos.ginger.engine.io.Window;
 import com.github.hydos.ginger.engine.render.models.TexturedModel;
 import com.github.hydos.ginger.main.settings.Constants;
@@ -18,7 +19,8 @@ public class Player extends RenderObject
 
 	public void move(RelativeDirection direction)
 	{
-		float ry = this.getRotY();
+		float ry = (float) Math.toRadians(GingerRegister.getInstance().game.data.camera.getYaw());
+		System.out.println(ry);
 		switch (direction)
 		{
 		case FORWARD:
