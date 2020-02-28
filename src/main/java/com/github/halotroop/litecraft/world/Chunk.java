@@ -85,10 +85,16 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 								continue;
 							}
 							// check for air. Yes this is stupid, TODO fix this
-							if (getBlockInstance(x - 1, y, z).getModel() == null || getBlockInstance(x + 1, y, z).getModel() == null ||
+							try {
+								if (getBlockInstance(x - 1, y, z).getModel() == null || getBlockInstance(x + 1, y, z).getModel() == null ||
 								getBlockInstance(x, y - 1, z).getModel() == null || getBlockInstance(x, y + 1, z).getModel() == null ||
 								getBlockInstance(x, y, z - 1).getModel() == null || getBlockInstance(x, y, z + 1).getModel() == null)
-							{ renderedBlocks[index(x, y, z)] = block; }
+									renderedBlocks[index(x, y, z)] = block;
+							}
+							catch (NullPointerException e) { // this seems to be a hotspot for errors
+								e.printStackTrace(); // so I can add a debug breakpoint on this line
+								throw e;
+							}
 						}
 					}
 				}
@@ -123,9 +129,6 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 					for (int z = 0; z < CHUNK_SIZE; ++z)
 					{
 						Block block = this.blocks[index(x, y, z)];
-						if (block == null) {
-							System.out.println(index(x, y, z));
-						}
 
 						this.blockEntities[index(x, y, z)] = new BlockInstance(block,
 							new Vector3f(
@@ -133,7 +136,9 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 								this.chunkStartY + y,
 								this.chunkStartZ + z));
 					}
-		else if (this.render) // else if it has been changed to false
+		else if (!render && this.render) // else if it has been changed to false.
+			// we need to check both variables because there are two cases that make
+			// the if statement fall to here
 			blockEntities = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 		this.render = render;
 		dirty = true;
