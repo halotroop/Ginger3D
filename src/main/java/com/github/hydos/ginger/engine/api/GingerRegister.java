@@ -15,20 +15,21 @@ public class GingerRegister
 {
 	private static GingerRegister INSTANCE;
 	public MasterRenderer masterRenderer;
+
 	public static GingerRegister getInstance()
 	{ return INSTANCE; }
+
 	public GingerThreading threadRegister;
 	public List<GUIText> texts;
 	public List<TextureButton> guiButtons;
 	public List<Fbo> fbos;
-
 	public Game game;
 	public Screen currentScreen;
 	public boolean wireframe = false;
 
 	public GingerRegister()
-	{ 
-		INSTANCE = this; 
+	{
+		INSTANCE = this;
 		threadRegister = new GingerThreading();
 	}
 
@@ -58,6 +59,11 @@ public class GingerRegister
 			{ return button; }
 		}
 		return null;
+	}
+
+	public void toggleWireframe()
+	{
+		this.wireframe = !this.wireframe;
 	}
 
 	public GUIText retrieveText(String string)

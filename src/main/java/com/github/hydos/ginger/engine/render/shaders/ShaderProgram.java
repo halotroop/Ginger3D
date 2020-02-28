@@ -1,18 +1,12 @@
 package com.github.hydos.ginger.engine.render.shaders;
 
 import java.io.*;
-import java.nio.FloatBuffer;
 
-import org.joml.Vector4f;
-import org.lwjgl.BufferUtils;
+import org.joml.*;
 import org.lwjgl.opengl.*;
-
-import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
-import com.github.hydos.ginger.engine.math.vectors.*;
 
 public abstract class ShaderProgram
 {
-	private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 	private static int loadShader(String file, int type)
 	{
 		StringBuilder shaderSource = new StringBuilder();
@@ -40,9 +34,9 @@ public abstract class ShaderProgram
 		}
 		return shaderID;
 	}
+
 	private int programID;
 	private int vertexShaderID;
-
 	private int fragmentShaderID;
 
 	public ShaderProgram(String vertexFile, String fragmentFile)
@@ -97,9 +91,9 @@ public abstract class ShaderProgram
 
 	protected void loadMatrix(int location, Matrix4f matrix)
 	{
-		matrix.store(matrixBuffer);
-		matrixBuffer.flip();
-		GL20.glUniformMatrix4fv(location, false, matrixBuffer);
+		float[] fm = new float[16];
+		matrix.get(fm);
+		GL20.glUniformMatrix4fv(location, false, fm);
 	}
 
 	protected void loadVector(int location, Vector3f vector)

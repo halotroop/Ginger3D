@@ -2,7 +2,7 @@ package com.github.hydos.ginger.engine.obj.normals;
 
 import java.util.*;
 
-import com.github.hydos.ginger.engine.math.vectors.Vector3f;
+import org.joml.Vector3f;
 
 public class VertexNM
 {
@@ -31,8 +31,8 @@ public class VertexNM
 		if (tangents.isEmpty())
 		{ return; }
 		for (Vector3f tangent : tangents)
-		{ Vector3f.add(averagedTangent, tangent, averagedTangent); }
-		averagedTangent.normalise();
+		{ averagedTangent.add(averagedTangent, tangent); }
+		averagedTangent.normalize();
 	}
 
 	//NEW

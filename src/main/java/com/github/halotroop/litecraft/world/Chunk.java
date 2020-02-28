@@ -1,16 +1,15 @@
 package com.github.halotroop.litecraft.world;
 
-import java.util.*;
 import java.util.function.ToIntFunction;
+
+import org.joml.Vector3f;
 
 import com.github.halotroop.litecraft.logic.DataStorage;
 import com.github.halotroop.litecraft.types.block.*;
 import com.github.halotroop.litecraft.world.block.BlockRenderer;
 import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
-import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 
 import it.unimi.dsi.fastutil.ints.*;
-import it.unimi.dsi.fastutil.longs.*;
 import it.unimi.dsi.fastutil.objects.*;
 import tk.valoeghese.sod.*;
 
@@ -19,19 +18,19 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 	/** @param x in-chunk x coordinate.
 	 * @param  y in-chunk y coordinate.
 	 * @param  z in-chunk z coordinate.
-	 * @return   creates a long that represents a coordinate, for use as a key in maps. */
-	private static long posHash(int x, int y, int z)
-	{ return ((long) x & MAX_POS) | (((long) y & MAX_POS) << POS_SHIFT) | (((long) z & MAX_POS) << DOUBLE_SHIFT); }
+	 * @return   creates a long that represents a coordinate, for use as a key in the array. */
+	public static int index(int x, int y, int z)
+	{ return (x & MAX_POS) | ((y & MAX_POS) << POS_SHIFT) | ((z & MAX_POS) << DOUBLE_SHIFT); }
 
-	private final Block[] blocks = new Block[CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE];
-	private BlockEntity[] blockEntities = new BlockEntity[CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE];
+	private final Block[] blocks = new Block[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
+	private BlockInstance[] blockEntities = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 	private boolean render = false;
 	public final int chunkX, chunkY, chunkZ;
 	public final int chunkStartX, chunkStartY, chunkStartZ;
 	private boolean fullyGenerated = false;
 	public final int dimension;
 	private boolean dirty = true;
-	private BlockEntity[] renderedBlocks;
+	private BlockInstance[] renderedBlocks;
 
 	public Chunk(int chunkX, int chunkY, int chunkZ, int dimension)
 	{
@@ -54,57 +53,52 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 	public Block getBlock(int x, int y, int z)
 	{
 		if (x > CHUNK_SIZE || y > CHUNK_SIZE || z > CHUNK_SIZE || x < 0 || y < 0 || z < 0)
-		{
-			throw new RuntimeException("Block [" + x + ", " + y + ", " + z + ", " + "] out of chunk bounds!");
-		}
-
-		return blocks[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y];
+		{ throw new RuntimeException("Block [" + x + ", " + y + ", " + z + ", " + "] out of chunk bounds!"); }
+		return blocks[index(x, y, z)];
 	}
 
-	public BlockEntity getBlockEntity(int x, int y, int z)
+	public BlockInstance getBlockInstance(int x, int y, int z)
 	{
 		if (x > CHUNK_SIZE || y > CHUNK_SIZE || z > CHUNK_SIZE || x < 0 || y < 0 || z < 0)
-		{
-			throw new RuntimeException("Block [" + x + ", " + y + ", " + z + ", " + "] out of chunk bounds!");
-		}
-
-		return this.blockEntities[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y];
+		{ throw new RuntimeException("Block [" + x + ", " + y + ", " + z + ", " + "] out of chunk bounds!"); }
+		return this.blockEntities[index(x, y, z)];
 	}
 
 	public void render(BlockRenderer blockRenderer)
 	{
-
 		if (render)
 		{
 			if (dirty)
 			{
 				dirty = false;
-				renderedBlocks = new BlockEntity[CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE];
-				for(int x = 0; x < CHUNK_SIZE; x++)
+				renderedBlocks = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
+				for (int x = 0; x < CHUNK_SIZE; x++)
 				{
-					for(int y = 0; y < CHUNK_SIZE; y++)
+					for (int y = 0; y < CHUNK_SIZE; y++)
 					{
-						for(int z = 0; z < CHUNK_SIZE; z++)
+						for (int z = 0; z < CHUNK_SIZE; z++)
 						{
-							BlockEntity block = getBlockEntity(x, y, z);
-							if (x == 0 || x == CHUNK_SIZE-1 || z == 0 || z == CHUNK_SIZE-1 || y == 0 || y == CHUNK_SIZE-1)
+							BlockInstance block = getBlockInstance(x, y, z);
+							if (x == 0 || x == CHUNK_SIZE - 1 || z == 0 || z == CHUNK_SIZE - 1 || y == 0 || y == CHUNK_SIZE - 1)
 							{
-								renderedBlocks[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y] = block;
+								renderedBlocks[index(x, y, z)] = block;
 								continue;
 							}
-
 							// check for air. Yes this is stupid, TODO fix this
-							if (getBlockEntity(x-1, y, z) == null || getBlockEntity(x+1, y, z) == null ||
-									getBlockEntity(x, y-1, z) == null || getBlockEntity(x, y+1, z) == null ||
-									getBlockEntity(x, y, z-1) == null || getBlockEntity(x, y, z+1) == null)
-							{
-								renderedBlocks[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y] = block;
+							try {
+								if (getBlockInstance(x - 1, y, z).getModel() == null || getBlockInstance(x + 1, y, z).getModel() == null ||
+								getBlockInstance(x, y - 1, z).getModel() == null || getBlockInstance(x, y + 1, z).getModel() == null ||
+								getBlockInstance(x, y, z - 1).getModel() == null || getBlockInstance(x, y, z + 1).getModel() == null)
+									renderedBlocks[index(x, y, z)] = block;
+							}
+							catch (NullPointerException e) { // this seems to be a hotspot for errors
+								e.printStackTrace(); // so I can add a debug breakpoint on this line
+								throw e;
 							}
 						}
 					}
 				}
 			}
-
 			blockRenderer.render(renderedBlocks);
 		}
 	}
@@ -121,38 +115,31 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		if (z > MAX_POS)
 			z = MAX_POS;
 		else if (z < 0) z = 0;
-		this.blocks[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y] = block;
+		this.blocks[index(x, y, z)] = block;
 		if (this.render)
-		{
-			this.blockEntities[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y] =  new BlockEntity(block, new Vector3f(this.chunkStartX + x, this.chunkStartY + y, this.chunkStartZ + z));
-		}
+		{ this.blockEntities[index(x, y, z)] = new BlockInstance(block, new Vector3f(this.chunkStartX + x, this.chunkStartY + y, this.chunkStartZ + z)); }
 		dirty = true;
 	}
 
 	public void setRender(boolean render)
 	{
 		if (render && !this.render) // if it has been changed to true
-		{
 			for (int x = 0; x < CHUNK_SIZE; ++x)
-			{
 				for (int y = 0; y < CHUNK_SIZE; ++y)
-				{
 					for (int z = 0; z < CHUNK_SIZE; ++z)
 					{
-						Block block = this.blocks[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y];
-						if (block.isVisible()) this.blockEntities[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y] =  new BlockEntity(block,
-								new Vector3f(
-										this.chunkStartX + x,
-										this.chunkStartY + y,
-										this.chunkStartZ + z));
+						Block block = this.blocks[index(x, y, z)];
+
+						this.blockEntities[index(x, y, z)] = new BlockInstance(block,
+							new Vector3f(
+								this.chunkStartX + x,
+								this.chunkStartY + y,
+								this.chunkStartZ + z));
 					}
-				}
-			}
-		}
-		else if (this.render) // else if it has been changed to false
-		{
-			blockEntities = new BlockEntity[CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE];
-		}
+		else if (!render && this.render) // else if it has been changed to false.
+			// we need to check both variables because there are two cases that make
+			// the if statement fall to here
+			blockEntities = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 		this.render = render;
 		dirty = true;
 	}
@@ -164,11 +151,10 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 	public void read(BinaryData data)
 	{
 		Int2ObjectMap<Block> palette = new Int2ObjectArrayMap<>();
-
 		DataSection paletteData = data.get("palette");
-
 		boolean readInt = true; // whether the thing from the palette to be read is int
 		int intIdCache = 0;
+		//
 		for (Object o : paletteData)
 		{
 			if (readInt)
@@ -178,26 +164,41 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 			}
 			else
 			{
-				palette.put(intIdCache, Block.getBlock((String) o));
+				palette.put(intIdCache, Block.getBlockOrAir((String) o));
 				readInt = true;
 			}
 		}
-
+		//
 		DataSection blockData = data.get("block");
-
-		long posHash = 0L; // also the index
+		int index = 0;
+		//
 		for (int z = 0; z < CHUNK_SIZE; ++z) // z, y, x order for data saving and loading so we can use incremental pos hashes
 		{
 			for (int y = 0; y < CHUNK_SIZE; ++y)
 			{
 				for (int x = 0; x < CHUNK_SIZE; ++x)
 				{
-					blocks[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y] = palette.get(blockData.readInt((int) posHash));
-					++posHash;
+					blocks[index] = palette.get(blockData.readInt(index));
+					++index;
 				}
 			}
 		}
+		//
+		DataSection properties = data.get("properties");
+		try
+		{
+			this.fullyGenerated = properties.readBoolean(0); // index 0 is the "fully generated" property
+		}
+		catch (Throwable e)
+		{
+			if (exceptionOccuredReadingNotif){
+				System.out.println("An exception occurred reading properties for a chunk! This could be a benign error due to updates to chunk properties.");
+				exceptionOccuredReadingNotif = false;
+			}
+		}
 	}
+
+	private static boolean exceptionOccuredReadingNotif = true;
 
 	private int nextId; // for saving
 
@@ -205,36 +206,37 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 	public void write(BinaryData data)
 	{
 		Object2IntMap<Block> palette = new Object2IntArrayMap<>(); // block to int id
-
 		DataSection paletteData = new DataSection();
 		DataSection blockData = new DataSection();
-
-		long posHash = 0L;
+		int index = 0;
 		nextId = 0;
-
 		ToIntFunction<Block> nextIdProvider = b -> nextId++;
-
+		//
 		for (int z = 0; z < CHUNK_SIZE; ++z) // z, y, x order for data saving and loading so we can use incremental pos hashes
 		{
 			for (int y = 0; y < CHUNK_SIZE; ++y)
 			{
 				for (int x = 0; x < CHUNK_SIZE; ++x)
 				{
-					Block b = blocks[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y];
+					Block b = blocks[index];
 					blockData.writeInt(palette.computeIntIfAbsent(b, nextIdProvider));
-					++posHash;
+					++index;
 				}
 			}
 		}
-
-		palette.forEach((b, id) -> {
+		//
+		palette.forEach((b, id) ->
+		{
 			paletteData.writeInt(id);
 			paletteData.writeString(b.identifier);
 		});
-
+		//
 		data.put("palette", paletteData);
 		data.put("block", blockData);
-
+		//
+		DataSection properties = new DataSection();
+		properties.writeBoolean(this.fullyGenerated);
+		data.put("properties", properties);
 		dirty = true;
 	}
 }

@@ -39,9 +39,7 @@ public class Image
 	}
 
 	private ByteBuffer image;
-
 	private int width, height;
-	
 	private IntBuffer comp;
 
 	Image(int width, int heigh, ByteBuffer image, IntBuffer comp)
@@ -86,13 +84,13 @@ public class Image
 
 	public int getHeight()
 	{ return height; }
+
 	public ByteBuffer getImage()
 	{ return image; }
 
 	public int getWidth()
 	{ return width; }
 
-	public IntBuffer getComp() {
-		return comp;
-	}
+	public IntBuffer getComp()
+	{ return comp; }
 }

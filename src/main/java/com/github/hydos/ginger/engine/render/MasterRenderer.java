@@ -1,8 +1,9 @@
 package com.github.hydos.ginger.engine.render;
 
+import java.lang.Math;
 import java.util.*;
 
-import org.joml.Vector4f;
+import org.joml.*;
 import org.lwjgl.opengl.*;
 
 import com.github.halotroop.litecraft.world.World;
@@ -11,27 +12,26 @@ import com.github.hydos.ginger.engine.cameras.Camera;
 import com.github.hydos.ginger.engine.elements.GuiTexture;
 import com.github.hydos.ginger.engine.elements.objects.*;
 import com.github.hydos.ginger.engine.io.Window;
-import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import com.github.hydos.ginger.engine.render.models.TexturedModel;
 import com.github.hydos.ginger.engine.render.renderers.*;
 import com.github.hydos.ginger.engine.render.shaders.*;
 import com.github.hydos.ginger.engine.shadow.ShadowMapMasterRenderer;
-import com.github.hydos.ginger.engine.terrain.Terrain;
 
 public class MasterRenderer
 {
 	public static final float FOV = 80f;
 	public static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000f;
+
 	public static void disableCulling()
 	{ GL11.glDisable(GL11.GL_CULL_FACE); }
-	
+
 	public static void enableCulling()
 	{
-//		GL11.glEnable(GL11.GL_CULL_FACE);
-//		GL11.glCullFace(GL11.GL_BACK);
+		//		GL11.glEnable(GL11.GL_CULL_FACE);
+		//		GL11.glCullFace(GL11.GL_BACK);
 	}
-	
+
 	public BlockRenderer blockRenderer;
 	private StaticShader entityShader;
 	public ObjectRenderer entityRenderer;
@@ -41,9 +41,7 @@ public class MasterRenderer
 	private NormalMappingRenderer normalRenderer;
 	private Matrix4f projectionMatrix;
 	private ShadowMapMasterRenderer shadowMapRenderer;
-
 	private Map<TexturedModel, List<RenderObject>> entities = new HashMap<TexturedModel, List<RenderObject>>();
-
 	private Map<TexturedModel, List<RenderObject>> normalMapEntities = new HashMap<TexturedModel, List<RenderObject>>();
 
 	public MasterRenderer(Camera camera)
@@ -74,12 +72,12 @@ public class MasterRenderer
 		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))));
 		float x_scale = y_scale / aspectRatio;
 		float frustum_length = FAR_PLANE - NEAR_PLANE;
-		projectionMatrix.m00 = x_scale;
-		projectionMatrix.m11 = y_scale;
-		projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
-		projectionMatrix.m23 = -1;
-		projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
-		projectionMatrix.m33 = 0;
+		projectionMatrix._m00(x_scale);
+		projectionMatrix._m11(y_scale);
+		projectionMatrix._m22(-((FAR_PLANE + NEAR_PLANE) / frustum_length));
+		projectionMatrix._m23(-1);
+		projectionMatrix._m32(-((2 * NEAR_PLANE * FAR_PLANE) / frustum_length));
+		projectionMatrix._m33(0);
 	}
 
 	public Matrix4f getProjectionMatrix()
@@ -159,16 +157,7 @@ public class MasterRenderer
 		normalRenderer.render(normalMapEntities, clipPlane, lights, camera);
 	}
 
-	public void renderScene(List<RenderObject> entities, List<RenderObject> normalEntities, List<Terrain> terrains, List<Light> lights, Camera camera, Vector4f clipPlane)
-	{
-		prepare();
-		renderEntities(entities, camera, lights);
-		renderNormalEntities(normalEntities, lights, camera, clipPlane);
-		renderTerrains(terrains, lights, camera);
-		skyboxRenderer.render(camera);
-	}
-
-	public void renderSceneNoTerrain(List<RenderObject> entities, List<RenderObject> normalEntities, List<Light> lights, Camera camera, Vector4f clipPlane, World world)
+	public void renderScene(List<RenderObject> entities, List<RenderObject> normalEntities, List<Light> lights, Camera camera, Vector4f clipPlane, World world)
 	{
 		prepare();
 		renderEntities(entities, camera, lights);
@@ -184,7 +173,4 @@ public class MasterRenderer
 		shadowMapRenderer.render(entities, sun);
 		entities.clear();
 	}
-
-	private void renderTerrains(List<Terrain> terrains, List<Light> lights, Camera camera)
-	{}
 }

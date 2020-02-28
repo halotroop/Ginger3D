@@ -2,11 +2,11 @@ package com.github.hydos.ginger.engine.io;
 
 import java.nio.*;
 
+import org.joml.*;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
-import com.github.hydos.ginger.engine.math.vectors.*;
 import com.github.hydos.ginger.engine.render.texture.Image;
 
 public class Window
@@ -84,7 +84,7 @@ public class Window
 
 	public static float getFloatTime()
 	{
-		float f = (System.nanoTime() / (long) 1000000000);
+		float f = (System.nanoTime() / 1000000000);
 		return f;
 	}
 
@@ -192,8 +192,5 @@ public class Window
 	}
 
 	public static void fullscreen()
-	{
-		Window.fullscreen = !Window.isFullscreen();
-		
-	}
+	{ Window.fullscreen = !Window.isFullscreen(); }
 }

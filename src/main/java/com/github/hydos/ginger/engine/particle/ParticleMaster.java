@@ -3,8 +3,9 @@ package com.github.hydos.ginger.engine.particle;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.joml.Matrix4f;
+
 import com.github.hydos.ginger.engine.cameras.Camera;
-import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import com.github.hydos.ginger.engine.render.renderers.ParticleRenderer;
 
 public class ParticleMaster

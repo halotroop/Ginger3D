@@ -1,13 +1,10 @@
 package com.github.hydos.ginger.engine.render.tools;
 
-import org.joml.Vector4f;
+import org.joml.*;
 
 import com.github.hydos.ginger.engine.cameras.Camera;
 import com.github.hydos.ginger.engine.io.Window;
 import com.github.hydos.ginger.engine.math.Maths;
-import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
-import com.github.hydos.ginger.engine.math.vectors.*;
-import com.github.hydos.ginger.engine.terrain.Terrain;
 
 public class MousePicker
 {
@@ -17,33 +14,20 @@ public class MousePicker
 	private Matrix4f projectionMatrix;
 	private Matrix4f viewMatrix;
 	private Camera camera;
-	private Terrain terrain;
 	private Vector3f currentTerrainPoint;
 
-	public MousePicker(Camera cam, Matrix4f projection, Terrain terrain)
+	public MousePicker(Camera cam, Matrix4f projection)
 	{
 		camera = cam;
 		projectionMatrix = projection;
 		viewMatrix = Maths.createViewMatrix(camera);
-		this.terrain = terrain;
 	}
 
 	private Vector3f binarySearch(int count, float start, float finish, Vector3f ray)
 	{
 		float half = start + ((finish - start) / 2f);
 		if (count >= RECURSION_COUNT)
-		{
-			Vector3f endPoint = getPointOnRay(ray, half);
-			Terrain terrain = getTerrain(endPoint.getX(), endPoint.getZ());
-			if (terrain != null)
-			{
-				return endPoint;
-			}
-			else
-			{
-				return null;
-			}
-		}
+		{ return null; }
 		if (intersectionInRange(start, half, ray))
 		{
 			return binarySearch(count + 1, start, half, ray);
@@ -84,11 +68,8 @@ public class MousePicker
 		Vector3f camPos = camera.getPosition();
 		Vector3f start = new Vector3f(camPos.x, camPos.y, camPos.z);
 		Vector3f scaledRay = new Vector3f(ray.x * distance, ray.y * distance, ray.z * distance);
-		return Vector3f.add(start, scaledRay, null);
+		return scaledRay.add(start);
 	}
-
-	private Terrain getTerrain(float worldX, float worldZ)
-	{ return terrain; }
 
 	private boolean intersectionInRange(float start, float finish, Vector3f ray)
 	{
@@ -105,34 +86,21 @@ public class MousePicker
 	}
 
 	private boolean isUnderGround(Vector3f testPoint)
-	{
-		Terrain terrain = getTerrain(testPoint.getX(), testPoint.getZ());
-		float height = 0;
-		if (terrain != null)
-		{ height = terrain.getHeightOfTerrain(testPoint.getX(), testPoint.getZ()); }
-		if (testPoint.y < height)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+	{ return false; }
 
 	private Vector4f toEyeCoords(Vector4f clipCoords)
 	{
-		Matrix4f invertedProjection = Matrix4f.invert(projectionMatrix, null);
-		Vector4f eyeCoords = Matrix4f.transform(invertedProjection, clipCoords, null);
+		Matrix4f invertedProjection = projectionMatrix.invert();
+		Vector4f eyeCoords = invertedProjection.transform(clipCoords);
 		return new Vector4f(eyeCoords.x, eyeCoords.y, -1f, 0f);
 	}
 
 	private Vector3f toWorldCoords(Vector4f eyeCoords)
 	{
-		Matrix4f invertedView = Matrix4f.invert(viewMatrix, null);
-		Vector4f rayWorld = Matrix4f.transform(invertedView, eyeCoords, null);
+		Matrix4f invertedView = viewMatrix.invert();
+		Vector4f rayWorld = invertedView.transform(eyeCoords);
 		Vector3f mouseRay = new Vector3f(rayWorld.x, rayWorld.y, rayWorld.z);
-		mouseRay.normalise();
+		mouseRay.normalize();
 		return mouseRay;
 	}
 

@@ -7,7 +7,6 @@ import org.joml.Vector4f;
 import com.github.hydos.ginger.engine.cameras.Camera;
 import com.github.hydos.ginger.engine.elements.GuiTexture;
 import com.github.hydos.ginger.engine.elements.objects.*;
-import com.github.hydos.ginger.engine.terrain.Terrain;
 
 /*
  * Used for storing essential engine game data so main class isn't messy
@@ -19,7 +18,6 @@ public class GameData
 	public List<RenderObject> entities;
 	public List<Light> lights;
 	public List<RenderObject> normalMapEntities;
-	public List<Terrain> flatTerrains;
 	public Player player;
 	public Camera camera;
 	public Vector4f clippingPlane;
@@ -33,7 +31,6 @@ public class GameData
 		entities = new ArrayList<RenderObject>();
 		lights = new ArrayList<Light>();
 		normalMapEntities = new ArrayList<RenderObject>();
-		flatTerrains = new ArrayList<Terrain>();
 		this.player = player;
 		this.camera = camera;
 		this.tickSpeed = tickSpeed;

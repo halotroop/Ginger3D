@@ -1,10 +1,10 @@
 package com.github.hydos.ginger.engine.cameras;
 
+import org.joml.Vector3f;
 import org.lwjgl.glfw.*;
 
 import com.github.hydos.ginger.engine.elements.objects.Player;
 import com.github.hydos.ginger.engine.io.Window;
-import com.github.hydos.ginger.engine.math.vectors.Vector3f;
 
 public class Camera
 {
@@ -107,4 +107,13 @@ public class Camera
 		calculateCameraPosition(horizontalDistance, verticalDistance);
 		this.yaw = 180 - (player.getRotY() + angleAroundPlayer);
 	}
+
+	public void setPitch(float pitch)
+	{ this.pitch = pitch; }
+
+	public void setYaw(float yaw)
+	{ this.yaw = yaw; }
+
+	public void setRoll(float roll)
+	{ this.roll = roll; }
 }

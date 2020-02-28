@@ -1,6 +1,6 @@
 package com.github.hydos.ginger.engine.obj;
 
-import com.github.hydos.ginger.engine.math.vectors.*;
+import org.joml.*;
 
 public class Vertex
 {

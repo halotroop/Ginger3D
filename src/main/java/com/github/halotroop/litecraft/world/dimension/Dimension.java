@@ -1,6 +1,8 @@
-package com.github.halotroop.litecraft.world.gen;
+package com.github.halotroop.litecraft.world.dimension;
 
 import java.util.*;
+
+import com.github.halotroop.litecraft.world.gen.*;
 
 import it.unimi.dsi.fastutil.ints.*;
 
@@ -21,9 +23,8 @@ public abstract class Dimension<T extends ChunkGenerator>
 		return this;
 	}
 
-	public WorldModifier[] getWorldModifierArray() {
-		return this.worldModifiers.toArray(WorldModifier[]::new);
-	}
+	public WorldModifier[] getWorldModifierArray()
+	{ return this.worldModifiers.toArray(new WorldModifier[0]); }
 
 	public abstract T createChunkGenerator(long seed);
 

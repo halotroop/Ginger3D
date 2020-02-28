@@ -1,9 +1,9 @@
 package com.github.hydos.ginger.engine.render.renderers;
 
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.*;
 
 import com.github.hydos.ginger.engine.cameras.Camera;
-import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import com.github.hydos.ginger.engine.render.Renderer;
 import com.github.hydos.ginger.engine.render.models.RawModel;
 import com.github.hydos.ginger.engine.render.shaders.SkyboxShader;

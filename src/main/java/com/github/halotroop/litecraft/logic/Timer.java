@@ -12,10 +12,10 @@ public class Timer
 	{
 		void onTick(float deltaTime);
 	}
+
 	private double lastTick;
 	private double nextTick;
 	private int tickRate;
-
 	private Set<TickListener> tickListeners = new HashSet<>();
 
 	public Timer(int tickRate)

@@ -1,7 +1,8 @@
 package com.github.hydos.ginger.engine.render.shaders;
 
+import org.joml.*;
+
 import com.github.hydos.ginger.engine.font.GUIText;
-import com.github.hydos.ginger.engine.math.vectors.*;
 
 public class FontShader extends ShaderProgram
 {

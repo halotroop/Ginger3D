@@ -55,9 +55,10 @@ public class Block
 	}
 
 	public static final Block getBlock(String identifier)
-	{
-		return IDENTIFIER_TO_BLOCK.get(identifier);
-	}
+	{ return IDENTIFIER_TO_BLOCK.get(identifier); }
+
+	public static final Block getBlockOrAir(String identifier)
+	{ return IDENTIFIER_TO_BLOCK.getOrDefault(identifier, Blocks.AIR); }
 
 	private static final Map<String, Block> IDENTIFIER_TO_BLOCK = new HashMap<>();
 }

@@ -28,11 +28,8 @@ public class DataSection implements Iterable<Object>
 	public <T extends Enum<?>> T readEnum(int index, T[] values)
 	{
 		Integer i = (Integer) this.data.get(index);
-		
-		if (i == null) {
-			return null;
-		}
-		
+		if (i == null)
+		{ return null; }
 		return values[i];
 	}
 

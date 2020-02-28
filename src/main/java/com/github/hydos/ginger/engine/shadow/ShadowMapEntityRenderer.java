@@ -2,11 +2,11 @@ package com.github.hydos.ginger.engine.shadow;
 
 import java.util.*;
 
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.*;
 
 import com.github.hydos.ginger.engine.elements.objects.RenderObject;
 import com.github.hydos.ginger.engine.math.Maths;
-import com.github.hydos.ginger.engine.math.matrixes.Matrix4f;
 import com.github.hydos.ginger.engine.render.MasterRenderer;
 import com.github.hydos.ginger.engine.render.models.*;
 
@@ -51,7 +51,7 @@ public class ShadowMapEntityRenderer
 	{
 		Matrix4f modelMatrix = Maths.createTransformationMatrix(entity.getPosition(),
 			entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
-		Matrix4f mvpMatrix = Matrix4f.mul(projectionViewMatrix, modelMatrix, null);
+		Matrix4f mvpMatrix = projectionViewMatrix.mul(modelMatrix);
 		shader.loadMvpMatrix(mvpMatrix);
 	}
 

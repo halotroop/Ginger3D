@@ -25,6 +25,7 @@ public class ShadowFrameBuffer
 		GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, frameBuffer);
 		GL11.glViewport(0, 0, width, height);
 	}
+
 	/** Creates a depth buffer texture attachment.
 	 * 
 	 * @param  width
@@ -45,6 +46,7 @@ public class ShadowFrameBuffer
 		GL32.glFramebufferTexture(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, texture, 0);
 		return texture;
 	}
+
 	/** Creates a frame buffer and binds it so that attachments can be added to
 	 * it. The draw buffer is set to none, indicating that there's no colour
 	 * buffer to be rendered to.
@@ -58,12 +60,10 @@ public class ShadowFrameBuffer
 		GL11.glReadBuffer(GL11.GL_NONE);
 		return frameBuffer;
 	}
+
 	private final int WIDTH;
-
 	private final int HEIGHT;
-
 	private int fbo;
-
 	private int shadowMap;
 
 	/** Initialises the frame buffer and shadow map of a certain size.
