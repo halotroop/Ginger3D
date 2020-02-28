@@ -13,14 +13,14 @@ public class GingerThreading
 	{ worldChunkThreadWaitlist.add(thread); }
 	
 	public void update() {
-		if(worldChunkThreadWaitlist.size() > 0) {
+		if(worldChunkThreadWaitlist.size() != 0) {
+			System.out.println(worldChunkThreadWaitlist.size());
 			GingerThread yes = worldChunkThreadWaitlist.get(0);
-			if(!yes.finished) {
+			if(yes.finished) {
 				worldChunkThreadWaitlist.remove(0);
-				if(worldChunkThreadWaitlist.size() > 0) {
+				if(worldChunkThreadWaitlist.size() != 0) {
 					worldChunkThreadWaitlist.get(0).start();
 				}
-//				yes.stop();
 			}else {
 				if(!yes.isAlive() && !yes.started) {
 					yes.start();
