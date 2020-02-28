@@ -8,7 +8,6 @@ import org.lwjgl.glfw.*;
 public class MouseCallbackHandler extends GLFWMouseButtonCallback
 {
 	private static final MouseCallbackHandler INSTANCE = new MouseCallbackHandler();
-
 	public static boolean[] buttons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
 
 	public static void trackWindow(long window)

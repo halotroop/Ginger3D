@@ -66,11 +66,11 @@ public class ObjectRenderer extends Renderer
 			List<RenderObject> batch = entities.get(model);
 			for (RenderObject entity : batch)
 			{
-				if(entity.isVisible) {
+				if (entity.isVisible)
+				{
 					prepareInstance(entity);
 					GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 				}
-
 			}
 			unbindTexturedModel();
 		}
@@ -85,14 +85,15 @@ public class ObjectRenderer extends Renderer
 	}
 
 	public void render(List<BlockEntity> renderList)
-	{ 
+	{
 		prepare();
 		shader.start();
 		shader.loadSkyColour(Window.getColour());
 		shader.loadViewMatrix(GingerRegister.getInstance().game.data.camera);
 		for (RenderObject entity : renderList)
 		{
-			if (entity != null && entity.getModel() != null) {
+			if (entity != null && entity.getModel() != null)
+			{
 				TexturedModel model = entity.getModel();
 				prepareTexturedModel(model);
 				prepareInstance(entity);
@@ -102,5 +103,4 @@ public class ObjectRenderer extends Renderer
 		}
 		shader.stop();
 	}
-
 }

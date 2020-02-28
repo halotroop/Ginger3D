@@ -27,9 +27,7 @@ public class MousePicker
 	{
 		float half = start + ((finish - start) / 2f);
 		if (count >= RECURSION_COUNT)
-		{
-			return null;
-		}
+		{ return null; }
 		if (intersectionInRange(start, half, ray))
 		{
 			return binarySearch(count + 1, start, half, ray);
@@ -88,9 +86,7 @@ public class MousePicker
 	}
 
 	private boolean isUnderGround(Vector3f testPoint)
-	{
-		return false;
-	}
+	{ return false; }
 
 	private Vector4f toEyeCoords(Vector4f clipCoords)
 	{

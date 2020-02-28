@@ -34,9 +34,9 @@ public abstract class ShaderProgram
 		}
 		return shaderID;
 	}
+
 	private int programID;
 	private int vertexShaderID;
-
 	private int fragmentShaderID;
 
 	public ShaderProgram(String vertexFile, String fragmentFile)

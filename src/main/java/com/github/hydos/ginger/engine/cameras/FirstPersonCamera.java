@@ -36,11 +36,9 @@ public class FirstPersonCamera extends Camera
 	@Override
 	public void move()
 	{
-				
 		position.x = player.getPosition().x;
 		position.z = player.getPosition().z;
 		position.y = player.getPosition().y;
-		
 		roll = player.getRotX();
 		yaw = -player.getRotY() + 180 + Window.getNormalizedMouseCoordinates().x() * 70;
 		pitch = player.getRotZ() + -Window.getNormalizedMouseCoordinates().y() * 70;

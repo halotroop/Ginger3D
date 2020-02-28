@@ -192,8 +192,5 @@ public class Window
 	}
 
 	public static void fullscreen()
-	{
-		Window.fullscreen = !Window.isFullscreen();
-		
-	}
+	{ Window.fullscreen = !Window.isFullscreen(); }
 }

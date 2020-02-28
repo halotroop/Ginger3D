@@ -22,15 +22,16 @@ public class MasterRenderer
 	public static final float FOV = 80f;
 	public static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000f;
+
 	public static void disableCulling()
 	{ GL11.glDisable(GL11.GL_CULL_FACE); }
-	
+
 	public static void enableCulling()
 	{
-//		GL11.glEnable(GL11.GL_CULL_FACE);
-//		GL11.glCullFace(GL11.GL_BACK);
+		//		GL11.glEnable(GL11.GL_CULL_FACE);
+		//		GL11.glCullFace(GL11.GL_BACK);
 	}
-	
+
 	public BlockRenderer blockRenderer;
 	private StaticShader entityShader;
 	public ObjectRenderer entityRenderer;
@@ -40,9 +41,7 @@ public class MasterRenderer
 	private NormalMappingRenderer normalRenderer;
 	private Matrix4f projectionMatrix;
 	private ShadowMapMasterRenderer shadowMapRenderer;
-
 	private Map<TexturedModel, List<RenderObject>> entities = new HashMap<TexturedModel, List<RenderObject>>();
-
 	private Map<TexturedModel, List<RenderObject>> normalMapEntities = new HashMap<TexturedModel, List<RenderObject>>();
 
 	public MasterRenderer(Camera camera)
@@ -75,7 +74,7 @@ public class MasterRenderer
 		float frustum_length = FAR_PLANE - NEAR_PLANE;
 		projectionMatrix._m00(x_scale);
 		projectionMatrix._m11(y_scale);
-		projectionMatrix._m22 (-((FAR_PLANE + NEAR_PLANE) / frustum_length));
+		projectionMatrix._m22(-((FAR_PLANE + NEAR_PLANE) / frustum_length));
 		projectionMatrix._m23(-1);
 		projectionMatrix._m32(-((2 * NEAR_PLANE * FAR_PLANE) / frustum_length));
 		projectionMatrix._m33(0);

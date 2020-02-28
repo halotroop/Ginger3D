@@ -31,7 +31,7 @@ public class OBJFileLoader
 				if (mesh.mNumUVComponents().get(0) != 0)
 				{
 					AIVector3D texture = mesh.mTextureCoords(0).get(i);
-					meshTextureCoord.set(texture.x(),texture.y());
+					meshTextureCoord.set(texture.x(), texture.y());
 				}
 				vertexList[i] = new Vertex(meshVertex, meshNormal, meshTextureCoord);
 			}

@@ -32,13 +32,13 @@ public class ParticleSystem
 		{ direction.z *= -1; }
 		return new Vector3f(direction.x, direction.y, direction.z);
 	}
+
 	private float pps, averageSpeed, gravityComplient, averageLifeLength, averageScale;
 	private float speedError, lifeError, scaleError = 0;
 	private boolean randomRotation = false;
 	private Vector3f direction;
 	private float directionDeviation = 0;
 	private ParticleTexture texture;
-
 	private Random random = new Random();
 
 	public ParticleSystem(ParticleTexture texture, float pps, float speed, float gravityComplient, float lifeLength, float scale)

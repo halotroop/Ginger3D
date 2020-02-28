@@ -8,7 +8,6 @@ import org.lwjgl.glfw.*;
 public class KeyCallbackHandler extends GLFWKeyCallback
 {
 	private static final KeyCallbackHandler INSTANCE = new KeyCallbackHandler();
-
 	public static boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
 
 	public static void trackWindow(long window)

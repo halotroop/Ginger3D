@@ -22,10 +22,8 @@ public class World implements BlockAccess, WorldGenConstants
 	private final ChunkGenerator chunkGenerator;
 	private final BlockAccess genBlockAccess;
 	private final LitecraftSave save;
-
 	private final long seed;
 	private final int dimension;
-
 	public Player player;
 
 	// This will likely become the main public constructor after we add dynamic chunkloading
@@ -54,42 +52,35 @@ public class World implements BlockAccess, WorldGenConstants
 	public World(long seed, int size, Dimension<?> dim, LitecraftSave save)
 	{
 		this(seed, dim, save);
-
 		long time = System.currentTimeMillis();
 		System.out.println("Generating world!");
-		for (int i = (0 - (size/2)); i < (size/2); i++)
-			for (int k = (0 - (size/2)); k < (size/2); k++)
+		for (int i = (0 - (size / 2)); i < (size / 2); i++)
+			for (int k = (0 - (size / 2)); k < (size / 2); k++)
 				for (int y = -2; y < 0; ++y)
 					this.getChunk(i, y, k).setRender(true);
-
 		System.out.println("Generated world in " + (System.currentTimeMillis() - time) + " milliseconds");
 	}
 
 	public Chunk getChunk(int chunkX, int chunkY, int chunkZ)
 	{
-		Chunk chunk = this.chunks.computeIfAbsent(posHash(chunkX, chunkY, chunkZ), pos -> {
+		Chunk chunk = this.chunks.computeIfAbsent(posHash(chunkX, chunkY, chunkZ), pos ->
+		{
 			Chunk readChunk = save.readChunk(chunkX, chunkY, chunkZ, this.dimension);
 			return readChunk == null ? this.chunkGenerator.generateChunk(chunkX, chunkY, chunkZ) : readChunk;
 		});
-
 		if (chunk.isFullyGenerated()) return chunk;
-
 		this.populateChunk(chunkX, chunkY, chunkZ, chunk.chunkStartX, chunk.chunkStartY, chunk.chunkStartZ);
 		chunk.setFullyGenerated(true);
 		return chunk;
 	}
 
-	/**
-	 * @return whether the chunk was unloaded without errors. Will often, but not always, be equal to whether the chunk was already in memory.
-	 */
+	/** @return whether the chunk was unloaded without errors. Will often, but not always, be equal to whether the chunk was already in memory. */
 	public boolean unloadChunk(int chunkX, int chunkY, int chunkZ)
 	{
 		long posHash = posHash(chunkX, chunkY, chunkZ);
 		Chunk chunk = this.chunks.get(posHash);
-
 		// If the chunk is not in memory, it does not need to be unloaded
 		if (chunk == null) return false;
-
 		// Otherwise save the chunk
 		boolean result = this.save.saveChunk(chunk);
 		this.chunks.remove(posHash);
@@ -99,16 +90,11 @@ public class World implements BlockAccess, WorldGenConstants
 	private void populateChunk(int chunkX, int chunkY, int chunkZ, int chunkStartX, int chunkStartY, int chunkStartZ)
 	{
 		Random rand = new Random(this.seed + 5828671L * chunkX + -47245139L * chunkY + 8972357 * (long) chunkZ);
-
 		for (WorldModifier modifier : this.worldModifiers)
-		{
-			modifier.modifyWorld(this.genBlockAccess, rand, chunkStartX, chunkStartY, chunkStartZ);
-		}
+		{ modifier.modifyWorld(this.genBlockAccess, rand, chunkStartX, chunkStartY, chunkStartZ); }
 	}
 
-	/**
-	 * @return a chunk that has not neccesarily gone through chunk populating. Used in chunk populating to prevent infinite recursion.
-	 */
+	/** @return a chunk that has not neccesarily gone through chunk populating. Used in chunk populating to prevent infinite recursion. */
 	Chunk getGenChunk(int chunkX, int chunkY, int chunkZ)
 	{ return this.chunks.computeIfAbsent(posHash(chunkX, chunkY, chunkZ), pos -> this.chunkGenerator.generateChunk(chunkX, chunkY, chunkZ)); }
 
@@ -128,14 +114,13 @@ public class World implements BlockAccess, WorldGenConstants
 
 	//used for model combining and culling
 	public Chunk optimiseChunk(Chunk chunk)
-	{
-		return chunk;
-	}
+	{ return chunk; }
 
 	public void render(BlockRenderer blockRenderer)
 	{
 		Chunk chunk = getChunk(0, -1, 0);
-		if(chunk!= null) {
+		if (chunk != null)
+		{
 			blockRenderer.prepareModel(chunk.getBlockEntity(0, 0, 0).getModel());
 			this.chunks.forEach((pos, c) -> c.render(blockRenderer));
 			blockRenderer.unbindModel();
@@ -146,25 +131,21 @@ public class World implements BlockAccess, WorldGenConstants
 	{
 		LongList chunkPositions = new LongArrayList();
 		if (this.chunks != null)
-			this.chunks.forEach((pos, chunk) -> { // for every chunk in memory
+			this.chunks.forEach((pos, chunk) ->
+			{ // for every chunk in memory
 				chunkPositions.add((long) pos); // add pos to chunk positions list for removal later
 				this.save.saveChunk(chunk); // save chunk
 			});
-
 		chunkPositions.forEach((LongConsumer) (pos -> this.chunks.remove(pos))); // remove all chunks
 	}
 
 	public long getSeed()
-	{
-		return this.seed;
-	}
+	{ return this.seed; }
 
 	private static final class GenerationWorld implements BlockAccess, WorldGenConstants
 	{
 		GenerationWorld(World parent)
-		{
-			this.parent = parent;
-		}
+		{ this.parent = parent; }
 
 		public final World parent;
 

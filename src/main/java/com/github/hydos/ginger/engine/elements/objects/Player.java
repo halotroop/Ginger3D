@@ -23,34 +23,28 @@ public class Player extends RenderObject
 			position.z -= Math.cos(ry) * Constants.movementSpeed;
 			position.x += Math.sin(ry) * Constants.movementSpeed;
 		}
-		
 		if (Window.isKeyDown(GLFW.GLFW_KEY_A))
 		{
 			position.z -= Math.cos(ry) * Constants.movementSpeed;
-			position.x -= Math.sin(ry) * Constants.movementSpeed;	
+			position.x -= Math.sin(ry) * Constants.movementSpeed;
 		}
-		
 		if (Window.isKeyDown(GLFW.GLFW_KEY_S))
 		{
 			position.z += Math.cos(ry) * Constants.movementSpeed;
 			position.x -= Math.sin(ry) * Constants.movementSpeed;
 		}
-		
 		if (Window.isKeyDown(GLFW.GLFW_KEY_D))
 		{
 			position.z += Math.cos(ry) * Constants.movementSpeed;
 			position.x += Math.sin(ry) * Constants.movementSpeed;
 		}
-		
 		if (Window.isKeyDown(GLFW.GLFW_KEY_SPACE))
 		{
-//			jump();
+			//			jump();
 			position.y += Constants.movementSpeed;
 		}
 		if (Window.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT))
-		{
-			position.y -= Constants.movementSpeed;
-		}
+		{ position.y -= Constants.movementSpeed; }
 	}
 
 	private void jump()
@@ -69,6 +63,6 @@ public class Player extends RenderObject
 		upwardsSpeed += Constants.gravity.y() * Window.getTime();
 		isInAir = false;
 		upwardsSpeed = 0;
-//		super.getPosition().y = 0;
+		//		super.getPosition().y = 0;
 	}
 }

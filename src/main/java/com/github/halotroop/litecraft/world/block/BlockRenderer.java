@@ -42,8 +42,9 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 		GL20.glEnableVertexAttribArray(2);
 		Litecraft.getInstance().binds++;
 	}
-	
-	private void prepTexture(ModelTexture texture, int textureID) {
+
+	private void prepTexture(ModelTexture texture, int textureID)
+	{
 		shader.loadFakeLightingVariable(texture.isUseFakeLighting());
 		shader.loadShine(texture.getShineDamper(), texture.getReflectivity());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -59,22 +60,20 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 	}
 
 	public void render(BlockEntity[] renderList)
-	{ 
+	{
 		shader.start();
 		shader.loadSkyColour(Window.getColour());
 		shader.loadViewMatrix(GingerRegister.getInstance().game.data.camera);
 		TexturedModel model = renderList[0].getModel();
-		if(GingerRegister.getInstance().wireframe) 
-		{
-			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-		}
-		for(int x = 0; x < CHUNK_SIZE; x++)
+		if (GingerRegister.getInstance().wireframe)
+		{ GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE); }
+		for (int x = 0; x < CHUNK_SIZE; x++)
 		{
 			for (int y = 0; y < CHUNK_SIZE; y++)
 			{
 				for (int z = 0; z < CHUNK_SIZE; z++)
 				{
-					BlockEntity entity = renderList[x*CHUNK_SIZE*CHUNK_SIZE + z*CHUNK_SIZE + y];
+					BlockEntity entity = renderList[x * CHUNK_SIZE * CHUNK_SIZE + z * CHUNK_SIZE + y];
 					if (entity != null && entity.getModel() != null)
 					{
 						prepTexture(entity.getModel().getTexture(), entity.getModel().getTexture().getTextureID());
@@ -84,11 +83,8 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 				}
 			}
 		}
-
-		if(GingerRegister.getInstance().wireframe) 
-		{
-			GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK,GL11.GL_FILL);
-		}
+		if (GingerRegister.getInstance().wireframe)
+		{ GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL); }
 		shader.stop();
 	}
 }

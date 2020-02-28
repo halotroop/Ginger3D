@@ -17,6 +17,7 @@ import com.github.hydos.ginger.engine.render.models.TexturedModel;
 public class ShadowMapMasterRenderer
 {
 	private static final int SHADOW_MAP_SIZE = 5120 * 2;
+
 	/** Create the offset for part of the conversion to shadow map space. This
 	 * conversion is necessary to convert from one coordinate system to the
 	 * coordinate system that we can use to sample to shadow map.
@@ -29,6 +30,7 @@ public class ShadowMapMasterRenderer
 		offset.scale(new Vector3f(0.5f, 0.5f, 0.5f));
 		return offset;
 	}
+
 	private ShadowFrameBuffer shadowFbo;
 	private ShadowShader shader;
 	private ShadowBox shadowBox;
@@ -36,7 +38,6 @@ public class ShadowMapMasterRenderer
 	private Matrix4f lightViewMatrix = new Matrix4f();
 	private Matrix4f projectionViewMatrix = new Matrix4f();
 	private Matrix4f offset = createOffset();
-
 	private ShadowMapEntityRenderer entityRenderer;
 
 	/** Creates instances of the important objects needed for rendering the scene

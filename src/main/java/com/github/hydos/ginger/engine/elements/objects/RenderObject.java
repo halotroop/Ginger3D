@@ -21,18 +21,15 @@ public class RenderObject
 		this.rotZ = rotZ;
 		this.scale = scale;
 	}
-	
-	public void x(float x) {
-		this.position.x = x;
-	}
-	
-	public void y(float y) {
-		this.position.y = y;
-	}
-	
-	public void z(float z) {
-		this.position.z = z;
-	}
+
+	public void x(float x)
+	{ this.position.x = x; }
+
+	public void y(float y)
+	{ this.position.y = y; }
+
+	public void z(float z)
+	{ this.position.z = z; }
 
 	public TexturedModel getModel()
 	{ return model; }

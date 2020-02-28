@@ -17,6 +17,6 @@ public class ModelLoader
 	public static TexturedModel loadModel(String objPath, String texturePath)
 	{
 		Mesh data = OBJFileLoader.loadModel(objPath);
-		return new TexturedModel(Loader.loadToVAO(data.getVertices(), data.getIndices(),data.getNormals(), data.getTextureCoords()), new ModelTexture(texturePath));
+		return new TexturedModel(Loader.loadToVAO(data.getVertices(), data.getIndices(), data.getNormals(), data.getTextureCoords()), new ModelTexture(texturePath));
 	}
 }

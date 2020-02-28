@@ -43,7 +43,7 @@ public class TextMaster
 	public static void render()
 	{ renderer.render(texts); }
 
-	public static void render(GUIText buildText) 
+	public static void render(GUIText buildText)
 	{
 		Map<FontType, List<GUIText>> oldTexts = texts;
 		List<GUIText> oldFontText = texts.get(Ginger.getInstance().globalFont);

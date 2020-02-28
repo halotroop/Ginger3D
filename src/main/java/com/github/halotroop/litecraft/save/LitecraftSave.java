@@ -6,7 +6,7 @@ import java.util.Random;
 import org.joml.Vector3f;
 
 import com.github.halotroop.litecraft.world.*;
-import com.github.halotroop.litecraft.world.gen.*;
+import com.github.halotroop.litecraft.world.gen.Dimension;
 import com.github.hydos.ginger.engine.elements.objects.Player;
 
 import tk.valoeghese.sod.*;
@@ -17,7 +17,6 @@ public final class LitecraftSave
 	{
 		StringBuilder sb = new StringBuilder(SAVE_DIR).append(name);
 		File saveDir = new File(sb.toString());
-
 		if (mustCreateNew)
 		{
 			while (saveDir.exists())
@@ -26,7 +25,6 @@ public final class LitecraftSave
 				saveDir = new File(sb.toString());
 			}
 		}
-
 		this.file = saveDir;
 		this.file.mkdirs();
 	}
@@ -36,19 +34,16 @@ public final class LitecraftSave
 	public boolean saveChunk(Chunk chunk)
 	{
 		StringBuilder fileLocBuilder = new StringBuilder(this.file.getPath())
-				.append('/').append(chunk.dimension)
-				.append('/').append(chunk.chunkX)
-				.append('/').append(chunk.chunkZ);
+			.append('/').append(chunk.dimension)
+			.append('/').append(chunk.chunkX)
+			.append('/').append(chunk.chunkZ);
 		File chunkDir = new File(fileLocBuilder.toString());
 		chunkDir.mkdirs(); // create directory for file if it does not exist
-
 		// format: <save dir>/<dim>/<chunkX>/<chunkZ>/<chunkY>.sod
 		File chunkFile = new File(fileLocBuilder.append('/').append(chunk.chunkY).append(".sod").toString());
-
 		try
 		{
 			chunkFile.createNewFile();
-
 			BinaryData data = new BinaryData(); // create new empty binary data
 			chunk.write(data); // write the chunk info to the binary data
 			return data.write(chunkFile); // write the data to the file, return whether an io exception occurred
@@ -64,15 +59,13 @@ public final class LitecraftSave
 	{
 		// format: <save dir>/<dim>/<chunkX>/<chunkZ>/<chunkY>.sod
 		File chunkFile = new File(new StringBuilder(this.file.getPath())
-				.append('/').append(dimension)
-				.append('/').append(chunkX)
-				.append('/').append(chunkZ)
-				.append('/').append(chunkY).append(".sod").toString());
-
+			.append('/').append(dimension)
+			.append('/').append(chunkX)
+			.append('/').append(chunkZ)
+			.append('/').append(chunkY).append(".sod").toString());
 		if (chunkFile.isFile())
 		{
 			BinaryData data = BinaryData.read(chunkFile);
-
 			Chunk result = new Chunk(chunkX, chunkY, chunkZ, dimension); // create chunk
 			result.read(data); // load the chunk data we have just read into the chunk
 			return result;
@@ -83,7 +76,6 @@ public final class LitecraftSave
 	public World getWorldOrCreate(Dimension<?> dim)
 	{
 		File globalDataFile = new File(this.file.getPath() + "/global_data.sod");
-
 		if (globalDataFile.isFile()) // load world
 		{
 			BinaryData data = BinaryData.read(globalDataFile); // read data from the world file
@@ -91,7 +83,6 @@ public final class LitecraftSave
 			DataSection playerData = data.get("player");
 			long seed = 0; // default seed if we cannot read it is 0
 			float playerX = 0, playerY = 0, playerZ = -3; // default player x/y/z
-
 			try // try read the seed from the file
 			{
 				seed = properties.readLong(0); // seed is at index 0
@@ -100,8 +91,9 @@ public final class LitecraftSave
 				playerZ = playerData.readFloat(2);
 			}
 			catch (Throwable e)
-			{ System.out.println("Exception in reading save data! This may be benign, merely an artifact of an update to the contents of the world save data."); }
-
+			{
+				System.out.println("Exception in reading save data! This may be benign, merely an artifact of an update to the contents of the world save data.");
+			}
 			World world = new World(seed, 10, dim, this); // create new world with seed read from file or 0, if it could not be read
 			world.spawnPlayer(playerX, playerY, playerZ); // spawn player in world
 			return world;
@@ -109,7 +101,6 @@ public final class LitecraftSave
 		else // create world
 		{
 			long seed = new Random().nextLong();
-
 			try
 			{
 				globalDataFile.createNewFile(); // create world file
@@ -120,7 +111,6 @@ public final class LitecraftSave
 				// If this fails the world seed will not be consistent across saves
 				e.printStackTrace();
 			}
-
 			World world = new World(seed, 2, dim, this); // create new world with generated seed
 			world.spawnPlayer(); // spawn player in world
 			return world;
@@ -131,11 +121,10 @@ public final class LitecraftSave
 	{
 		File globalDataFile = new File(this.file.getPath() + "/global_data.sod");
 		globalDataFile.createNewFile(); // create world file if it doesn't exist.
-
 		writeGlobalData(globalDataFile, seed, player.getPosition());
 	}
 
-	private void writeGlobalData(File globalDataFile, long seed, Vector3f playerPos) 
+	private void writeGlobalData(File globalDataFile, long seed, Vector3f playerPos)
 	{
 		BinaryData data = new BinaryData(); // create empty binary data
 		DataSection properties = new DataSection(); // create empty data section for properties

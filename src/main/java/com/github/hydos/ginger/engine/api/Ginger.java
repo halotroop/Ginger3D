@@ -20,7 +20,6 @@ import com.github.hydos.ginger.engine.utils.Loader;
 public class Ginger
 {
 	private static Ginger INSTANCE;
-	
 	public GingerRegister gingerRegister;
 	public MousePicker picker;
 	public FontType globalFont;
@@ -30,11 +29,10 @@ public class Ginger
 	{
 		@Override
 		public void onTick(float deltaTime)
-		{ 
-			gingerRegister.game.tick(); 
-			if(gingerRegister.currentScreen != null) {
-				gingerRegister.currentScreen.tick();
-			}
+		{
+			gingerRegister.game.tick();
+			if (gingerRegister.currentScreen != null)
+			{ gingerRegister.currentScreen.tick(); }
 		};
 	};
 
@@ -47,11 +45,9 @@ public class Ginger
 		TextMaster.cleanUp();
 		Loader.cleanUp();
 	}
-	
+
 	public void openScreen(Screen screen)
-	{
-		gingerRegister.currentScreen = screen;
-	}
+	{ gingerRegister.currentScreen = screen; }
 
 	public void postRender()
 	{ Window.swapBuffers(); }
@@ -74,9 +70,8 @@ public class Ginger
 	public void renderOverlays(Game game)
 	{
 		gingerRegister.masterRenderer.renderGuis(game.data.guis);
-		if(gingerRegister.currentScreen != null) {
-			gingerRegister.masterRenderer.renderGuis(gingerRegister.currentScreen.elements);
-		}
+		if (gingerRegister.currentScreen != null)
+		{ gingerRegister.masterRenderer.renderGuis(gingerRegister.currentScreen.elements); }
 		TextMaster.render();
 	}
 
@@ -90,7 +85,6 @@ public class Ginger
 		PostProcessing.doPostProcessing(contrastFbo.colorTexture);
 		if (game.data.handleGuis)
 		{ renderOverlays(game); }
-
 	}
 
 	public void setGlobalFont(FontType font)
@@ -133,7 +127,6 @@ public class Ginger
 		ParticleMaster.update(data.camera);
 	}
 
-	public static Ginger getInstance() {
-		return INSTANCE;
-	}
+	public static Ginger getInstance()
+	{ return INSTANCE; }
 }

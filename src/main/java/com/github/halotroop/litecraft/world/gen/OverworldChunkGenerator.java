@@ -21,35 +21,26 @@ public class OverworldChunkGenerator implements ChunkGenerator, WorldGenConstant
 	public Chunk generateChunk(int chunkX, int chunkY, int chunkZ)
 	{
 		Chunk chunk = new Chunk(chunkX, chunkY, chunkZ, this.dimension);
-
 		for (int x = 0; x < CHUNK_SIZE; ++x)
 		{
 			double totalX = x + chunk.chunkStartX;
-
 			for (int z = 0; z < CHUNK_SIZE; ++z)
 			{
-				int height = (int) this.noise.sample(totalX, (double) (chunk.chunkStartZ + z));
-
+				int height = (int) this.noise.sample(totalX, chunk.chunkStartZ + z);
 				for (int y = 0; y < CHUNK_SIZE; ++y)
 				{
 					int totalY = chunk.chunkStartY + y;
 					Block block = Blocks.AIR;
-
 					if (totalY < height - 3)
 					{
 						block = Blocks.DIRT;
 					}
 					else if (totalY < height)
-					{
-						block = Blocks.STONE;
-					}
-
+					{ block = Blocks.STONE; }
 					chunk.setBlock(x, y, z, block);
 				}
 			}
 		}
-
 		return chunk;
 	}
-
 }

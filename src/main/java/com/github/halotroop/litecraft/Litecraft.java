@@ -1,9 +1,8 @@
 package com.github.halotroop.litecraft;
 
-import org.joml.*;
 import java.io.IOException;
 
-import org.joml.Vector4i;
+import org.joml.*;
 import org.lwjgl.glfw.GLFW;
 
 import com.github.halotroop.litecraft.save.LitecraftSave;
@@ -53,10 +52,7 @@ public class Litecraft extends Game
 		KeyCallbackHandler.trackWindow(Window.window);
 		MouseCallbackHandler.trackWindow(Window.window);
 		setupKeybinds();
-
-		@SuppressWarnings("unused")
-		Block b = Blocks.AIR; // make sure blocks are initialised
-
+		@SuppressWarnings("unused") Block b = Blocks.AIR; // make sure blocks are initialised
 		GingerUtils.init();
 		Window.setBackgroundColour(0.2f, 0.2f, 0.6f);
 		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/stone/brick/stonebrick.png");
@@ -92,17 +88,17 @@ public class Litecraft extends Game
 		if (this.world != null)
 		{
 			this.world.unloadAllChunks();
-
 			try
-			{ this.save.saveGlobalData(this.world.getSeed(), this.player); }
+			{
+				this.save.saveGlobalData(this.world.getSeed(), this.player);
+			}
 			catch (IOException e)
 			{
 				System.err.println("A critical error occurred while trying to save world data!");
 				e.printStackTrace();
 			}
 		}
-	
-		ginger3D.cleanup(); 
+		ginger3D.cleanup();
 		System.exit(0);
 	}
 
@@ -119,23 +115,17 @@ public class Litecraft extends Game
 			this.tps = 0;
 			this.frameTimer += 1000; // reset the wait time
 		}
-
 		// TODO pls comment this code
 		if (ginger3D.gingerRegister.currentScreen == null)
 			this.ginger3D.openScreen(new TitleScreen());
-
 		this.ginger3D.update(data);
-
 		if (oldWindowHeight != Window.height || oldWindowWidth != Window.width)
 			this.ginger3D.contrastFbo.resizeFBOs();
-
 		this.oldWindowWidth = Window.width;
 		this.oldWindowHeight = Window.height;
 		this.ginger3D.gingerRegister.masterRenderer.renderShadowMap(data.entities, data.lights.get(0));
-
 		if (this.world != null)
 			this.ginger3D.renderWorld(this, this.world);
-
 		this.ginger3D.renderOverlays(this);
 		this.ginger3D.postRender();
 		this.dbgStats.w = binds;
@@ -158,11 +148,9 @@ public class Litecraft extends Game
 	public void setGingerPlayer(Player player)
 	{
 		this.data.entities.remove(this.player); // remove the old player
-
 		this.data.player = player; // set all the player variables
 		this.player = player;
 		this.camera.player = player;
-
 		this.data.entities.add(this.player); // add the new player
 	}
 
@@ -173,6 +161,6 @@ public class Litecraft extends Game
 			this.save = new LitecraftSave("test", false);
 			this.world = this.save.getWorldOrCreate(Dimensions.OVERWORLD);
 			this.setGingerPlayer(this.world.player);
-		}		
+		}
 	}
 }

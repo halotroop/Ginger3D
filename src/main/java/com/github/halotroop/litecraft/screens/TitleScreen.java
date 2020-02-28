@@ -16,13 +16,11 @@ import com.github.hydos.ginger.engine.screen.Screen;
  * YeS
  */
 public class TitleScreen extends Screen
-{	
+{
 	GUIText buildText;
-	
 	Ginger ginger3D;
-
 	TextureButton playButton;
-	
+
 	public TitleScreen()
 	{
 		ginger3D = Ginger.getInstance();
@@ -32,18 +30,16 @@ public class TitleScreen extends Screen
 		buildText = ginger3D.registerText("LiteCraft", 3, new Vector2f(0, 0), 1f, true, "PLAYBUTTON");
 		buildText.setBorderWidth(0.5f);
 	}
-	
+
 	@Override
 	public void render() // FIXME: This never gets called!!!
-	{
-		
-	}
+	{}
 
 	@Override
 	public void tick()
 	{
 		Vector4i dbg = Litecraft.getInstance().dbgStats;
-		buildText.setText("FPS: "+dbg.x()+" UPS: "+dbg.y+" TPS: "+dbg.z+" Binds: "+dbg.w);
+		buildText.setText("FPS: " + dbg.x() + " UPS: " + dbg.y + " TPS: " + dbg.z + " Binds: " + dbg.w);
 		playButton.update();
 		if (playButton.isClicked())
 		{
