@@ -6,9 +6,9 @@ import com.github.halotroop.litecraft.types.block.*;
 import com.github.halotroop.litecraft.util.noise.OctaveSimplexNoise;
 import com.github.halotroop.litecraft.world.Chunk;
 
-public class OverworldChunkGenerator implements ChunkGenerator, WorldGenConstants
+public class EarthChunkGenerator implements ChunkGenerator, WorldGenConstants
 {
-	public OverworldChunkGenerator(long seed, int dimension)
+	public EarthChunkGenerator(long seed, int dimension)
 	{
 		Random rand = new Random(seed);
 		this.noise = new OctaveSimplexNoise(rand, 3, 250.0, 35.0, 10.0);

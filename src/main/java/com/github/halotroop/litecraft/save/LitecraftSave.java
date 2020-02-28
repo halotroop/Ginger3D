@@ -36,7 +36,7 @@ public final class LitecraftSave
 	public boolean saveChunk(Chunk chunk)
 	{
 		StringBuilder fileLocBuilder = new StringBuilder(this.file.getPath())
-			.append('/').append(chunk.dimension)
+			.append('/').append(Dimension.getById(chunk.dimension).saveIdentifier)
 			.append('/').append(chunk.chunkX)
 			.append('/').append(chunk.chunkZ);
 		File chunkDir = new File(fileLocBuilder.toString());
@@ -61,7 +61,7 @@ public final class LitecraftSave
 	{
 		// format: <save dir>/<dim>/<chunkX>/<chunkZ>/<chunkY>.sod
 		File chunkFile = new File(new StringBuilder(this.file.getPath())
-			.append('/').append(dimension)
+			.append('/').append(Dimension.getById(dimension).saveIdentifier)
 			.append('/').append(chunkX)
 			.append('/').append(chunkZ)
 			.append('/').append(chunkY).append(".sod").toString());
