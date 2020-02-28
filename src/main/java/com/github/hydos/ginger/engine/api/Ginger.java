@@ -1,7 +1,6 @@
 package com.github.hydos.ginger.engine.api;
 
 import org.joml.Vector2f;
-import org.lwjgl.opengl.GL11;
 
 import com.github.halotroop.litecraft.Litecraft;
 import com.github.halotroop.litecraft.logic.Timer;

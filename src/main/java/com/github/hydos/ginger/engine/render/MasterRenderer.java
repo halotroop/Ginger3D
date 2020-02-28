@@ -37,7 +37,7 @@ public class MasterRenderer
 	public ObjectRenderer entityRenderer;
 	private GuiShader guiShader;
 	private GuiRenderer guiRenderer;
-	private SkyboxRenderer skyboxRenderer;
+//	private SkyboxRenderer skyboxRenderer;
 	private NormalMappingRenderer normalRenderer;
 	private Matrix4f projectionMatrix;
 	private ShadowMapMasterRenderer shadowMapRenderer;
@@ -50,7 +50,6 @@ public class MasterRenderer
 		entityShader = new StaticShader();
 		blockRenderer = new BlockRenderer(entityShader, projectionMatrix);
 		entityRenderer = new ObjectRenderer(entityShader, projectionMatrix);
-		skyboxRenderer = new SkyboxRenderer(projectionMatrix);
 		guiShader = new GuiShader();
 		guiRenderer = new GuiRenderer(guiShader);
 		normalRenderer = new NormalMappingRenderer(projectionMatrix);
@@ -163,7 +162,7 @@ public class MasterRenderer
 		renderEntities(entities, camera, lights);
 		world.render(blockRenderer);
 		renderNormalEntities(normalEntities, lights, camera, clipPlane);
-		skyboxRenderer.render(camera);
+//		skyboxRenderer.render(camera);
 	}
 
 	public void renderShadowMap(List<RenderObject> entityList, Light sun)

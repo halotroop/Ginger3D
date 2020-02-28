@@ -4,7 +4,6 @@ import org.joml.Vector3f;
 
 import com.github.halotroop.litecraft.Litecraft;
 import com.github.halotroop.litecraft.util.RelativeDirection;
-import com.github.halotroop.litecraft.world.World;
 import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 import com.github.hydos.ginger.engine.api.GingerRegister;
 import com.github.hydos.ginger.engine.io.Window;
