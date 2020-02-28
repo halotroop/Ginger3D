@@ -4,7 +4,7 @@ import org.joml.Matrix4f;
 import org.lwjgl.opengl.*;
 
 import com.github.halotroop.litecraft.Litecraft;
-import com.github.halotroop.litecraft.types.block.BlockEntity;
+import com.github.halotroop.litecraft.types.block.BlockInstance;
 import com.github.halotroop.litecraft.world.Chunk;
 import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 import com.github.hydos.ginger.engine.api.GingerRegister;
@@ -61,21 +61,20 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 		GL30.glBindVertexArray(0);
 	}
 
-	public void render(BlockEntity[] renderList)
+	public void render(BlockInstance[] renderList)
 	{
 		shader.start();
 		shader.loadSkyColour(Window.getColour());
 		shader.loadViewMatrix(GingerRegister.getInstance().game.data.camera);
 		TexturedModel model = renderList[0].getModel();
 		if (GingerRegister.getInstance().wireframe)
-		{ GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE); }
+			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+		//
 		for (int x = 0; x < CHUNK_SIZE; x++)
-		{
 			for (int y = 0; y < CHUNK_SIZE; y++)
-			{
 				for (int z = 0; z < CHUNK_SIZE; z++)
 				{
-					BlockEntity entity = renderList[Chunk.index(x, y, z)];
+					BlockInstance entity = renderList[Chunk.index(x, y, z)];
 					if (entity != null && entity.getModel() != null)
 					{
 						prepTexture(entity.getModel().getTexture(), entity.getModel().getTexture().getTextureID());
@@ -83,10 +82,8 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 						GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 					}
 				}
-			}
-		}
 		if (GingerRegister.getInstance().wireframe)
-		{ GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL); }
+			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 		shader.stop();
 	}
 }

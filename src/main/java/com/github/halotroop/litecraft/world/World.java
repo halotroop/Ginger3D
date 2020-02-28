@@ -27,21 +27,6 @@ public class World implements BlockAccess, WorldGenConstants
 	private final int dimension;
 	public Player player;
 
-	public int findAir(int x, int z)
-	{
-		int y = SEA_LEVEL;
-		int attemptsRemaining = 255;
-
-		while (attemptsRemaining --> 0)
-		{
-			// DO NOT CHANGE TO y++
-			if (this.getBlock(x, ++y, z) == Blocks.AIR)
-				return y;
-		}
-
-		return -1; // if it fails, returns -1
-	}
-
 	// This will likely become the main public constructor after we add dynamic chunkloading
 	private World(long seed, Dimension<?> dim, LitecraftSave save)
 	{
@@ -55,7 +40,13 @@ public class World implements BlockAccess, WorldGenConstants
 	}
 
 	public void spawnPlayer()
-	{ this.spawnPlayer(0, 0, -3); }
+	{
+		int y = this.findAir(0, 0);
+		if (y == -1)
+			y = 300; // yeet
+
+		this.spawnPlayer(0, y, -3);
+	}
 
 	public Player spawnPlayer(float x, float y, float z)
 	{
@@ -73,9 +64,24 @@ public class World implements BlockAccess, WorldGenConstants
 		System.out.println("Generating world!");
 		for (int i = (0 - (size / 2)); i < (size / 2); i++)
 			for (int k = (0 - (size / 2)); k < (size / 2); k++)
-				for (int y = -2; y < 0; ++y)
+				for (int y = -2; y < 2; ++y)
 					this.loadChunk(i, y, k).setRender(true);
 		System.out.println("Generated world in " + (System.currentTimeMillis() - time) + " milliseconds");
+	}
+
+	public int findAir(int x, int z)
+	{
+		int y = SEA_LEVEL;
+		int attemptsRemaining = 255;
+
+		while (attemptsRemaining --> 0)
+		{
+			// DO NOT CHANGE TO y++
+			if (this.getBlock(x, ++y, z) == Blocks.AIR)
+				return y;
+		}
+
+		return -1; // if it fails, returns -1
 	}
 
 	public Chunk getChunk(int chunkX, int chunkY, int chunkZ)

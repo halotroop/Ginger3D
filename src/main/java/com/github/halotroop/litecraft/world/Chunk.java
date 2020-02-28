@@ -23,14 +23,14 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 	{ return (x & MAX_POS) | ((y & MAX_POS) << POS_SHIFT) | ((z & MAX_POS) << DOUBLE_SHIFT); }
 
 	private final Block[] blocks = new Block[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
-	private BlockEntity[] blockEntities = new BlockEntity[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
+	private BlockInstance[] blockEntities = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 	private boolean render = false;
 	public final int chunkX, chunkY, chunkZ;
 	public final int chunkStartX, chunkStartY, chunkStartZ;
 	private boolean fullyGenerated = false;
 	public final int dimension;
 	private boolean dirty = true;
-	private BlockEntity[] renderedBlocks;
+	private BlockInstance[] renderedBlocks;
 
 	public Chunk(int chunkX, int chunkY, int chunkZ, int dimension)
 	{
@@ -57,7 +57,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		return blocks[index(x, y, z)];
 	}
 
-	public BlockEntity getBlockEntity(int x, int y, int z)
+	public BlockInstance getBlockEntity(int x, int y, int z)
 	{
 		if (x > CHUNK_SIZE || y > CHUNK_SIZE || z > CHUNK_SIZE || x < 0 || y < 0 || z < 0)
 		{ throw new RuntimeException("Block [" + x + ", " + y + ", " + z + ", " + "] out of chunk bounds!"); }
@@ -71,14 +71,14 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 			if (dirty)
 			{
 				dirty = false;
-				renderedBlocks = new BlockEntity[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
+				renderedBlocks = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 				for (int x = 0; x < CHUNK_SIZE; x++)
 				{
 					for (int y = 0; y < CHUNK_SIZE; y++)
 					{
 						for (int z = 0; z < CHUNK_SIZE; z++)
 						{
-							BlockEntity block = getBlockEntity(x, y, z);
+							BlockInstance block = getBlockEntity(x, y, z);
 							if (x == 0 || x == CHUNK_SIZE - 1 || z == 0 || z == CHUNK_SIZE - 1 || y == 0 || y == CHUNK_SIZE - 1)
 							{
 								renderedBlocks[index(x, y, z)] = block;
@@ -111,18 +111,15 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		else if (z < 0) z = 0;
 		this.blocks[index(x, y, z)] = block;
 		if (this.render)
-		{ this.blockEntities[index(x, y, z)] = new BlockEntity(block, new Vector3f(this.chunkStartX + x, this.chunkStartY + y, this.chunkStartZ + z)); }
+		{ this.blockEntities[index(x, y, z)] = new BlockInstance(block, new Vector3f(this.chunkStartX + x, this.chunkStartY + y, this.chunkStartZ + z)); }
 		dirty = true;
 	}
 
 	public void setRender(boolean render)
 	{
 		if (render && !this.render) // if it has been changed to true
-		{
 			for (int x = 0; x < CHUNK_SIZE; ++x)
-			{
 				for (int y = 0; y < CHUNK_SIZE; ++y)
-				{
 					for (int z = 0; z < CHUNK_SIZE; ++z)
 					{
 						Block block = this.blocks[index(x, y, z)];
@@ -130,17 +127,14 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 							System.out.println(index(x, y, z));
 						}
 
-						if (block.isVisible()) this.blockEntities[index(x, y, z)] = new BlockEntity(block,
+						this.blockEntities[index(x, y, z)] = new BlockInstance(block,
 							new Vector3f(
 								this.chunkStartX + x,
 								this.chunkStartY + y,
 								this.chunkStartZ + z));
 					}
-				}
-			}
-		}
 		else if (this.render) // else if it has been changed to false
-		{ blockEntities = new BlockEntity[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE]; }
+			blockEntities = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 		this.render = render;
 		dirty = true;
 	}
