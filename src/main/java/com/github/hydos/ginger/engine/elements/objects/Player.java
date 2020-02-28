@@ -32,12 +32,14 @@ public class Player extends RenderObject
 			position.x -= Math.sin(ry) * Constants.movementSpeed;
 			break;
 		case LEFT:
-			position.z -= Math.cos(ry + 105) * Constants.movementSpeed;
-			position.x += Math.sin(ry + 105) * Constants.movementSpeed;
+			ry -= NINETY_DEGREES;
+			position.z -= Math.cos(ry) * Constants.movementSpeed;
+			position.x += Math.sin(ry) * Constants.movementSpeed;
 			break;
 		case RIGHT:
-			position.z -= Math.cos(ry - 105) * Constants.movementSpeed;
-			position.x += Math.sin(ry - 105) * Constants.movementSpeed;
+			ry += NINETY_DEGREES;
+			position.z -= Math.cos(ry) * Constants.movementSpeed;
+			position.x += Math.sin(ry) * Constants.movementSpeed;
 			break;
 		case UP:
 			if (this.noWeight) position.y += Constants.movementSpeed;
@@ -48,6 +50,8 @@ public class Player extends RenderObject
 			break;
 		}
 	}
+
+	private static final float NINETY_DEGREES = (float) (Math.PI / 2f);
 
 	private void jump()
 	{
