@@ -32,7 +32,8 @@ public class Litecraft extends Game
 	private LitecraftSave save;
 	private Ginger ginger3D;
 	private static Litecraft INSTANCE;
-	private static Player player;
+	private Player player;
+	private Camera camera;
 	//temp stuff to test out fbo fixes
 	int oldWindowWidth = Window.width;
 	int oldWindowHeight = Window.height;
@@ -53,29 +54,30 @@ public class Litecraft extends Game
 		MouseCallbackHandler.trackWindow(Window.window);
 		setupKeybinds();
 
+		@SuppressWarnings("unused")
 		Block b = Blocks.AIR; // make sure blocks are initialised
 
 		GingerUtils.init();
 		Window.setBackgroundColour(0.2f, 0.2f, 0.6f);
 		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/stone/brick/stonebrick.png");
 		StaticCube.scaleCube(1f);
-		player = new Player(dirtModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
-		Camera camera = new FirstPersonCamera(player);
-		player.isVisible = false;
-		ginger3D = new Ginger();
-		data = new GameData(player, camera, 20);
-		data.handleGuis = false;
-		ginger3D.setup(new MasterRenderer(camera), INSTANCE);
+		this.player = new Player(dirtModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
+		this.camera = new FirstPersonCamera(player);
+		this.player.isVisible = false;
+		this.ginger3D = new Ginger();
+		this.data = new GameData(this.player, this.camera, 20);
+		this.data.handleGuis = false;
+		this.ginger3D.setup(new MasterRenderer(this.camera), INSTANCE);
 		FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
-		ginger3D.setGlobalFont(font);
+		this.ginger3D.setGlobalFont(font);
 		Light sun = new Light(new Vector3f(100, 105, -100), new Vector3f(1.3f, 1.3f, 1.3f), new Vector3f(0.0001f, 0.0001f, 0.0001f));
-		data.lights.add(sun);
-		data.entities.add(player);
-		oldWindowWidth = Window.width;
-		oldWindowHeight = Window.height;
-		frameTimer = System.currentTimeMillis();
+		this.data.lights.add(sun);
+		this.data.entities.add(this.player);
+		this.oldWindowWidth = Window.width;
+		this.oldWindowHeight = Window.height;
+		this.frameTimer = System.currentTimeMillis();
 		//start the game loop
-		ginger3D.startGame();
+		this.ginger3D.startGame();
 	}
 
 	private void setupKeybinds()
@@ -107,7 +109,7 @@ public class Litecraft extends Game
 	@Override
 	public void render()
 	{
-		fps++;
+		this.fps++;
 		//FPS stuff sorry if i forget to remove whitespace
 		if (System.currentTimeMillis() > frameTimer + 1000) // wait for one second
 		{
@@ -117,19 +119,26 @@ public class Litecraft extends Game
 			this.tps = 0;
 			this.frameTimer += 1000; // reset the wait time
 		}
+
+		// TODO pls comment this code
 		if (ginger3D.gingerRegister.currentScreen == null)
-			ginger3D.openScreen(new TitleScreen());
-		ginger3D.update(data);
+			this.ginger3D.openScreen(new TitleScreen());
+
+		this.ginger3D.update(data);
+
 		if (oldWindowHeight != Window.height || oldWindowWidth != Window.width)
-			ginger3D.contrastFbo.resizeFBOs();
-		oldWindowWidth = Window.width;
-		oldWindowHeight = Window.height;
-		ginger3D.gingerRegister.masterRenderer.renderShadowMap(data.entities, data.lights.get(0));
+			this.ginger3D.contrastFbo.resizeFBOs();
+
+		this.oldWindowWidth = Window.width;
+		this.oldWindowHeight = Window.height;
+		this.ginger3D.gingerRegister.masterRenderer.renderShadowMap(data.entities, data.lights.get(0));
+
 		if (this.world != null)
-			ginger3D.renderWorld(this, this.world);
-		ginger3D.renderOverlays(this);
-		ginger3D.postRender();
-		dbgStats.w = binds;
+			this.ginger3D.renderWorld(this, this.world);
+
+		this.ginger3D.renderOverlays(this);
+		this.ginger3D.postRender();
+		this.dbgStats.w = binds;
 		this.binds = 0;
 	}
 
@@ -146,12 +155,24 @@ public class Litecraft extends Game
 	public static Litecraft getInstance()
 	{ return INSTANCE; }
 
+	public void setGingerPlayer(Player player)
+	{
+		this.data.entities.remove(this.player); // remove the old player
+
+		this.data.player = player; // set all the player variables
+		this.player = player;
+		this.camera.player = player;
+
+		this.data.entities.add(this.player); // add the new player
+	}
+
 	public void onPlayButtonClick()
 	{
 		if (world == null)
 		{
 			this.save = new LitecraftSave("test", false);
 			this.world = this.save.getWorldOrCreate(Dimensions.OVERWORLD);
+			this.setGingerPlayer(this.world.player);
 		}		
 	}
 }

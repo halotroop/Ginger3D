@@ -94,12 +94,12 @@ public final class LitecraftSave
 			try // try read the seed from the file
 			{
 				seed = properties.readLong(0); // seed is at index 0
-				playerX = playerData.readFloat(1); // player x/y/z is at index 1/2/3 respectively
-				playerY = playerData.readFloat(2);
-				playerZ = playerData.readFloat(3);
+				playerX = playerData.readFloat(0); // player x/y/z is at index 1/2/3 respectively
+				playerY = playerData.readFloat(1);
+				playerZ = playerData.readFloat(2);
 			}
 			catch (Throwable e)
-			{ e.printStackTrace(); }
+			{ System.out.println("Exception in reading save data! This may be benign, merely an artifact of an update to the contents of the world save data."); }
 
 			World world = new World(seed, 10, dim, this); // create new world with seed read from file or 0, if it could not be read
 			world.spawnPlayer(playerX, playerY, playerZ); // spawn player in world
