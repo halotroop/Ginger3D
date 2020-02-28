@@ -18,9 +18,9 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 	/** @param x in-chunk x coordinate.
 	 * @param  y in-chunk y coordinate.
 	 * @param  z in-chunk z coordinate.
-	 * @return   creates a long that represents a coordinate, for use as a key in maps. */
-	public static long posHash(int x, int y, int z)
-	{ return ((long) x & MAX_POS) | (((long) y & MAX_POS) << POS_SHIFT) | (((long) z & MAX_POS) << DOUBLE_SHIFT); }
+	 * @return   creates a long that represents a coordinate, for use as a key in the array. */
+	public static int index(int x, int y, int z)
+	{ return (x & MAX_POS) | ((y & MAX_POS) << POS_SHIFT) | ((z & MAX_POS) << DOUBLE_SHIFT); }
 
 	private final Block[] blocks = new Block[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 	private BlockEntity[] blockEntities = new BlockEntity[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
@@ -54,14 +54,14 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 	{
 		if (x > CHUNK_SIZE || y > CHUNK_SIZE || z > CHUNK_SIZE || x < 0 || y < 0 || z < 0)
 		{ throw new RuntimeException("Block [" + x + ", " + y + ", " + z + ", " + "] out of chunk bounds!"); }
-		return blocks[x * CHUNK_SIZE * CHUNK_SIZE + z * CHUNK_SIZE + y];
+		return blocks[index(x, y, z)];
 	}
 
 	public BlockEntity getBlockEntity(int x, int y, int z)
 	{
 		if (x > CHUNK_SIZE || y > CHUNK_SIZE || z > CHUNK_SIZE || x < 0 || y < 0 || z < 0)
 		{ throw new RuntimeException("Block [" + x + ", " + y + ", " + z + ", " + "] out of chunk bounds!"); }
-		return this.blockEntities[x * CHUNK_SIZE * CHUNK_SIZE + z * CHUNK_SIZE + y];
+		return this.blockEntities[index(x, y, z)];
 	}
 
 	public void render(BlockRenderer blockRenderer)
@@ -81,14 +81,14 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 							BlockEntity block = getBlockEntity(x, y, z);
 							if (x == 0 || x == CHUNK_SIZE - 1 || z == 0 || z == CHUNK_SIZE - 1 || y == 0 || y == CHUNK_SIZE - 1)
 							{
-								renderedBlocks[x * CHUNK_SIZE * CHUNK_SIZE + z * CHUNK_SIZE + y] = block;
+								renderedBlocks[index(x, y, z)] = block;
 								continue;
 							}
 							// check for air. Yes this is stupid, TODO fix this
 							if (getBlockEntity(x - 1, y, z) == null || getBlockEntity(x + 1, y, z) == null ||
 								getBlockEntity(x, y - 1, z) == null || getBlockEntity(x, y + 1, z) == null ||
 								getBlockEntity(x, y, z - 1) == null || getBlockEntity(x, y, z + 1) == null)
-							{ renderedBlocks[x * CHUNK_SIZE * CHUNK_SIZE + z * CHUNK_SIZE + y] = block; }
+							{ renderedBlocks[index(x, y, z)] = block; }
 						}
 					}
 				}
@@ -109,9 +109,9 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		if (z > MAX_POS)
 			z = MAX_POS;
 		else if (z < 0) z = 0;
-		this.blocks[x * CHUNK_SIZE * CHUNK_SIZE + z * CHUNK_SIZE + y] = block;
+		this.blocks[index(x, y, z)] = block;
 		if (this.render)
-		{ this.blockEntities[x * CHUNK_SIZE * CHUNK_SIZE + z * CHUNK_SIZE + y] = new BlockEntity(block, new Vector3f(this.chunkStartX + x, this.chunkStartY + y, this.chunkStartZ + z)); }
+		{ this.blockEntities[index(x, y, z)] = new BlockEntity(block, new Vector3f(this.chunkStartX + x, this.chunkStartY + y, this.chunkStartZ + z)); }
 		dirty = true;
 	}
 
@@ -125,8 +125,12 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 				{
 					for (int z = 0; z < CHUNK_SIZE; ++z)
 					{
-						Block block = this.blocks[x * CHUNK_SIZE * CHUNK_SIZE + z * CHUNK_SIZE + y];
-						if (block.isVisible()) this.blockEntities[x * CHUNK_SIZE * CHUNK_SIZE + z * CHUNK_SIZE + y] = new BlockEntity(block,
+						Block block = this.blocks[index(x, y, z)];
+						if (block == null) {
+							System.out.println(index(x, y, z));
+						}
+
+						if (block.isVisible()) this.blockEntities[index(x, y, z)] = new BlockEntity(block,
 							new Vector3f(
 								this.chunkStartX + x,
 								this.chunkStartY + y,
@@ -151,6 +155,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		DataSection paletteData = data.get("palette");
 		boolean readInt = true; // whether the thing from the palette to be read is int
 		int intIdCache = 0;
+		//
 		for (Object o : paletteData)
 		{
 			if (readInt)
@@ -164,16 +169,18 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 				readInt = true;
 			}
 		}
+		//
 		DataSection blockData = data.get("block");
-		long posHash = 0L; // also the index
+		int index = 0;
+		//
 		for (int z = 0; z < CHUNK_SIZE; ++z) // z, y, x order for data saving and loading so we can use incremental pos hashes
 		{
 			for (int y = 0; y < CHUNK_SIZE; ++y)
 			{
 				for (int x = 0; x < CHUNK_SIZE; ++x)
 				{
-					blocks[x * CHUNK_SIZE * CHUNK_SIZE + z * CHUNK_SIZE + y] = palette.get(blockData.readInt((int) posHash));
-					++posHash;
+					blocks[index] = palette.get(blockData.readInt(index));
+					++index;
 				}
 			}
 		}
@@ -187,26 +194,29 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		Object2IntMap<Block> palette = new Object2IntArrayMap<>(); // block to int id
 		DataSection paletteData = new DataSection();
 		DataSection blockData = new DataSection();
-//		long posHash = 0L; Why is this here?
+		int index = 0;
 		nextId = 0;
 		ToIntFunction<Block> nextIdProvider = b -> nextId++;
+		//
 		for (int z = 0; z < CHUNK_SIZE; ++z) // z, y, x order for data saving and loading so we can use incremental pos hashes
 		{
 			for (int y = 0; y < CHUNK_SIZE; ++y)
 			{
 				for (int x = 0; x < CHUNK_SIZE; ++x)
 				{
-					Block b = blocks[x * CHUNK_SIZE * CHUNK_SIZE + z * CHUNK_SIZE + y];
+					Block b = blocks[index];
 					blockData.writeInt(palette.computeIntIfAbsent(b, nextIdProvider));
-//					++posHash; and this
+					++index;
 				}
 			}
 		}
+		//
 		palette.forEach((b, id) ->
 		{
 			paletteData.writeInt(id);
 			paletteData.writeString(b.identifier);
 		});
+		//
 		data.put("palette", paletteData);
 		data.put("block", blockData);
 		dirty = true;

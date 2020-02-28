@@ -5,6 +5,7 @@ import org.lwjgl.opengl.*;
 
 import com.github.halotroop.litecraft.Litecraft;
 import com.github.halotroop.litecraft.types.block.BlockEntity;
+import com.github.halotroop.litecraft.world.Chunk;
 import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 import com.github.hydos.ginger.engine.api.GingerRegister;
 import com.github.hydos.ginger.engine.elements.objects.RenderObject;
@@ -17,6 +18,7 @@ import com.github.hydos.ginger.engine.render.texture.ModelTexture;
 
 public class BlockRenderer extends Renderer implements WorldGenConstants
 {
+
 	private StaticShader shader;
 
 	public BlockRenderer(StaticShader shader, Matrix4f projectionMatrix)
@@ -73,7 +75,7 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 			{
 				for (int z = 0; z < CHUNK_SIZE; z++)
 				{
-					BlockEntity entity = renderList[x * CHUNK_SIZE * CHUNK_SIZE + z * CHUNK_SIZE + y];
+					BlockEntity entity = renderList[Chunk.index(x, y, z)];
 					if (entity != null && entity.getModel() != null)
 					{
 						prepTexture(entity.getModel().getTexture(), entity.getModel().getTexture().getTextureID());
