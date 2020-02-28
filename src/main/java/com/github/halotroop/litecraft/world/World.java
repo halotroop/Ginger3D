@@ -8,6 +8,7 @@ import org.joml.Vector3f;
 import com.github.halotroop.litecraft.save.LitecraftSave;
 import com.github.halotroop.litecraft.types.block.Block;
 import com.github.halotroop.litecraft.world.block.BlockRenderer;
+import com.github.halotroop.litecraft.world.dimension.Dimension;
 import com.github.halotroop.litecraft.world.gen.*;
 import com.github.hydos.ginger.engine.elements.objects.Player;
 import com.github.hydos.ginger.engine.obj.ModelLoader;

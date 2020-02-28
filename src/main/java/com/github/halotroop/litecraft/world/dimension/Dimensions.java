@@ -1,4 +1,6 @@
-package com.github.halotroop.litecraft.world.gen;
+package com.github.halotroop.litecraft.world.dimension;
+
+import com.github.halotroop.litecraft.world.gen.*;
 
 public final class Dimensions
 {

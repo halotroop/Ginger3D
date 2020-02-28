@@ -1,6 +1,8 @@
-package com.github.halotroop.litecraft.world.gen;
+package com.github.halotroop.litecraft.world.dimension;
 
 import java.util.*;
+
+import com.github.halotroop.litecraft.world.gen.*;
 
 import it.unimi.dsi.fastutil.ints.*;
 

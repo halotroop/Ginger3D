@@ -9,7 +9,7 @@ import com.github.halotroop.litecraft.screens.TitleScreen;
 import com.github.halotroop.litecraft.types.block.Blocks;
 import com.github.halotroop.litecraft.util.RelativeDirection;
 import com.github.halotroop.litecraft.world.World;
-import com.github.halotroop.litecraft.world.gen.Dimensions;
+import com.github.halotroop.litecraft.world.dimension.Dimensions;
 import com.github.hydos.ginger.engine.api.*;
 import com.github.hydos.ginger.engine.api.game.*;
 import com.github.hydos.ginger.engine.cameras.*;

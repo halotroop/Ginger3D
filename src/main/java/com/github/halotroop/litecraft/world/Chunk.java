@@ -165,7 +165,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 			}
 			else
 			{
-				palette.put(intIdCache, Block.getBlock((String) o));
+				palette.put(intIdCache, Block.getBlockOrAir((String) o));
 				readInt = true;
 			}
 		}
