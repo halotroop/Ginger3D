@@ -163,7 +163,7 @@ public class Litecraft extends Game
 	@Override
 	public void tick()
 	{
-		tps++;
+		this.tps++;
 		Input.invokeAllListeners();
 		data.player.updateMovement();
 	}

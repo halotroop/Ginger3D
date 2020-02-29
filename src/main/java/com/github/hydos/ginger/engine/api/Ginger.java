@@ -27,8 +27,8 @@ public class Ginger
 	public FontType globalFont;
 	public Fbo contrastFbo;
 	public GingerThreading threading;
-	Timer timer;
 	
+	private Timer timer;
 	TickListener gameTickListener = new TickListener()
 	{
 		@Override
