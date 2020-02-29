@@ -5,6 +5,7 @@ import java.util.Random;
 import com.github.halotroop.litecraft.types.block.*;
 import com.github.halotroop.litecraft.util.noise.OctaveSimplexNoise;
 import com.github.halotroop.litecraft.world.Chunk;
+import com.github.halotroop.litecraft.world.World;
 
 public class EarthChunkGenerator implements ChunkGenerator, WorldGenConstants
 {
@@ -21,9 +22,9 @@ public class EarthChunkGenerator implements ChunkGenerator, WorldGenConstants
 	private final int dimension;
 
 	@Override
-	public Chunk generateChunk(int chunkX, int chunkY, int chunkZ)
+	public Chunk generateChunk(World world, int chunkX, int chunkY, int chunkZ)
 	{
-		Chunk chunk = new Chunk(chunkX, chunkY, chunkZ, this.dimension);
+		Chunk chunk = new Chunk(world, chunkX, chunkY, chunkZ, this.dimension);
 		for (int x = 0; x < CHUNK_SIZE; x++)
 		{
 			double totalX = x + chunk.chunkStartX;
