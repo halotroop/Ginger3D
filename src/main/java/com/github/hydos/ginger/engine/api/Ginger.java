@@ -17,7 +17,7 @@ import com.github.hydos.ginger.engine.render.MasterRenderer;
 import com.github.hydos.ginger.engine.render.tools.MousePicker;
 import com.github.hydos.ginger.engine.screen.Screen;
 import com.github.hydos.ginger.engine.utils.Loader;
-import com.github.hydos.multiThreading.GingerThreading;
+import com.github.hydos.multithreading.GingerThreading;
 
 public class Ginger
 {

@@ -1,4 +1,4 @@
-package com.github.hydos.multiThreading;
+package com.github.hydos.multithreading;
 
 import java.util.*;
 

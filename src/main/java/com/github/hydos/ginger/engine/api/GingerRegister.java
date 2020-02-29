@@ -8,7 +8,7 @@ import com.github.hydos.ginger.engine.font.GUIText;
 import com.github.hydos.ginger.engine.postprocessing.Fbo;
 import com.github.hydos.ginger.engine.render.MasterRenderer;
 import com.github.hydos.ginger.engine.screen.Screen;
-import com.github.hydos.multiThreading.GingerThreading;
+import com.github.hydos.multithreading.GingerThreading;
 
 /** Used if a game wants to access engine variables safely */
 public class GingerRegister

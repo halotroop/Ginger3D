@@ -114,15 +114,7 @@ public class Litecraft extends Game
 		{
 			System.out.println("Saving chunks...");
 			this.world.unloadAllChunks();
-			try
-			{
-				this.getSave().saveGlobalData(this.world.getSeed(), this.player);
-			}
-			catch (IOException e)
-			{
-				System.err.println("A critical error occurred while trying to save world data!");
-				e.printStackTrace();
-			}
+			this.getSave().saveGlobalData(this.world.getSeed(), this.player);
 		}
 		ginger3D.cleanup();
 		System.exit(0);

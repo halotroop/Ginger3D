@@ -3,7 +3,7 @@ package com.github.halotroop.litecraft.world;
 import java.util.*;
 import java.util.function.LongConsumer;
 
-import com.github.hydos.multiThreading.GingerThread;
+import com.github.hydos.multithreading.GingerThread;
 
 import it.unimi.dsi.fastutil.longs.*;
 

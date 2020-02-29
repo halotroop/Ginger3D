@@ -125,11 +125,19 @@ public final class LitecraftSave
 		}
 	}
 
-	public void saveGlobalData(long seed, Player player) throws IOException
+	public void saveGlobalData(long seed, Player player)
 	{
-		File globalDataFile = new File(this.file.getPath() + "/global_data.sod");
-		globalDataFile.createNewFile(); // create world file if it doesn't exist.
-		writeGlobalData(globalDataFile, seed, player.getPosition());
+		try
+		{
+			File globalDataFile = new File(this.file.getPath() + "/global_data.sod");
+			globalDataFile.createNewFile(); // create world file if it doesn't exist.
+			writeGlobalData(globalDataFile, seed, player.getPosition());
+		}
+		catch (IOException e)
+		{
+			System.err.println("A critical error occurred while trying to save world data!");
+			e.printStackTrace();
+		}
 	}
 
 	private void writeGlobalData(File globalDataFile, long seed, Vector3f playerPos)
