@@ -37,14 +37,14 @@ public class CavesModifier implements WorldModifier, WorldGenConstants
 					int scOffsetY = subChunkY << 2; // sub chunk offset y
 					int scTotalY = scOffsetY + chunkStartY;
 					// calculate noise at each corner of the cube [lower|upper][south|north][west|east]
-					double noiseLSW = this.caveNoise.sample(scOffsetX, scOffsetY, scOffsetZ); // base = lower south west
-					double noiseUSW = this.caveNoise.sample(scOffsetX, scOffsetY + 1, scOffsetZ);
-					double noiseLNW = this.caveNoise.sample(scOffsetX, scOffsetY, scOffsetZ + 1);
-					double noiseUNW = this.caveNoise.sample(scOffsetX, scOffsetY + 1, scOffsetZ + 1);
-					double noiseLSE = this.caveNoise.sample(scOffsetX + 1, scOffsetY, scOffsetZ);
-					double noiseUSE = this.caveNoise.sample(scOffsetX + 1, scOffsetY + 1, scOffsetZ);
-					double noiseLNE = this.caveNoise.sample(scOffsetX + 1, scOffsetY, scOffsetZ + 1);
-					double noiseUNE = this.caveNoise.sample(scOffsetX + 1, scOffsetY + 1, scOffsetZ + 1);
+					double noiseLSW = this.caveNoise.sample(subChunkX, subChunkY, subChunkZ); // base = lower south west
+					double noiseUSW = this.caveNoise.sample(subChunkX, subChunkY + 1, subChunkZ);
+					double noiseLNW = this.caveNoise.sample(subChunkX, subChunkY, subChunkZ + 1);
+					double noiseUNW = this.caveNoise.sample(subChunkX, subChunkY + 1, subChunkZ + 1);
+					double noiseLSE = this.caveNoise.sample(subChunkX + 1, subChunkY, subChunkZ);
+					double noiseUSE = this.caveNoise.sample(subChunkX + 1, subChunkY + 1, subChunkZ);
+					double noiseLNE = this.caveNoise.sample(subChunkX + 1, subChunkY, subChunkZ + 1);
+					double noiseUNE = this.caveNoise.sample(subChunkX + 1, subChunkY + 1, subChunkZ + 1);
 					// calculate y lerp progresses
 					// lerp = low + progress * (high - low)
 					double ypSW = 0.25 * (noiseUSW - noiseLSW);
@@ -80,7 +80,7 @@ public class CavesModifier implements WorldModifier, WorldGenConstants
 								int totalX = subX + scTotalX;
 								// calculate whether to replace block with air
 								// if the noise is within the threshold for caves
-								if (lerpNoise > -THRESHOLD && lerpNoise < THRESHOLD)
+								if (-THRESHOLD < lerpNoise && lerpNoise < THRESHOLD)
 								{
 									// if the cave can carve into the block
 									if (world.getBlock(totalX, totalY, totalZ).canCaveCarve())
