@@ -18,7 +18,7 @@ public class IngameHUD extends Screen
 	{
 		debugText = ginger3D.registerText("Loading...", 2, new Vector2f(0, 0), 1f, true, "debugInfo");
 		debugText.setBorderWidth(0.5f);
-		positionText = ginger3D.registerText("Loading...", 2, new Vector2f(5, 5), 1f, true, "debugInfo");
+		positionText = ginger3D.registerText("Loading...", 2, new Vector2f(0, -0.1f), 1f, true, "debugInfo");
 		positionText.setBorderWidth(0.5f);
 	}
 	

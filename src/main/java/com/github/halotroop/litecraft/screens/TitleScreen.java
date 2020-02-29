@@ -67,6 +67,6 @@ public class TitleScreen extends Screen
 	public void close()
 	{
 		this.debugText.remove();
-		this.playButton.hide(this.elements);
+		this.playButton.hide(Litecraft.getInstance().data.guis);
 	}
 }
