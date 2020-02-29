@@ -61,6 +61,7 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 	
 	public void prepareRender() {
 		//TODO: combine VBOS
+				
 		shader.start();
 		shader.loadSkyColour(Window.getColour());
 		shader.loadViewMatrix(GingerRegister.getInstance().game.data.camera);
