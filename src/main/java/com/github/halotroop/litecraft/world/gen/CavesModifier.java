@@ -22,6 +22,7 @@ public class CavesModifier implements WorldModifier, WorldGenConstants
 	@Override
 	public void modifyWorld(BlockAccess world, Random rand, int chunkStartX, int chunkStartY, int chunkStartZ)
 	{
+		for (int i = 0; i < 8; ++i) world.setBlock(chunkStartX + i, chunkStartY + i, chunkStartZ + i, Blocks.DIORITE);
 		final int subChunks = CHUNK_SIZE >> 2; // in 4x4x4 blocks
 
 		for (int subChunkX = 0; subChunkX < subChunks; subChunkX++)
@@ -37,14 +38,14 @@ public class CavesModifier implements WorldModifier, WorldGenConstants
 					int scOffsetY = subChunkY << 2; // sub chunk offset y
 					int scTotalY = scOffsetY + chunkStartY;
 					// calculate noise at each corner of the cube [lower|upper][south|north][west|east]
-					double noiseLSW = this.caveNoise.sample(subChunkX, subChunkY, subChunkZ); // base = lower south west
-					double noiseUSW = this.caveNoise.sample(subChunkX, subChunkY + 1, subChunkZ);
-					double noiseLNW = this.caveNoise.sample(subChunkX, subChunkY, subChunkZ + 1);
-					double noiseUNW = this.caveNoise.sample(subChunkX, subChunkY + 1, subChunkZ + 1);
-					double noiseLSE = this.caveNoise.sample(subChunkX + 1, subChunkY, subChunkZ);
-					double noiseUSE = this.caveNoise.sample(subChunkX + 1, subChunkY + 1, subChunkZ);
-					double noiseLNE = this.caveNoise.sample(subChunkX + 1, subChunkY, subChunkZ + 1);
-					double noiseUNE = this.caveNoise.sample(subChunkX + 1, subChunkY + 1, subChunkZ + 1);
+					double noiseLSW = this.caveNoise.sample(scTotalX, scTotalY, scTotalZ); // base = lower south west
+					double noiseUSW = this.caveNoise.sample(scTotalX, scTotalY + 4, scTotalZ);
+					double noiseLNW = this.caveNoise.sample(scTotalX, scTotalY, scTotalZ + 4);
+					double noiseUNW = this.caveNoise.sample(scTotalX, scTotalY + 4, scTotalZ + 4);
+					double noiseLSE = this.caveNoise.sample(scTotalX + 4, scTotalY, scTotalZ);
+					double noiseUSE = this.caveNoise.sample(scTotalX + 4, scTotalY + 4, scTotalZ);
+					double noiseLNE = this.caveNoise.sample(scTotalX + 4, scTotalY, scTotalZ + 4);
+					double noiseUNE = this.caveNoise.sample(scTotalX + 4, scTotalY + 4, scTotalZ + 4);
 					// calculate y lerp progresses
 					// lerp = low + progress * (high - low)
 					double ypSW = 0.25 * (noiseUSW - noiseLSW);

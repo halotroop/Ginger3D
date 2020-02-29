@@ -40,6 +40,8 @@ public class EarthChunkGenerator implements ChunkGenerator, WorldGenConstants
 						block = pickStone(rockNoise);
 					else if (totalY < height)
 						block = Blocks.DIRT;
+					else if (totalY == height)
+						block = Blocks.GRASS;
 					chunk.setBlock(x, y, z, block);
 				}
 			}
