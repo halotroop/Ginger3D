@@ -85,7 +85,8 @@ public class Litecraft extends Game
 		Input.addPressCallback(Keybind.FLY_DOWN, () -> this.movePlayer(RelativeDirection.DOWN));
 	}
 
-	private void setupGinger() {
+	private void setupGinger()
+	{
 		TexturedModel playerModel = ModelLoader.loadGenericCube("block/cubes/stone/brick/stonebrick.png");
 		StaticCube.scaleCube(1f);
 		this.player = new Player(playerModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
@@ -145,7 +146,6 @@ public class Litecraft extends Game
 		if (this.world != null) this.ginger3D.renderWorld(this, this.world);
 		this.ginger3D.renderOverlays(this);
 		this.ginger3D.postRender();
-		this.dbgStats.w = binds;
 		this.binds = 0;
 	}
 

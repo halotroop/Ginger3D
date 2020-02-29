@@ -91,7 +91,8 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 								getBlockInstance(x, y, z - 1).getModel() == null || getBlockInstance(x, y, z + 1).getModel() == null)
 									renderedBlocks[index(x, y, z)] = block;
 							}
-							catch (NullPointerException e) { // this seems to be a hotspot for errors
+							catch (NullPointerException e)
+							{ // this seems to be a hotspot for errors
 								e.printStackTrace(); // so I can add a debug breakpoint on this line
 								throw e;
 							}
