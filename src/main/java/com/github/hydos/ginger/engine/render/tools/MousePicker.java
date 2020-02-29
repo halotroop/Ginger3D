@@ -61,7 +61,6 @@ public class MousePicker
 		float y = (2.0f * mouseY) / Window.height - 1f;
 		return new Vector2f(x, y);
 	}
-	//**********************************************************
 
 	private Vector3f getPointOnRay(Vector3f ray, float distance)
 	{
