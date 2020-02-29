@@ -122,7 +122,7 @@ public class Ginger
 		while (!Window.closed())
 		{
 			Litecraft.getInstance().ups++;
-			if (Window.isUpdating())
+			if (Window.shouldRender())
 			{
 				timer.tick();
 				gingerRegister.game.render();

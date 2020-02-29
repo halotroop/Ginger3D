@@ -50,7 +50,6 @@ public class Litecraft extends Game
 		this.setupWindow();
 		Blocks.setup(); // make sure blocks are initialised
 		GingerUtils.init(); // set up ginger utilities
-		Window.setBackgroundColour(0.2f, 0.2f, 0.6f); // set the window refresh colour
 		// set up Ginger3D stuff
 		this.setupGinger();
 		this.oldWindowWidth = Window.width;

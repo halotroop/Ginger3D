@@ -18,7 +18,7 @@ public class Window
 	public static int height;
 	private static String title;
 	public static long window;
-	private static Vector3f backgroundColour = new Vector3f(0.2f, 0.2f, 0.2f);
+	private static Vector3f backgroundColour = new Vector3f(118f, 215f, 234f);
 	private static boolean[] mouseButtons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
 	private static GLFWImage.Buffer iconBuffer = null;
 	private static double fpsCap, time, processedTime = 0;
@@ -127,7 +127,7 @@ public class Window
 	public static boolean isMouseReleased(int keyCode)
 	{ return !isMouseDown(keyCode) && mouseButtons[keyCode]; }
 
-	public static boolean isUpdating()
+	public static boolean shouldRender()
 	{
 		double nextTime = getTime();
 		double passedTime = nextTime - time;
@@ -143,9 +143,6 @@ public class Window
 
 	public static void lockMouse()
 	{ GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED); }
-
-	public static void setBackgroundColour(float r, float g, float b)
-	{ backgroundColour = new Vector3f(r, g, b); }
 
 	private static void setIcon()
 	{
@@ -180,7 +177,7 @@ public class Window
 		width = widthBuffer.get(0);
 		height = heightBuffer.get(0);
 		GL11.glViewport(0, 0, width, height);
-		GL11.glClearColor(backgroundColour.x, backgroundColour.y, backgroundColour.z, 1.0f);
+		GL11.glClearColor(backgroundColour.x/255, backgroundColour.y/255, backgroundColour.z/255, 1.0f);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		GLFW.glfwPollEvents();
 		newX = Window.getMouseX();
