@@ -1,7 +1,5 @@
 package com.github.halotroop.litecraft;
 
-import java.io.IOException;
-
 import org.joml.*;
 
 import com.github.halotroop.litecraft.save.LitecraftSave;
@@ -120,9 +118,8 @@ public class Litecraft extends Game
 		System.exit(0);
 	}
 
-	private void movePlayer(RelativeDirection direction) {
-		this.player.move(direction);
-	}
+	private void movePlayer(RelativeDirection direction)
+	{ this.player.move(direction); }
 
 	@Override
 	public void render()
@@ -131,13 +128,13 @@ public class Litecraft extends Game
 		//FPS stuff sorry if i forget to remove whitespace
 		if (System.currentTimeMillis() > frameTimer + 1000) // wait for one second
 		{
-			this.dbgStats.set(fps, ups, tps, this.threadWaitlist);
+			this.dbgStats.set(fps, ups, tps, threadWaitlist);
 			this.fps = 0;
 			this.ups = 0;
 			this.tps = 0;
 			this.frameTimer += 1000; // reset the wait time
 		}
-		// TODO pls comment this code
+		// TODO: Document this code!
 		if (ginger3D.gingerRegister.currentScreen == null) ginger3D.openScreen(new TitleScreen());
 		this.ginger3D.update(data); // FIXME: This should either be renamed to "render" or moved to tick() if it has nothing to do with rendering.
 		if (oldWindowHeight != Window.getHeight() || oldWindowWidth != Window.getWidth() && Window.getHeight() > 10 && Window.getWidth() > 10)
