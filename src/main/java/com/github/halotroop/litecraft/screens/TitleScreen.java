@@ -67,8 +67,6 @@ public class TitleScreen extends Screen
 	public void close()
 	{
 		this.debugText.remove();
-		this.debugText = null;
 		this.playButton.hide(this.elements);
-		this.playButton = null;
 	}
 }
