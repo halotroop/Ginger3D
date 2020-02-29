@@ -3,7 +3,7 @@ package com.github.halotroop.litecraft;
 import org.joml.*;
 
 import com.github.halotroop.litecraft.save.LitecraftSave;
-import com.github.halotroop.litecraft.screens.TitleScreen;
+import com.github.halotroop.litecraft.screens.*;
 import com.github.halotroop.litecraft.types.block.Blocks;
 import com.github.halotroop.litecraft.util.RelativeDirection;
 import com.github.halotroop.litecraft.world.World;
@@ -52,7 +52,8 @@ public class Litecraft extends Game
 	@Override
 	public void exit()
 	{
-		engine.openScreen(null);
+		engine.openScreen(new ExitGameScreen());
+		render(); // Render the exit game screen
 		if (this.world != null)
 		{
 			System.out.println("Saving chunks...");
