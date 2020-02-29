@@ -11,6 +11,7 @@ public class Block
 	{ // add properties to this builder!
 		private boolean visible = true;
 		private boolean fullCube = true;
+		private boolean canCaveCarve = false;
 		private final String identifier;
 
 		public Properties(String identifier)
@@ -27,10 +28,16 @@ public class Block
 			this.visible = visible;
 			return this;
 		}
+
+		public Properties canCaveCarve(boolean canCaveCarve)
+		{
+			this.canCaveCarve = canCaveCarve;
+			return this;
+		}
 	}
 
 	public final TexturedModel model;
-	private final boolean visible, fullCube;
+	private final boolean visible, fullCube, canCaveCarve;
 	public final String identifier;
 
 	public boolean isFullCube()
@@ -38,6 +45,9 @@ public class Block
 
 	public boolean isVisible()
 	{ return this.visible; }
+
+	public boolean canCaveCarve()
+	{ return this.canCaveCarve; }
 
 	protected Block(Properties properties)
 	{ this((TexturedModel) null, properties); }
@@ -51,6 +61,7 @@ public class Block
 		this.visible = properties.visible;
 		this.fullCube = properties.fullCube;
 		this.identifier = properties.identifier;
+		this.canCaveCarve = properties.canCaveCarve;
 		IDENTIFIER_TO_BLOCK.put(this.identifier, this);
 	}
 
