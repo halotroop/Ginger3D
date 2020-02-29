@@ -71,7 +71,7 @@ public class Camera
 
 	private void calculateZoom()
 	{
-		GLFW.glfwSetScrollCallback(Window.window, new GLFWScrollCallback()
+		GLFW.glfwSetScrollCallback(Window.getWindow(), new GLFWScrollCallback()
 		{
 			@Override
 			public void invoke(long win, double dx, double dy)
@@ -97,7 +97,7 @@ public class Camera
 	public void invertPitch()
 	{ this.pitch = -pitch; }
 
-	public void move()
+	public void updateMovement()
 	{
 		calculateZoom();
 		calculatePitch();

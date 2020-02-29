@@ -129,7 +129,7 @@ public class ShadowBox
 
 	/** @return The aspect ratio of the display (width:height ratio). */
 	private float getAspectRatio()
-	{ return (float) Window.width / (float) Window.height; }
+	{ return (float) Window.getWidth() / (float) Window.getHeight(); }
 
 	/** Calculates the center of the "view cuboid" in light space first, and then
 	 * converts this to world space using the inverse light's view matrix.

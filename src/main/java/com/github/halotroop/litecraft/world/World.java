@@ -10,6 +10,7 @@ import com.github.halotroop.litecraft.types.block.*;
 import com.github.halotroop.litecraft.world.block.BlockRenderer;
 import com.github.halotroop.litecraft.world.dimension.Dimension;
 import com.github.halotroop.litecraft.world.gen.*;
+import com.github.halotroop.litecraft.world.gen.modifier.WorldModifier;
 import com.github.hydos.ginger.engine.api.Ginger;
 import com.github.hydos.ginger.engine.elements.objects.Player;
 import com.github.hydos.ginger.engine.obj.ModelLoader;
@@ -29,18 +30,22 @@ public class World implements BlockAccess, WorldGenConstants
 	public Player player;
 	int renderBound;
 	int renderBoundVertical;
+	// dummy block instance for retrieving the default block model
 	private final BlockInstance dummy;
-	private DynamicChunkLoader chunkLoader;
-
 	public World(long seed, int renderSize, Dimension<?> dim, LitecraftSave save)
 	{
-		this.chunkLoader = new DynamicChunkLoader(0, 0, 0, this);
+		new DynamicChunkLoader(0, 0, 0, this);
 		this.dummy = new BlockInstance(Blocks.ANDESITE, new Vector3f(0, 0, 0));
-		this.dummy.isVisible = false;
+		this.dummy.setVisible(false);
 		this.chunks = new Long2ObjectArrayMap<>();
 		this.seed = seed;
 		this.chunkGenerator = dim.createChunkGenerator(seed);
 		this.worldModifiers = dim.getWorldModifierArray();
+		// initialize world modifiers with seed
+		for (WorldModifier modifier : this.worldModifiers)
+		{
+			modifier.initialize(seed);
+		}
 		this.genBlockAccess = new GenerationWorld(this);
 		this.save = save;
 		this.dimension = dim.id;
@@ -79,7 +84,7 @@ public class World implements BlockAccess, WorldGenConstants
 		// Player model and stuff
 		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
 		this.player = new Player(dirtModel, new Vector3f(x, y, z), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
-		this.player.isVisible = false;
+		this.player.setVisible(false);
 		// Generate world around player
 		long time = System.currentTimeMillis();
 		System.out.println("Generating world!");

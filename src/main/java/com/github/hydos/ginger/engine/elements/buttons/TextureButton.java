@@ -23,14 +23,14 @@ public class TextureButton
 		guiTexture = new GuiTexture(Loader.loadTextureDirectly(texture), position, scale);
 	}
 
-	public void hide(List<GuiTexture> guiTexture)
+	public void hide(List<GuiTexture> guiTextureList)
 	{
 		if (!shown)
 		{
 		}
 		else
 		{
-			guiTexture.remove(this.guiTexture);
+			guiTextureList.remove(this.guiTexture);
 			this.shown = false;
 		}
 	}
@@ -44,14 +44,14 @@ public class TextureButton
 	public boolean isShown()
 	{ return shown; }
 
-	public void show(List<GuiTexture> guiTexture)
+	public void show(List<GuiTexture> guiTextureList)
 	{
 		if (shown)
 		{
 		}
 		else
 		{
-			guiTexture.add(this.guiTexture);
+			guiTextureList.add(this.guiTexture);
 			this.shown = true;
 		}
 	}

@@ -12,7 +12,7 @@ public class EarthChunkGenerator implements ChunkGenerator, WorldGenConstants
 	public EarthChunkGenerator(long seed, int dimension)
 	{
 		Random rand = new Random(seed);
-		this.noise = new OctaveSimplexNoise(rand, 3, 250.0, 35.0, 10.0);
+		this.noise = new OctaveSimplexNoise(rand, 3, 250.0, 50.0, 18.0);
 		this.stoneNoise = new OctaveSimplexNoise(rand, 1);
 		this.dimension = dimension;
 	}
@@ -48,7 +48,8 @@ public class EarthChunkGenerator implements ChunkGenerator, WorldGenConstants
 		return chunk;
 	}
 
-	private static Block pickStone(double rockNoise) {
+	private static Block pickStone(double rockNoise)
+	{
 		if (rockNoise < -0.25)
 		{
 			return Blocks.ANDESITE;

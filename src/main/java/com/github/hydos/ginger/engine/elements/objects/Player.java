@@ -82,7 +82,7 @@ public class Player extends RenderObject implements WorldGenConstants
 	public void updateMovement()
 	{
 		super.increasePosition(0, (float) (upwardsSpeed * (Window.getTime())), 0);
-		upwardsSpeed += Constants.gravity.y() * Window.getTime();
+		upwardsSpeed += Constants.gravity.y() * Window.getTime(); // TODO: Implement 3D gravity
 		isInAir = false;
 		upwardsSpeed = 0;
 		

@@ -18,6 +18,7 @@ public class DataSection implements BaseDataSection<Object> {
 	/**
 	 * @deprecated Should only be used by the parser! Please use the type specific methods instead for writing data.
 	 */
+	@Deprecated
 	@Override
 	public <T> void writeForParser(T data) {
 		this.data.add(data);

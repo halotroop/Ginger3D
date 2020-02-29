@@ -107,6 +107,6 @@ public class ShadowFrameBuffer
 	protected void unbindFrameBuffer()
 	{
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
-		GL11.glViewport(0, 0, Window.width, Window.height);
+		GL11.glViewport(0, 0, Window.getWidth(), Window.getHeight());
 	}
 }
