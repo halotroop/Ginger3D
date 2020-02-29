@@ -2,17 +2,26 @@ package com.github.halotroop.litecraft.logic;
 
 import java.util.*;
 
+import com.github.hydos.multiThreading.GingerThread;
+
 /*
  * @author Jack Wilsdon (Stack Exchange)
  * https://codereview.stackexchange.com/questions/111855/ticker-for-game-timing
  */
-public class Timer
+public class Timer extends GingerThread
 {
+	@Override
+	public void run() {
+		for (TickListener listener : tickListeners)
+		{ listener.onTick(deltaTime); }
+	}
+	
 	public interface TickListener
 	{
 		void onTick(float deltaTime);
 	}
-
+	
+	float deltaTime;
 	private double lastTick;
 	private double nextTick;
 	private int tickRate;
@@ -50,9 +59,8 @@ public class Timer
 				lastTick = currentTime - targetTimeDelta;
 				nextTick = currentTime;
 			}
-			float deltaTime = (float) (currentTime - lastTick) / targetTimeDelta;
-			for (TickListener listener : tickListeners)
-			{ listener.onTick(deltaTime); }
+			deltaTime = (float) (currentTime - lastTick) / targetTimeDelta;
+			this.run();
 			lastTick = currentTime;
 			nextTick = currentTime + targetTimeDelta;
 			return true;

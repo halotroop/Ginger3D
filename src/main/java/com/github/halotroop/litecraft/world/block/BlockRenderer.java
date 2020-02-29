@@ -48,19 +48,31 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 		GL20.glDisableVertexAttribArray(2);
 		GL30.glBindVertexArray(0);
 	}
-
-	public void render(BlockInstance[] renderList)
-	{
+	
+	public void enableWireframe() {
+		if (GingerRegister.getInstance().wireframe)
+			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+	}
+	
+	public void disableWireframe() {
+		if (GingerRegister.getInstance().wireframe)
+			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+	}
+	
+	public void prepareRender() {
+		//TODO: combine VBOS
 		shader.start();
 		shader.loadSkyColour(Window.getColour());
 		shader.loadViewMatrix(GingerRegister.getInstance().game.data.camera);
 		shader.loadFakeLightingVariable(true);
 		shader.loadShine(1, 1);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		enableWireframe();
+	}
 
-		if (GingerRegister.getInstance().wireframe)
-			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-		
+	public void render(BlockInstance[] renderList)
+	{
+		prepareRender();
 		for (int x = 0; x < CHUNK_SIZE; x++)
 			for (int y = 0; y < CHUNK_SIZE; y++)
 				for (int z = 0; z < CHUNK_SIZE; z++)
@@ -74,8 +86,8 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 						GL11.glDrawElements(GL11.GL_TRIANGLES, blockModel.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 					}
 				}
+		disableWireframe();
 		shader.stop();
-		if (GingerRegister.getInstance().wireframe)
-			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+
 	}
 }
