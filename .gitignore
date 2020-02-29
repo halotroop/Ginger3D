@@ -27,7 +27,7 @@ hs_err_pid*
 
 .classpath
 .metadata
-bin/
+/bin/
 tmp/
 *.tmp
 *.bak

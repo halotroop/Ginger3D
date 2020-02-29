@@ -37,9 +37,9 @@ public class Fbo
 	public Fbo(FboCallbackHandler handler)
 	{
 		this.handler = handler;
-		this.window = Window.window;
-		width = Window.actuallWidth;
-		height = Window.actuallHeight;
+		this.window = Window.getWindow();
+		width = Window.actualWidth;
+		height = Window.actualHeight;
 		createFBO();
 	}
 
@@ -52,7 +52,7 @@ public class Fbo
 
 	public void createFBO()
 	{
-		this.window = Window.window;
+		this.window = Window.getWindow();
 		this.width = Window.getWidth();
 		this.height = Window.getHeight();
 		/* Create multisampled FBO */

@@ -45,7 +45,14 @@ public class Loader
 
 	public static int createEmptyVbo(int floatCount)
 	{
-		int vbo = GL15.glGenBuffers();
+		int vbo;
+		if (Window.glContext.GL_ARB_vertex_buffer_object) { //checks if gpu can handle faster vbos
+			IntBuffer buffer = BufferUtils.createIntBuffer(1);
+			ARBVertexBufferObject.glGenBuffersARB(buffer);
+			vbo = buffer.get(0);
+		}else {
+			vbo = GL15.glGenBuffers();
+		}
 		vbos.add(vbo);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, floatCount * 4, GL15.GL_STREAM_DRAW);

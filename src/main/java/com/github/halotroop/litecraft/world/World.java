@@ -36,7 +36,7 @@ public class World implements BlockAccess, WorldGenConstants
 	{
 		new DynamicChunkLoader(0, 0, 0, this);
 		this.dummy = new BlockInstance(Blocks.ANDESITE, new Vector3f(0, 0, 0));
-		this.dummy.isVisible = false;
+		this.dummy.setVisible(false);
 		this.chunks = new Long2ObjectArrayMap<>();
 		this.seed = seed;
 		this.chunkGenerator = dim.createChunkGenerator(seed);
@@ -84,7 +84,7 @@ public class World implements BlockAccess, WorldGenConstants
 		// Player model and stuff
 		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
 		this.player = new Player(dirtModel, new Vector3f(x, y, z), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
-		this.player.isVisible = false;
+		this.player.setVisible(false);
 		// Generate world around player
 		long time = System.currentTimeMillis();
 		System.out.println("Generating world!");

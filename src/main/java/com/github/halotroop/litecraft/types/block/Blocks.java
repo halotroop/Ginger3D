@@ -10,7 +10,8 @@ public final class Blocks
 	public static final Block DIORITE = new Block("block/cubes/stone/basic/diorite.png", new Properties("diorite").canCaveCarve(true));
 	public static final Block GRANITE = new Block("block/cubes/stone/basic/granite.png", new Properties("granite").canCaveCarve(true));
 	public static final Block GNEISS = new Block("block/cubes/stone/basic/gneiss.png", new Properties("gneiss").canCaveCarve(true));
-	public static Block setup()
+
+	public static Block init()
 	{
 		return AIR;
 	}

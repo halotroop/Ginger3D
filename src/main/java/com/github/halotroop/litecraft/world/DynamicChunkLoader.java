@@ -3,16 +3,18 @@ package com.github.halotroop.litecraft.world;
 import java.util.*;
 import java.util.function.LongConsumer;
 
-import com.github.hydos.multiThreading.GingerThread;
+import com.github.hydos.multithreading.GingerThread;
 
 import it.unimi.dsi.fastutil.longs.*;
 
-public class DynamicChunkLoader extends GingerThread{
+public class DynamicChunkLoader extends GingerThread
+{
 	
 	public int chunkX, chunkY, chunkZ;
 	public World world;
 	
-	public DynamicChunkLoader(int chunkX, int chunkY, int chunkZ, World world) {
+	public DynamicChunkLoader(int chunkX, int chunkY, int chunkZ, World world)
+	{
 		this.chunkX = chunkX;
 		this.chunkY = chunkY;
 		this.chunkZ = chunkZ;
@@ -21,7 +23,8 @@ public class DynamicChunkLoader extends GingerThread{
 	}
 	
 	@Override
-	public void run() {
+	public void run()
+	{
 		Long2ObjectMap<Chunk> chunks = world.chunks; //this is to seperate the lists so we dont create render bugs
 		
 		started = true;

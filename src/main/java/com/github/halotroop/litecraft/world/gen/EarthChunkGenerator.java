@@ -47,7 +47,8 @@ public class EarthChunkGenerator implements ChunkGenerator, WorldGenConstants
 		return chunk;
 	}
 
-	private static Block pickStone(double rockNoise) {
+	private static Block pickStone(double rockNoise)
+	{
 		if (rockNoise < -0.25)
 		{
 			return Blocks.ANDESITE;

@@ -14,7 +14,7 @@ public class FirstPersonCamera extends Camera
 	public FirstPersonCamera(Player player)
 	{
 		super(player);
-		player.isVisible = false;
+		player.setVisible(false);
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class FirstPersonCamera extends Camera
 	{ return yaw; }
 
 	@Override
-	public void move()
+	public void updateMovement()
 	{
 		position.x = player.getPosition().x;
 		position.z = player.getPosition().z;

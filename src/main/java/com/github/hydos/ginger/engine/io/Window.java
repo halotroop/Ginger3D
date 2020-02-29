@@ -7,6 +7,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
+import com.github.hydos.ginger.engine.api.Ginger;
 import com.github.hydos.ginger.engine.render.texture.Image;
 
 public class Window
@@ -28,7 +29,7 @@ public class Window
 
 	private static int width, height;
 	private static String title;
-	public static long window;
+	private static long window;
 	private static Vector3f backgroundColour = new Vector3f(118f, 215f, 234f);
 	private static boolean[] mouseButtons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
 	private static GLFWImage.Buffer iconBuffer = null;
@@ -41,10 +42,13 @@ public class Window
 	static double newX = 0;
 	static double newY = 0;
 	public static GLCapabilities glContext;
-	public static int actuallWidth, actuallHeight;
+	public static int actualWidth, actualHeight;
+	//temp stuff to test out fbo fixes
+	private static int oldWindowWidth = Window.getWidth();
+	private static int oldWindowHeight = Window.getHeight();
 
 	public static boolean closed()
-	{ return GLFW.glfwWindowShouldClose(window); }
+	{ return GLFW.glfwWindowShouldClose(getWindow()); }
 
 	public static void create()
 	{
@@ -60,31 +64,34 @@ public class Window
 		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
 		GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-		window = GLFW.glfwCreateWindow(actuallWidth, actuallHeight, title, (fullscreen) ? GLFW.glfwGetPrimaryMonitor() : 0, window);
-		if (window == 0)
+		window = GLFW.glfwCreateWindow(actualWidth, actualHeight, title, (fullscreen) ? GLFW.glfwGetPrimaryMonitor() : 0, getWindow());
+		if (getWindow() == 0)
 		{
 			System.err.println("Error: Couldnt initilize window");
 			System.exit(-1);
 		}
-		GLFW.glfwMakeContextCurrent(window);
+		GLFW.glfwMakeContextCurrent(getWindow());
 		glContext = GL.createCapabilities();
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GLFW.glfwSetWindowPos(window, (vidmode.width() - actuallWidth) / 2, (vidmode.height() - actuallHeight) / 2);
-		GLFW.glfwShowWindow(window);
+		GLFW.glfwSetWindowPos(getWindow(), (vidmode.width() - actualWidth) / 2, (vidmode.height() - actualHeight) / 2);
+		GLFW.glfwShowWindow(getWindow());
 		time = getTime();
 		getCurrentTime();
+		
+		oldWindowWidth = getWidth();
+		oldWindowHeight = getHeight();
 	}
 
-	public static void create(int width, int height, String title, int fps)
+	public static void create(int width, int height, String title, int fpsCap)
 	{
 		Window.width = width / 2;
 		Window.height = height / 2;
-		Window.actuallHeight = height;
-		Window.actuallWidth = width;
+		Window.actualHeight = height;
+		Window.actualWidth = width;
 		Window.title = title;
-		fpsCap = fps;
-		create();
-		setIcon();
+		Window.fpsCap = fpsCap;
+		Window.create();
+		Window.setIcon();
 	}
 
 	public static Vector3f getColour()
@@ -102,14 +109,14 @@ public class Window
 	public static double getMouseX()
 	{
 		DoubleBuffer buffer = BufferUtils.createDoubleBuffer(1);
-		GLFW.glfwGetCursorPos(window, buffer, null);
+		GLFW.glfwGetCursorPos(getWindow(), buffer, null);
 		return buffer.get(0);
 	}
 
 	public static double getMouseY()
 	{
 		DoubleBuffer buffer = BufferUtils.createDoubleBuffer(1);
-		GLFW.glfwGetCursorPos(window, null, buffer);
+		GLFW.glfwGetCursorPos(getWindow(), null, buffer);
 		return buffer.get(0);
 	}
 
@@ -127,10 +134,10 @@ public class Window
 	}
 
 	public static boolean isKeyDown(int keycode)
-	{ return GLFW.glfwGetKey(window, keycode) == 1; }
+	{ return GLFW.glfwGetKey(getWindow(), keycode) == 1; }
 
 	public static boolean isMouseDown(int mouseButton)
-	{ return GLFW.glfwGetMouseButton(window, mouseButton) == 1; }
+	{ return GLFW.glfwGetMouseButton(getWindow(), mouseButton) == 1; }
 
 	public static boolean isMousePressed(int keyCode)
 	{ return isMouseDown(keyCode) && !mouseButtons[keyCode]; }
@@ -144,7 +151,7 @@ public class Window
 		double passedTime = nextTime - time;
 		processedTime += passedTime;
 		time = nextTime;
-		while (processedTime > 1.0 / fpsCap)
+		if (processedTime > 1.0 / fpsCap)
 		{
 			processedTime -= 1.0 / fpsCap;
 			return true;
@@ -153,7 +160,7 @@ public class Window
 	}
 
 	public static void lockMouse()
-	{ GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED); }
+	{ GLFW.glfwSetInputMode(getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED); }
 
 	private static void setIcon()
 	{
@@ -162,29 +169,34 @@ public class Window
 		iconBuffer = GLFWImage.malloc(1);
 		iconImage.set(icon.getWidth(), icon.getHeight(), icon.getImage());
 		iconBuffer.put(0, iconImage);
-		GLFW.glfwSetWindowIcon(window, iconBuffer);
+		GLFW.glfwSetWindowIcon(getWindow(), iconBuffer);
 	}
 
 	public static void showIcon()
-	{
-		if (iconBuffer != null)
-		{ GLFW.glfwSetWindowIcon(window, iconBuffer); }
-	}
+	{ if (iconBuffer != null) GLFW.glfwSetWindowIcon(getWindow(), iconBuffer); }
 
 	public static void stop()
 	{ GLFW.glfwTerminate(); }
 
 	public static void swapBuffers()
-	{ GLFW.glfwSwapBuffers(window); }
+	{ GLFW.glfwSwapBuffers(getWindow()); }
 
 	public static void unlockMouse()
-	{ GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL); }
+	{ GLFW.glfwSetInputMode(getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL); }
 
 	public static void update()
 	{
+		// Hack to make the FBO update when the screen size is changed
+		if ((oldWindowHeight != Window.getHeight() || oldWindowWidth != Window.getWidth()) && Window.getHeight() > 10 && Window.getWidth() > 10)
+		{
+			Ginger.getInstance().contrastFbo.resizeFBOs();
+			oldWindowWidth = Window.getWidth();
+			oldWindowHeight = Window.getHeight();
+		}
+		
 		IntBuffer widthBuffer = BufferUtils.createIntBuffer(1);
 		IntBuffer heightBuffer = BufferUtils.createIntBuffer(1);
-		GLFW.glfwGetWindowSize(window, widthBuffer, heightBuffer);
+		GLFW.glfwGetWindowSize(getWindow(), widthBuffer, heightBuffer);
 		width = widthBuffer.get(0);
 		height = heightBuffer.get(0);
 		GL11.glViewport(0, 0, width, height);
@@ -201,4 +213,9 @@ public class Window
 
 	public static void fullscreen()
 	{ Window.fullscreen = !Window.isFullscreen(); }
+
+	public static long getWindow()
+	{
+		return window;
+	}
 }
