@@ -43,5 +43,4 @@ public class IngameHUD extends Screen
 		debugText.remove();
 		positionText.remove();
 	}
-	
 }

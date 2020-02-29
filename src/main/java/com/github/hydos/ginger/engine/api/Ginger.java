@@ -51,7 +51,10 @@ public class Ginger
 	}
 
 	public void openScreen(Screen screen)
-	{ gingerRegister.currentScreen = screen; }
+	{
+		if (gingerRegister.currentScreen != null) gingerRegister.currentScreen.close();
+		gingerRegister.currentScreen = screen;
+	}
 	
 	public void setGingerPlayer(Player player)
 	{
