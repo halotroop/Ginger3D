@@ -2,7 +2,7 @@ package com.github.halotroop.litecraft.logic;
 
 import java.util.*;
 
-import com.github.hydos.multiThreading.GingerThread;
+import com.github.hydos.multithreading.GingerThread;
 
 /*
  * @author Jack Wilsdon (Stack Exchange)
