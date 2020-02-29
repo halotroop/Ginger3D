@@ -20,6 +20,7 @@ public class TitleScreen extends Screen
 	GUIText buildText;
 	Ginger ginger3D;
 	TextureButton playButton;
+	Litecraft litecraft;
 
 	public TitleScreen()
 	{
@@ -38,8 +39,11 @@ public class TitleScreen extends Screen
 	@Override
 	public void tick()
 	{
-		Vector4i dbg = Litecraft.getInstance().dbgStats;
-		buildText.setText("FPS: " + dbg.x() + " UPS: " + dbg.y + " TPS: " + dbg.z + " World Chunk Threads: " + Litecraft.getInstance().threadWaitlist);
+		if(litecraft == null) {
+			litecraft = Litecraft.getInstance();
+		}
+		Vector4i dbg = litecraft.dbgStats;
+		buildText.setText("FPS: " + dbg.x() + "      Position " + litecraft.player.getPosition().toString() + " World Chunk Threads: " + litecraft.threadWaitlist);
 		playButton.update();
 		if (playButton.isClicked())
 		{
