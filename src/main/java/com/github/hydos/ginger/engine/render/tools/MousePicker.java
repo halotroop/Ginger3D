@@ -9,12 +9,12 @@ import com.github.hydos.ginger.engine.math.Maths;
 public class MousePicker
 {
 	private static final int RECURSION_COUNT = 200;
-	private static final float RAY_RANGE = 600;
+	private static final float RAY_RANGE = 30;
 	private Vector3f currentRay = new Vector3f();
 	private Matrix4f projectionMatrix;
 	private Matrix4f viewMatrix;
 	private Camera camera;
-	private Vector3f currentTerrainPoint;
+	private Vector3f blockLocation;
 
 	public MousePicker(Camera cam, Matrix4f projection)
 	{
@@ -53,7 +53,7 @@ public class MousePicker
 	{ return currentRay; }
 
 	public Vector3f getCurrentTerrainPoint()
-	{ return currentTerrainPoint; }
+	{ return blockLocation; }
 
 	private Vector2f getNormalisedDeviceCoordinates(float mouseX, float mouseY)
 	{
@@ -86,7 +86,7 @@ public class MousePicker
 	}
 
 	private boolean isUnderGround(Vector3f testPoint)
-	{ return false; }
+	{ return false; } //uuuh
 
 	private Vector4f toEyeCoords(Vector4f clipCoords)
 	{
@@ -110,11 +110,11 @@ public class MousePicker
 		currentRay = calculateMouseRay();
 		if (intersectionInRange(0, RAY_RANGE, currentRay))
 		{
-			currentTerrainPoint = binarySearch(0, 0, RAY_RANGE, currentRay);
+			blockLocation = binarySearch(0, 0, RAY_RANGE, currentRay);
 		}
 		else
 		{
-			currentTerrainPoint = null;
+			blockLocation = new Vector3f();
 		}
 	}
 }
