@@ -66,7 +66,7 @@ public class ObjectRenderer extends Renderer
 			List<RenderObject> batch = entities.get(model);
 			for (RenderObject entity : batch)
 			{
-				if (entity.isVisible)
+				if (entity.isVisible())
 				{
 					prepareInstance(entity);
 					GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);

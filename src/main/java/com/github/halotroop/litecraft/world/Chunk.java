@@ -15,16 +15,18 @@ import tk.valoeghese.sod.*;
 
 public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 {
-	/** @param x in-chunk x coordinate.
-	 * @param  y in-chunk y coordinate.
-	 * @param  z in-chunk z coordinate.
-	 * @return   creates a long that represents a coordinate, for use as a key in the array. */
+	/*
+	 * @param	x in-chunk x coordinate.
+	 * @param	y in-chunk y coordinate.
+	 * @param	z in-chunk z coordinate.
+	 * @return	creates a long that represents a coordinate, for use as a key in the array.
+	 */
 	public static int index(int x, int y, int z)
 	{ return (x & MAX_POS) | ((y & MAX_POS) << POS_SHIFT) | ((z & MAX_POS) << DOUBLE_SHIFT); }
 
 	private final Block[] blocks = new Block[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 	private BlockInstance[] blockEntities = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
-	private boolean render = false;
+	private boolean shouldRender = false;
 	public final int chunkX, chunkY, chunkZ;
 	public final int chunkStartX, chunkStartY, chunkStartZ;
 	private boolean fullyGenerated = false;
@@ -44,7 +46,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 	}
 
 	public boolean doRender()
-	{ return this.render; }
+	{ return this.shouldRender; }
 
 	public void setFullyGenerated(boolean fullyGenerated)
 	{ this.fullyGenerated = fullyGenerated; }
@@ -66,16 +68,13 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 
 	public void render(BlockRenderer blockRenderer)
 	{
-		if (render)
+		if (shouldRender)
 		{
 			if (dirty)
-			{
 				dirty = false;
 				renderedBlocks = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 				for (int x = 0; x < CHUNK_SIZE; x++)
-				{
 					for (int y = 0; y < CHUNK_SIZE; y++)
-					{
 						for (int z = 0; z < CHUNK_SIZE; z++)
 						{
 							BlockInstance block = getBlockInstance(x, y, z);
@@ -97,34 +96,38 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 								throw e;
 							}
 						}
-					}
-				}
-			}
 			blockRenderer.render(renderedBlocks);
 		}
 	}
 
+	/*
+	 * Change the block in this exact position
+	 * @param x, y, z	The coordinate position of block to overwrite
+	 * @param block		The block to place there
+	 */
 	@Override
 	public void setBlock(int x, int y, int z, Block block)
 	{
-		if (x > MAX_POS)
-			x = MAX_POS;
+		// This section makes sure the blocks don't go out of range
+		if (x > MAX_POS) x = MAX_POS;
 		else if (x < 0) x = 0;
-		if (y > MAX_POS)
-			y = MAX_POS;
+		if (y > MAX_POS) y = MAX_POS;
 		else if (y < 0) y = 0;
-		if (z > MAX_POS)
-			z = MAX_POS;
+		if (z > MAX_POS) z = MAX_POS;
 		else if (z < 0) z = 0;
+		//
 		this.blocks[index(x, y, z)] = block;
-		if (this.render)
-		{ this.blockEntities[index(x, y, z)] = new BlockInstance(block, new Vector3f(this.chunkStartX + x, this.chunkStartY + y, this.chunkStartZ + z)); }
+		if (this.shouldRender) this.blockEntities[index(x, y, z)] =
+			new BlockInstance(block, new Vector3f(this.chunkStartX + x, this.chunkStartY + y, this.chunkStartZ + z));
 		dirty = true;
 	}
 
+	/*
+	 * Set whether or not the chunk should render
+	 */
 	public void setRender(boolean render)
 	{
-		if (render && !this.render) // if it has been changed to true
+		if (render && !this.shouldRender) // if it has been changed to true
 			for (int x = 0; x < CHUNK_SIZE; ++x)
 				for (int y = 0; y < CHUNK_SIZE; ++y)
 					for (int z = 0; z < CHUNK_SIZE; ++z)
@@ -137,11 +140,11 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 								this.chunkStartY + y,
 								this.chunkStartZ + z));
 					}
-		else if (!render && this.render) // else if it has been changed to false.
+		else if (!render && this.shouldRender) // else if it has been changed to false.
 			// we need to check both variables because there are two cases that make
 			// the if statement fall to here
 			blockEntities = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
-		this.render = render;
+		this.shouldRender = render;
 		dirty = true;
 	}
 
@@ -172,18 +175,14 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		//
 		IntArrayDataSection blockData = data.getIntArray("block");
 		int index = 0;
-		//
+		// Iterate over each block in the chunk
 		for (int z = 0; z < CHUNK_SIZE; ++z) // z, y, x order for data saving and loading so we can use incremental pos hashes
-		{
 			for (int y = 0; y < CHUNK_SIZE; ++y)
-			{
 				for (int x = 0; x < CHUNK_SIZE; ++x)
 				{
 					blocks[index] = palette.get(blockData.readInt(index));
 					++index;
 				}
-			}
-		}
 		//
 		DataSection properties = data.get("properties");
 		try
@@ -192,14 +191,15 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		}
 		catch (Throwable e)
 		{
-			if (exceptionOccuredReadingNotif){
+			if (!readExceptionNotif)
+			{
 				System.out.println("An exception occurred reading properties for a chunk! This could be a benign error due to updates to chunk properties.");
-				exceptionOccuredReadingNotif = false;
+				readExceptionNotif = true;
 			}
 		}
 	}
 
-	private static boolean exceptionOccuredReadingNotif = true;
+	private static boolean readExceptionNotif = false;
 
 	private int nextId; // for saving
 
@@ -214,17 +214,13 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		ToIntFunction<Block> nextIdProvider = b -> nextId++;
 		//
 		for (int z = 0; z < CHUNK_SIZE; ++z) // z, y, x order for data saving and loading so we can use incremental pos hashes
-		{
 			for (int y = 0; y < CHUNK_SIZE; ++y)
-			{
 				for (int x = 0; x < CHUNK_SIZE; ++x)
 				{
 					Block b = blocks[index];
 					blockData.writeInt(palette.computeIntIfAbsent(b, nextIdProvider));
 					++index;
 				}
-			}
-		}
 		//
 		palette.forEach((b, id) ->
 		{
