@@ -14,7 +14,7 @@ import com.github.hydos.ginger.engine.font.GUIText;
 import com.github.hydos.ginger.engine.io.Window;
 import com.github.hydos.ginger.engine.screen.Screen;
 
-/*
+/**
  * YeS
  */
 public class TitleScreen extends Screen

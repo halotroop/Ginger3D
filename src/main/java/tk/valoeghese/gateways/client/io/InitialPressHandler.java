@@ -1,6 +1,6 @@
 package tk.valoeghese.gateways.client.io;
 
-/*
+/**
  * Author: Valoeghese
  */
 public final class InitialPressHandler implements KeyListener

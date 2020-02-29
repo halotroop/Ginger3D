@@ -8,7 +8,7 @@ import com.github.hydos.ginger.engine.cameras.Camera;
 import com.github.hydos.ginger.engine.elements.GuiTexture;
 import com.github.hydos.ginger.engine.elements.objects.*;
 
-/*
+/**
  * Used for storing essential engine game data so main class isn't messy
  * Also in general used with Game Class
  */

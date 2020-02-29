@@ -16,7 +16,7 @@ import tk.valoeghese.sod.*;
 
 public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable
 {
-	/*
+	/**
 	 * @param	x in-chunk x coordinate.
 	 * @param	y in-chunk y coordinate.
 	 * @param	z in-chunk z coordinate.
@@ -106,7 +106,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable
 		}
 	}
 
-	/*
+	/**
 	 * Change the block in this exact position
 	 * @param x, y, z	The coordinate position of block to overwrite
 	 * @param block		The block to place there
@@ -128,7 +128,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable
 		dirty = true;
 	}
 
-	/*
+	/**
 	 * Set whether or not the chunk should render
 	 */
 	public void setRender(boolean render)

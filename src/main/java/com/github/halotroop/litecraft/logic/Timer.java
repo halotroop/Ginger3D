@@ -4,7 +4,7 @@ import java.util.*;
 
 import com.github.hydos.multithreading.GingerThread;
 
-/*
+/**
  * @author Jack Wilsdon (Stack Exchange)
  * https://codereview.stackexchange.com/questions/111855/ticker-for-game-timing
  */

@@ -2,7 +2,7 @@ package tk.valoeghese.gateways.client.io;
 
 import org.lwjgl.glfw.GLFW;
 
-/*
+/**
  * Author: Valoeghese
  */
 public enum Keybind

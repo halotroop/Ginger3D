@@ -1,6 +1,6 @@
 package com.github.halotroop.litecraft.util.noise;
 
-/*
+/**
  * OpenSimplex Noise in Java.
  * (Using implementation by Kurt Spencer)
  *
