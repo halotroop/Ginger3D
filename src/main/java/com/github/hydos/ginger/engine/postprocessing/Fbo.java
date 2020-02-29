@@ -53,8 +53,8 @@ public class Fbo
 	public void createFBO()
 	{
 		this.window = Window.window;
-		this.width = Window.width;
-		this.height = Window.height;
+		this.width = Window.getWidth();
+		this.height = Window.getHeight();
 		/* Create multisampled FBO */
 		multisampledColorRenderBuffer = glGenRenderbuffers();
 		multisampledDepthRenderBuffer = glGenRenderbuffers();

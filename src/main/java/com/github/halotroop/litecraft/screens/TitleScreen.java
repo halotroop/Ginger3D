@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.joml.*;
 
 import com.github.halotroop.litecraft.Litecraft;
+import com.github.halotroop.litecraft.save.LitecraftSave;
+import com.github.halotroop.litecraft.world.dimension.Dimensions;
 import com.github.hydos.ginger.engine.api.Ginger;
 import com.github.hydos.ginger.engine.elements.GuiTexture;
 import com.github.hydos.ginger.engine.elements.buttons.TextureButton;
@@ -17,40 +19,56 @@ import com.github.hydos.ginger.engine.screen.Screen;
  */
 public class TitleScreen extends Screen
 {
-	GUIText buildText;
-	Ginger ginger3D;
-	TextureButton playButton;
-	Litecraft litecraft;
+	private GUIText debugText;
+	private Ginger ginger3D = Ginger.getInstance();
+	private TextureButton playButton;
+	private Litecraft litecraft = Litecraft.getInstance();
 
 	public TitleScreen()
 	{
-		ginger3D = Ginger.getInstance();
 		elements = new ArrayList<GuiTexture>();
-		playButton = ginger3D.registerButton("/textures/guis/purpur.png", new Vector2f(0, 0), new Vector2f(0.25f, 0.1f));
+		playButton = ginger3D.registerButton("/textures/guis/playbutton.png", new Vector2f(0, 0), new Vector2f(0.25f, 0.1f));
 		playButton.show(Litecraft.getInstance().data.guis);
-		buildText = ginger3D.registerText("LiteCraft", 3, new Vector2f(0, 0), 1f, true, "PLAYBUTTON");
-		buildText.setBorderWidth(0.5f);
+		debugText = ginger3D.registerText("Loading...", 2, new Vector2f(0, 0), 1f, true, "debugInfo");
+		debugText.setBorderWidth(0.5f);
 	}
 
 	@Override
-	public void render() // FIXME: This never gets called!!!
+	public void render()
 	{}
 
 	@Override
 	public void tick()
 	{
-		if(litecraft == null) {
-			litecraft = Litecraft.getInstance();
-		}
 		Vector4i dbg = litecraft.dbgStats;
-		buildText.setText("FPS: " + dbg.x() + "      Position " + litecraft.player.getPosition().toString() + " World Chunk Threads: " + litecraft.threadWaitlist);
+		debugText.setText("FPS: " + dbg.x() + " UPS: " + dbg.y + " TPS: " + dbg.z);
 		playButton.update();
 		if (playButton.isClicked())
 		{
 			Window.lockMouse();
-			playButton.hide(Litecraft.getInstance().data.guis);
-			Litecraft.getInstance().onPlayButtonClick();//TODO: add world gui so it takes u to world creation place
-			//TODO: also add a texture to be rendered behind the gui as an option
+			
+			if (Litecraft.getInstance().getWorld() == null)
+			{
+				Litecraft.getInstance().setSave(new LitecraftSave("cegregatedordinaldata", false));
+				Litecraft.getInstance().changeWorld(Litecraft.getInstance().getSave().getWorldOrCreate(Dimensions.OVERWORLD));
+				ginger3D.setGingerPlayer(Litecraft.getInstance().getWorld().player);
+			}
+			if (Litecraft.getInstance().getWorld() != null)
+			{
+				ginger3D.openScreen(new IngameHUD());
+				this.close();
+			}
+			//TODO: add world creation gui so it takes u to world creation place
+			//TODO: add a texture to be rendered behind the gui as an option
 		}
+	}
+
+	@Override
+	public void close()
+	{
+		this.debugText.remove();
+		this.debugText = null;
+		this.playButton.hide(this.elements);
+		this.playButton = null;
 	}
 }

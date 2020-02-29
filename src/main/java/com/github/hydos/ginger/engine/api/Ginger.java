@@ -28,6 +28,7 @@ public class Ginger
 	public Fbo contrastFbo;
 	public GingerThreading threading;
 	Timer timer;
+	
 	TickListener gameTickListener = new TickListener()
 	{
 		@Override
@@ -123,13 +124,10 @@ public class Ginger
 		while (!Window.closed())
 		{
 			Litecraft.getInstance().ups++;
-			if (Window.shouldRender())
-			{
-				timer.tick();
-				gingerRegister.game.render();
-			}
+			timer.tick();
+			if (Window.shouldRender()) gingerRegister.game.render();
 		}
-		Litecraft.getInstance().exit();
+		gingerRegister.game.exit();
 	}
 
 	public void update(GameData data)

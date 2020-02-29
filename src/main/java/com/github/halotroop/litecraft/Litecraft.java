@@ -9,7 +9,6 @@ import com.github.halotroop.litecraft.screens.TitleScreen;
 import com.github.halotroop.litecraft.types.block.Blocks;
 import com.github.halotroop.litecraft.util.RelativeDirection;
 import com.github.halotroop.litecraft.world.World;
-import com.github.halotroop.litecraft.world.dimension.Dimensions;
 import com.github.hydos.ginger.engine.api.*;
 import com.github.hydos.ginger.engine.api.game.*;
 import com.github.hydos.ginger.engine.cameras.*;
@@ -34,8 +33,8 @@ public class Litecraft extends Game
 	public Player player;
 	private Camera camera;
 	//temp stuff to test out fbo fixes
-	int oldWindowWidth = Window.width;
-	int oldWindowHeight = Window.height;
+	int oldWindowWidth = Window.getWidth();
+	int oldWindowHeight = Window.getHeight();
 	public int fps, ups, tps, binds;
 	public Vector4i dbgStats;
 	private long frameTimer;
@@ -52,8 +51,8 @@ public class Litecraft extends Game
 		GingerUtils.init(); // set up ginger utilities
 		// set up Ginger3D stuff
 		this.setupGinger();
-		this.oldWindowWidth = Window.width;
-		this.oldWindowHeight = Window.height;
+		this.oldWindowWidth = Window.getWidth();
+		this.oldWindowHeight = Window.getHeight();
 		this.frameTimer = System.currentTimeMillis();
 		setupKeybinds(); // set up keybinds
 		//start the game loop
@@ -117,7 +116,7 @@ public class Litecraft extends Game
 			this.world.unloadAllChunks();
 			try
 			{
-				this.save.saveGlobalData(this.world.getSeed(), this.player);
+				this.getSave().saveGlobalData(this.world.getSeed(), this.player);
 			}
 			catch (IOException e)
 			{
@@ -140,23 +139,21 @@ public class Litecraft extends Game
 		//FPS stuff sorry if i forget to remove whitespace
 		if (System.currentTimeMillis() > frameTimer + 1000) // wait for one second
 		{
-			this.dbgStats.set(fps, ups, tps, 0);
+			this.dbgStats.set(fps, ups, tps, this.threadWaitlist);
 			this.fps = 0;
 			this.ups = 0;
 			this.tps = 0;
 			this.frameTimer += 1000; // reset the wait time
 		}
 		// TODO pls comment this code
-		if (ginger3D.gingerRegister.currentScreen == null)
-			this.ginger3D.openScreen(new TitleScreen());
-		this.ginger3D.update(data);
-		if (oldWindowHeight != Window.height || oldWindowWidth != Window.width && Window.height > 10 && Window.width > 10)
+		if (ginger3D.gingerRegister.currentScreen == null) ginger3D.openScreen(new TitleScreen());
+		this.ginger3D.update(data); // FIXME: This should either be renamed to "render" or moved to tick() if it has nothing to do with rendering.
+		if (oldWindowHeight != Window.getHeight() || oldWindowWidth != Window.getWidth() && Window.getHeight() > 10 && Window.getWidth() > 10)
 			this.ginger3D.contrastFbo.resizeFBOs();
-		this.oldWindowWidth = Window.width;
-		this.oldWindowHeight = Window.height;
+		this.oldWindowWidth = Window.getWidth();
+		this.oldWindowHeight = Window.getHeight();
 		this.ginger3D.gingerRegister.masterRenderer.renderShadowMap(data.entities, data.lights.get(0));
-		if (this.world != null)
-			this.ginger3D.renderWorld(this, this.world);
+		if (this.world != null) this.ginger3D.renderWorld(this, this.world);
 		this.ginger3D.renderOverlays(this);
 		this.ginger3D.postRender();
 		this.dbgStats.w = binds;
@@ -174,18 +171,19 @@ public class Litecraft extends Game
 	public static Litecraft getInstance()
 	{ return INSTANCE; }
 
-	public void onPlayButtonClick()
+	public World getWorld()
+	{ return this.world; }
+
+	public LitecraftSave getSave()
 	{
-		if (world == null)
-		{
-			this.save = new LitecraftSave("cegregatedordinaldata", false);
-			this.world = this.save.getWorldOrCreate(Dimensions.OVERWORLD);
-			ginger3D.setGingerPlayer(this.world.player);
-		}
+		return save;
 	}
 
-	public World getWorld()
+	public void changeWorld(World world)
+	{ this.world = world; }
+
+	public void setSave(LitecraftSave save)
 	{
-		return this.world;
+		this.save = save;
 	}
 }

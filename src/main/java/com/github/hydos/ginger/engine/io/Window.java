@@ -11,11 +11,22 @@ import com.github.hydos.ginger.engine.render.texture.Image;
 
 public class Window
 {
+	public static int getWidth()
+	{ return width; }
+
+	public static void setWidth(int width)
+	{ Window.width = width; }
+
+	public static int getHeight()
+	{ return height; }
+
+	public static void setHeight(int height)
+	{ Window.height = height; }
+
 	public static boolean isFullscreen()
 	{ return fullscreen; }
 
-	public static int width;
-	public static int height;
+	private static int width, height;
 	private static String title;
 	public static long window;
 	private static Vector3f backgroundColour = new Vector3f(118f, 215f, 234f);
