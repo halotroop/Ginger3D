@@ -19,7 +19,7 @@ import it.unimi.dsi.fastutil.longs.*;
 
 public class World implements BlockAccess, WorldGenConstants
 {
-	final Long2ObjectMap<Chunk> chunks;
+	Long2ObjectMap<Chunk> chunks;
 	private final WorldModifier[] worldModifiers;
 	private final ChunkGenerator chunkGenerator;
 	private final BlockAccess genBlockAccess;

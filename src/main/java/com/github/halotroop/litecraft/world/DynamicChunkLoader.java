@@ -22,6 +22,8 @@ public class DynamicChunkLoader extends GingerThread{
 	
 	@Override
 	public void run() {
+		Long2ObjectMap<Chunk> chunks = world.chunks; //this is to seperate the lists so we dont create render bugs
+		
 		started = true;
 		List<Chunk> toKeep = new ArrayList<>();
 		// loop over rendered area, adding chunks that are needed
@@ -32,7 +34,7 @@ public class DynamicChunkLoader extends GingerThread{
 		// list of keys to remove
 		LongList toRemove = new LongArrayList();
 		// check which loaded chunks are not neccesary
-		this.world.chunks.forEach((pos, chunk) ->
+		chunks.forEach((pos, chunk) ->
 		{
 			if (!toKeep.contains(chunk))
 				toRemove.add((long) pos);
@@ -49,8 +51,9 @@ public class DynamicChunkLoader extends GingerThread{
 			boolean alreadyRendering = chunk.doRender(); // if it's already rendering then it's most likely in the map
 			chunk.setRender(true);
 			if (!alreadyRendering)
-				this.world.chunks.put(this.world.posHash(chunk.chunkX, chunk.chunkY, chunk.chunkZ), chunk);
+				chunks.put(this.world.posHash(chunk.chunkX, chunk.chunkY, chunk.chunkZ), chunk);
 		});
+		this.world.chunks = chunks;
 		this.finished = true;
 	}
 	

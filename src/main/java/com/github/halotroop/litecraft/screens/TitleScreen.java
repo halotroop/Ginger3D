@@ -39,7 +39,7 @@ public class TitleScreen extends Screen
 	public void tick()
 	{
 		Vector4i dbg = Litecraft.getInstance().dbgStats;
-		buildText.setText("FPS: " + dbg.x() + " UPS: " + dbg.y + " TPS: " + dbg.z + " Binds: " + dbg.w);
+		buildText.setText("FPS: " + dbg.x() + " UPS: " + dbg.y + " TPS: " + dbg.z + " World Chunk Threads: " + Litecraft.getInstance().threadWaitlist);
 		playButton.update();
 		if (playButton.isClicked())
 		{

@@ -2,6 +2,8 @@ package com.github.hydos.multiThreading;
 
 import java.util.*;
 
+import com.github.halotroop.litecraft.Litecraft;
+
 public class GingerThreading
 {
 	public List<GingerThread> worldChunkThreadWaitlist;
@@ -14,7 +16,7 @@ public class GingerThreading
 	
 	public void update() {
 		if(worldChunkThreadWaitlist.size() != 0) {
-			System.out.println(worldChunkThreadWaitlist.size());
+			Litecraft.getInstance().threadWaitlist = worldChunkThreadWaitlist.size();
 			GingerThread yes = worldChunkThreadWaitlist.get(0);
 			if(yes.finished) {
 				worldChunkThreadWaitlist.remove(0);

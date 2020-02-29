@@ -39,6 +39,7 @@ public class Litecraft extends Game
 	public int fps, ups, tps, binds;
 	public Vector4i dbgStats;
 	private long frameTimer;
+	public int threadWaitlist = 0;
 
 	public Litecraft()
 	{
@@ -150,7 +151,7 @@ public class Litecraft extends Game
 		if (ginger3D.gingerRegister.currentScreen == null)
 			this.ginger3D.openScreen(new TitleScreen());
 		this.ginger3D.update(data);
-		if (oldWindowHeight != Window.height || oldWindowWidth != Window.width)
+		if (oldWindowHeight != Window.height || oldWindowWidth != Window.width && Window.height > 10 && Window.width > 10)
 			this.ginger3D.contrastFbo.resizeFBOs();
 		this.oldWindowWidth = Window.width;
 		this.oldWindowHeight = Window.height;
@@ -178,7 +179,7 @@ public class Litecraft extends Game
 	{
 		if (world == null)
 		{
-			this.save = new LitecraftSave("test", false);
+			this.save = new LitecraftSave("cegregatedordinaldata", false);
 			this.world = this.save.getWorldOrCreate(Dimensions.OVERWORLD);
 			ginger3D.setGingerPlayer(this.world.player);
 		}
