@@ -17,7 +17,7 @@ public class DynamicChunkLoader extends GingerThread{
 		this.chunkY = chunkY;
 		this.chunkZ = chunkZ;
 		this.world = world;
-		this.setName("DynamicChunk thread");
+		this.setName("Dynamic Chunk thread");
 	}
 	
 	@Override

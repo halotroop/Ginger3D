@@ -119,6 +119,7 @@ public class Ginger
 
 	public void startGame()
 	{
+		threading.start();
 		while (!Window.closed())
 		{
 			Litecraft.getInstance().ups++;
@@ -133,7 +134,6 @@ public class Ginger
 
 	public void update(GameData data)
 	{
-		threading.update();
 		data.camera.move();
 		GingerUtils.update();
 		picker.update();
