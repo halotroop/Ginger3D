@@ -32,14 +32,16 @@ public class IngameHUD extends Screen
 	public void tick()
 	{
 		Vector4i dbg = litecraft.dbgStats;
+		Vector3f position = GingerRegister.getInstance().game.data.player.getPosition();
 		debugText.setText("FPS: " + dbg.x() + " UPS: " + dbg.y + " TPS: " + dbg.z);
-		positionText.setText("Position " + GingerRegister.getInstance().game.data.player.getPosition().toString());
+		positionText.setText("Position " + (int) position.x() + ", " + (int) position.y() + ", "+ (int) position.z());
 	}
 
 	@Override
 	public void close()
 	{
-		
+		debugText.remove();
+		positionText.remove();
 	}
 	
 }

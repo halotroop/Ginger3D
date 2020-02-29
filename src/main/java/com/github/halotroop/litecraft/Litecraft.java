@@ -175,15 +175,11 @@ public class Litecraft extends Game
 	{ return this.world; }
 
 	public LitecraftSave getSave()
-	{
-		return save;
-	}
+	{ return save; }
 
 	public void changeWorld(World world)
 	{ this.world = world; }
 
 	public void setSave(LitecraftSave save)
-	{
-		this.save = save;
-	}
+	{ this.save = save; }
 }
