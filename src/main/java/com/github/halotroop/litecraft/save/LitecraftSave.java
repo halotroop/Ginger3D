@@ -151,5 +151,5 @@ public final class LitecraftSave
 	}
 
 	private static final String SAVE_DIR = "./saves/";
-	private static final int RENDER_SIZE = 8;
+	private static final int RENDER_SIZE = 10;
 }
