@@ -10,7 +10,7 @@ public class GingerThreading extends Thread
 	public List<GingerThread> worldChunkThreadWaitlist;
 
 	public GingerThreading()
-	{ worldChunkThreadWaitlist = new ArrayList<GingerThread>(); }
+	{ worldChunkThreadWaitlist = new ArrayList<>(); }
 
 	public void registerChunkThreadToWaitlist(GingerThread thread)
 	{ worldChunkThreadWaitlist.add(thread); }

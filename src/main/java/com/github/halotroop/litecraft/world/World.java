@@ -1,6 +1,10 @@
 package com.github.halotroop.litecraft.world;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.LongConsumer;
 
 import org.joml.Vector3f;
@@ -11,7 +15,6 @@ import com.github.halotroop.litecraft.world.block.BlockRenderer;
 import com.github.halotroop.litecraft.world.dimension.Dimension;
 import com.github.halotroop.litecraft.world.gen.*;
 import com.github.halotroop.litecraft.world.gen.modifier.WorldModifier;
-import com.github.hydos.ginger.engine.api.Ginger;
 import com.github.hydos.ginger.engine.elements.objects.Player;
 import com.github.hydos.ginger.engine.obj.ModelLoader;
 import com.github.hydos.ginger.engine.render.models.TexturedModel;
@@ -52,7 +55,9 @@ public class World implements BlockAccess, WorldGenConstants
 		this.renderBound = renderSize / 2;
 		this.renderBoundVertical = this.renderBound / 2;
 		if (this.renderBoundVertical < 2)
+		{
 			this.renderBoundVertical = 2;
+		}
 	}
 
 	public int findAir(int x, int z)
@@ -130,9 +135,12 @@ public class World implements BlockAccess, WorldGenConstants
 		// If the chunk is not in memory, it does not need to be unloaded
 		if (chunk == null) return false;
 		// Otherwise save the chunk
-		boolean result = this.save.saveChunk(chunk);
-		this.chunks.remove(posHash);
-		return result;
+		AtomicBoolean result = new AtomicBoolean(false);
+		CompletableFuture.runAsync(() -> {
+			result.set(this.save.saveChunk(chunk));
+			this.chunks.remove(posHash);
+		});
+		return result.get();
 	}
 
 	void populateChunk(Chunk chunk)
@@ -195,7 +203,43 @@ public class World implements BlockAccess, WorldGenConstants
 
 	public void updateLoadedChunks(int chunkX, int chunkY, int chunkZ)
 	{
-		Ginger.getInstance().threading.registerChunkThreadToWaitlist(new DynamicChunkLoader(chunkX, chunkY, chunkZ, this));
+		//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+		//Ginger.getInstance().threading.registerChunkThreadToWaitlist(new DynamicChunkLoader(chunkX, chunkY, chunkZ, this));
+
+		Long2ObjectMap<Chunk> chunksList = this.chunks;
+
+		//FIXME completable futures
+
+		List<Chunk> toKeep = new ArrayList<>();
+		// loop over rendered area, adding chunks that are needed
+		for (int x = chunkX - this.renderBound; x < chunkX + this.renderBound; x++)
+			for (int z = chunkZ - this.renderBound; z < chunkZ + this.renderBound; z++)
+				for (int y = chunkY - this.renderBound; y < chunkY + this.renderBound; y++)
+					toKeep.add(this.getChunkToLoad(x, y, z));
+
+		LongList toRemove = new LongArrayList();
+		// check which loaded chunks are not neccesary
+		chunksList.forEach((pos, chunk) ->
+		{
+			if (!toKeep.contains(chunk))
+				toRemove.add((long) pos);
+		});
+		// unload unneccesary chunks from chunk array
+		toRemove.forEach((LongConsumer) this::unloadChunk);
+
+		toKeep.forEach(chunk -> {
+			if (!chunk.isFullyGenerated())
+			{
+				this.populateChunk(chunk);
+				chunk.setFullyGenerated(true);
+			}
+			boolean alreadyRendering = chunk.doRender(); // if it's already rendering then it's most likely in the map
+			chunk.setRender(true);
+			if (!alreadyRendering)
+				chunksList.put(this.posHash(chunk.chunkX, chunk.chunkY, chunk.chunkZ), chunk);
+		});
+		this.chunks = chunksList;
+
 	}
 
 	private static final class GenerationWorld implements BlockAccess, WorldGenConstants

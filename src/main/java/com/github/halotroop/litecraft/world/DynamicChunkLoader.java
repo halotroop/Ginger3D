@@ -9,7 +9,8 @@ import it.unimi.dsi.fastutil.longs.*;
 
 public class DynamicChunkLoader extends GingerThread
 {
-	
+
+    private static int instances = 0;
 	public int chunkX, chunkY, chunkZ;
 	public World world;
 	
@@ -20,6 +21,8 @@ public class DynamicChunkLoader extends GingerThread
 		this.chunkZ = chunkZ;
 		this.world = world;
 		this.setName("Dynamic Chunk thread");
+        instances++;
+        System.out.println("allocations of dynamic chunk loader: " + instances);
 	}
 	
 	@Override
