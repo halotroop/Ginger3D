@@ -1,11 +1,11 @@
-package com.github.halotroop.litecraft.world.gen;
+package com.github.halotroop.litecraft.world.gen.modifier;
 
 import java.util.Random;
 
-import com.github.halotroop.litecraft.types.block.Blocks;
+import com.github.halotroop.litecraft.types.block.*;
 import com.github.halotroop.litecraft.util.noise.OctaveSimplexNoise;
 import com.github.halotroop.litecraft.world.BlockAccess;
-import com.github.halotroop.litecraft.world.gen.modifier.WorldModifier;
+import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 
 public class CavesModifier implements WorldModifier, WorldGenConstants
 {
@@ -16,7 +16,7 @@ public class CavesModifier implements WorldModifier, WorldGenConstants
 	public void initialize(long seed)
 	{
 		Random rand = new Random(seed);
-		this.caveNoise = new OctaveSimplexNoise(rand, 1, 45.0, 1.0, 1.0);
+		this.caveNoise = new OctaveSimplexNoise(rand, 2, 65.0, 1.0, 1.0);
 	}
 
 	@Override
@@ -36,8 +36,8 @@ public class CavesModifier implements WorldModifier, WorldGenConstants
 				{
 					int scOffsetY = subChunkY << 2; // sub chunk offset y
 					int scTotalY = scOffsetY + chunkStartY;
-					double scSampleY = (double) scTotalY * 2.0;
-					double scUpperYOffset = 4.0 * 2.0;
+					double scSampleY = (double) scTotalY * 1.5; // squish caves along y axis a bit
+					double scUpperYOffset = 4.0 * 1.5;
 					// calculate noise at each corner of the cube [lower|upper][south|north][west|east]
 					double noiseLSW = this.caveNoise.sample(scTotalX, scSampleY, scTotalZ); // base = lower south west
 					double noiseUSW = this.caveNoise.sample(scTotalX, scSampleY + scUpperYOffset, scTotalZ);
@@ -81,14 +81,11 @@ public class CavesModifier implements WorldModifier, WorldGenConstants
 							{
 								int totalX = subX + scTotalX;
 								// calculate whether to replace block with air
-								// if the noise is within the threshold for caves
-								if (-THRESHOLD < lerpNoise && lerpNoise < THRESHOLD)
+								// if the noise is within the threshold for that block for caves
+								float threshold = world.getBlock(totalX, totalY, totalZ).getCaveCarveThreshold();
+								if (-threshold < lerpNoise && lerpNoise < threshold)
 								{
-									// if the cave can carve into the block
-									if (world.getBlock(totalX, totalY, totalZ).canCaveCarve())
-									{
-										world.setBlock(totalX, totalY, totalZ, Blocks.AIR);
-									}
+									world.setBlock(totalX, totalY, totalZ, Blocks.AIR);
 								}
 								// add progress to the noise
 								lerpNoise += lerpProg;
