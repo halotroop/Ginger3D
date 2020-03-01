@@ -1,9 +1,14 @@
 package com.github.halotroop.litecraft.types.block;
 
+import java.util.*;
+
 import com.github.halotroop.litecraft.types.block.Block.Properties;
 
 public final class Blocks
 {
+	
+	public static List<Block> blocks = new ArrayList<Block>();
+	
 	public static final Block AIR = new Block(new Properties("air").visible(false).fullCube(false));
 	public static final Block GRASS = new Block(new Properties("block/cubes/soil/grass/grass_top.png").caveCarveThreshold(0.04f));
 	public static final Block DIRT = new Block("block/cubes/soil/dirt.png", new Properties("dirt").caveCarveThreshold(0.04f));

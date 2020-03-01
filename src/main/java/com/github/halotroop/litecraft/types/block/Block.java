@@ -64,6 +64,7 @@ public class Block
 		this.identifier = properties.identifier;
 		this.caveCarveThreshold = properties.caveCarveThreshold;
 		IDENTIFIER_TO_BLOCK.put(this.identifier, this);
+		Blocks.blocks.add(this);
 	}
 
 	public static final Block getBlock(String identifier)

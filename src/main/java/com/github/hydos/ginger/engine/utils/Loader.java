@@ -6,6 +6,7 @@ import java.util.*;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 
+import com.github.halotroop.litecraft.types.block.*;
 import com.github.hydos.ginger.engine.io.Window;
 import com.github.hydos.ginger.engine.render.models.RawModel;
 import com.github.hydos.ginger.engine.render.texture.*;
@@ -104,7 +105,15 @@ public class Loader
 
 	public static int loadTexture(String path)
 	{ return loadTextureDirectly("/textures/" + path); }
-
+	
+	public int createBlockAtlas()
+	{
+		for(Block block: Blocks.blocks) {
+			
+		}
+		return 0;
+	}
+	
 	public static int loadTextureDirectly(String path)
 	{
 		int textureID = GL11.glGenTextures();
