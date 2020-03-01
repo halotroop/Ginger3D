@@ -11,7 +11,7 @@ public class Block
 	{ // add properties to this builder!
 		private boolean visible = true;
 		private boolean fullCube = true;
-		private boolean canCaveCarve = false;
+		private boolean canCaveCarve = true;
 		private final String identifier;
 
 		public Properties(String identifier)
@@ -29,9 +29,9 @@ public class Block
 			return this;
 		}
 
-		public Properties canCaveCarve(boolean canCaveCarve)
+		public Properties cannotCarveCave()
 		{
-			this.canCaveCarve = canCaveCarve;
+			this.canCaveCarve = false;
 			return this;
 		}
 	}
