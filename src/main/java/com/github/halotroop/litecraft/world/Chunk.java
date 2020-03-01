@@ -1,10 +1,11 @@
 package com.github.halotroop.litecraft.world;
 
+import java.util.Arrays;
 import java.util.function.ToIntFunction;
 
 import org.joml.Vector3f;
 
-import com.github.halotroop.litecraft.logic.DataStorage;
+import com.github.halotroop.litecraft.logic.SODSerializable;
 import com.github.halotroop.litecraft.types.block.*;
 import com.github.halotroop.litecraft.world.block.BlockRenderer;
 import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
@@ -13,9 +14,9 @@ import it.unimi.dsi.fastutil.ints.*;
 import it.unimi.dsi.fastutil.objects.*;
 import tk.valoeghese.sod.*;
 
-public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
+public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable
 {
-	/*
+	/**
 	 * @param	x in-chunk x coordinate.
 	 * @param	y in-chunk y coordinate.
 	 * @param	z in-chunk z coordinate.
@@ -32,9 +33,10 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 	private boolean fullyGenerated = false;
 	public final int dimension;
 	private boolean dirty = true;
-	private BlockInstance[] renderedBlocks;
+	private World world;
+	private BlockInstance[] renderedBlocks = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 
-	public Chunk(int chunkX, int chunkY, int chunkZ, int dimension)
+	public Chunk(World world, int chunkX, int chunkY, int chunkZ, int dimension)
 	{
 		this.chunkX = chunkX;
 		this.chunkY = chunkY;
@@ -43,6 +45,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		this.chunkStartY = chunkY << POS_SHIFT;
 		this.chunkStartZ = chunkZ << POS_SHIFT;
 		this.dimension = dimension;
+		this.world = world;
 	}
 
 	public boolean doRender()
@@ -55,14 +58,14 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 	public Block getBlock(int x, int y, int z)
 	{
 		if (x > CHUNK_SIZE || y > CHUNK_SIZE || z > CHUNK_SIZE || x < 0 || y < 0 || z < 0)
-		{ throw new RuntimeException("Block [" + x + ", " + y + ", " + z + ", " + "] out of chunk bounds!"); }
+		{ throw new RuntimeException("Block [" + x + ", " + y + ", " + z + "] out of chunk bounds!"); }
 		return blocks[index(x, y, z)];
 	}
 
 	public BlockInstance getBlockInstance(int x, int y, int z)
 	{
 		if (x > CHUNK_SIZE || y > CHUNK_SIZE || z > CHUNK_SIZE || x < 0 || y < 0 || z < 0)
-		{ throw new RuntimeException("Block [" + x + ", " + y + ", " + z + ", " + "] out of chunk bounds!"); }
+		{ throw new RuntimeException("Block [" + x + ", " + y + ", " + z + "] out of chunk bounds!"); }
 		return this.blockEntities[index(x, y, z)];
 	}
 
@@ -72,12 +75,13 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		{
 			if (dirty)
 				dirty = false;
-				renderedBlocks = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
+				Arrays.fill(renderedBlocks, null);
 				for (int x = 0; x < CHUNK_SIZE; x++)
 					for (int y = 0; y < CHUNK_SIZE; y++)
 						for (int z = 0; z < CHUNK_SIZE; z++)
 						{
 							BlockInstance block = getBlockInstance(x, y, z);
+
 							if (x == 0 || x == CHUNK_SIZE - 1 || z == 0 || z == CHUNK_SIZE - 1 || y == 0 || y == CHUNK_SIZE - 1)
 							{
 								renderedBlocks[index(x, y, z)] = block;
@@ -88,19 +92,21 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 								if (getBlockInstance(x - 1, y, z).getModel() == null || getBlockInstance(x + 1, y, z).getModel() == null ||
 								getBlockInstance(x, y - 1, z).getModel() == null || getBlockInstance(x, y + 1, z).getModel() == null ||
 								getBlockInstance(x, y, z - 1).getModel() == null || getBlockInstance(x, y, z + 1).getModel() == null)
+								{
 									renderedBlocks[index(x, y, z)] = block;
+								}
 							}
 							catch (NullPointerException e)
 							{ // this seems to be a hotspot for errors
 								e.printStackTrace(); // so I can add a debug breakpoint on this line
-								throw e;
+								throw e; // e
 							}
 						}
 			blockRenderer.render(renderedBlocks);
 		}
 	}
 
-	/*
+	/**
 	 * Change the block in this exact position
 	 * @param x, y, z	The coordinate position of block to overwrite
 	 * @param block		The block to place there
@@ -122,7 +128,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, DataStorage
 		dirty = true;
 	}
 
-	/*
+	/**
 	 * Set whether or not the chunk should render
 	 */
 	public void setRender(boolean render)

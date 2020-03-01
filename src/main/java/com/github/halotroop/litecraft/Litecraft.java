@@ -64,7 +64,7 @@ public class Litecraft extends Game
 		System.exit(0);
 	}
 
-	/*
+	/**
 	 * Things that ARE rendering: Anything that results in something being drawn to the frame buffer
 	 * Things that are NOT rendering: Things that happen to update between frames but do not result in things being drawn to the screen
 	 */
@@ -80,7 +80,7 @@ public class Litecraft extends Game
 			this.tps = 0;
 			this.frameTimer += 1000;
 		}
-		/*
+		/**
 		 * And now, the actual rendering:
 		 */
 		// Render shadows
@@ -153,7 +153,7 @@ public class Litecraft extends Game
 		MouseCallbackHandler.trackWindow(Window.getWindow());
 	}
 
-	/*
+	/**
 	 * Things that should be ticked: Entities when deciding an action, in-game timers (such as smelting), the in-game time
 	 * Things that should not be ticked: Rendering, input, player movement
 	 */ 

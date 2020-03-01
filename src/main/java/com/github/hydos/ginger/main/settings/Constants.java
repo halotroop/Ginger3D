@@ -8,5 +8,5 @@ public class Constants
 	public static Vector3f gravity = new Vector3f(0, 0, 0);
 	public static float jumpPower = 0;
 	public static float turnSpeed = 0;
-	public static double movementSpeed = 1;
+	public static double movementSpeed = 2;
 }

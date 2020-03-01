@@ -1,6 +1,6 @@
 package com.github.hydos.ginger.engine.api;
 
-/*
+/**
  * make your own resource manager if you want!
  */
 public abstract class ResourceManager

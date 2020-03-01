@@ -57,7 +57,7 @@ public final class LitecraftSave
 		}
 	}
 
-	public Chunk readChunk(int chunkX, int chunkY, int chunkZ, int dimension)
+	public Chunk readChunk(World world, int chunkX, int chunkY, int chunkZ, int dimension)
 	{
 		// format: <save dir>/<dim>/<chunkX>/<chunkZ>/<chunkY>.sod
 		File chunkFile = new File(new StringBuilder(this.file.getPath())
@@ -68,7 +68,7 @@ public final class LitecraftSave
 		if (chunkFile.isFile())
 		{
 			BinaryData data = BinaryData.read(chunkFile);
-			Chunk result = new Chunk(chunkX, chunkY, chunkZ, dimension); // create chunk
+			Chunk result = new Chunk(world, chunkX, chunkY, chunkZ, dimension); // create chunk
 			result.read(data); // load the chunk data we have just read into the chunk
 			return result;
 		}

@@ -2,7 +2,7 @@ package com.github.halotroop.litecraft.logic;
 
 import tk.valoeghese.sod.BinaryData;
 
-public interface DataStorage
+public interface SODSerializable
 {
 	void read(BinaryData data);
 

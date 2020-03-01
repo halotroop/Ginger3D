@@ -98,8 +98,8 @@ public class World implements BlockAccess, WorldGenConstants
 	{
 		Chunk chunk = this.chunks.computeIfAbsent(posHash(chunkX, chunkY, chunkZ), pos ->
 		{
-			Chunk readChunk = save.readChunk(chunkX, chunkY, chunkZ, this.dimension);
-			return readChunk == null ? this.chunkGenerator.generateChunk(chunkX, chunkY, chunkZ) : readChunk;
+			Chunk readChunk = save.readChunk(this, chunkX, chunkY, chunkZ, this.dimension);
+			return readChunk == null ? this.chunkGenerator.generateChunk(this, chunkX, chunkY, chunkZ) : readChunk;
 		});
 		if (chunk.isFullyGenerated()) return chunk;
 		this.populateChunk(chunkX, chunkY, chunkZ, chunk.chunkStartX, chunk.chunkStartY, chunk.chunkStartZ);
@@ -114,9 +114,9 @@ public class World implements BlockAccess, WorldGenConstants
 		if (result != null)
 			return result;
 		// try read a chunk from memory
-		result = save.readChunk(chunkX, chunkY, chunkZ, this.dimension);
+		result = save.readChunk(this, chunkX, chunkY, chunkZ, this.dimension);
 		// if neither of those work, generate the chunk
-		return result == null ? this.chunkGenerator.generateChunk(chunkX, chunkY, chunkZ) : result;
+		return result == null ? this.chunkGenerator.generateChunk(this, chunkX, chunkY, chunkZ) : result;
 	}
 
 	/** @return whether the chunk was unloaded without errors. Will often, but not always, be equal to whether the chunk was already in memory. */
@@ -145,7 +145,7 @@ public class World implements BlockAccess, WorldGenConstants
 
 	/** @return a chunk that has not neccesarily gone through chunk populating. Used in chunk populating to prevent infinite recursion. */
 	Chunk getGenChunk(int chunkX, int chunkY, int chunkZ)
-	{ return this.chunks.computeIfAbsent(posHash(chunkX, chunkY, chunkZ), pos -> this.chunkGenerator.generateChunk(chunkX, chunkY, chunkZ)); }
+	{ return this.chunks.computeIfAbsent(posHash(chunkX, chunkY, chunkZ), pos -> this.chunkGenerator.generateChunk(this, chunkX, chunkY, chunkZ)); }
 
 	long posHash(int chunkX, int chunkY, int chunkZ)
 	{ return ((long) chunkX & 0x3FF) | (((long) chunkY & 0x3FF) << 10) | (((long) chunkZ & 0x3FF) << 20); }
