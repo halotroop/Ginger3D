@@ -15,7 +15,7 @@ public class CavesModifier implements WorldModifier, WorldGenConstants
 	public void initialize(long seed)
 	{
 		Random rand = new Random(seed);
-		this.caveNoise = new OctaveSimplexNoise(rand, 1, 45.0, 1.0, 1.0);
+		this.caveNoise = new OctaveSimplexNoise(rand, 1, 43.0, 1.0, 1.0);
 	}
 
 	@Override
