@@ -135,16 +135,13 @@ public class Litecraft extends Game
 		Input.addPressCallback(Keybind.EXIT, this::exit);
 		Input.addInitialPressCallback(Keybind.FULLSCREEN, Window::fullscreen);
 		Input.addInitialPressCallback(Keybind.WIREFRAME, GingerRegister.getInstance()::toggleWireframe);
-		Input.addPressCallback(Keybind.MOVE_FORWARD, () -> this.movePlayer(RelativeDirection.FORWARD));
-		Input.addPressCallback(Keybind.MOVE_BACKWARD, () -> this.movePlayer(RelativeDirection.BACKWARD));
-		Input.addPressCallback(Keybind.STRAFE_LEFT, () -> this.movePlayer(RelativeDirection.LEFT));
-		Input.addPressCallback(Keybind.STRAFE_RIGHT, () -> this.movePlayer(RelativeDirection.RIGHT));
-		Input.addPressCallback(Keybind.FLY_UP, () -> this.movePlayer(RelativeDirection.UP));
-		Input.addPressCallback(Keybind.FLY_DOWN, () -> this.movePlayer(RelativeDirection.DOWN));
+		Input.addPressCallback(Keybind.MOVE_FORWARD, () -> this.player.move(RelativeDirection.FORWARD));
+		Input.addPressCallback(Keybind.MOVE_BACKWARD, () -> this.player.move(RelativeDirection.BACKWARD));
+		Input.addPressCallback(Keybind.STRAFE_LEFT, () -> this.player.move(RelativeDirection.LEFT));
+		Input.addPressCallback(Keybind.STRAFE_RIGHT, () -> this.player.move(RelativeDirection.RIGHT));
+		Input.addPressCallback(Keybind.FLY_UP, () -> this.player.move(RelativeDirection.UP));
+		Input.addPressCallback(Keybind.FLY_DOWN, () -> this.player.move(RelativeDirection.DOWN));
 	}
-
-	private void movePlayer(RelativeDirection direction)
-	{ this.player.move(direction); }
 	
 	private void setupWindow()
 	{
