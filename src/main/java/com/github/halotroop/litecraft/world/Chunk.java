@@ -1,6 +1,8 @@
 package com.github.halotroop.litecraft.world;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.ToIntFunction;
 
 import org.joml.Vector3f;
@@ -20,13 +22,13 @@ public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable
 	 * @param	x in-chunk x coordinate.
 	 * @param	y in-chunk y coordinate.
 	 * @param	z in-chunk z coordinate.
-	 * @return	creates a long that represents a coordinate, for use as a key in the array.
+	 * @return	creates a long that represents a coordinate, for use as a key in arrays.
 	 */
 	public static int index(int x, int y, int z)
 	{ return (x & MAX_POS) | ((y & MAX_POS) << POS_SHIFT) | ((z & MAX_POS) << DOUBLE_SHIFT); }
 
 	private final Block[] blocks = new Block[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
-	private BlockInstance[] blockEntities = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
+	private BlockInstance[] blockInstances = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 	private boolean shouldRender = false;
 	public final int chunkX, chunkY, chunkZ;
 	public final int chunkStartX, chunkStartY, chunkStartZ;
@@ -34,6 +36,10 @@ public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable
 	public final int dimension;
 	private boolean dirty = true;
 	private World world;
+	/**
+	 * A holder for the rendered blocks in this chunk. This array is *NOT* safe to use for getting BIs at a position!
+	 * It can vary in size from 0 to 512 elements long and must only be read linearly.
+	 */
 	private BlockInstance[] renderedBlocks = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 
 	public Chunk(World world, int chunkX, int chunkY, int chunkZ, int dimension)
@@ -66,7 +72,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable
 	{
 		if (x > CHUNK_SIZE || y > CHUNK_SIZE || z > CHUNK_SIZE || x < 0 || y < 0 || z < 0)
 		{ throw new RuntimeException("BlockInstance [" + x + ", " + y + ", " + z + "] out of chunk bounds!"); }
-		return this.blockEntities[index(x, y, z)];
+		return this.blockInstances[index(x, y, z)];
 	}
 
 	public void render(BlockRenderer blockRenderer)
@@ -74,7 +80,9 @@ public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable
 		if (shouldRender)
 		{
 			if (dirty)
+			{
 				dirty = false;
+				List<BlockInstance> tempList = new ArrayList<>();
 				Arrays.fill(renderedBlocks, null);
 				for (int x = 0; x < CHUNK_SIZE; x++)
 					for (int y = 0; y < CHUNK_SIZE; y++)
@@ -85,26 +93,28 @@ public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable
 							// Check for chunk edges to avoid errors when get the neighboring blocks, TODO fix this
 							if (x == 0 || x == CHUNK_SIZE - 1 || z == 0 || z == CHUNK_SIZE - 1 || y == 0 || y == CHUNK_SIZE - 1)
 							{
-								renderedBlocks[index(x, y, z)] = block;
+								tempList.add(block);
 								continue;
 							}
 
 							// Check for air. Yes this is stupid, TODO fix this too
-							try {
+							try
+							{
 								if (getBlockInstance(x - 1, y, z).getModel() == null || getBlockInstance(x + 1, y, z).getModel() == null ||
 										getBlockInstance(x, y - 1, z).getModel() == null || getBlockInstance(x, y + 1, z).getModel() == null ||
 										getBlockInstance(x, y, z - 1).getModel() == null || getBlockInstance(x, y, z + 1).getModel() == null)
 								{
-									renderedBlocks[index(x, y, z)] = block;
+									tempList.add(block);
 								}
-							}
-							catch (NullPointerException e)
+							} catch (NullPointerException e)
 							{ // this seems to be a hotspot for errors
 								e.printStackTrace(); // so I can add a debug breakpoint on this line
 								throw e; // e
 							}
 
 						}
+				renderedBlocks = tempList.toArray(BlockInstance[]::new);
+			}
 
 			blockRenderer.prepareRender();
 			blockRenderer.render(renderedBlocks);
@@ -129,7 +139,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable
 		else if (z < 0) z = 0;
 		//
 		this.blocks[index(x, y, z)] = block;
-		if (this.shouldRender) this.blockEntities[index(x, y, z)] =
+		if (this.shouldRender) this.blockInstances[index(x, y, z)] =
 			new BlockInstance(block, new Vector3f(this.chunkStartX + x, this.chunkStartY + y, this.chunkStartZ + z));
 		dirty = true;
 	}
@@ -146,7 +156,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable
 					{
 						Block block = this.blocks[index(x, y, z)];
 
-						this.blockEntities[index(x, y, z)] = new BlockInstance(block,
+						this.blockInstances[index(x, y, z)] = new BlockInstance(block,
 							new Vector3f(
 								this.chunkStartX + x,
 								this.chunkStartY + y,
@@ -155,7 +165,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable
 		else if (!render && this.shouldRender) // else if it has been changed to false.
 			// we need to check both variables because there are two cases that make
 			// the if statement fall to here
-			blockEntities = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
+			blockInstances = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 		this.shouldRender = render;
 		dirty = true;
 	}

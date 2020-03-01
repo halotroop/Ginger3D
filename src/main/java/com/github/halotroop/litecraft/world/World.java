@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.LongConsumer;
 
@@ -30,6 +31,7 @@ public class World implements BlockAccess, WorldGenConstants
 	private final LitecraftSave save;
 	private final long seed;
 	private final int dimension;
+	private final ForkJoinPool threadPool;
 	public Player player;
 	int renderBound;
 	int renderBoundVertical;
@@ -37,6 +39,7 @@ public class World implements BlockAccess, WorldGenConstants
 	private final BlockInstance dummy;
 	public World(long seed, int renderSize, Dimension<?> dim, LitecraftSave save)
 	{
+		this.threadPool = new ForkJoinPool(4, ForkJoinPool.defaultForkJoinWorkerThreadFactory, null, true);
 		this.updateLoadedChunks(0, 0, 0);
 		this.dummy = new BlockInstance(Blocks.ANDESITE, new Vector3f(0, 0, 0));
 		this.dummy.setVisible(false);
@@ -140,7 +143,7 @@ public class World implements BlockAccess, WorldGenConstants
 		{
 			result.set(this.save.saveChunk(chunk));
 			this.chunks.remove(posHash);
-		});
+		}, threadPool);
 		return result.get();
 	}
 
@@ -195,16 +198,20 @@ public class World implements BlockAccess, WorldGenConstants
 	public void unloadAllChunks()
 	{
 		LongList chunkPositions = new LongArrayList();
-		CompletableFuture.runAsync(() ->
+		List<CompletableFuture> futures = new ArrayList<>();
+		if (this.chunks != null)
 		{
-			if (this.chunks != null)
-				this.chunks.forEach((pos, chunk) ->
-				{ // for every chunk in memory
+			this.chunks.forEach((pos, chunk) ->
+			{ // for every chunk in memory
+				futures.add(CompletableFuture.runAsync(() ->
+				{
 					chunkPositions.add((long) pos); // add pos to chunk positions list for removal later
 					this.save.saveChunk(chunk); // save chunk
-				});
-			chunkPositions.forEach((LongConsumer) (pos -> this.chunks.remove(pos))); // remove all chunks
-		}).join();
+				}, threadPool));
+			});
+		}
+		futures.forEach(CompletableFuture::join);
+		chunkPositions.forEach((LongConsumer) (pos -> this.chunks.remove(pos))); // remove all chunks
 	}
 
 	public long getSeed()
@@ -245,7 +252,7 @@ public class World implements BlockAccess, WorldGenConstants
 				if (!alreadyRendering)
 					chunks.put(this.posHash(chunk.chunkX, chunk.chunkY, chunk.chunkZ), chunk);
 			});
-		});
+		}, threadPool);
 	}
 
 	private static final class GenerationWorld implements BlockAccess, WorldGenConstants
