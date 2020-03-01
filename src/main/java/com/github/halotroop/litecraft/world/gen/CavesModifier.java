@@ -15,7 +15,7 @@ public class CavesModifier implements WorldModifier, WorldGenConstants
 	public void initialize(long seed)
 	{
 		Random rand = new Random(seed);
-		this.caveNoise = new OctaveSimplexNoise(rand, 1, 43.0, 1.0, 1.0);
+		this.caveNoise = new OctaveSimplexNoise(rand, 2, 65.0, 1.0, 1.0);
 	}
 
 	@Override
@@ -35,8 +35,8 @@ public class CavesModifier implements WorldModifier, WorldGenConstants
 				{
 					int scOffsetY = subChunkY << 2; // sub chunk offset y
 					int scTotalY = scOffsetY + chunkStartY;
-					double scSampleY = (double) scTotalY * 2.0;
-					double scUpperYOffset = 4.0 * 2.0;
+					double scSampleY = (double) scTotalY * 1.5; // squish caves along y axis a bit
+					double scUpperYOffset = 4.0 * 1.5;
 					// calculate noise at each corner of the cube [lower|upper][south|north][west|east]
 					double noiseLSW = this.caveNoise.sample(scTotalX, scSampleY, scTotalZ); // base = lower south west
 					double noiseUSW = this.caveNoise.sample(scTotalX, scSampleY + scUpperYOffset, scTotalZ);
