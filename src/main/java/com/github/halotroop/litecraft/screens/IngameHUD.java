@@ -31,10 +31,14 @@ public class IngameHUD extends Screen
 	@Override
 	public void tick()
 	{
+//		long maxMemory = Runtime.getRuntime().maxMemory();
+		long totalMemory = Runtime.getRuntime().totalMemory();
+		long freeMemory = Runtime.getRuntime().freeMemory();
+		long usedMemory = totalMemory - freeMemory;
 		Vector4i dbg = litecraft.dbgStats;
 		Vector3f position = GingerRegister.getInstance().game.data.player.getPosition();
-		debugText.setText("FPS: " + dbg.x() + " UPS: " + dbg.y + " TPS: " + dbg.z);
-		positionText.setText("Position " + (int) position.x() + ", " + (int) position.y() + ", "+ (int) position.z());
+		debugText.setText("FPS: " + dbg.x() + " UPS: " + dbg.y + " TPS: " + dbg.z + " Mem: " + (usedMemory / 1024 / 1024) + "MB / " + (totalMemory / 1024 / 1024) + " MB");
+		positionText.setText("Position " + (int) position.x() + ", " + (int) position.y() + ", "+ (int) position.z() );
 	}
 
 	@Override

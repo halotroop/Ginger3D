@@ -197,7 +197,7 @@ public class World implements BlockAccess, WorldGenConstants
 					this.save.saveChunk(chunk); // save chunk
 				});
 			chunkPositions.forEach((LongConsumer) (pos -> this.chunks.remove(pos))); // remove all chunks
-		});
+		}).join();
 	}
 
 	public long getSeed()
