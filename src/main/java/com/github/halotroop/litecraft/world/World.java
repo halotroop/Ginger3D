@@ -136,7 +136,8 @@ public class World implements BlockAccess, WorldGenConstants
 		if (chunk == null) return false;
 		// Otherwise save the chunk
 		AtomicBoolean result = new AtomicBoolean(false);
-		CompletableFuture.runAsync(() -> {
+		CompletableFuture.runAsync(() ->
+		{
 			result.set(this.save.saveChunk(chunk));
 			this.chunks.remove(posHash);
 		});
@@ -187,13 +188,16 @@ public class World implements BlockAccess, WorldGenConstants
 	public void unloadAllChunks()
 	{
 		LongList chunkPositions = new LongArrayList();
-		if (this.chunks != null)
-			this.chunks.forEach((pos, chunk) ->
-			{ // for every chunk in memory
-				chunkPositions.add((long) pos); // add pos to chunk positions list for removal later
-				this.save.saveChunk(chunk); // save chunk
-			});
-		chunkPositions.forEach((LongConsumer) (pos -> this.chunks.remove(pos))); // remove all chunks
+		CompletableFuture.runAsync(() ->
+		{
+			if (this.chunks != null)
+				this.chunks.forEach((pos, chunk) ->
+				{ // for every chunk in memory
+					chunkPositions.add((long) pos); // add pos to chunk positions list for removal later
+					this.save.saveChunk(chunk); // save chunk
+				});
+			chunkPositions.forEach((LongConsumer) (pos -> this.chunks.remove(pos))); // remove all chunks
+		});
 	}
 
 	public long getSeed()
@@ -203,43 +207,38 @@ public class World implements BlockAccess, WorldGenConstants
 
 	public void updateLoadedChunks(int chunkX, int chunkY, int chunkZ)
 	{
-		//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-		//Ginger.getInstance().threading.registerChunkThreadToWaitlist(new DynamicChunkLoader(chunkX, chunkY, chunkZ, this));
-
-		Long2ObjectMap<Chunk> chunksList = this.chunks;
-
-		//FIXME completable futures
-
-		List<Chunk> toKeep = new ArrayList<>();
-		// loop over rendered area, adding chunks that are needed
-		for (int x = chunkX - this.renderBound; x < chunkX + this.renderBound; x++)
-			for (int z = chunkZ - this.renderBound; z < chunkZ + this.renderBound; z++)
-				for (int y = chunkY - this.renderBound; y < chunkY + this.renderBound; y++)
-					toKeep.add(this.getChunkToLoad(x, y, z));
-
-		LongList toRemove = new LongArrayList();
-		// check which loaded chunks are not neccesary
-		chunksList.forEach((pos, chunk) ->
+		CompletableFuture.runAsync(() ->
 		{
-			if (!toKeep.contains(chunk))
-				toRemove.add((long) pos);
-		});
-		// unload unneccesary chunks from chunk array
-		toRemove.forEach((LongConsumer) this::unloadChunk);
+			List<Chunk> toKeep = new ArrayList<>();
+			// loop over rendered area, adding chunks that are needed
+			for (int x = chunkX - this.renderBound; x < chunkX + this.renderBound; x++)
+				for (int z = chunkZ - this.renderBound; z < chunkZ + this.renderBound; z++)
+					for (int y = chunkY - this.renderBound; y < chunkY + this.renderBound; y++)
+						toKeep.add(this.getChunkToLoad(x, y, z));
 
-		toKeep.forEach(chunk -> {
-			if (!chunk.isFullyGenerated())
+			LongList toRemove = new LongArrayList();
+			// check which loaded chunks are not neccesary
+			chunks.forEach((pos, chunk) ->
 			{
-				this.populateChunk(chunk);
-				chunk.setFullyGenerated(true);
-			}
-			boolean alreadyRendering = chunk.doRender(); // if it's already rendering then it's most likely in the map
-			chunk.setRender(true);
-			if (!alreadyRendering)
-				chunksList.put(this.posHash(chunk.chunkX, chunk.chunkY, chunk.chunkZ), chunk);
-		});
-		this.chunks = chunksList;
+				if (!toKeep.contains(chunk))
+					toRemove.add((long) pos);
+			});
+			// unload unneccesary chunks from chunk array
+			toRemove.forEach((LongConsumer) this::unloadChunk);
 
+			toKeep.forEach(chunk ->
+			{
+				if (!chunk.isFullyGenerated())
+				{
+					this.populateChunk(chunk);
+					chunk.setFullyGenerated(true);
+				}
+				boolean alreadyRendering = chunk.doRender(); // if it's already rendering then it's most likely in the map
+				chunk.setRender(true);
+				if (!alreadyRendering)
+					chunks.put(this.posHash(chunk.chunkX, chunk.chunkY, chunk.chunkZ), chunk);
+			});
+		});
 	}
 
 	private static final class GenerationWorld implements BlockAccess, WorldGenConstants
