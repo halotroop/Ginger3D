@@ -10,19 +10,18 @@ import com.github.halotroop.litecraft.world.gen.modifier.WorldModifier;
 public class CavesModifier implements WorldModifier, WorldGenConstants
 {
 	private OctaveSimplexNoise caveNoise;
-	private static final double THRESHOLD = 0.3;
+	private static final double THRESHOLD = 0.1;
 	//
 	@Override
 	public void initialize(long seed)
 	{
 		Random rand = new Random(seed);
-		this.caveNoise = new OctaveSimplexNoise(rand, 2, 45.0, 1.0, 1.0);
+		this.caveNoise = new OctaveSimplexNoise(rand, 1, 45.0, 1.0, 1.0);
 	}
 
 	@Override
 	public void modifyWorld(BlockAccess world, Random rand, int chunkStartX, int chunkStartY, int chunkStartZ)
 	{
-		for (int i = 0; i < 8; ++i) world.setBlock(chunkStartX + i, chunkStartY + i, chunkStartZ + i, Blocks.DIORITE);
 		final int subChunks = CHUNK_SIZE >> 2; // in 4x4x4 blocks
 
 		for (int subChunkX = 0; subChunkX < subChunks; subChunkX++)
@@ -37,15 +36,17 @@ public class CavesModifier implements WorldModifier, WorldGenConstants
 				{
 					int scOffsetY = subChunkY << 2; // sub chunk offset y
 					int scTotalY = scOffsetY + chunkStartY;
+					double scSampleY = (double) scTotalY * 2.0;
+					double scUpperYOffset = 4.0 * 2.0;
 					// calculate noise at each corner of the cube [lower|upper][south|north][west|east]
-					double noiseLSW = this.caveNoise.sample(scTotalX, scTotalY, scTotalZ); // base = lower south west
-					double noiseUSW = this.caveNoise.sample(scTotalX, scTotalY + 4, scTotalZ);
-					double noiseLNW = this.caveNoise.sample(scTotalX, scTotalY, scTotalZ + 4);
-					double noiseUNW = this.caveNoise.sample(scTotalX, scTotalY + 4, scTotalZ + 4);
-					double noiseLSE = this.caveNoise.sample(scTotalX + 4, scTotalY, scTotalZ);
-					double noiseUSE = this.caveNoise.sample(scTotalX + 4, scTotalY + 4, scTotalZ);
-					double noiseLNE = this.caveNoise.sample(scTotalX + 4, scTotalY, scTotalZ + 4);
-					double noiseUNE = this.caveNoise.sample(scTotalX + 4, scTotalY + 4, scTotalZ + 4);
+					double noiseLSW = this.caveNoise.sample(scTotalX, scSampleY, scTotalZ); // base = lower south west
+					double noiseUSW = this.caveNoise.sample(scTotalX, scSampleY + scUpperYOffset, scTotalZ);
+					double noiseLNW = this.caveNoise.sample(scTotalX, scSampleY, scTotalZ + 4);
+					double noiseUNW = this.caveNoise.sample(scTotalX, scSampleY + scUpperYOffset, scTotalZ + 4);
+					double noiseLSE = this.caveNoise.sample(scTotalX + 4, scSampleY, scTotalZ);
+					double noiseUSE = this.caveNoise.sample(scTotalX + 4, scSampleY + scUpperYOffset, scTotalZ);
+					double noiseLNE = this.caveNoise.sample(scTotalX + 4, scSampleY, scTotalZ + 4);
+					double noiseUNE = this.caveNoise.sample(scTotalX + 4, scSampleY + scUpperYOffset, scTotalZ + 4);
 					// calculate y lerp progresses
 					// lerp = low + progress * (high - low)
 					double ypSW = 0.25 * (noiseUSW - noiseLSW);
