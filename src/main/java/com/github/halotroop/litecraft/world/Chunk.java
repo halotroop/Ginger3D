@@ -33,7 +33,6 @@ public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable
 	private boolean fullyGenerated = false;
 	public final int dimension;
 	private boolean dirty = true;
-	private World world;
 	private BlockInstance[] renderedBlocks = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 
 	public Chunk(World world, int chunkX, int chunkY, int chunkZ, int dimension)
@@ -45,7 +44,6 @@ public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable
 		this.chunkStartY = chunkY << POS_SHIFT;
 		this.chunkStartZ = chunkZ << POS_SHIFT;
 		this.dimension = dimension;
-		this.world = world;
 	}
 
 	public boolean doRender()
