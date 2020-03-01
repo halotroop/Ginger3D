@@ -1,13 +1,11 @@
 package com.github.halotroop.litecraft.types.block;
 
-import java.util.*;
-
 import com.github.halotroop.litecraft.types.block.Block.Properties;
 
 public final class Blocks
 {
 	
-	public static List<Block> blocks = new ArrayList<Block>();
+	public static Block[] blocks = new Block[255];//real number is 256 //TODO: get all mods to say how many blocks they have and increace the number by that
 	
 	public static final Block AIR = new Block(new Properties("air").visible(false).fullCube(false));
 	public static final Block GRASS = new Block(new Properties("block/cubes/soil/grass/grass_top.png").caveCarveThreshold(0.04f));

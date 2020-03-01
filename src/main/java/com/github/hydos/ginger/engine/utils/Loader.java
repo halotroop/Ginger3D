@@ -108,6 +108,20 @@ public class Loader
 	
 	public int createBlockAtlas()
 	{
+		int width = 16;
+		int height = 16;
+		//Prepare the atlas texture and gen it
+		int atlasId = GL11.glGenTextures();
+		//Bind it to openGL
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, atlasId);
+		//Apply the settings for the texture
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+        //Fill the image with blank image data
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width*2, height*2, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, (ByteBuffer) null);
+		
+        int maxX = Blocks.blocks.length/2;//if the block list gets too big just increace the 2 by 4 or somthing to account for it
+        
 		for(Block block: Blocks.blocks) {
 			
 		}
