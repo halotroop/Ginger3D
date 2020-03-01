@@ -71,23 +71,9 @@ public class Litecraft extends Game
 	@Override
 	public void render()
 	{
-<<<<<<< Upstream, based on branch 'liteCraft' of https://github.com/halotroop/Ginger3D.git
 		fps += 1; // This section updates the debug stats once per real-time second, regardless of how many frames have been rendered
 		if (System.currentTimeMillis() > frameTimer + 1000)
-		{
-			this.dbgStats.set(fps, ups, tps, threadWaitlist);
-			this.fps = 0;
-			this.ups = 0;
-			this.tps = 0;
-			this.frameTimer += 1000;
-		}
-		/**
-		 * And now, the actual rendering:
-		 */
-=======
-		fps+=1;
 		updateDebugStats();
->>>>>>> 4b249f6 Moved stuff around
 		// Render shadows
 		GingerRegister.getInstance().masterRenderer.renderShadowMap(data.entities, data.lights.get(0));
 		// If there's a world, render it!
@@ -101,14 +87,11 @@ public class Litecraft extends Game
 	// Updates the debug stats once per real-time second, regardless of how many frames have been rendered
 	private void updateDebugStats()
 	{
-		if (System.currentTimeMillis() > frameTimer + 1000)
-		{
-			this.dbgStats.set(fps, ups, tps, threadWaitlist);
-			this.fps=0;
-			this.ups=0;
-			this.tps=0;
-			this.frameTimer += 1000;
-		}
+		this.dbgStats.set(fps, ups, tps, threadWaitlist);
+		this.fps=0;
+		this.ups=0;
+		this.tps=0;
+		this.frameTimer += 1000;
 	}
 	
 	public void update()
