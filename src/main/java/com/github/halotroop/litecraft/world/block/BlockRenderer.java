@@ -13,18 +13,22 @@ import com.github.hydos.ginger.engine.math.Maths;
 import com.github.hydos.ginger.engine.render.Renderer;
 import com.github.hydos.ginger.engine.render.models.TexturedModel;
 import com.github.hydos.ginger.engine.render.shaders.StaticShader;
+import com.github.hydos.ginger.engine.utils.Loader;
 
 public class BlockRenderer extends Renderer implements WorldGenConstants
 {
 
 	private StaticShader shader;
-
+	
+	public int atlasID;
+		
 	public BlockRenderer(StaticShader shader, Matrix4f projectionMatrix)
 	{
 		this.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
+		this.atlasID = Loader.createBlockAtlas();
 	}
 
 	private void prepBlockInstance(RenderObject entity)
@@ -81,7 +85,7 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 					if (entity != null && entity.getModel() != null)
 					{
 						TexturedModel blockModel = entity.getModel();
-						GL11.glBindTexture(GL11.GL_TEXTURE_2D, blockModel.getTexture().getTextureID());
+						GL11.glBindTexture(GL11.GL_TEXTURE_2D, atlasID);
 						prepBlockInstance(entity);
 						GL11.glDrawElements(GL11.GL_TRIANGLES, blockModel.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 					}

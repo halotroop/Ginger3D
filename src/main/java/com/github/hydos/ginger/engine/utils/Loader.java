@@ -106,26 +106,41 @@ public class Loader
 	public static int loadTexture(String path)
 	{ return loadTextureDirectly("/textures/" + path); }
 	
-	public int createBlockAtlas()
+	public static int createBlockAtlas()
 	{
 		int width = 16;
 		int height = 16;
 		//Prepare the atlas texture and gen it
-		int atlasId = GL11.glGenTextures();
+		int atlasId = GL40.glGenTextures();
 		//Bind it to openGL
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, atlasId);
+		GL40.glBindTexture(GL40.GL_TEXTURE_2D, atlasId);
 		//Apply the settings for the texture
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+		GL40.glTexParameteri(GL40.GL_TEXTURE_2D, GL40.GL_TEXTURE_MIN_FILTER, GL40.GL_NEAREST);
+        GL40.glTexParameteri(GL40.GL_TEXTURE_2D, GL40.GL_TEXTURE_MAG_FILTER, GL40.GL_NEAREST);
         //Fill the image with blank image data
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width*2, height*2, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, (ByteBuffer) null);
-		
-        int maxX = Blocks.blocks.length/2;//if the block list gets too big just increace the 2 by 4 or somthing to account for it
+        GL40.glTexImage2D(GL40.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width*2, height*2, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, (ByteBuffer) null);
         
+        int maxX = (int) Math.sqrt(Blocks.blocks.size());//if the block list gets too big just increace the 2 by 4 or somthing to account for it
+        int currentX = 0;
+        int currentY = 0;
 		for(Block block: Blocks.blocks) {
+			//just in case
 			
+			block.updateBlockModel();
+			
+			if(currentX > maxX) {
+				currentX = 0;
+				currentY--;
+			}
+			GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 
+					currentX*width, currentY*height, 
+					width, height, 
+					GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, 
+					block.model.getTexture().getTexture().getImage()
+			);
+			currentX++;
 		}
-		return 0;
+		return atlasId;
 	}
 	
 	public static int loadTextureDirectly(String path)
