@@ -109,14 +109,18 @@ public class World implements BlockAccess, WorldGenConstants
 
 	public Chunk getChunkToLoad(int chunkX, int chunkY, int chunkZ)
 	{
+		long posHash = posHash(chunkX, chunkY, chunkZ);
 		// try get an already loaded chunk
-		Chunk result = this.chunks.get(posHash(chunkX, chunkY, chunkZ));
+		Chunk result = this.chunks.get(posHash);
 		if (result != null)
 			return result;
 		// try read a chunk from memory
 		result = save.readChunk(this, chunkX, chunkY, chunkZ, this.dimension);
 		// if neither of those work, generate the chunk
-		return result == null ? this.chunkGenerator.generateChunk(this, chunkX, chunkY, chunkZ) : result;
+		result = result == null ? this.chunkGenerator.generateChunk(this, chunkX, chunkY, chunkZ) : result;
+		// add chunk to array
+		this.chunks.put(posHash, result);
+		return result;
 	}
 
 	/** @return whether the chunk was unloaded without errors. Will often, but not always, be equal to whether the chunk was already in memory. */
