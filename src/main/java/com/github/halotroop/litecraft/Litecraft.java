@@ -73,16 +73,7 @@ public class Litecraft extends Game
 	{
 		fps += 1; // This section updates the debug stats once per real-time second, regardless of how many frames have been rendered
 		if (System.currentTimeMillis() > frameTimer + 1000)
-		{
-			this.dbgStats.set(fps, ups, tps, threadWaitlist);
-			this.fps = 0;
-			this.ups = 0;
-			this.tps = 0;
-			this.frameTimer += 1000;
-		}
-		/**
-		 * And now, the actual rendering:
-		 */
+		updateDebugStats();
 		// Render shadows
 		GingerRegister.getInstance().masterRenderer.renderShadowMap(data.entities, data.lights.get(0));
 		// If there's a world, render it!
@@ -93,9 +84,21 @@ public class Litecraft extends Game
 		Window.swapBuffers();
 	}
 	
+	// Updates the debug stats once per real-time second, regardless of how many frames have been rendered
+	private void updateDebugStats()
+	{
+		this.dbgStats.set(fps, ups, tps, threadWaitlist);
+		this.fps=0;
+		this.ups=0;
+		this.tps=0;
+		this.frameTimer += 1000;
+	}
+	
 	public void update()
 	{
 		Input.invokeAllListeners();
+		data.player.updateMovement();
+		data.camera.updateMovement();
 	}
 
 	private void setupConstants()
@@ -135,16 +138,13 @@ public class Litecraft extends Game
 		Input.addPressCallback(Keybind.EXIT, this::exit);
 		Input.addInitialPressCallback(Keybind.FULLSCREEN, Window::fullscreen);
 		Input.addInitialPressCallback(Keybind.WIREFRAME, GingerRegister.getInstance()::toggleWireframe);
-		Input.addPressCallback(Keybind.MOVE_FORWARD, () -> this.movePlayer(RelativeDirection.FORWARD));
-		Input.addPressCallback(Keybind.MOVE_BACKWARD, () -> this.movePlayer(RelativeDirection.BACKWARD));
-		Input.addPressCallback(Keybind.STRAFE_LEFT, () -> this.movePlayer(RelativeDirection.LEFT));
-		Input.addPressCallback(Keybind.STRAFE_RIGHT, () -> this.movePlayer(RelativeDirection.RIGHT));
-		Input.addPressCallback(Keybind.FLY_UP, () -> this.movePlayer(RelativeDirection.UP));
-		Input.addPressCallback(Keybind.FLY_DOWN, () -> this.movePlayer(RelativeDirection.DOWN));
+		Input.addPressCallback(Keybind.MOVE_FORWARD, () -> this.player.move(RelativeDirection.FORWARD));
+		Input.addPressCallback(Keybind.MOVE_BACKWARD, () -> this.player.move(RelativeDirection.BACKWARD));
+		Input.addPressCallback(Keybind.STRAFE_LEFT, () -> this.player.move(RelativeDirection.LEFT));
+		Input.addPressCallback(Keybind.STRAFE_RIGHT, () -> this.player.move(RelativeDirection.RIGHT));
+		Input.addPressCallback(Keybind.FLY_UP, () -> this.player.move(RelativeDirection.UP));
+		Input.addPressCallback(Keybind.FLY_DOWN, () -> this.player.move(RelativeDirection.DOWN));
 	}
-
-	private void movePlayer(RelativeDirection direction)
-	{ this.player.move(direction); }
 	
 	private void setupWindow()
 	{

@@ -134,8 +134,6 @@ public class Ginger
 	public void update(GameData data)
 	{
 		registry.game.update();
-		data.player.updateMovement();
-		data.camera.updateMovement();
 		picker.update();
 		GingerUtils.update();
 		ParticleMaster.update(data.camera);
