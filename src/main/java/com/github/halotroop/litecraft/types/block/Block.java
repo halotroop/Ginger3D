@@ -54,7 +54,7 @@ public class Block
 	{ this((TexturedModel) null, properties); }
 
 	protected Block(String texture, Properties properties)
-	{ this(ModelLoader.loadGenericCube(texture), properties); }
+	{ this(ModelLoader.loadGenericCube("block/"+texture), properties); }
 
 	protected Block(TexturedModel model, Properties properties)
 	{
