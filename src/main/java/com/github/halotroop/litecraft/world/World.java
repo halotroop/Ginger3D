@@ -37,7 +37,7 @@ public class World implements BlockAccess, WorldGenConstants
 	private final BlockInstance dummy;
 	public World(long seed, int renderSize, Dimension<?> dim, LitecraftSave save)
 	{
-		new DynamicChunkLoader(0, 0, 0, this);
+		this.updateLoadedChunks(0, 0, 0);
 		this.dummy = new BlockInstance(Blocks.ANDESITE, new Vector3f(0, 0, 0));
 		this.dummy.setVisible(false);
 		this.chunks = new Long2ObjectArrayMap<>();
@@ -65,7 +65,7 @@ public class World implements BlockAccess, WorldGenConstants
 		int y = SEA_LEVEL;
 		int attemptsRemaining = 255;
 
-		while (attemptsRemaining --> 0)
+		while (attemptsRemaining-- > 0)
 		{
 			// DO NOT CHANGE TO y++
 			if (this.getBlock(x, ++y, z) == Blocks.AIR)
@@ -181,7 +181,14 @@ public class World implements BlockAccess, WorldGenConstants
 	public void render(BlockRenderer blockRenderer)
 	{
 		blockRenderer.prepareModel(this.dummy.getModel());
-		this.chunks.forEach((pos, c) -> c.render(blockRenderer));
+		try
+		{
+			this.chunks.forEach((pos, c) -> c.render(blockRenderer));
+		}
+		catch (NullPointerException e)
+		{
+			System.out.println("Null chunk - we should look into fixing this");
+		}
 		blockRenderer.unbindModel();
 	}
 

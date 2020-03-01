@@ -65,7 +65,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable
 	public BlockInstance getBlockInstance(int x, int y, int z)
 	{
 		if (x > CHUNK_SIZE || y > CHUNK_SIZE || z > CHUNK_SIZE || x < 0 || y < 0 || z < 0)
-		{ throw new RuntimeException("Block [" + x + ", " + y + ", " + z + "] out of chunk bounds!"); }
+		{ throw new RuntimeException("BlockInstance [" + x + ", " + y + ", " + z + "] out of chunk bounds!"); }
 		return this.blockEntities[index(x, y, z)];
 	}
 
@@ -82,19 +82,33 @@ public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable
 						{
 							BlockInstance block = getBlockInstance(x, y, z);
 
-							// Why are we deliberately rendering blocks on the outside of the chunk???
+							// Check for chunk edges to avoid errors when get the neighboring blocks, TODO fix this
 							if (x == 0 || x == CHUNK_SIZE - 1 || z == 0 || z == CHUNK_SIZE - 1 || y == 0 || y == CHUNK_SIZE - 1)
 							{
 								renderedBlocks[index(x, y, z)] = block;
 								continue;
 							}
-							// Check for non-full-cubes around the block
-							if ((!getBlock(x - 1, y, z).isFullCube() || !getBlock(x + 1, y, z).isFullCube() || !getBlock(x, y - 1, z).isFullCube()
-							|| !getBlock(x, y + 1, z).isFullCube() || !getBlock(x, y, z - 1).isFullCube() || !getBlock(x, y, z + 1).isFullCube()))
-								renderedBlocks[index(x, y, z)] = block;
+
+							// Check for air. Yes this is stupid, TODO fix this too
+							try {
+								if (getBlockInstance(x - 1, y, z).getModel() == null || getBlockInstance(x + 1, y, z).getModel() == null ||
+										getBlockInstance(x, y - 1, z).getModel() == null || getBlockInstance(x, y + 1, z).getModel() == null ||
+										getBlockInstance(x, y, z - 1).getModel() == null || getBlockInstance(x, y, z + 1).getModel() == null)
+								{
+									renderedBlocks[index(x, y, z)] = block;
+								}
+							}
+							catch (NullPointerException e)
+							{ // this seems to be a hotspot for errors
+								e.printStackTrace(); // so I can add a debug breakpoint on this line
+								throw e; // e
+							}
 
 						}
+
+			blockRenderer.prepareRender();
 			blockRenderer.render(renderedBlocks);
+			blockRenderer.shader.stop();
 		}
 	}
 
