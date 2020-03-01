@@ -11,7 +11,7 @@ public class Block
 	{ // add properties to this builder!
 		private boolean visible = true;
 		private boolean fullCube = true;
-		private boolean canCaveCarve = true;
+		private float caveCarveThreshold = -1f; // cannot carve
 		private final String identifier;
 
 		public Properties(String identifier)
@@ -29,15 +29,16 @@ public class Block
 			return this;
 		}
 
-		public Properties cannotCarveCave()
+		public Properties caveCarveThreshold(float threshold)
 		{
-			this.canCaveCarve = false;
+			this.caveCarveThreshold = threshold;
 			return this;
 		}
 	}
 
 	public final TexturedModel model;
-	private final boolean visible, fullCube, canCaveCarve;
+	private final boolean visible, fullCube;
+	private final float caveCarveThreshold;
 	public final String identifier;
 
 	public boolean isFullCube()
@@ -46,8 +47,8 @@ public class Block
 	public boolean isVisible()
 	{ return this.visible; }
 
-	public boolean canCaveCarve()
-	{ return this.canCaveCarve; }
+	public float getCaveCarveThreshold()
+	{ return this.caveCarveThreshold; }
 
 	protected Block(Properties properties)
 	{ this((TexturedModel) null, properties); }
@@ -61,7 +62,7 @@ public class Block
 		this.visible = properties.visible;
 		this.fullCube = properties.fullCube;
 		this.identifier = properties.identifier;
-		this.canCaveCarve = properties.canCaveCarve;
+		this.caveCarveThreshold = properties.caveCarveThreshold;
 		IDENTIFIER_TO_BLOCK.put(this.identifier, this);
 	}
 

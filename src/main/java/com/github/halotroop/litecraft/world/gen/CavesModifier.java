@@ -2,7 +2,7 @@ package com.github.halotroop.litecraft.world.gen;
 
 import java.util.Random;
 
-import com.github.halotroop.litecraft.types.block.Blocks;
+import com.github.halotroop.litecraft.types.block.*;
 import com.github.halotroop.litecraft.util.noise.OctaveSimplexNoise;
 import com.github.halotroop.litecraft.world.BlockAccess;
 import com.github.halotroop.litecraft.world.gen.modifier.WorldModifier;
@@ -10,7 +10,6 @@ import com.github.halotroop.litecraft.world.gen.modifier.WorldModifier;
 public class CavesModifier implements WorldModifier, WorldGenConstants
 {
 	private OctaveSimplexNoise caveNoise;
-	private static final double THRESHOLD = 0.1;
 	//
 	@Override
 	public void initialize(long seed)
@@ -81,14 +80,11 @@ public class CavesModifier implements WorldModifier, WorldGenConstants
 							{
 								int totalX = subX + scTotalX;
 								// calculate whether to replace block with air
-								// if the noise is within the threshold for caves
-								if (-THRESHOLD < lerpNoise && lerpNoise < THRESHOLD)
+								// if the noise is within the threshold for that block for caves
+								float threshold = world.getBlock(totalX, totalY, totalZ).getCaveCarveThreshold();
+								if (-threshold < lerpNoise && lerpNoise < threshold)
 								{
-									// if the cave can carve into the block
-									if (world.getBlock(totalX, totalY, totalZ).canCaveCarve())
-									{
-										world.setBlock(totalX, totalY, totalZ, Blocks.AIR);
-									}
+									world.setBlock(totalX, totalY, totalZ, Blocks.AIR);
 								}
 								// add progress to the noise
 								lerpNoise += lerpProg;
