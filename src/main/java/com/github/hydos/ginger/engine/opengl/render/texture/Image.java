@@ -8,7 +8,7 @@ import java.nio.*;
 
 import org.lwjgl.system.MemoryStack;
 
-import com.github.hydos.ginger.engine.opengl.render.tools.IOUtil;
+import com.github.hydos.ginger.engine.common.tools.IOUtil;
 
 public class Image
 {

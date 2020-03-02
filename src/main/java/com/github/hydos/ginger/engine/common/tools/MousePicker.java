@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.opengl.render.tools;
+package com.github.hydos.ginger.engine.common.tools;
 
 import org.joml.*;
 

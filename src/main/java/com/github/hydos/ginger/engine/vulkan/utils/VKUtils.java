@@ -13,7 +13,7 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.shaderc.*;
 import org.lwjgl.vulkan.*;
 
-import com.github.hydos.ginger.engine.opengl.render.tools.IOUtil;
+import com.github.hydos.ginger.engine.common.tools.IOUtil;
 
 /** @author hydos06
  *         a util library for Vulkan */
