@@ -10,7 +10,8 @@ import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 public class CavesModifier implements WorldModifier, WorldGenConstants
 {
 	private OctaveSimplexNoise caveNoise;
-	//
+	private static final double THRESHOLD = 0.1;
+
 	@Override
 	public void initialize(long seed)
 	{
