@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.opengl.font;
+package com.github.hydos.ginger.engine.common.font;
 
 /** Stores the vertex data for all the quads on which a text will be rendered. */
 public class TextMeshData

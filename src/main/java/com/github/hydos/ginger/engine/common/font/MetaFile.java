@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.opengl.font;
+package com.github.hydos.ginger.engine.common.font;
 
 import java.io.*;
 import java.util.*;

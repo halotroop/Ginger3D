@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.opengl.fbo;
+package com.github.hydos.ginger.engine.common.fbo;
 
 public abstract class FboCallbackHandler
 {

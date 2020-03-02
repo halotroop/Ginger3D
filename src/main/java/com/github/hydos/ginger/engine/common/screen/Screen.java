@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.opengl.screen;
+package com.github.hydos.ginger.engine.common.screen;
 
 import java.util.List;
 

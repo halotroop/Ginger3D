@@ -4,7 +4,7 @@ import java.util.*;
 
 import org.lwjgl.opengl.*;
 
-import com.github.hydos.ginger.engine.opengl.font.*;
+import com.github.hydos.ginger.engine.common.font.*;
 import com.github.hydos.ginger.engine.opengl.render.Renderer;
 import com.github.hydos.ginger.engine.opengl.render.shaders.FontShader;
 

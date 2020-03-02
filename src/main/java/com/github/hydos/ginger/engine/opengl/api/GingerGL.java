@@ -9,12 +9,12 @@ import com.github.hydos.ginger.engine.common.api.GingerRegister;
 import com.github.hydos.ginger.engine.common.api.game.*;
 import com.github.hydos.ginger.engine.common.elements.buttons.TextureButton;
 import com.github.hydos.ginger.engine.common.elements.objects.Player;
+import com.github.hydos.ginger.engine.common.font.*;
 import com.github.hydos.ginger.engine.common.io.Window;
-import com.github.hydos.ginger.engine.opengl.font.*;
+import com.github.hydos.ginger.engine.common.screen.Screen;
 import com.github.hydos.ginger.engine.opengl.postprocessing.*;
 import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
 import com.github.hydos.ginger.engine.opengl.render.tools.MousePicker;
-import com.github.hydos.ginger.engine.opengl.screen.Screen;
 import com.github.hydos.ginger.engine.opengl.utils.GlLoader;
 import com.github.hydos.multithreading.GingerThreading;
 

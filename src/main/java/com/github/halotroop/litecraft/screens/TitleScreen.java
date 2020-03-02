@@ -9,10 +9,10 @@ import com.github.halotroop.litecraft.save.LitecraftSave;
 import com.github.halotroop.litecraft.world.dimension.Dimensions;
 import com.github.hydos.ginger.engine.common.elements.GuiTexture;
 import com.github.hydos.ginger.engine.common.elements.buttons.TextureButton;
+import com.github.hydos.ginger.engine.common.font.GUIText;
 import com.github.hydos.ginger.engine.common.io.Window;
+import com.github.hydos.ginger.engine.common.screen.Screen;
 import com.github.hydos.ginger.engine.opengl.api.GingerGL;
-import com.github.hydos.ginger.engine.opengl.font.GUIText;
-import com.github.hydos.ginger.engine.opengl.screen.Screen;
 
 /**
  * YeS

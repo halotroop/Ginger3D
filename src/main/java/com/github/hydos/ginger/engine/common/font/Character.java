@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.opengl.font;
+package com.github.hydos.ginger.engine.common.font;
 
 /** Simple data structure class holding information about a certain glyph in the
  * font texture atlas. All sizes are for a font-size of 1. */

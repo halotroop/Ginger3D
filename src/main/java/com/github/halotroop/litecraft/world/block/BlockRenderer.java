@@ -17,11 +17,9 @@ import com.github.hydos.ginger.engine.opengl.utils.GlLoader;
 
 public class BlockRenderer extends Renderer implements WorldGenConstants
 {
-
 	private StaticShader shader;
-	
 	public int atlasID;
-		
+
 	public BlockRenderer(StaticShader shader, Matrix4f projectionMatrix)
 	{
 		this.shader = shader;
@@ -33,7 +31,8 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 
 	private void prepBlockInstance(RenderObject entity)
 	{
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),
+			entity.getRotY(), entity.getRotZ(), entity.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 
@@ -52,19 +51,18 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 		GL20.glDisableVertexAttribArray(2);
 		GL30.glBindVertexArray(0);
 	}
-	
-	public void enableWireframe() {
-		if (GingerRegister.getInstance().wireframe)
-			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-	}
-	
-	public void disableWireframe() {
-		if (GingerRegister.getInstance().wireframe)
-			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-	}
-	
-	public void prepareRender() {
-		//TODO: combine VBOS
+
+	public void enableWireframe()
+	{ if (GingerRegister.getInstance().wireframe)
+		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE); }
+
+	public void disableWireframe()
+	{ if (GingerRegister.getInstance().wireframe)
+		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL); }
+
+	public void prepareRender()
+	{
+		// TODO: combine VBOS
 		shader.start();
 		shader.loadSkyColour(Window.getColour());
 		shader.loadViewMatrix(GingerRegister.getInstance().game.data.camera);
@@ -81,18 +79,18 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 		for (int x = 0; x < CHUNK_SIZE; x++)
 			for (int y = 0; y < CHUNK_SIZE; y++)
 				for (int z = 0; z < CHUNK_SIZE; z++)
-				{
-					BlockInstance entity = renderList[Chunk.index(x, y, z)];
-					if (entity != null && entity.getModel() != null)
-					{
-						TexturedModel blockModel = entity.getModel();
-						GL11.glBindTexture(GL11.GL_TEXTURE_2D, blockModel.getTexture().getTextureID());
-						prepBlockInstance(entity);
-						GL11.glDrawElements(GL11.GL_TRIANGLES, blockModel.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-					}
-				}
+		{
+			BlockInstance entity = renderList[Chunk.index(x, y, z)];
+			if (entity != null && entity.getModel() != null)
+			{
+				TexturedModel blockModel = entity.getModel();
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, blockModel.getTexture().getTextureID());
+				prepBlockInstance(entity);
+				GL11.glDrawElements(GL11.GL_TRIANGLES, blockModel.getRawModel().getVertexCount(),
+					GL11.GL_UNSIGNED_INT, 0);
+			}
+		}
 		disableWireframe();
 		shader.stop();
-
 	}
 }

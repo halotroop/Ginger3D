@@ -2,7 +2,7 @@ package com.github.hydos.ginger.engine.opengl.render.shaders;
 
 import org.joml.*;
 
-import com.github.hydos.ginger.engine.opengl.font.GUIText;
+import com.github.hydos.ginger.engine.common.font.GUIText;
 
 public class FontShader extends ShaderProgram
 {

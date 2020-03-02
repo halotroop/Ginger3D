@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.opengl.font;
+package com.github.hydos.ginger.engine.common.font;
 
 /** Represents a font. It holds the font's texture atlas as well as having the
  * ability to create the quad vertices for any text using this font. */
