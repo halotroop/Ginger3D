@@ -266,7 +266,7 @@ public class VulkanStarter
 		return new VkCommandBuffer(commandBuffer, device);
 	}
 
-	private static class Swapchain
+	public static class Swapchain
 	{
 		long swapchainHandle;
 		long[] images;
