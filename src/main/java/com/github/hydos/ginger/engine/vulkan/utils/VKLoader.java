@@ -1,5 +1,7 @@
 package com.github.hydos.ginger.engine.vulkan.utils;
 
+import org.lwjgl.vulkan.VK12;
+
 /**
  * 
  * @author hydos
@@ -9,7 +11,6 @@ package com.github.hydos.ginger.engine.vulkan.utils;
 public class VKLoader {
 	
 	public void setupVulkan() {
-		
 	}
 	
 }

@@ -56,6 +56,7 @@ public class VKUtils {
     }
 
     public static ByteBuffer glslToSpirv(String classPath, int vulkanStage) throws IOException {
+    	System.out.println("Converting shader " + classPath + " to GLSL");
         ByteBuffer src = IOUtil.ioResourceToByteBuffer(classPath, 1024);
         long compiler = shaderc_compiler_initialize();
         long options = shaderc_compile_options_initialize();

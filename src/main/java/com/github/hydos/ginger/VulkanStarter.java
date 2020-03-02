@@ -10,7 +10,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.vulkan.EXTDebugReport.*;
 import static org.lwjgl.vulkan.KHRSurface.*;
 import static org.lwjgl.vulkan.KHRSwapchain.*;
-import static org.lwjgl.vulkan.VK10.*;
+import static org.lwjgl.vulkan.VK12.*;
 
 import java.io.IOException;
 import java.nio.*;
@@ -49,7 +49,7 @@ public class VulkanStarter {
     private static VkInstance createInstance(PointerBuffer requiredExtensions) {
         VkApplicationInfo appInfo = VkApplicationInfo.calloc()
                 .sType(VK_STRUCTURE_TYPE_APPLICATION_INFO)
-                .apiVersion(VK_API_VERSION_1_0);
+                .apiVersion(VK_API_VERSION_1_2);
         PointerBuffer ppEnabledExtensionNames = memAllocPointer(requiredExtensions.remaining() + 1);
         ppEnabledExtensionNames.put(requiredExtensions);
         ByteBuffer VK_EXT_DEBUG_REPORT_EXTENSION = memUTF8(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
@@ -1037,8 +1037,8 @@ public class VulkanStarter {
 
         // Load shaders
         VkPipelineShaderStageCreateInfo.Buffer shaderStages = VkPipelineShaderStageCreateInfo.calloc(2);
-        shaderStages.get(0).set(loadShader(device, "org/lwjgl/demo/vulkan/twoRotatingTriangles.vert", VK_SHADER_STAGE_VERTEX_BIT));
-        shaderStages.get(1).set(loadShader(device, "org/lwjgl/demo/vulkan/twoRotatingTriangles.frag", VK_SHADER_STAGE_FRAGMENT_BIT));
+        shaderStages.get(0).set(loadShader(device, "/vulkan/shaders/entityVertexShader.glsl", VK_SHADER_STAGE_VERTEX_BIT));
+        shaderStages.get(1).set(loadShader(device, "/vulkan/shaders/entityFragmentShader.glsl", VK_SHADER_STAGE_FRAGMENT_BIT));
 
         // Create the pipeline layout that is used to generate the rendering pipelines that
         // are based on this descriptor set layout
@@ -1199,7 +1199,7 @@ public class VulkanStarter {
         return renderCommandBuffers;
     }
 
-    private static void updateUbo(VkDevice device, UboDescriptor ubo, float angle) {
+    private static void updateUbo(VkDevice device, UboDescriptor ubo, float angle) { //a UBO is a uniform buffer object
         Matrix4f m = new Matrix4f()
                 .scale(1, -1, 1) // <- correcting viewport transformation (what Direct3D does, too)
                 .perspective((float) Math.toRadians(45.0f), (float) width / height, 0.1f, 10.0f, true)
