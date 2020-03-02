@@ -8,7 +8,6 @@ import com.github.hydos.ginger.engine.common.font.GUIText;
 import com.github.hydos.ginger.engine.common.screen.Screen;
 import com.github.hydos.ginger.engine.opengl.postprocessing.Fbo;
 import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
-import com.github.hydos.multithreading.GingerThreading;
 
 /** Used if a game wants to access engine variables safely */
 public class GingerRegister
@@ -19,7 +18,6 @@ public class GingerRegister
 	public static GingerRegister getInstance()
 	{ return INSTANCE; }
 
-	public GingerThreading threadRegister;
 	public List<GUIText> texts;
 	public List<TextureButton> guiButtons;
 	public List<Fbo> fbos;
@@ -30,12 +28,11 @@ public class GingerRegister
 	public GingerRegister()
 	{
 		INSTANCE = this;
-		threadRegister = new GingerThreading();
 	}
 
 	public void registerButton(TextureButton button)
 	{
-		if (guiButtons == null) guiButtons = new ArrayList<TextureButton>();
+		if (guiButtons == null) guiButtons = new ArrayList<>();
 		guiButtons.add(button);
 	}
 
@@ -44,7 +41,7 @@ public class GingerRegister
 
 	public void registerText(GUIText guiText)
 	{
-		if (texts == null) texts = new ArrayList<GUIText>();
+		if (texts == null) texts = new ArrayList<>();
 		texts.add(guiText);
 	}
 

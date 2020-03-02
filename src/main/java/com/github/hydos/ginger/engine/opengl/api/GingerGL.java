@@ -16,7 +16,6 @@ import com.github.hydos.ginger.engine.opengl.postprocessing.*;
 import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
 import com.github.hydos.ginger.engine.opengl.render.tools.MousePicker;
 import com.github.hydos.ginger.engine.opengl.utils.GlLoader;
-import com.github.hydos.multithreading.GingerThreading;
 
 public class GingerGL
 {
@@ -25,7 +24,6 @@ public class GingerGL
 	public MousePicker picker;
 	public FontType globalFont;
 	public Fbo contrastFbo;
-	public GingerThreading threading;
 	
 	private Timer timer;
 	TickListener gameTickListener = new TickListener()
@@ -102,7 +100,6 @@ public class GingerGL
 	{
 		INSTANCE = this;
 		registry = new GingerRegister();
-		threading = new GingerThreading();
 		registry.registerGame(game);
 		timer = new Timer(game.data.tickSpeed);
 		timer.addTickListener(gameTickListener);
@@ -114,15 +111,11 @@ public class GingerGL
 
 	public void startGameLoop()
 	{
-		if (!threading.isAlive()) // Prevents this from accidentally being run twice
+		while (!Window.closed())
 		{
-			threading.start();
-			while (!Window.closed())
-			{
-				update(Litecraft.getInstance().data); // Run this regardless, (so as fast as possible)
-				if (timer.tick()) Litecraft.getInstance().tps += 1; // Run this only [ticklimit] times per second (This invokes gameTickListener.onTick!)
-				if (Window.shouldRender()) registry.game.render(); // Run this only [framelimit] times per second
-			}
+			update(Litecraft.getInstance().data); // Run this regardless, (so as fast as possible)
+			if (timer.tick()) Litecraft.getInstance().tps += 1; // Run this only [ticklimit] times per second (This invokes gameTickListener.onTick!)
+			if (Window.shouldRender()) registry.game.render(); // Run this only [framelimit] times per second
 		}
 		registry.game.exit();
 	}
