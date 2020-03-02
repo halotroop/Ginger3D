@@ -1,31 +1,25 @@
 package com.github.hydos.ginger.engine.vulkan.utils;
 
-import org.lwjgl.assimp.*;
-import org.lwjgl.system.Callback;
-import org.lwjgl.system.MemoryStack;
-import org.lwjgl.util.shaderc.ShadercIncludeResolve;
-import org.lwjgl.util.shaderc.ShadercIncludeResult;
-import org.lwjgl.util.shaderc.ShadercIncludeResultRelease;
-import org.lwjgl.vulkan.*;
-
-import com.github.hydos.ginger.engine.opengl.render.tools.IOUtil;
-
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.LongBuffer;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.lwjgl.BufferUtils.*;
+import static org.lwjgl.BufferUtils.createByteBuffer;
 import static org.lwjgl.assimp.Assimp.*;
 import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.util.shaderc.Shaderc.*;
-import static org.lwjgl.vulkan.EXTDebugReport.*;
-import static org.lwjgl.vulkan.KHRDisplaySwapchain.*;
+import static org.lwjgl.vulkan.EXTDebugReport.VK_ERROR_VALIDATION_FAILED_EXT;
+import static org.lwjgl.vulkan.KHRDisplaySwapchain.VK_ERROR_INCOMPATIBLE_DISPLAY_KHR;
 import static org.lwjgl.vulkan.KHRSurface.*;
 import static org.lwjgl.vulkan.KHRSwapchain.*;
 import static org.lwjgl.vulkan.NVRayTracing.*;
-import static org.lwjgl.vulkan.VK12.*;
+import static org.lwjgl.vulkan.VK10.*;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.*;
+
+import org.lwjgl.assimp.*;
+import org.lwjgl.system.*;
+import org.lwjgl.util.shaderc.*;
+
+import com.github.hydos.ginger.engine.opengl.render.tools.IOUtil;
 
 /**
  * Utility functions for Vulkan.

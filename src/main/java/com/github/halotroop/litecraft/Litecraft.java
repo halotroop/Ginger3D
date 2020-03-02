@@ -13,6 +13,7 @@ import com.github.hydos.ginger.engine.common.api.game.*;
 import com.github.hydos.ginger.engine.common.cameras.*;
 import com.github.hydos.ginger.engine.common.elements.objects.*;
 import com.github.hydos.ginger.engine.common.font.FontType;
+import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.obj.ModelLoader;
 import com.github.hydos.ginger.engine.common.obj.shapes.StaticCube;
@@ -151,7 +152,7 @@ public class Litecraft extends Game
 	
 	private void setupWindow()
 	{
-		Window.create(1280, 720, "LiteCraft", 60); // create window
+		Window.create(1280, 720, "LiteCraft", 60, RenderAPI.OpenGL); // create window
 		KeyCallbackHandler.trackWindow(Window.getWindow()); // set up the gateways keybind key tracking
 		MouseCallbackHandler.trackWindow(Window.getWindow());
 	}

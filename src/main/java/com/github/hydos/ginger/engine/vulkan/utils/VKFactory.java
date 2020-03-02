@@ -1,21 +1,17 @@
 package com.github.hydos.ginger.engine.vulkan.utils;
 
-import java.nio.Buffer;
-
-import org.lwjgl.system.MemoryStack;
-import org.lwjgl.util.vma.VmaAllocationCreateInfo;
-import org.lwjgl.util.vma.VmaAllocationInfo;
-import org.lwjgl.util.vma.VmaAllocatorCreateInfo;
-import org.lwjgl.util.vma.VmaVulkanFunctions;
-import org.lwjgl.vulkan.*;
-import static org.lwjgl.vulkan.EXTDebugReport.*;
-import static org.lwjgl.vulkan.KHR8bitStorage.*;
-import static org.lwjgl.vulkan.KHRGetMemoryRequirements2.*;
+import static org.lwjgl.vulkan.EXTDebugReport.VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT;
+import static org.lwjgl.vulkan.KHR8bitStorage.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES_KHR;
+import static org.lwjgl.vulkan.KHRGetMemoryRequirements2.VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2_KHR;
 import static org.lwjgl.vulkan.KHRGetPhysicalDeviceProperties2.*;
-import static org.lwjgl.vulkan.KHRShaderFloat16Int8.*;
+import static org.lwjgl.vulkan.KHRShaderFloat16Int8.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR;
 import static org.lwjgl.vulkan.KHRSwapchain.*;
 import static org.lwjgl.vulkan.NVRayTracing.*;
 import static org.lwjgl.vulkan.VK10.*;
+
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.util.vma.*;
+import org.lwjgl.vulkan.*;
 
 public class VKFactory {
     static VmaVulkanFunctions VmaVulkanFunctions(MemoryStack stack) {

@@ -7,6 +7,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
+import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.opengl.api.GingerGL;
 import com.github.hydos.ginger.engine.opengl.render.texture.Image;
 
@@ -26,7 +27,8 @@ public class Window
 
 	public static boolean isFullscreen()
 	{ return fullscreen; }
-
+	
+	public static RenderAPI renderAPI;
 	private static int width, height;
 	private static String title;
 	private static long window;
@@ -50,18 +52,23 @@ public class Window
 	public static boolean closed()
 	{ return GLFW.glfwWindowShouldClose(getWindow()); }
 
-	public static void create()
+	public static void create(RenderAPI api)
 	{
 		if (!GLFW.glfwInit())
 		{
 			System.err.println("Error: Couldn't initialize GLFW");
 			System.exit(-1);
 		}
+		renderAPI = api;
+		if(renderAPI == RenderAPI.OpenGL) 
+		{
+			GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 4);
+			GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 6);
+			GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
+			GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
+		}else if (renderAPI == RenderAPI.Vulkan)
+
 		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
-		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 4);
-		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 6);
-		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
-		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
 		GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 		window = GLFW.glfwCreateWindow(actualWidth, actualHeight, title, (fullscreen) ? GLFW.glfwGetPrimaryMonitor() : 0, getWindow());
@@ -82,7 +89,7 @@ public class Window
 		oldWindowHeight = getHeight();
 	}
 
-	public static void create(int width, int height, String title, int fpsCap)
+	public static void create(int width, int height, String title, int fpsCap, RenderAPI api)
 	{
 		Window.width = width / 2;
 		Window.height = height / 2;
@@ -90,7 +97,7 @@ public class Window
 		Window.actualWidth = width;
 		Window.title = title;
 		Window.fpsCap = fpsCap;
-		Window.create();
+		Window.create(api);
 		Window.setIcon();
 	}
 

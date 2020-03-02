@@ -197,7 +197,7 @@ public class World implements BlockAccess, WorldGenConstants
 	public void unloadAllChunks()
 	{
 		LongList chunkPositions = new LongArrayList();
-		List<CompletableFuture> futures = new ArrayList<>();
+		@SuppressWarnings("rawtypes") List<CompletableFuture> futures = new ArrayList<>();
 		if (this.chunks != null)
 		{
 			this.chunks.forEach((pos, chunk) ->
