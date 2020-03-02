@@ -75,12 +75,13 @@ public class BinaryData implements Iterable<Map.Entry<String, BaseDataSection>> 
 	}
 
 	@Override
-	public Iterator<Map.Entry<String, BaseDataSection>> iterator() {
-		return this.sections.entrySet().iterator();
-	}
+	public Iterator<Map.Entry<String, BaseDataSection>> iterator()
+	{ return this.sections.entrySet().iterator(); }
 
-	public static BinaryData read(File file) throws SODParseException {
-		try (DataInputStream dis = new DataInputStream(new FileInputStream(file))) {
+	public static BinaryData read(File file) throws SODParseException
+	{
+		try (DataInputStream dis = new DataInputStream(new FileInputStream(file)))
+		{
 			long magic = dis.readLong();
 
 			if (magic != 0xA77D1E) {
@@ -88,9 +89,11 @@ public class BinaryData implements Iterable<Map.Entry<String, BaseDataSection>> 
 			}
 
 			return Parser.parse(dis);
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
+			System.err.println("Error in parsing file " + file.toString());
 			e.printStackTrace();
-			//throw new SODParseException("Error in parsing file " + file.toString());
 			return new BinaryData();
 		}
 	}

@@ -41,7 +41,7 @@ public class TitleScreen extends Screen
 	public void tick()
 	{
 		Vector4i dbg = litecraft.dbgStats;
-		debugText.setText("FPS: " + dbg.x() + " UPS: " + dbg.y + " TPS: " + dbg.z);
+		debugText.setText("FPS: " + dbg.x() + " UPS: " + dbg.y() + " TPS: " + dbg.z() + " TWL: " + dbg.w());
 		playButton.update();
 		if (playButton.isClicked())
 		{
@@ -49,14 +49,14 @@ public class TitleScreen extends Screen
 			
 			if (Litecraft.getInstance().getWorld() == null)
 			{
-				Litecraft.getInstance().setSave(new LitecraftSave("cegregatedordinaldata", false));
+				Litecraft.getInstance().setSave(new LitecraftSave("SegregatedOrdinalData", false));
 				Litecraft.getInstance().changeWorld(Litecraft.getInstance().getSave().getWorldOrCreate(Dimensions.OVERWORLD));
 				ginger3D.setGingerPlayer(Litecraft.getInstance().getWorld().player);
 			}
 			if (Litecraft.getInstance().getWorld() != null)
 			{
 				ginger3D.openScreen(new IngameHUD());
-				this.close();
+				this.cleanup();
 			}
 			//TODO: add world creation gui so it takes u to world creation place
 			//TODO: add a texture to be rendered behind the gui as an option
@@ -64,7 +64,7 @@ public class TitleScreen extends Screen
 	}
 
 	@Override
-	public void close()
+	public void cleanup()
 	{
 		this.debugText.remove();
 		this.playButton.hide(Litecraft.getInstance().data.guis);

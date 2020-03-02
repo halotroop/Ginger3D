@@ -47,7 +47,7 @@ public class GingerGL
 
 	public void openScreen(Screen screen)
 	{
-		if (registry.currentScreen != null) registry.currentScreen.close();
+		if (registry.currentScreen != null) registry.currentScreen.cleanup();
 		registry.currentScreen = screen;
 	}
 	

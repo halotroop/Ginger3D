@@ -76,6 +76,10 @@ public class Window
 	        }
 		}
 		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
+		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 4);
+		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 6);
+		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
+		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
 		GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 		window = GLFW.glfwCreateWindow(actualWidth, actualHeight, title, (fullscreen) ? GLFW.glfwGetPrimaryMonitor() : 0, getWindow());
@@ -98,7 +102,7 @@ public class Window
 		oldWindowHeight = getHeight();
 	}
 
-	public static void create(int width, int height, String title, int fpsCap, RenderAPI api)
+	public static void create(int width, int height, String title, float fpsCap, RenderAPI api)
 	{
 		Window.width = width / 2;
 		Window.height = height / 2;
