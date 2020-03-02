@@ -58,8 +58,10 @@ public class Litecraft extends Game
 		if (this.world != null)
 		{
 			System.out.println("Saving chunks...");
+			long time = System.currentTimeMillis();
 			this.world.unloadAllChunks();
 			this.getSave().saveGlobalData(this.world.getSeed(), this.player);
+			System.out.println("Saved world in " + (System.currentTimeMillis() - time) + " milliseconds");
 		}
 		engine.cleanup();
 		System.exit(0);

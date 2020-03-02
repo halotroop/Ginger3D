@@ -40,7 +40,6 @@ public class World implements BlockAccess, WorldGenConstants
 	public World(long seed, int renderSize, Dimension<?> dim, LitecraftSave save)
 	{
 		this.threadPool = new ForkJoinPool(4, ForkJoinPool.defaultForkJoinWorkerThreadFactory, null, true);
-		this.updateLoadedChunks(0, 0, 0);
 		this.dummy = new BlockInstance(Blocks.ANDESITE, new Vector3f(0, 0, 0));
 		this.dummy.setVisible(false);
 		this.chunks = new Long2ObjectArrayMap<>();
