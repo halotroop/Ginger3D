@@ -21,11 +21,6 @@ import org.lwjgl.util.shaderc.*;
 
 import com.github.hydos.ginger.engine.opengl.render.tools.IOUtil;
 
-/**
- * Utility functions for Vulkan.
- * 
- * @author Kai Burjack
- */
 public class VKUtils {
 
     public static final int VK_FLAGS_NONE = 0;

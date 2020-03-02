@@ -20,6 +20,8 @@ import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.*;
 import org.lwjgl.vulkan.*;
 
+import com.github.hydos.ginger.engine.common.info.RenderAPI;
+import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
 
 /**
@@ -1229,13 +1231,10 @@ public class VulkanStarter {
     private static DepthStencil depthStencil;
 
     public static void main(String[] args) throws IOException {
-        if (!glfwInit()) {
-            throw new RuntimeException("Failed to initialize GLFW");
-        }
-        if (!glfwVulkanSupported()) {
-            throw new AssertionError("GLFW failed to find the Vulkan loader");
-        }
-
+    	Window.create(1200, 600, "Vulkan Ginger3D", 60, RenderAPI.Vulkan);
+    	width = Window.getWidth();
+    	height = Window.getHeight();
+    	
         /* Look for instance extensions */
         PointerBuffer requiredExtensions = glfwGetRequiredInstanceExtensions();
         if (requiredExtensions == null) {
@@ -1257,13 +1256,8 @@ public class VulkanStarter {
         int queueFamilyIndex = deviceAndGraphicsQueueFamily.queueFamilyIndex;
         final VkPhysicalDeviceMemoryProperties memoryProperties = deviceAndGraphicsQueueFamily.memoryProperties;
 
-        // Create GLFW window
-        glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        long window = glfwCreateWindow(800, 600, "GLFW Vulkan Demo", NULL, NULL);
         GLFWKeyCallback keyCallback;
-        glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback() {
+        glfwSetKeyCallback(Window.getWindow(), keyCallback = new GLFWKeyCallback() {
             public void invoke(long window, int key, int scancode, int action, int mods) {
                 if (action != GLFW_RELEASE)
                     return;
@@ -1272,7 +1266,7 @@ public class VulkanStarter {
             }
         });
         LongBuffer pSurface = memAllocLong(1);
-        int err = glfwCreateWindowSurface(instance, window, null, pSurface);
+        int err = glfwCreateWindowSurface(instance, Window.getWindow(), null, pSurface);
         final long surface = pSurface.get(0);
         if (err != VK_SUCCESS) {
             throw new AssertionError("Failed to create surface: " + VKUtils.translateVulkanResult(err));
@@ -1343,8 +1337,8 @@ public class VulkanStarter {
                 VulkanStarter.height = height;
             }
         };
-        glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-        glfwShowWindow(window);
+        glfwSetFramebufferSizeCallback(Window.getWindow(), framebufferSizeCallback);
+        glfwShowWindow(Window.getWindow());
 
         // Pre-allocate everything needed in the render loop
 
@@ -1382,7 +1376,7 @@ public class VulkanStarter {
         // The render loop
         long lastTime = System.nanoTime();
         float time = 0.0f;
-        while (!glfwWindowShouldClose(window)) {
+        while (!glfwWindowShouldClose(Window.getWindow())) {
             // Handle window messages. Resize events happen exactly here.
             // So it is safe to use the new swapchain images and framebuffers afterwards.
             glfwPollEvents();
@@ -1451,7 +1445,7 @@ public class VulkanStarter {
 
         framebufferSizeCallback.free();
         keyCallback.free();
-        glfwDestroyWindow(window);
+        glfwDestroyWindow(Window.getWindow());
         glfwTerminate();
 
         // We don't bother disposing of all Vulkan resources.

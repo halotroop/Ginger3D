@@ -1,5 +1,7 @@
 package com.github.hydos.ginger.engine.common.io;
 
+import static org.lwjgl.glfw.GLFW.*;
+
 import java.nio.*;
 
 import org.joml.*;
@@ -67,7 +69,12 @@ public class Window
 			GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
 			GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
 		}else if (renderAPI == RenderAPI.Vulkan)
-
+		{
+	        GLFW.glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+	        if (!GLFWVulkan.glfwVulkanSupported()) {
+	            throw new AssertionError("GLFW failed to find the Vulkan loader");
+	        }
+		}
 		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
 		GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
@@ -78,8 +85,10 @@ public class Window
 			System.exit(-1);
 		}
 		GLFW.glfwMakeContextCurrent(getWindow());
-		glContext = GL.createCapabilities();
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		if(api == RenderAPI.OpenGL) {
+			glContext = GL.createCapabilities();
+			GL11.glEnable(GL11.GL_DEPTH_TEST);
+		}
 		GLFW.glfwSetWindowPos(getWindow(), (vidmode.width() - actualWidth) / 2, (vidmode.height() - actualHeight) / 2);
 		GLFW.glfwShowWindow(getWindow());
 		time = getTime();
