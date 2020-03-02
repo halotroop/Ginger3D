@@ -41,7 +41,7 @@ public class TitleScreen extends Screen
 	public void tick()
 	{
 		Vector4i dbg = litecraft.dbgStats;
-		debugText.setText("FPS: " + dbg.x() + " UPS: " + dbg.y + " TPS: " + dbg.z);
+		debugText.setText("FPS: " + dbg.x() + " UPS: " + dbg.y() + " TPS: " + dbg.z() + " TWL: " + dbg.w());
 		playButton.update();
 		if (playButton.isClicked())
 		{
@@ -49,7 +49,7 @@ public class TitleScreen extends Screen
 			
 			if (Litecraft.getInstance().getWorld() == null)
 			{
-				Litecraft.getInstance().setSave(new LitecraftSave("cegregatedordinaldata", false));
+				Litecraft.getInstance().setSave(new LitecraftSave("SegregatedOrdinalData", false));
 				Litecraft.getInstance().changeWorld(Litecraft.getInstance().getSave().getWorldOrCreate(Dimensions.OVERWORLD));
 				ginger3D.setGingerPlayer(Litecraft.getInstance().getWorld().player);
 			}

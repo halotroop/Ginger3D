@@ -19,7 +19,7 @@ public class IngameHUD extends Screen
 	{
 		debugText = ginger3D.registerText("Loading...", 2, new Vector2f(0, 0), 1f, true, "debugInfo");
 		debugText.setBorderWidth(0.5f);
-		positionText = ginger3D.registerText("Loading...", 2, new Vector2f(0, -0.1f), 1f, true, "debugInfo");
+		positionText = ginger3D.registerText("Loading...", 2, new Vector2f(0, -0.1f), 1f, true, "posInfo");
 		positionText.setBorderWidth(0.5f);
 	}
 	
@@ -35,11 +35,11 @@ public class IngameHUD extends Screen
 //		long maxMemory = Runtime.getRuntime().maxMemory();
 		long totalMemory = Runtime.getRuntime().totalMemory();
 		long freeMemory = Runtime.getRuntime().freeMemory();
-		long usedMemory = totalMemory - freeMemory;
+		long usedMemory = (totalMemory - freeMemory) / 1024 / 1024;
 		Vector4i dbg = litecraft.dbgStats;
 		Vector3f position = GingerRegister.getInstance().game.data.player.getPosition();
-		debugText.setText("FPS: " + dbg.x() + " UPS: " + dbg.y + " TPS: " + dbg.z + " Mem: " + (usedMemory / 1024 / 1024) + "MB / " + (totalMemory / 1024 / 1024) + " MB");
-		positionText.setText("Position " + (int) position.x() + ", " + (int) position.y() + ", "+ (int) position.z() );
+		debugText.setText("FPS: " + dbg.x() + " UPS: " + dbg.y() + " TPS: " + dbg.z() + " TWL: " + dbg.w() + " Mem: " + usedMemory + "MB");
+		positionText.setText("Position: " + (int) position.x() + ", " + (int) position.y() + ", "+ (int) position.z() );
 	}
 
 	@Override
