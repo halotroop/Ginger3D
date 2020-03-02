@@ -35,14 +35,11 @@ public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable
 	private boolean fullyGenerated = false;
 	public final int dimension;
 	private boolean dirty = true;
-<<<<<<< HEAD
 	private World world;
 	/**
 	 * A holder for the rendered blocks in this chunk. This array is *NOT* safe to use for getting BIs at a position!
 	 * It can vary in size from 0 to 512 elements long and must only be read linearly.
 	 */
-=======
->>>>>>> liteCraft
 	private BlockInstance[] renderedBlocks = new BlockInstance[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 
 	public Chunk(World world, int chunkX, int chunkY, int chunkZ, int dimension)

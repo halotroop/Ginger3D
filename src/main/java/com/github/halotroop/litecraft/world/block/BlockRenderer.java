@@ -17,13 +17,8 @@ import com.github.hydos.ginger.engine.opengl.utils.GlLoader;
 
 public class BlockRenderer extends Renderer implements WorldGenConstants
 {
-<<<<<<< HEAD
-
 	public StaticShader shader;
-=======
-	private StaticShader shader;
 	public int atlasID;
->>>>>>> liteCraft
 
 	public BlockRenderer(StaticShader shader, Matrix4f projectionMatrix)
 	{
@@ -74,32 +69,12 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 		shader.loadFakeLightingVariable(true);
 		shader.loadShine(1, 1);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-<<<<<<< HEAD
-//		enableWireframe();
-=======
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, atlasID);
 		enableWireframe();
->>>>>>> liteCraft
 	}
 
 	public void render(BlockInstance[] renderList)
 	{
-<<<<<<< HEAD
-//		prepareRender();
-
-        for (BlockInstance entity : renderList) {
-            if (entity != null && entity.getModel() != null)
-            {
-                TexturedModel blockModel = entity.getModel();
-                GL11.glBindTexture(GL11.GL_TEXTURE_2D, blockModel.getTexture().getTextureID());
-                prepBlockInstance(entity);
-                GL11.glDrawElements(GL11.GL_TRIANGLES, blockModel.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-            }
-        }
-//		disableWireframe();
-//		shader.stop();
-
-=======
 		prepareRender();
 		for (int x = 0; x < CHUNK_SIZE; x++)
 			for (int y = 0; y < CHUNK_SIZE; y++)
@@ -117,6 +92,5 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 		}
 		disableWireframe();
 		shader.stop();
->>>>>>> liteCraft
 	}
 }

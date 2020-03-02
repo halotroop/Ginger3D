@@ -2,22 +2,12 @@ package com.github.hydos.ginger.engine.common.api;
 
 import java.util.*;
 
-<<<<<<< HEAD:src/main/java/com/github/hydos/ginger/engine/api/GingerRegister.java
-import com.github.hydos.ginger.engine.api.game.Game;
-import com.github.hydos.ginger.engine.elements.buttons.TextureButton;
-import com.github.hydos.ginger.engine.font.GUIText;
-import com.github.hydos.ginger.engine.postprocessing.Fbo;
-import com.github.hydos.ginger.engine.render.MasterRenderer;
-import com.github.hydos.ginger.engine.screen.Screen;
-=======
 import com.github.hydos.ginger.engine.common.api.game.Game;
 import com.github.hydos.ginger.engine.common.elements.buttons.TextureButton;
 import com.github.hydos.ginger.engine.common.font.GUIText;
 import com.github.hydos.ginger.engine.common.screen.Screen;
 import com.github.hydos.ginger.engine.opengl.postprocessing.Fbo;
 import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
-import com.github.hydos.multithreading.GingerThreading;
->>>>>>> liteCraft:src/main/java/com/github/hydos/ginger/engine/common/api/GingerRegister.java
 
 /** Used if a game wants to access engine variables safely */
 public class GingerRegister
