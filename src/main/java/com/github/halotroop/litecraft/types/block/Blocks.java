@@ -7,7 +7,7 @@ import com.github.halotroop.litecraft.types.block.Block.Properties;
 public final class Blocks
 {
 	
-	public static ArrayList<Block> blocks = new ArrayList<Block>();//real number is 256 //TODO: get all mods to say how many blocks they have and increace the number by that
+	public static ArrayList<Block> blocks = new ArrayList<Block>();
 	
 	public static final Block AIR = new Block(new Properties("air").visible(false).fullCube(false));
 	public static final Block GRASS = new Block(new Properties("cubes/soil/grass/grass_top.png").caveCarveThreshold(0.04f));

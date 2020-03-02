@@ -40,7 +40,7 @@ public class Block
 	private final boolean visible, fullCube;
 	private final float caveCarveThreshold;
 	public final String identifier;
-	private String texture;
+	public String texture;
 
 	public boolean isFullCube()
 	{ return this.fullCube; }
@@ -67,11 +67,17 @@ public class Block
 		this.fullCube = properties.fullCube;
 		this.identifier = properties.identifier;
 		this.caveCarveThreshold = properties.caveCarveThreshold;
+		if(model != null) {
+			this.texture = model.getTexture().getTexture().getLocation();
+		}else {
+			this.texture = "DONTLOAD";
+		}
 		IDENTIFIER_TO_BLOCK.put(this.identifier, this);
 		Blocks.blocks.add(this);
 	}
 	
-	public void updateBlockModel() {
+	public void updateBlockModelData() {
+		System.out.println("Updating block with texture at block/"+texture);
 		this.model = ModelLoader.loadGenericCube("block/"+texture);
 	}
 	

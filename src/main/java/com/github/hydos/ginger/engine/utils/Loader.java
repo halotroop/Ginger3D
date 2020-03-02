@@ -120,25 +120,27 @@ public class Loader
         //Fill the image with blank image data
         GL40.glTexImage2D(GL40.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width*2, height*2, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, (ByteBuffer) null);
         
-        int maxX = (int) Math.sqrt(Blocks.blocks.size());//if the block list gets too big just increace the 2 by 4 or somthing to account for it
+        long maxX = Math.round(Math.sqrt(Blocks.blocks.size()));
         int currentX = 0;
         int currentY = 0;
 		for(Block block: Blocks.blocks) {
 			//just in case
 			
-			block.updateBlockModel();
-			
-			if(currentX > maxX) {
-				currentX = 0;
-				currentY--;
+			if(!block.texture.equals("DONTLOAD")) {
+				block.updateBlockModelData();
+				if(currentX > maxX) {
+					currentX = 0;
+					currentY--;
+				}
+				GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 
+						currentX*width, currentY*height, 
+						width, height, 
+						GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, 
+						block.model.getTexture().getTexture().getImage()
+				);
+				currentX++;
 			}
-			GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 
-					currentX*width, currentY*height, 
-					width, height, 
-					GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, 
-					block.model.getTexture().getTexture().getImage()
-			);
-			currentX++;
+
 		}
 		return atlasId;
 	}

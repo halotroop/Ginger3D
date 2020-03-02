@@ -34,20 +34,22 @@ public class Image
 			img = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
 			if (img == null)
 			{ throw new RuntimeException("Failed to load image: " + stbi_failure_reason()); }
-			return new Image(w.get(0), h.get(0), img, comp);
+			return new Image(w.get(0), h.get(0), img, comp, imagePath);
 		}
 	}
 
 	private ByteBuffer image;
 	private int width, height;
 	private IntBuffer comp;
+	private String location;
 
-	Image(int width, int heigh, ByteBuffer image, IntBuffer comp)
+	Image(int width, int heigh, ByteBuffer image, IntBuffer comp, String location)
 	{
 		this.image = image;
 		this.height = heigh;
 		this.width = width;
 		this.comp = comp;
+		this.location = location;
 	}
 
 	public int getHeight()
@@ -61,4 +63,8 @@ public class Image
 
 	public IntBuffer getComp()
 	{ return comp; }
+
+	public String getLocation() {
+		return location;
+	}
 }

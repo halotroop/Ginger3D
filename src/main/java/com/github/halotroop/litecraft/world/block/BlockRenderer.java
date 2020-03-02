@@ -71,6 +71,7 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 		shader.loadFakeLightingVariable(true);
 		shader.loadShine(1, 1);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, atlasID);
 		enableWireframe();
 	}
 
@@ -85,7 +86,7 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 					if (entity != null && entity.getModel() != null)
 					{
 						TexturedModel blockModel = entity.getModel();
-						GL11.glBindTexture(GL11.GL_TEXTURE_2D, atlasID);
+						GL11.glBindTexture(GL11.GL_TEXTURE_2D, blockModel.getTexture().getTextureID());
 						prepBlockInstance(entity);
 						GL11.glDrawElements(GL11.GL_TRIANGLES, blockModel.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 					}
