@@ -114,7 +114,7 @@ public class Litecraft extends Game
 	{
 		if (engine == null) // Prevents this from being run more than once on accident.
 		{
-			Window.create(windowWidth, windowHeight, "LiteCraft", frameCap); // create window
+			Window.create(windowWidth, windowHeight, "Litecraft", frameCap, RenderAPI.OpenGL); // create window
 			// set up the gateways keybind key tracking
 			KeyCallbackHandler.trackWindow(Window.getWindow());
 			MouseCallbackHandler.trackWindow(Window.getWindow());
