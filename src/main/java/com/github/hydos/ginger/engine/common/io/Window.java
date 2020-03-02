@@ -69,6 +69,13 @@ public class Window
 		}else if (renderAPI == RenderAPI.Vulkan)
 
 		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
+<<<<<<< Upstream, based on branch 'liteCraft' of https://github.com/halotroop/Ginger3D.git
+=======
+		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 4);
+		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 6);
+		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
+		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
+>>>>>>> 2023b14 OpenGL 4.6 YeS
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
 		GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 		window = GLFW.glfwCreateWindow(actualWidth, actualHeight, title, (fullscreen) ? GLFW.glfwGetPrimaryMonitor() : 0, getWindow());
@@ -89,7 +96,11 @@ public class Window
 		oldWindowHeight = getHeight();
 	}
 
+<<<<<<< Upstream, based on branch 'liteCraft' of https://github.com/halotroop/Ginger3D.git
 	public static void create(int width, int height, String title, int fpsCap, RenderAPI api)
+=======
+	public static void create(int width, int height, String title, float fpsCap)
+>>>>>>> 2023b14 OpenGL 4.6 YeS
 	{
 		Window.width = width / 2;
 		Window.height = height / 2;
