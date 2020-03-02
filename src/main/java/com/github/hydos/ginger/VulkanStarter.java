@@ -19,6 +19,7 @@ import org.lwjgl.vulkan.*;
 import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.vulkan.utils.*;
+import com.github.hydos.ginger.engine.vulkan.utils.VKUtils.Pipeline;
 /**
  * 
  * @author hydos06
@@ -313,13 +314,13 @@ public class VulkanStarter
 		int currentHeight = currentExtent.height();
 		if (currentWidth != -1 && currentHeight != -1)
 		{
-			width = currentWidth;
-			height = currentHeight;
+			Window.width = currentWidth;
+			Window.height = currentHeight;
 		}
 		else
 		{
-			width = newWidth;
-			height = newHeight;
+			Window.width = newWidth;
+			Window.height = newHeight;
 		}
 		int preTransform;
 		if ((surfCaps.supportedTransforms() & VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR) != 0)
@@ -346,8 +347,8 @@ public class VulkanStarter
 			.clipped(true)
 			.compositeAlpha(VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR);
 		swapchainCI.imageExtent()
-			.width(width)
-			.height(height);
+			.width(Window.getWidth())
+			.height(Window.getHeight());
 		LongBuffer pSwapChain = memAllocLong(1);
 		err = vkCreateSwapchainKHR(device, swapchainCI, null, pSwapChain);
 		swapchainCI.free();
@@ -415,7 +416,7 @@ public class VulkanStarter
 			.samples(VK_SAMPLE_COUNT_1_BIT)
 			.tiling(VK_IMAGE_TILING_OPTIMAL)
 			.usage(VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
-		imageCreateInfo.extent().width(width).height(height).depth(1);
+		imageCreateInfo.extent().width(Window.getWidth()).height(Window.getHeight()).depth(1);
 		VkMemoryAllocateInfo mem_alloc = VkMemoryAllocateInfo.calloc()
 			.sType(VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO);
 		VkImageViewCreateInfo depthStencilViewCreateInfo = VkImageViewCreateInfo.calloc()
@@ -848,12 +849,6 @@ public class VulkanStarter
 		return descriptorSetLayout;
 	}
 
-	private static class Pipeline
-	{
-		long pipeline;
-		long layout;
-	}
-
 	private static Pipeline createPipeline(VkDevice device, long renderPass, VkPipelineVertexInputStateCreateInfo vi, long descriptorSetLayout) throws IOException
 	{
 		int err;
@@ -964,98 +959,11 @@ public class VulkanStarter
 		return ret;
 	}
 
-	private static VkCommandBuffer[] createRenderCommandBuffers(VkDevice device, long commandPool, long[] framebuffers, long renderPass, int width, int height,
-		Pipeline pipeline, long descriptorSet, long verticesBuf)
-	{
-		// Create the render command buffers (one command buffer per framebuffer image)
-		VkCommandBufferAllocateInfo cmdBufAllocateInfo = VkCommandBufferAllocateInfo.calloc()
-			.sType(VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO)
-			.commandPool(commandPool)
-			.level(VK_COMMAND_BUFFER_LEVEL_PRIMARY)
-			.commandBufferCount(framebuffers.length);
-		PointerBuffer pCommandBuffer = memAllocPointer(framebuffers.length);
-		int err = vkAllocateCommandBuffers(device, cmdBufAllocateInfo, pCommandBuffer);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to allocate render command buffer: " + VKUtils.translateVulkanResult(err)); }
-		VkCommandBuffer[] renderCommandBuffers = new VkCommandBuffer[framebuffers.length];
-		for (int i = 0; i < framebuffers.length; i++)
-		{ renderCommandBuffers[i] = new VkCommandBuffer(pCommandBuffer.get(i), device); }
-		memFree(pCommandBuffer);
-		cmdBufAllocateInfo.free();
-		// Create the command buffer begin structure
-		VkCommandBufferBeginInfo cmdBufInfo = VkCommandBufferBeginInfo.calloc()
-			.sType(VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO);
-		// Specify clear color (cornflower blue)
-		VkClearValue.Buffer clearValues = VkClearValue.calloc(2);
-		clearValues.get(0).color()
-			.float32(0, 100 / 255.0f)
-			.float32(1, 149 / 255.0f)
-			.float32(2, 237 / 255.0f)
-			.float32(3, 1.0f);
-		// Specify clear depth-stencil
-		clearValues.get(1).depthStencil().depth(1.0f).stencil(0);
-		// Specify everything to begin a render pass
-		VkRenderPassBeginInfo renderPassBeginInfo = VkRenderPassBeginInfo.calloc()
-			.sType(VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO)
-			.renderPass(renderPass)
-			.pClearValues(clearValues);
-		VkRect2D renderArea = renderPassBeginInfo.renderArea();
-		renderArea.offset().set(0, 0);
-		renderArea.extent().set(width, height);
-		for (int i = 0; i < renderCommandBuffers.length; ++i)
-		{
-			// Set target frame buffer
-			renderPassBeginInfo.framebuffer(framebuffers[i]);
-			err = vkBeginCommandBuffer(renderCommandBuffers[i], cmdBufInfo);
-			if (err != VK_SUCCESS)
-			{ throw new AssertionError("Failed to begin render command buffer: " + VKUtils.translateVulkanResult(err)); }
-			vkCmdBeginRenderPass(renderCommandBuffers[i], renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-			// Update dynamic viewport state
-			VkViewport.Buffer viewport = VkViewport.calloc(1)
-				.height(height)
-				.width(width)
-				.minDepth(0.0f)
-				.maxDepth(1.0f);
-			vkCmdSetViewport(renderCommandBuffers[i], 0, viewport);
-			viewport.free();
-			// Update dynamic scissor state
-			VkRect2D.Buffer scissor = VkRect2D.calloc(1);
-			scissor.extent().set(width, height);
-			scissor.offset().set(0, 0);
-			vkCmdSetScissor(renderCommandBuffers[i], 0, scissor);
-			scissor.free();
-			// Bind descriptor sets describing shader binding points
-			LongBuffer descriptorSets = memAllocLong(1).put(0, descriptorSet);
-			vkCmdBindDescriptorSets(renderCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.layout, 0, descriptorSets, null);
-			memFree(descriptorSets);
-			// Bind the rendering pipeline (including the shaders)
-			vkCmdBindPipeline(renderCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.pipeline);
-			// Bind triangle vertices
-			LongBuffer offsets = memAllocLong(1);
-			offsets.put(0, 0L);
-			LongBuffer pBuffers = memAllocLong(1);
-			pBuffers.put(0, verticesBuf);
-			vkCmdBindVertexBuffers(renderCommandBuffers[i], 0, pBuffers, offsets);
-			memFree(pBuffers);
-			memFree(offsets);
-			// Draw triangle
-			vkCmdDraw(renderCommandBuffers[i], 6, 1, 0, 0);
-			vkCmdEndRenderPass(renderCommandBuffers[i]);
-			err = vkEndCommandBuffer(renderCommandBuffers[i]);
-			if (err != VK_SUCCESS)
-			{ throw new AssertionError("Failed to begin render command buffer: " + VKUtils.translateVulkanResult(err)); }
-		}
-		renderPassBeginInfo.free();
-		clearValues.free();
-		cmdBufInfo.free();
-		return renderCommandBuffers;
-	}
-
 	private static void updateUbo(VkDevice device, UboDescriptor ubo, float angle)
 	{ //a UBO is a uniform buffer object
 		Matrix4f m = new Matrix4f()
 			.scale(1, -1, 1) // <- correcting viewport transformation (what Direct3D does, too)
-			.perspective((float) Math.toRadians(45.0f), (float) width / height, 0.1f, 10.0f, true)
+			.perspective((float) Math.toRadians(45.0f), (float) Window.getWidth() / Window.getHeight(), 0.1f, 10.0f, true)
 			.lookAt(0, 1, 3,
 				0, 0, 0,
 				0, 1, 0)
@@ -1077,29 +985,19 @@ public class VulkanStarter
 	private static Swapchain swapchain;
 	private static long[] framebuffers;
 	private static VkCommandBuffer[] renderCommandBuffers;
-	private static int width, height;
 	private static DepthStencil depthStencil;
 
 	public static void main(String[] args) throws IOException
 	{
 		Window.create(1200, 600, "Vulkan Ginger3D", 60, RenderAPI.Vulkan);
-		width = Window.getWidth();
-		height = Window.getHeight();
 		/* Look for instance extensions */
 		PointerBuffer requiredExtensions = glfwGetRequiredInstanceExtensions();
 		if (requiredExtensions == null)
 		{ throw new AssertionError("Failed to find list of required Vulkan extensions"); }
 		// Create the Vulkan instance
 		final VkInstance instance = VKLoader.createInstance(requiredExtensions);
-		final VkDebugReportCallbackEXT debugCallback = new VkDebugReportCallbackEXT()
-		{
-			public int invoke(int flags, int objectType, long object, long location, int messageCode, long pLayerPrefix, long pMessage, long pUserData)
-			{
-				System.err.println("ERROR OCCURED: " + VkDebugReportCallbackEXT.getString(pMessage));
-				return 0;
-			}
-		};
-		final long debugCallbackHandle = VKUtils.startVulkanDebugging(instance, VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT, debugCallback);
+		VKUtils.setupVulkanDebugCallback();
+		final long debugCallbackHandle = VKUtils.startVulkanDebugging(instance, VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT, VKConstants.debugCallback);
 		final VkPhysicalDevice physicalDevice = getFirstPhysicalDevice(instance);
 		final DeviceAndGraphicsQueueFamily deviceAndGraphicsQueueFamily = createDeviceAndGetGraphicsQueueFamily(physicalDevice);
 		final VkDevice device = deviceAndGraphicsQueueFamily.device;
@@ -1150,7 +1048,7 @@ public class VulkanStarter
 				long oldChain = swapchain != null ? swapchain.swapchainHandle : VK_NULL_HANDLE;
 				// Create the swapchain (this will also add a memory barrier to initialize the framebuffer images)
 				swapchain = createSwapChain(device, physicalDevice, surface, oldChain, setupCommandBuffer,
-					width, height, colorAndDepthFormatAndSpace.colorFormat, colorAndDepthFormatAndSpace.colorSpace);
+					Window.getWidth(), Window.getHeight(), colorAndDepthFormatAndSpace.colorFormat, colorAndDepthFormatAndSpace.colorSpace);
 				// Create depth-stencil image
 				depthStencil = createDepthStencil(device, memoryProperties, colorAndDepthFormatAndSpace.depthFormat, setupCommandBuffer);
 				err = vkEndCommandBuffer(setupCommandBuffer);
@@ -1161,11 +1059,11 @@ public class VulkanStarter
 				if (framebuffers != null)
 				{ for (int i = 0; i < framebuffers.length; i++)
 					vkDestroyFramebuffer(device, framebuffers[i], null); }
-				framebuffers = createFramebuffers(device, swapchain, renderPass, width, height, depthStencil);
+				framebuffers = createFramebuffers(device, swapchain, renderPass, Window.getWidth(), Window.getHeight(), depthStencil);
 				// Create render command buffers
 				if (renderCommandBuffers != null)
 				{ vkResetCommandPool(device, renderCommandPool, VKUtils.VK_FLAGS_NONE); }
-				renderCommandBuffers = createRenderCommandBuffers(device, renderCommandPool, framebuffers, renderPass, width, height, pipeline, descriptorSet,
+				renderCommandBuffers = VKUtils.initRenderCommandBuffers(device, renderCommandPool, framebuffers, renderPass, Window.getWidth(), Window.getHeight(), pipeline, descriptorSet,
 					vertices.verticesBuf);
 				mustRecreate = false;
 			}
@@ -1179,8 +1077,6 @@ public class VulkanStarter
 				if (width <= 0 || height <= 0)
 					return;
 				swapchainRecreator.mustRecreate = true;
-				VulkanStarter.width = width;
-				VulkanStarter.height = height;
 			}
 		};
 		glfwSetFramebufferSizeCallback(Window.getWindow(), framebufferSizeCallback);
@@ -1273,7 +1169,5 @@ public class VulkanStarter
 		keyCallback.free();
 		glfwDestroyWindow(Window.getWindow());
 		glfwTerminate();
-		// We don't bother disposing of all Vulkan resources.
-		// Let the OS process manager take care of it.
 	}
 }

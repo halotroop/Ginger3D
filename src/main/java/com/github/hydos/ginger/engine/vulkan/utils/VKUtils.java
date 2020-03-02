@@ -5,12 +5,12 @@ import static org.lwjgl.util.shaderc.Shaderc.*;
 import static org.lwjgl.vulkan.EXTDebugReport.*;
 import static org.lwjgl.vulkan.KHRSurface.*;
 import static org.lwjgl.vulkan.NVRayTracing.*;
-import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
+import static org.lwjgl.vulkan.VK10.*;
 
 import java.io.IOException;
 import java.nio.*;
 
-import org.lwjgl.BufferUtils;
+import org.lwjgl.*;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.shaderc.*;
 import org.lwjgl.vulkan.*;
@@ -21,6 +21,7 @@ import com.github.hydos.ginger.engine.opengl.render.tools.IOUtil;
  *         a util library for Vulkan */
 public class VKUtils
 {
+	
 	public static final int VK_FLAGS_NONE = 0;
 
 	public static long startVulkanDebugging(VkInstance instance, int flags, VkDebugReportCallbackEXT callback)
@@ -163,5 +164,110 @@ public class VKUtils
 		default:
 			return String.format("%s [%d]", "Is an unknown vulkan result", Integer.valueOf(vulkanResult));
 		}
+	}
+	
+	public static class Pipeline
+	{
+		public long pipeline;
+		public long layout;
+	}
+	
+	public static VkCommandBuffer[] initRenderCommandBuffers(VkDevice device, long commandPool, long[] framebuffers, long renderPass, int width, int height,
+		Pipeline pipeline, long descriptorSet, long verticesBuf)
+	{
+		// Create the render command buffers (one command buffer per framebuffer image)
+		VkCommandBufferAllocateInfo cmdBufAllocateInfo = VkCommandBufferAllocateInfo.calloc()
+			.sType(VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO)
+			.commandPool(commandPool)
+			.level(VK_COMMAND_BUFFER_LEVEL_PRIMARY)
+			.commandBufferCount(framebuffers.length);
+		PointerBuffer pCommandBuffer = memAllocPointer(framebuffers.length);
+		int err = vkAllocateCommandBuffers(device, cmdBufAllocateInfo, pCommandBuffer);
+		if (err != VK_SUCCESS)
+		{ throw new AssertionError("Failed to create render command buffer: " + VKUtils.translateVulkanResult(err)); }
+		VkCommandBuffer[] renderCommandBuffers = new VkCommandBuffer[framebuffers.length];
+		for (int i = 0; i < framebuffers.length; i++)
+		{ renderCommandBuffers[i] = new VkCommandBuffer(pCommandBuffer.get(i), device); }
+		memFree(pCommandBuffer);
+		cmdBufAllocateInfo.free();
+		// Create the command buffer begin structure
+		VkCommandBufferBeginInfo cmdBufInfo = VkCommandBufferBeginInfo.calloc()
+			.sType(VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO);
+		// Specify clear color (cornflower blue)
+		VkClearValue.Buffer clearValues = VkClearValue.calloc(2);
+		clearValues.get(0).color()
+			.float32(0, 100 / 255.0f)
+			.float32(1, 149 / 255.0f)
+			.float32(2, 237 / 255.0f)
+			.float32(3, 1.0f);
+		// Specify clear depth-stencil
+		clearValues.get(1).depthStencil().depth(1.0f).stencil(0);
+		// Specify everything to begin a render pass
+		VkRenderPassBeginInfo renderPassBeginInfo = VkRenderPassBeginInfo.calloc()
+			.sType(VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO)
+			.renderPass(renderPass)
+			.pClearValues(clearValues);
+		VkRect2D renderArea = renderPassBeginInfo.renderArea();
+		renderArea.offset().set(0, 0);
+		renderArea.extent().set(width, height);
+		for (int i = 0; i < renderCommandBuffers.length; ++i)
+		{
+			// Set target frame buffer
+			renderPassBeginInfo.framebuffer(framebuffers[i]);
+			err = vkBeginCommandBuffer(renderCommandBuffers[i], cmdBufInfo);
+			if (err != VK_SUCCESS)
+			{ throw new AssertionError("Failed to begin render command buffer: " + VKUtils.translateVulkanResult(err)); }
+			vkCmdBeginRenderPass(renderCommandBuffers[i], renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+			// Update dynamic viewport state
+			VkViewport.Buffer viewport = VkViewport.calloc(1)
+				.height(height)
+				.width(width)
+				.minDepth(0.0f)
+				.maxDepth(1.0f);
+			vkCmdSetViewport(renderCommandBuffers[i], 0, viewport);
+			viewport.free();
+			// Update dynamic scissor state
+			VkRect2D.Buffer scissor = VkRect2D.calloc(1);
+			scissor.extent().set(width, height);
+			scissor.offset().set(0, 0);
+			vkCmdSetScissor(renderCommandBuffers[i], 0, scissor);
+			scissor.free();
+			// Bind descriptor sets describing shader binding points
+			LongBuffer descriptorSets = memAllocLong(1).put(0, descriptorSet);
+			vkCmdBindDescriptorSets(renderCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.layout, 0, descriptorSets, null);
+			memFree(descriptorSets);
+			// Bind the rendering pipeline (including the shaders)
+			vkCmdBindPipeline(renderCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.pipeline);
+			// Bind triangle vertices
+			LongBuffer offsets = memAllocLong(1);
+			offsets.put(0, 0L);
+			LongBuffer pBuffers = memAllocLong(1);
+			pBuffers.put(0, verticesBuf);
+			vkCmdBindVertexBuffers(renderCommandBuffers[i], 0, pBuffers, offsets);
+			memFree(pBuffers);
+			memFree(offsets);
+			// Draw triangle
+			vkCmdDraw(renderCommandBuffers[i], 6, 1, 0, 0);
+			vkCmdEndRenderPass(renderCommandBuffers[i]);
+			err = vkEndCommandBuffer(renderCommandBuffers[i]);
+			if (err != VK_SUCCESS)
+			{ throw new AssertionError("Failed to begin render command buffer: " + VKUtils.translateVulkanResult(err)); }
+		}
+		renderPassBeginInfo.free();
+		clearValues.free();
+		cmdBufInfo.free();
+		return renderCommandBuffers;
+	}
+
+	public static void setupVulkanDebugCallback()
+	{
+		VKConstants.debugCallback = new VkDebugReportCallbackEXT()
+		{
+			public int invoke(int flags, int objectType, long object, long location, int messageCode, long pLayerPrefix, long pMessage, long pUserData)
+			{
+				System.err.println("ERROR OCCURED: " + VkDebugReportCallbackEXT.getString(pMessage));
+				return 0;
+			}
+		};
 	}
 }

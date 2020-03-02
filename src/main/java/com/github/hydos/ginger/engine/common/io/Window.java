@@ -31,7 +31,8 @@ public class Window
 	{ return fullscreen; }
 	
 	public static RenderAPI renderAPI;
-	private static int width, height;
+	public static int width;
+	public static int height;
 	private static String title;
 	private static long window;
 	private static Vector3f backgroundColour = new Vector3f(118f, 215f, 234f);
