@@ -4,7 +4,6 @@ import org.joml.Matrix4f;
 import org.lwjgl.opengl.*;
 
 import com.github.halotroop.litecraft.types.block.BlockInstance;
-import com.github.halotroop.litecraft.world.Chunk;
 import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 import com.github.hydos.ginger.engine.common.api.GingerRegister;
 import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
