@@ -56,7 +56,7 @@ public class TitleScreen extends Screen
 			if (Litecraft.getInstance().getWorld() != null)
 			{
 				ginger3D.openScreen(new IngameHUD());
-				this.close();
+				this.cleanup();
 			}
 			//TODO: add world creation gui so it takes u to world creation place
 			//TODO: add a texture to be rendered behind the gui as an option
@@ -64,7 +64,7 @@ public class TitleScreen extends Screen
 	}
 
 	@Override
-	public void close()
+	public void cleanup()
 	{
 		this.debugText.remove();
 		this.playButton.hide(Litecraft.getInstance().data.guis);

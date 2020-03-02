@@ -29,6 +29,6 @@ public class ExitGameScreen extends Screen
 	{}
 
 	@Override
-	public void close()
+	public void cleanup()
 	{ infoText.remove(); }
 }

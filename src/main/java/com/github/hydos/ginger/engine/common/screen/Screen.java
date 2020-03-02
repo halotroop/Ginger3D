@@ -12,5 +12,5 @@ public abstract class Screen
 
 	public abstract void tick();
 	
-	public abstract void close();
+	public abstract void cleanup();
 }

@@ -43,7 +43,7 @@ public class IngameHUD extends Screen
 	}
 
 	@Override
-	public void close()
+	public void cleanup()
 	{
 		debugText.remove();
 		positionText.remove();
