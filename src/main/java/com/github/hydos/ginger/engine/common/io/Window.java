@@ -7,8 +7,8 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
-import com.github.hydos.ginger.engine.openGL.api.GingerGL;
-import com.github.hydos.ginger.engine.openGL.render.texture.Image;
+import com.github.hydos.ginger.engine.opengl.api.GingerGL;
+import com.github.hydos.ginger.engine.opengl.render.texture.Image;
 
 public class Window
 {

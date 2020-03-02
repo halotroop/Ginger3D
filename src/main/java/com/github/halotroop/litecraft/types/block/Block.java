@@ -3,7 +3,7 @@ package com.github.halotroop.litecraft.types.block;
 import java.util.*;
 
 import com.github.hydos.ginger.engine.common.obj.ModelLoader;
-import com.github.hydos.ginger.engine.openGL.render.models.TexturedModel;
+import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
 
 public class Block
 {

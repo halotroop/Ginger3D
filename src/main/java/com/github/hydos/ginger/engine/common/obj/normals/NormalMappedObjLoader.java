@@ -5,8 +5,8 @@ import java.util.*;
 
 import org.joml.*;
 
-import com.github.hydos.ginger.engine.openGL.render.models.RawModel;
-import com.github.hydos.ginger.engine.openGL.utils.GlLoader;
+import com.github.hydos.ginger.engine.opengl.render.models.RawModel;
+import com.github.hydos.ginger.engine.opengl.utils.GlLoader;
 
 public class NormalMappedObjLoader
 {

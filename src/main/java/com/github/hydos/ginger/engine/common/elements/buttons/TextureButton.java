@@ -7,7 +7,7 @@ import org.lwjgl.glfw.GLFW;
 
 import com.github.hydos.ginger.engine.common.elements.GuiTexture;
 import com.github.hydos.ginger.engine.common.io.Window;
-import com.github.hydos.ginger.engine.openGL.utils.GlLoader;
+import com.github.hydos.ginger.engine.opengl.utils.GlLoader;
 
 public class TextureButton
 {

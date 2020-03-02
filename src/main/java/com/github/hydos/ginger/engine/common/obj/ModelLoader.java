@@ -1,9 +1,9 @@
 package com.github.hydos.ginger.engine.common.obj;
 
 import com.github.hydos.ginger.engine.common.obj.shapes.StaticCube;
-import com.github.hydos.ginger.engine.openGL.render.models.TexturedModel;
-import com.github.hydos.ginger.engine.openGL.render.texture.ModelTexture;
-import com.github.hydos.ginger.engine.openGL.utils.GlLoader;
+import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
+import com.github.hydos.ginger.engine.opengl.render.texture.ModelTexture;
+import com.github.hydos.ginger.engine.opengl.utils.GlLoader;
 
 public class ModelLoader
 {

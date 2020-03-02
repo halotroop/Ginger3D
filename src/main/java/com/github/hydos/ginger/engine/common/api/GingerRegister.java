@@ -4,10 +4,10 @@ import java.util.*;
 
 import com.github.hydos.ginger.engine.common.api.game.Game;
 import com.github.hydos.ginger.engine.common.elements.buttons.TextureButton;
-import com.github.hydos.ginger.engine.openGL.font.GUIText;
-import com.github.hydos.ginger.engine.openGL.postprocessing.Fbo;
-import com.github.hydos.ginger.engine.openGL.render.MasterRenderer;
-import com.github.hydos.ginger.engine.openGL.screen.Screen;
+import com.github.hydos.ginger.engine.opengl.font.GUIText;
+import com.github.hydos.ginger.engine.opengl.postprocessing.Fbo;
+import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
+import com.github.hydos.ginger.engine.opengl.screen.Screen;
 import com.github.hydos.multithreading.GingerThreading;
 
 /** Used if a game wants to access engine variables safely */

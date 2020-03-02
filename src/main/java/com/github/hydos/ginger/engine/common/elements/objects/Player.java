@@ -8,7 +8,7 @@ import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 import com.github.hydos.ginger.engine.common.Constants;
 import com.github.hydos.ginger.engine.common.api.GingerRegister;
 import com.github.hydos.ginger.engine.common.io.Window;
-import com.github.hydos.ginger.engine.openGL.render.models.TexturedModel;
+import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
 
 public class Player extends RenderObject implements WorldGenConstants
 {

@@ -15,11 +15,11 @@ import com.github.hydos.ginger.engine.common.elements.objects.*;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.obj.ModelLoader;
 import com.github.hydos.ginger.engine.common.obj.shapes.StaticCube;
-import com.github.hydos.ginger.engine.openGL.api.*;
-import com.github.hydos.ginger.engine.openGL.font.FontType;
-import com.github.hydos.ginger.engine.openGL.render.MasterRenderer;
-import com.github.hydos.ginger.engine.openGL.render.models.TexturedModel;
-import com.github.hydos.ginger.engine.openGL.utils.GlLoader;
+import com.github.hydos.ginger.engine.opengl.api.*;
+import com.github.hydos.ginger.engine.opengl.font.FontType;
+import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
+import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
+import com.github.hydos.ginger.engine.opengl.utils.GlLoader;
 
 import tk.valoeghese.gateways.client.io.*;
 

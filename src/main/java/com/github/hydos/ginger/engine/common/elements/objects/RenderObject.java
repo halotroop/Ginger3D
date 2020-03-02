@@ -2,7 +2,7 @@ package com.github.hydos.ginger.engine.common.elements.objects;
 
 import org.joml.Vector3f;
 
-import com.github.hydos.ginger.engine.openGL.render.models.TexturedModel;
+import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
 
 public class RenderObject
 {
