@@ -2,8 +2,8 @@ package com.github.halotroop.litecraft.types.entity;
 
 import org.joml.Vector3f;
 
-import com.github.hydos.ginger.engine.elements.objects.RenderObject;
-import com.github.hydos.ginger.engine.render.models.TexturedModel;
+import com.github.hydos.ginger.engine.openGL.elements.objects.RenderObject;
+import com.github.hydos.ginger.engine.openGL.render.models.TexturedModel;
 
 public abstract class Entity extends RenderObject
 {

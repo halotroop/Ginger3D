@@ -7,12 +7,12 @@ import org.joml.*;
 import com.github.halotroop.litecraft.Litecraft;
 import com.github.halotroop.litecraft.save.LitecraftSave;
 import com.github.halotroop.litecraft.world.dimension.Dimensions;
-import com.github.hydos.ginger.engine.api.Ginger;
-import com.github.hydos.ginger.engine.elements.GuiTexture;
-import com.github.hydos.ginger.engine.elements.buttons.TextureButton;
-import com.github.hydos.ginger.engine.font.GUIText;
-import com.github.hydos.ginger.engine.io.Window;
-import com.github.hydos.ginger.engine.screen.Screen;
+import com.github.hydos.ginger.engine.openGL.api.Ginger;
+import com.github.hydos.ginger.engine.openGL.elements.GuiTexture;
+import com.github.hydos.ginger.engine.openGL.elements.buttons.TextureButton;
+import com.github.hydos.ginger.engine.openGL.font.GUIText;
+import com.github.hydos.ginger.engine.openGL.io.Window;
+import com.github.hydos.ginger.engine.openGL.screen.Screen;
 
 /**
  * YeS

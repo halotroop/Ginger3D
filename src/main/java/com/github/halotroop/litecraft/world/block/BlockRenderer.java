@@ -6,14 +6,14 @@ import org.lwjgl.opengl.*;
 import com.github.halotroop.litecraft.types.block.BlockInstance;
 import com.github.halotroop.litecraft.world.Chunk;
 import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
-import com.github.hydos.ginger.engine.api.GingerRegister;
-import com.github.hydos.ginger.engine.elements.objects.RenderObject;
-import com.github.hydos.ginger.engine.io.Window;
-import com.github.hydos.ginger.engine.math.Maths;
-import com.github.hydos.ginger.engine.render.Renderer;
-import com.github.hydos.ginger.engine.render.models.TexturedModel;
-import com.github.hydos.ginger.engine.render.shaders.StaticShader;
-import com.github.hydos.ginger.engine.utils.Loader;
+import com.github.hydos.ginger.engine.openGL.api.GingerRegister;
+import com.github.hydos.ginger.engine.openGL.elements.objects.RenderObject;
+import com.github.hydos.ginger.engine.openGL.io.Window;
+import com.github.hydos.ginger.engine.openGL.math.Maths;
+import com.github.hydos.ginger.engine.openGL.render.Renderer;
+import com.github.hydos.ginger.engine.openGL.render.models.TexturedModel;
+import com.github.hydos.ginger.engine.openGL.render.shaders.StaticShader;
+import com.github.hydos.ginger.engine.openGL.utils.Loader;
 
 public class BlockRenderer extends Renderer implements WorldGenConstants
 {

@@ -3,7 +3,7 @@ package com.github.halotroop.litecraft.types.block;
 import org.joml.Vector3f;
 
 import com.github.halotroop.litecraft.world.Chunk;
-import com.github.hydos.ginger.engine.elements.objects.RenderObject;
+import com.github.hydos.ginger.engine.openGL.elements.objects.RenderObject;
 
 public class BlockInstance extends RenderObject
 {

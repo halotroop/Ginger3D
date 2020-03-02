@@ -2,10 +2,10 @@ package com.github.halotroop.litecraft.screens;
 
 import org.joml.*;
 
-import com.github.hydos.ginger.engine.api.*;
-import com.github.hydos.ginger.engine.font.GUIText;
-import com.github.hydos.ginger.engine.io.Window;
-import com.github.hydos.ginger.engine.screen.Screen;
+import com.github.hydos.ginger.engine.openGL.api.*;
+import com.github.hydos.ginger.engine.openGL.font.GUIText;
+import com.github.hydos.ginger.engine.openGL.io.Window;
+import com.github.hydos.ginger.engine.openGL.screen.Screen;
 
 public class ExitGameScreen extends Screen
 {
