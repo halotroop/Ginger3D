@@ -16,9 +16,9 @@ import com.github.halotroop.litecraft.world.block.BlockRenderer;
 import com.github.halotroop.litecraft.world.dimension.Dimension;
 import com.github.halotroop.litecraft.world.gen.*;
 import com.github.halotroop.litecraft.world.gen.modifier.WorldModifier;
-import com.github.hydos.ginger.engine.elements.objects.Player;
-import com.github.hydos.ginger.engine.obj.ModelLoader;
-import com.github.hydos.ginger.engine.render.models.TexturedModel;
+import com.github.hydos.ginger.engine.common.elements.objects.Player;
+import com.github.hydos.ginger.engine.common.obj.ModelLoader;
+import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
 
 import it.unimi.dsi.fastutil.longs.*;
 

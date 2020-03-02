@@ -8,8 +8,8 @@ import org.joml.Vector3f;
 import com.github.halotroop.litecraft.Litecraft;
 import com.github.halotroop.litecraft.world.*;
 import com.github.halotroop.litecraft.world.dimension.Dimension;
-import com.github.hydos.ginger.engine.cameras.Camera;
-import com.github.hydos.ginger.engine.elements.objects.Player;
+import com.github.hydos.ginger.engine.common.cameras.Camera;
+import com.github.hydos.ginger.engine.common.elements.objects.Player;
 
 import tk.valoeghese.sod.*;
 

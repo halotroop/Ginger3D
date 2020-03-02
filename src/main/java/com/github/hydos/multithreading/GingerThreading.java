@@ -3,7 +3,7 @@ package com.github.hydos.multithreading;
 import java.util.*;
 
 import com.github.halotroop.litecraft.Litecraft;
-import com.github.hydos.ginger.engine.io.Window;
+import com.github.hydos.ginger.engine.common.io.Window;
 
 public class GingerThreading extends Thread
 {
