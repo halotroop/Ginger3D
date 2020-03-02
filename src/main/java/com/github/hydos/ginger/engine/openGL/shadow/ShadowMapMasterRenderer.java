@@ -6,8 +6,8 @@ import java.util.*;
 import org.joml.*;
 import org.lwjgl.opengl.GL11;
 
-import com.github.hydos.ginger.engine.openGL.cameras.Camera;
-import com.github.hydos.ginger.engine.openGL.elements.objects.*;
+import com.github.hydos.ginger.engine.common.cameras.Camera;
+import com.github.hydos.ginger.engine.common.elements.objects.*;
 import com.github.hydos.ginger.engine.openGL.render.models.TexturedModel;
 
 /** This class is in charge of using all of the classes in the shadows package to

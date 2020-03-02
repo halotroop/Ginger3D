@@ -3,6 +3,7 @@ package com.github.halotroop.litecraft.screens;
 import org.joml.*;
 
 import com.github.halotroop.litecraft.Litecraft;
+import com.github.hydos.ginger.engine.common.api.GingerRegister;
 import com.github.hydos.ginger.engine.openGL.api.*;
 import com.github.hydos.ginger.engine.openGL.font.GUIText;
 import com.github.hydos.ginger.engine.openGL.screen.Screen;
@@ -11,7 +12,7 @@ public class IngameHUD extends Screen
 {
 	private GUIText debugText;
 	private GUIText positionText;
-	private Ginger ginger3D = Ginger.getInstance();
+	private GingerGL ginger3D = GingerGL.getInstance();
 	private Litecraft litecraft = Litecraft.getInstance();
 	
 	public IngameHUD()

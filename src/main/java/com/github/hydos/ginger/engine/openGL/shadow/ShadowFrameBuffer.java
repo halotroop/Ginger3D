@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.opengl.*;
 
-import com.github.hydos.ginger.engine.openGL.io.Window;
+import com.github.hydos.ginger.engine.common.io.Window;
 
 /** The frame buffer for the shadow pass. This class sets up the depth texture
  * which can be rendered to during the shadow render pass, producing a shadow

@@ -6,14 +6,14 @@ import org.lwjgl.opengl.*;
 import com.github.halotroop.litecraft.types.block.BlockInstance;
 import com.github.halotroop.litecraft.world.Chunk;
 import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
-import com.github.hydos.ginger.engine.openGL.api.GingerRegister;
-import com.github.hydos.ginger.engine.openGL.elements.objects.RenderObject;
-import com.github.hydos.ginger.engine.openGL.io.Window;
-import com.github.hydos.ginger.engine.openGL.math.Maths;
+import com.github.hydos.ginger.engine.common.api.GingerRegister;
+import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
+import com.github.hydos.ginger.engine.common.io.Window;
+import com.github.hydos.ginger.engine.common.math.Maths;
 import com.github.hydos.ginger.engine.openGL.render.Renderer;
 import com.github.hydos.ginger.engine.openGL.render.models.TexturedModel;
 import com.github.hydos.ginger.engine.openGL.render.shaders.StaticShader;
-import com.github.hydos.ginger.engine.openGL.utils.Loader;
+import com.github.hydos.ginger.engine.openGL.utils.GlLoader;
 
 public class BlockRenderer extends Renderer implements WorldGenConstants
 {
@@ -28,7 +28,7 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
-		this.atlasID = Loader.createBlockAtlas();
+		this.atlasID = GlLoader.createBlockAtlas();
 	}
 
 	private void prepBlockInstance(RenderObject entity)

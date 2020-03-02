@@ -2,9 +2,9 @@ package com.github.hydos.ginger.engine.openGL.render.tools;
 
 import org.joml.*;
 
-import com.github.hydos.ginger.engine.openGL.cameras.Camera;
-import com.github.hydos.ginger.engine.openGL.io.Window;
-import com.github.hydos.ginger.engine.openGL.math.Maths;
+import com.github.hydos.ginger.engine.common.cameras.Camera;
+import com.github.hydos.ginger.engine.common.io.Window;
+import com.github.hydos.ginger.engine.common.math.Maths;
 
 public class MousePicker
 {

@@ -3,7 +3,7 @@ package com.github.hydos.ginger.engine.openGL.postprocessing;
 import org.lwjgl.opengl.*;
 
 import com.github.hydos.ginger.engine.openGL.render.models.RawModel;
-import com.github.hydos.ginger.engine.openGL.utils.Loader;
+import com.github.hydos.ginger.engine.openGL.utils.GlLoader;
 
 public class PostProcessing
 {
@@ -33,7 +33,7 @@ public class PostProcessing
 
 	public static void init()
 	{
-		quad = Loader.loadToVAO(POSITIONS, 2);
+		quad = GlLoader.loadToVAO(POSITIONS, 2);
 		contrastChanger = new ContrastChanger();
 	}
 

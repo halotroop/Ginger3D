@@ -4,8 +4,8 @@ import java.lang.Math;
 
 import org.joml.*;
 
-import com.github.hydos.ginger.engine.openGL.cameras.Camera;
-import com.github.hydos.ginger.engine.openGL.io.Window;
+import com.github.hydos.ginger.engine.common.cameras.Camera;
+import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.openGL.render.MasterRenderer;
 
 /** Represents the 3D cuboidal area of the world in which objects will cast

@@ -2,9 +2,9 @@ package com.github.hydos.ginger.engine.openGL.font;
 
 import java.util.*;
 
-import com.github.hydos.ginger.engine.openGL.api.Ginger;
+import com.github.hydos.ginger.engine.openGL.api.GingerGL;
 import com.github.hydos.ginger.engine.openGL.render.renderers.FontRenderer;
-import com.github.hydos.ginger.engine.openGL.utils.Loader;
+import com.github.hydos.ginger.engine.openGL.utils.GlLoader;
 
 public class TextMaster
 {
@@ -21,7 +21,7 @@ public class TextMaster
 	{
 		FontType font = text.getFont();
 		TextMeshData data = font.loadText(text);
-		int vao = Loader.loadToVAO(data.getVertexPositions(), data.getTextureCoords());
+		int vao = GlLoader.loadToVAO(data.getVertexPositions(), data.getTextureCoords());
 		text.setMeshInfo(vao, data.getVertexCount());
 		List<GUIText> textBatch = texts.get(font);
 		if (textBatch == null)
@@ -46,10 +46,10 @@ public class TextMaster
 	public static void render(GUIText buildText)
 	{
 		Map<FontType, List<GUIText>> oldTexts = texts;
-		List<GUIText> oldFontText = texts.get(Ginger.getInstance().globalFont);
+		List<GUIText> oldFontText = texts.get(GingerGL.getInstance().globalFont);
 		oldFontText.add(buildText);
 		texts.clear();
-		texts.put(Ginger.getInstance().globalFont, oldFontText);
+		texts.put(GingerGL.getInstance().globalFont, oldFontText);
 		texts = oldTexts;
 	}
 }

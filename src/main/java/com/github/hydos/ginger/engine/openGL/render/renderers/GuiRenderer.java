@@ -5,12 +5,12 @@ import java.util.List;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.*;
 
-import com.github.hydos.ginger.engine.openGL.elements.GuiTexture;
-import com.github.hydos.ginger.engine.openGL.math.Maths;
+import com.github.hydos.ginger.engine.common.elements.GuiTexture;
+import com.github.hydos.ginger.engine.common.math.Maths;
 import com.github.hydos.ginger.engine.openGL.render.Renderer;
 import com.github.hydos.ginger.engine.openGL.render.models.RawModel;
 import com.github.hydos.ginger.engine.openGL.render.shaders.GuiShader;
-import com.github.hydos.ginger.engine.openGL.utils.Loader;
+import com.github.hydos.ginger.engine.openGL.utils.GlLoader;
 
 public class GuiRenderer extends Renderer
 {
@@ -24,7 +24,7 @@ public class GuiRenderer extends Renderer
 		{
 			-1, 1, -1, -1, 1, 1, 1, -1
 		};
-		quad = Loader.loadToVAO(positions, 2);
+		quad = GlLoader.loadToVAO(positions, 2);
 	}
 
 	public void cleanUp()

@@ -2,15 +2,15 @@ package com.github.halotroop.litecraft.screens;
 
 import org.joml.*;
 
+import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.openGL.api.*;
 import com.github.hydos.ginger.engine.openGL.font.GUIText;
-import com.github.hydos.ginger.engine.openGL.io.Window;
 import com.github.hydos.ginger.engine.openGL.screen.Screen;
 
 public class ExitGameScreen extends Screen
 {
 	private GUIText infoText;
-	private Ginger ginger3D = Ginger.getInstance();
+	private GingerGL ginger3D = GingerGL.getInstance();
 	
 	public ExitGameScreen()
 	{

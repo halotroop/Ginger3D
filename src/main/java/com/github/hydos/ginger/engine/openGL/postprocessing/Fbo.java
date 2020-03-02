@@ -8,8 +8,8 @@ import java.nio.ByteBuffer;
 import org.lwjgl.glfw.*;
 import org.lwjgl.system.Callback;
 
+import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.openGL.fbo.FboCallbackHandler;
-import com.github.hydos.ginger.engine.openGL.io.Window;
 
 public class Fbo
 {

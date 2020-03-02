@@ -1,8 +1,8 @@
 package com.github.hydos.ginger.engine.openGL.api;
 
+import com.github.hydos.ginger.engine.common.obj.ModelLoader;
+import com.github.hydos.ginger.engine.common.obj.normals.NormalMappedObjLoader;
 import com.github.hydos.ginger.engine.openGL.font.TextMaster;
-import com.github.hydos.ginger.engine.openGL.obj.ModelLoader;
-import com.github.hydos.ginger.engine.openGL.obj.normals.NormalMappedObjLoader;
 import com.github.hydos.ginger.engine.openGL.render.MasterRenderer;
 import com.github.hydos.ginger.engine.openGL.render.models.*;
 import com.github.hydos.ginger.engine.openGL.render.texture.ModelTexture;

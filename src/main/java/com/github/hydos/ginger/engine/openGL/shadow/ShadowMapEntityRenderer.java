@@ -5,8 +5,8 @@ import java.util.*;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.*;
 
-import com.github.hydos.ginger.engine.openGL.elements.objects.RenderObject;
-import com.github.hydos.ginger.engine.openGL.math.Maths;
+import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
+import com.github.hydos.ginger.engine.common.math.Maths;
 import com.github.hydos.ginger.engine.openGL.render.MasterRenderer;
 import com.github.hydos.ginger.engine.openGL.render.models.*;
 

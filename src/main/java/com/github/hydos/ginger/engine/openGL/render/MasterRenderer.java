@@ -8,10 +8,10 @@ import org.lwjgl.opengl.*;
 
 import com.github.halotroop.litecraft.world.World;
 import com.github.halotroop.litecraft.world.block.BlockRenderer;
-import com.github.hydos.ginger.engine.openGL.cameras.Camera;
-import com.github.hydos.ginger.engine.openGL.elements.GuiTexture;
-import com.github.hydos.ginger.engine.openGL.elements.objects.*;
-import com.github.hydos.ginger.engine.openGL.io.Window;
+import com.github.hydos.ginger.engine.common.cameras.Camera;
+import com.github.hydos.ginger.engine.common.elements.GuiTexture;
+import com.github.hydos.ginger.engine.common.elements.objects.*;
+import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.openGL.render.models.TexturedModel;
 import com.github.hydos.ginger.engine.openGL.render.renderers.*;
 import com.github.hydos.ginger.engine.openGL.render.shaders.*;

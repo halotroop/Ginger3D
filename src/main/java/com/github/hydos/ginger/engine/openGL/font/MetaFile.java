@@ -3,7 +3,7 @@ package com.github.hydos.ginger.engine.openGL.font;
 import java.io.*;
 import java.util.*;
 
-import com.github.hydos.ginger.engine.openGL.io.Window;
+import com.github.hydos.ginger.engine.common.io.Window;
 
 /** Provides functionality for getting the values from a font file. */
 public class MetaFile

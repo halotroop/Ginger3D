@@ -2,8 +2,8 @@ package com.github.hydos.ginger.engine.openGL.render.shaders;
 
 import org.joml.Matrix4f;
 
-import com.github.hydos.ginger.engine.openGL.cameras.Camera;
-import com.github.hydos.ginger.engine.openGL.math.Maths;
+import com.github.hydos.ginger.engine.common.cameras.Camera;
+import com.github.hydos.ginger.engine.common.math.Maths;
 
 public class SkyboxShader extends ShaderProgram
 {

@@ -6,10 +6,10 @@ import org.joml.Matrix4f;
 import org.lwjgl.opengl.*;
 
 import com.github.halotroop.litecraft.types.block.BlockInstance;
-import com.github.hydos.ginger.engine.openGL.api.GingerRegister;
-import com.github.hydos.ginger.engine.openGL.elements.objects.RenderObject;
-import com.github.hydos.ginger.engine.openGL.io.Window;
-import com.github.hydos.ginger.engine.openGL.math.Maths;
+import com.github.hydos.ginger.engine.common.api.GingerRegister;
+import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
+import com.github.hydos.ginger.engine.common.io.Window;
+import com.github.hydos.ginger.engine.common.math.Maths;
 import com.github.hydos.ginger.engine.openGL.render.*;
 import com.github.hydos.ginger.engine.openGL.render.models.*;
 import com.github.hydos.ginger.engine.openGL.render.shaders.StaticShader;

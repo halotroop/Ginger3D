@@ -3,11 +3,11 @@ package com.github.hydos.ginger.engine.openGL.render.renderers;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.*;
 
-import com.github.hydos.ginger.engine.openGL.cameras.Camera;
+import com.github.hydos.ginger.engine.common.cameras.Camera;
 import com.github.hydos.ginger.engine.openGL.render.Renderer;
 import com.github.hydos.ginger.engine.openGL.render.models.RawModel;
 import com.github.hydos.ginger.engine.openGL.render.shaders.SkyboxShader;
-import com.github.hydos.ginger.engine.openGL.utils.Loader;
+import com.github.hydos.ginger.engine.openGL.utils.GlLoader;
 
 public class SkyboxRenderer extends Renderer
 {
@@ -62,8 +62,8 @@ public class SkyboxRenderer extends Renderer
 
 	public SkyboxRenderer(Matrix4f projectionMatrix)
 	{
-		cube = Loader.loadToVAO(VERTICES, 3);
-		texture = Loader.loadCubeMap(TEXTURE_FILES);
+		cube = GlLoader.loadToVAO(VERTICES, 3);
+		texture = GlLoader.loadCubeMap(TEXTURE_FILES);
 		shader = new SkyboxShader();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);

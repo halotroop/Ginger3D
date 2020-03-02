@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.joml.*;
 
-import com.github.hydos.ginger.engine.openGL.elements.objects.Light;
+import com.github.hydos.ginger.engine.common.elements.objects.Light;
 
 public class NormalMappingShader extends ShaderProgram
 {

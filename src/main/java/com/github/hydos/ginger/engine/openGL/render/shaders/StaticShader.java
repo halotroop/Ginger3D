@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.joml.*;
 
-import com.github.hydos.ginger.engine.openGL.cameras.Camera;
-import com.github.hydos.ginger.engine.openGL.elements.objects.Light;
-import com.github.hydos.ginger.engine.openGL.math.Maths;
+import com.github.hydos.ginger.engine.common.cameras.Camera;
+import com.github.hydos.ginger.engine.common.elements.objects.Light;
+import com.github.hydos.ginger.engine.common.math.Maths;
 
 public class StaticShader extends ShaderProgram
 {

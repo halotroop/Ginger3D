@@ -2,7 +2,7 @@ package com.github.hydos.ginger.engine.openGL.screen;
 
 import java.util.List;
 
-import com.github.hydos.ginger.engine.openGL.elements.GuiTexture;
+import com.github.hydos.ginger.engine.common.elements.GuiTexture;
 
 public abstract class Screen
 {

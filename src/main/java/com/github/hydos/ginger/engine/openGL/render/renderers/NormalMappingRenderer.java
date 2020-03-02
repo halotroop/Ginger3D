@@ -5,10 +5,10 @@ import java.util.*;
 import org.joml.*;
 import org.lwjgl.opengl.*;
 
-import com.github.hydos.ginger.engine.openGL.cameras.Camera;
-import com.github.hydos.ginger.engine.openGL.elements.objects.*;
-import com.github.hydos.ginger.engine.openGL.io.Window;
-import com.github.hydos.ginger.engine.openGL.math.Maths;
+import com.github.hydos.ginger.engine.common.cameras.Camera;
+import com.github.hydos.ginger.engine.common.elements.objects.*;
+import com.github.hydos.ginger.engine.common.io.Window;
+import com.github.hydos.ginger.engine.common.math.Maths;
 import com.github.hydos.ginger.engine.openGL.render.*;
 import com.github.hydos.ginger.engine.openGL.render.models.*;
 import com.github.hydos.ginger.engine.openGL.render.shaders.NormalMappingShader;

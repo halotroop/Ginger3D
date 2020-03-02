@@ -7,18 +7,19 @@ import com.github.halotroop.litecraft.screens.*;
 import com.github.halotroop.litecraft.types.block.Blocks;
 import com.github.halotroop.litecraft.util.RelativeDirection;
 import com.github.halotroop.litecraft.world.World;
-import com.github.hydos.ginger.engine.openGL.Constants;
+import com.github.hydos.ginger.engine.common.Constants;
+import com.github.hydos.ginger.engine.common.api.GingerRegister;
+import com.github.hydos.ginger.engine.common.api.game.*;
+import com.github.hydos.ginger.engine.common.cameras.*;
+import com.github.hydos.ginger.engine.common.elements.objects.*;
+import com.github.hydos.ginger.engine.common.io.Window;
+import com.github.hydos.ginger.engine.common.obj.ModelLoader;
+import com.github.hydos.ginger.engine.common.obj.shapes.StaticCube;
 import com.github.hydos.ginger.engine.openGL.api.*;
-import com.github.hydos.ginger.engine.openGL.api.game.*;
-import com.github.hydos.ginger.engine.openGL.cameras.*;
-import com.github.hydos.ginger.engine.openGL.elements.objects.*;
 import com.github.hydos.ginger.engine.openGL.font.FontType;
-import com.github.hydos.ginger.engine.openGL.io.Window;
-import com.github.hydos.ginger.engine.openGL.obj.ModelLoader;
-import com.github.hydos.ginger.engine.openGL.obj.shapes.StaticCube;
 import com.github.hydos.ginger.engine.openGL.render.MasterRenderer;
 import com.github.hydos.ginger.engine.openGL.render.models.TexturedModel;
-import com.github.hydos.ginger.engine.openGL.utils.Loader;
+import com.github.hydos.ginger.engine.openGL.utils.GlLoader;
 
 import tk.valoeghese.gateways.client.io.*;
 
@@ -27,7 +28,7 @@ public class Litecraft extends Game
 	private static Litecraft INSTANCE;
 	private World world;
 	private LitecraftSave save;
-	private Ginger engine;
+	private GingerGL engine;
 	public Player player;
 	private Camera camera;
 	public int fps, ups, tps;
@@ -119,8 +120,8 @@ public class Litecraft extends Game
 			TexturedModel playerModel = ModelLoader.loadGenericCube("block/cubes/stone/brick/stonebrick.png");
 			StaticCube.scaleCube(1f);
 			Light sun = new Light(new Vector3f(0, 105, 0), new Vector3f(0.9765625f, 0.98828125f, 0.05859375f), new Vector3f(0.002f, 0.002f, 0.002f));
-			FontType font = new FontType(Loader.loadFontAtlas("candara.png"), "candara.fnt");
-			this.engine = new Ginger();
+			FontType font = new FontType(GlLoader.loadFontAtlas("candara.png"), "candara.fnt");
+			this.engine = new GingerGL();
 			this.player = new Player(playerModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
 			this.camera = new FirstPersonCamera(player);
 			this.player.setVisible(false);

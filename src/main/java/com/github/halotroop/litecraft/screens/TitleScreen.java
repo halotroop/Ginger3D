@@ -7,11 +7,11 @@ import org.joml.*;
 import com.github.halotroop.litecraft.Litecraft;
 import com.github.halotroop.litecraft.save.LitecraftSave;
 import com.github.halotroop.litecraft.world.dimension.Dimensions;
-import com.github.hydos.ginger.engine.openGL.api.Ginger;
-import com.github.hydos.ginger.engine.openGL.elements.GuiTexture;
-import com.github.hydos.ginger.engine.openGL.elements.buttons.TextureButton;
+import com.github.hydos.ginger.engine.common.elements.GuiTexture;
+import com.github.hydos.ginger.engine.common.elements.buttons.TextureButton;
+import com.github.hydos.ginger.engine.common.io.Window;
+import com.github.hydos.ginger.engine.openGL.api.GingerGL;
 import com.github.hydos.ginger.engine.openGL.font.GUIText;
-import com.github.hydos.ginger.engine.openGL.io.Window;
 import com.github.hydos.ginger.engine.openGL.screen.Screen;
 
 /**
@@ -20,7 +20,7 @@ import com.github.hydos.ginger.engine.openGL.screen.Screen;
 public class TitleScreen extends Screen
 {
 	private GUIText debugText;
-	private Ginger ginger3D = Ginger.getInstance();
+	private GingerGL ginger3D = GingerGL.getInstance();
 	private TextureButton playButton;
 	private Litecraft litecraft = Litecraft.getInstance();
 
