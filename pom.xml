@@ -91,13 +91,28 @@
 	</build>
 
 	<repositories>
+	
 		<repository>
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
 		</repository>
+		<repository>
+			<id>sonatype-snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<releases><enabled>false</enabled></releases>
+			<snapshots><enabled>true</enabled></snapshots>
+		</repository>
 	</repositories>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-vma</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-shaderc</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.joml</groupId>
 			<artifactId>joml</artifactId>
