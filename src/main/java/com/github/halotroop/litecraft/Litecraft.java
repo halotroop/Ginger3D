@@ -16,7 +16,6 @@ import com.github.hydos.ginger.engine.common.font.FontType;
 import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.obj.ModelLoader;
-import com.github.hydos.ginger.engine.common.obj.shapes.StaticCube;
 import com.github.hydos.ginger.engine.opengl.api.*;
 import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
 import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
@@ -43,7 +42,7 @@ public class Litecraft extends Game
 		Litecraft.INSTANCE = this;
 		// set constants
 		this.setupConstants();
-		this.setupGinger();
+		this.setupGinger(1280, 720, 60);
 		Blocks.init(); // make sure blocks are initialised
 		this.frameTimer = System.currentTimeMillis();
 		setupKeybinds(); // setup keybinds
@@ -75,9 +74,8 @@ public class Litecraft extends Game
 	@Override
 	public void render()
 	{
-		fps += 1; // This section updates the debug stats once per real-time second, regardless of how many frames have been rendered
-		if (System.currentTimeMillis() > frameTimer + 1000)
-		updateDebugStats();
+		fps += 1;
+		if (System.currentTimeMillis() > frameTimer + 1000) updateDebugStats();
 		// Render shadows
 		GingerRegister.getInstance().masterRenderer.renderShadowMap(data.entities, data.lights.get(0));
 		// If there's a world, render it!
@@ -101,8 +99,6 @@ public class Litecraft extends Game
 	public void update()
 	{
 		Input.invokeAllListeners();
-		data.player.updateMovement();
-		data.camera.updateMovement();
 	}
 
 	private void setupConstants()
@@ -114,14 +110,18 @@ public class Litecraft extends Game
 	}
 
 	// set up Ginger3D engine stuff
-	private void setupGinger()
+	private void setupGinger(int windowWidth, int windowHeight, float frameCap)
 	{
 		if (engine == null) // Prevents this from being run more than once on accident.
 		{
-			this.setupWindow();
-			GingerUtils.init(); // set up ginger utilities
+			Window.create(windowWidth, windowHeight, "LiteCraft", frameCap); // create window
+			// set up the gateways keybind key tracking
+			KeyCallbackHandler.trackWindow(Window.getWindow());
+			MouseCallbackHandler.trackWindow(Window.getWindow());
+			// set up ginger utilities
+			GingerUtils.init();
+			//Set the player model
 			TexturedModel playerModel = ModelLoader.loadGenericCube("block/cubes/stone/brick/stonebrick.png");
-			StaticCube.scaleCube(1f);
 			Light sun = new Light(new Vector3f(0, 105, 0), new Vector3f(0.9765625f, 0.98828125f, 0.05859375f), new Vector3f(0.002f, 0.002f, 0.002f));
 			FontType font = new FontType(GlLoader.loadFontAtlas("candara.png"), "candara.fnt");
 			this.engine = new GingerGL();
@@ -149,13 +149,6 @@ public class Litecraft extends Game
 		Input.addPressCallback(Keybind.FLY_UP, () -> this.player.move(RelativeDirection.UP));
 		Input.addPressCallback(Keybind.FLY_DOWN, () -> this.player.move(RelativeDirection.DOWN));
 	}
-	
-	private void setupWindow()
-	{
-		Window.create(1280, 720, "LiteCraft", 60, RenderAPI.OpenGL); // create window
-		KeyCallbackHandler.trackWindow(Window.getWindow()); // set up the gateways keybind key tracking
-		MouseCallbackHandler.trackWindow(Window.getWindow());
-	}
 
 	/**
 	 * Things that should be ticked: Entities when deciding an action, in-game timers (such as smelting), the in-game time
@@ -167,6 +160,12 @@ public class Litecraft extends Game
 		// Open the title screen if it's not already open.
 		if (GingerRegister.getInstance().currentScreen == null && world == null)
 			engine.openScreen(new TitleScreen());
+		
+		if (data.player != null && data.camera != null)
+		{
+			data.player.updateMovement();
+			data.camera.updateMovement();
+		}
 	}
 	
 	// @formatter=off

@@ -87,11 +87,4 @@ public class StaticCube
 		{ mesh = new Mesh(vertices, textureCoords, new float[vertices.length], indices, vertices.length); }
 		return mesh;
 	}
-
-	public static void scaleCube(float multiplier)
-	{
-		for (int i = 0; i < vertices.length; i++)
-		{ vertices[i] = vertices[i] * multiplier; }
-		mesh = new Mesh(vertices, textureCoords, new float[vertices.length], indices, vertices.length);
-	}
 }
