@@ -7,6 +7,7 @@ import java.util.function.LongConsumer;
 
 import org.joml.Vector3f;
 
+import com.github.halotroop.litecraft.Litecraft;
 import com.github.halotroop.litecraft.render.BlockRenderer;
 import com.github.halotroop.litecraft.save.LitecraftSave;
 import com.github.halotroop.litecraft.types.block.*;
@@ -14,8 +15,6 @@ import com.github.halotroop.litecraft.types.entity.PlayerEntity;
 import com.github.halotroop.litecraft.world.dimension.Dimension;
 import com.github.halotroop.litecraft.world.gen.*;
 import com.github.halotroop.litecraft.world.gen.modifier.WorldModifier;
-import com.github.hydos.ginger.engine.common.obj.ModelLoader;
-import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
 
 import it.unimi.dsi.fastutil.longs.*;
 
@@ -85,8 +84,7 @@ public class World implements BlockAccess, WorldGenConstants
 
 	public PlayerEntity spawnPlayer(float x, float y, float z)
 	{
-		GLTexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
-		this.playerEntity = new PlayerEntity(dirtModel, new Vector3f(x, y, z), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
+		this.playerEntity = (PlayerEntity) Litecraft.getInstance().player;
 		this.playerEntity.setVisible(false);
 
 		// Generate world around player

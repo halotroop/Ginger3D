@@ -14,19 +14,17 @@ import org.lwjgl.vulkan.VkPresentInfoKHR;
 import org.lwjgl.vulkan.VkSemaphoreCreateInfo;
 import org.lwjgl.vulkan.VkSubmitInfo;
 
+import com.github.hydos.ginger.engine.common.api.GingerEngine;
+import com.github.hydos.ginger.engine.common.api.game.Game;
 import com.github.hydos.ginger.engine.common.io.Window;
+import com.github.hydos.ginger.engine.common.screen.Screen;
 
-public class VKGinger {
-	
-	private static VKGinger INSTANCE;
-	
-	public VKGinger()
+public class GingerVK extends GingerEngine
+{
+	public GingerVK()
 	{
 		INSTANCE = this;
 	}
-	
-	public static VKGinger getInstance()
-	{return INSTANCE; }
 
 	public void end(IntBuffer pWaitDstStageMask, LongBuffer pImageAcquiredSemaphore, LongBuffer pRenderCompleteSemaphore, LongBuffer pSwapchains, PointerBuffer pCommandBuffers, VkSemaphoreCreateInfo semaphoreCreateInfo, VkSubmitInfo submitInfo, VkPresentInfoKHR presentInfo, VkInstance vulkanInstance, long debugCallbackHandle, GLFWFramebufferSizeCallback framebufferSizeCallback, GLFWKeyCallback keyCallback)
 	{ 
@@ -43,6 +41,24 @@ public class VKGinger {
 		keyCallback.free();
 		GLFW.glfwDestroyWindow(Window.getWindow());
 		GLFW.glfwTerminate();
+	}
+
+	@Override
+	public void cleanup()
+	{
+		// TODO
+	}
+
+	@Override
+	public void openScreen(Screen screen)
+	{
+		// TODO 
+	}
+
+	@Override
+	public void renderOverlays(Game game)
+	{
+		// TODO
 	}
 
 }

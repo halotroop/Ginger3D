@@ -9,7 +9,7 @@ import com.github.halotroop.litecraft.types.entity.PlayerEntity;
 import com.github.halotroop.litecraft.util.RelativeDirection;
 import com.github.halotroop.litecraft.world.World;
 import com.github.hydos.ginger.engine.common.Constants;
-import com.github.hydos.ginger.engine.common.api.GingerRegister;
+import com.github.hydos.ginger.engine.common.api.*;
 import com.github.hydos.ginger.engine.common.api.game.*;
 import com.github.hydos.ginger.engine.common.cameras.*;
 import com.github.hydos.ginger.engine.common.elements.objects.*;
@@ -22,15 +22,18 @@ import com.github.hydos.ginger.engine.opengl.postprocessing.PostProcessing;
 import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
 import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
 import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
+import com.github.hydos.ginger.engine.vulkan.api.GingerVK;
 
 import tk.valoeghese.gateways.client.io.*;
 
 public class Litecraft extends Game
 {
+	// FIXME: search for ((GingerGL)engine) and properly implement both render APIs when Vulkan is complete.
+	
 	private static Litecraft INSTANCE;
 	private World world;
 	private LitecraftSave save;
-	private GingerGL engine;
+	private GingerEngine engine;
 	public int fps, ups, tps;
 	public Vector4i dbgStats = new Vector4i();
 	private long frameTimer;
@@ -97,12 +100,12 @@ public class Litecraft extends Game
 	public void renderWorld(Game game)
 	{
 		GameData data = game.data;
-		GingerUtils.preRenderScene(engine.getRegistry().masterRenderer);
-		engine.contrastFbo.bindFBO();
-		engine.getRegistry().masterRenderer.renderScene(data.entities, data.normalMapEntities, data.lights, data.camera, data.clippingPlane);
-		engine.contrastFbo.unbindFBO();
-		PostProcessing.doPostProcessing(engine.contrastFbo.colorTexture);
-		if (data.handleGuis) engine.renderOverlays(game);
+		GingerUtils.preRenderScene(((GingerGL)engine).getRegistry().masterRenderer);
+		((GingerGL)engine).contrastFbo.bindFBO();
+		((GingerGL)engine).getRegistry().masterRenderer.renderScene(data.entities, data.normalMapEntities, data.lights, data.camera, data.clippingPlane);
+		((GingerGL)engine).contrastFbo.unbindFBO();
+		PostProcessing.doPostProcessing(((GingerGL)engine).contrastFbo.colorTexture);
+		if (data.handleGuis) ((GingerGL)engine).renderOverlays(game);
 	}
 	
 	public void update()
@@ -129,20 +132,34 @@ public class Litecraft extends Game
 			MouseCallbackHandler.trackWindow(Window.getWindow());
 			// set up ginger utilities
 			GingerUtils.init();
-			//Set the player model
-			GLTexturedModel playerModel = ModelLoader.loadGenericCube("block/cubes/stone/brick/stonebrick.png");
+			
+			switch (Window.renderAPI)
+			{
+				case OpenGL:
+				{
+					this.engine = new GingerGL();
+					//Set the player model
+					GLTexturedModel playerModel = ModelLoader.loadGenericCube("block/cubes/stone/brick/stonebrick.png");
+					FontType font = new FontType(GLLoader.loadFontAtlas("candara.png"), "candara.fnt");
+					this.player = new PlayerEntity(playerModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
+					this.camera = new FirstPersonCamera(player);
+					this.data = new GameData(this.player, this.camera, 20);
+					this.data.handleGuis = false;
+					((GingerGL)engine).setup(new MasterRenderer(this.camera), INSTANCE);
+					((GingerGL)engine).setGlobalFont(font);
+					this.data.entities.add(this.player);
+					break;
+				}
+				case Vulkan:
+				{
+					this.engine = new GingerVK();
+					// TODO: Setup Vulkan
+					exit();
+					break;
+				}
+			}
 			Light sun = new Light(new Vector3f(0, 105, 0), new Vector3f(0.9765625f, 0.98828125f, 0.05859375f), new Vector3f(0.002f, 0.002f, 0.002f));
-			FontType font = new FontType(GLLoader.loadFontAtlas("candara.png"), "candara.fnt");
-			this.engine = new GingerGL();
-			this.player = new PlayerEntity(playerModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
-			this.camera = new FirstPersonCamera(player);
-			this.player.setVisible(false);
-			this.data = new GameData(this.player, this.camera, 20);
-			this.data.handleGuis = false;
-			this.engine.setup(new MasterRenderer(this.camera), INSTANCE);
-			this.engine.setGlobalFont(font);
 			this.data.lights.add(sun);
-			this.data.entities.add(this.player);
 		}
 	}
 
@@ -168,7 +185,7 @@ public class Litecraft extends Game
 	{
 		tps += 1;
 		// Open the title screen if it's not already open.
-		if (GingerRegister.getInstance().currentScreen == null && world == null) engine.openScreen(new TitleScreen());
+		if (GingerRegister.getInstance().currentScreen == null && world == null) ((GingerGL)engine).openScreen(new TitleScreen());
 		
 		if (this.player instanceof PlayerEntity && camera != null)
 		{
