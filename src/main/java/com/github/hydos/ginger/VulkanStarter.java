@@ -21,7 +21,6 @@ import static org.lwjgl.system.MemoryUtil.memAllocPointer;
 import static org.lwjgl.system.MemoryUtil.memByteBuffer;
 import static org.lwjgl.system.MemoryUtil.memCopy;
 import static org.lwjgl.system.MemoryUtil.memFree;
-import static org.lwjgl.system.MemoryUtil.memUTF8;
 import static org.lwjgl.vulkan.EXTDebugReport.VK_DEBUG_REPORT_ERROR_BIT_EXT;
 import static org.lwjgl.vulkan.EXTDebugReport.VK_DEBUG_REPORT_WARNING_BIT_EXT;
 import static org.lwjgl.vulkan.EXTDebugReport.vkDestroyDebugReportCallbackEXT;
@@ -46,7 +45,6 @@ import static org.lwjgl.vulkan.VK10.VK_ATTACHMENT_LOAD_OP_CLEAR;
 import static org.lwjgl.vulkan.VK10.VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 import static org.lwjgl.vulkan.VK10.VK_ATTACHMENT_STORE_OP_DONT_CARE;
 import static org.lwjgl.vulkan.VK10.VK_ATTACHMENT_STORE_OP_STORE;
-import static org.lwjgl.vulkan.VK10.VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
 import static org.lwjgl.vulkan.VK10.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 import static org.lwjgl.vulkan.VK10.VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 import static org.lwjgl.vulkan.VK10.VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
@@ -92,7 +90,6 @@ import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
 import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
@@ -165,7 +162,6 @@ import org.lwjgl.vulkan.VkMemoryAllocateInfo;
 import org.lwjgl.vulkan.VkMemoryRequirements;
 import org.lwjgl.vulkan.VkPhysicalDevice;
 import org.lwjgl.vulkan.VkPhysicalDeviceMemoryProperties;
-import org.lwjgl.vulkan.VkPipelineShaderStageCreateInfo;
 import org.lwjgl.vulkan.VkPipelineVertexInputStateCreateInfo;
 import org.lwjgl.vulkan.VkPresentInfoKHR;
 import org.lwjgl.vulkan.VkQueue;
@@ -184,8 +180,10 @@ import org.lwjgl.vulkan.VkWriteDescriptorSet;
 import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.vulkan.VKConstants;
+import com.github.hydos.ginger.engine.vulkan.memory.VKMemory;
+import com.github.hydos.ginger.engine.vulkan.render.ubo.Ubo;
+import com.github.hydos.ginger.engine.vulkan.render.ubo.UboDescriptor;
 import com.github.hydos.ginger.engine.vulkan.shaders.Pipeline;
-import com.github.hydos.ginger.engine.vulkan.shaders.VKShaderManager;
 import com.github.hydos.ginger.engine.vulkan.utils.VKDeviceProperties;
 import com.github.hydos.ginger.engine.vulkan.utils.VKLoader;
 import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
@@ -534,7 +532,7 @@ public class VulkanStarter
 		vkGetImageMemoryRequirements(device, depthStencilImage, memReqs);
 		mem_alloc.allocationSize(memReqs.size());
 		IntBuffer pMemoryTypeIndex = memAllocInt(1);
-		getMemoryType(physicalDeviceMemoryProperties, memReqs.memoryTypeBits(), VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, pMemoryTypeIndex);
+		VKMemory.getMemoryType(physicalDeviceMemoryProperties, memReqs.memoryTypeBits(), VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, pMemoryTypeIndex);
 		mem_alloc.memoryTypeIndex(pMemoryTypeIndex.get(0));
 		memFree(pMemoryTypeIndex);
 		LongBuffer pDepthStencilMem = memAllocLong(1);
@@ -657,24 +655,6 @@ public class VulkanStarter
 		{ throw new AssertionError("Failed to submit command buffer: " + VKUtils.translateVulkanResult(err)); }
 	}
 
-	private static boolean getMemoryType(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, int typeBits, int properties, IntBuffer typeIndex)
-	{
-		int bits = typeBits;
-		for (int i = 0; i < 32; i++)
-		{
-			if ((bits & 1) == 1)
-			{
-				if ((deviceMemoryProperties.memoryTypes(i).propertyFlags() & properties) == properties)
-				{
-					typeIndex.put(0, i);
-					return true;
-				}
-			}
-			bits >>= 1;
-		}
-		return false;
-	}
-
 	private static class Vertices
 	{
 		long verticesBuf;
@@ -713,7 +693,7 @@ public class VulkanStarter
 		vkGetBufferMemoryRequirements(device, verticesBuf, memReqs);
 		memAlloc.allocationSize(memReqs.size());
 		IntBuffer memoryTypeIndex = memAllocInt(1);
-		getMemoryType(deviceMemoryProperties, memReqs.memoryTypeBits(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, memoryTypeIndex);
+		VKMemory.getMemoryType(deviceMemoryProperties, memReqs.memoryTypeBits(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, memoryTypeIndex);
 		memAlloc.memoryTypeIndex(memoryTypeIndex.get(0));
 		memFree(memoryTypeIndex);
 		memReqs.free();
@@ -798,65 +778,6 @@ public class VulkanStarter
 		return descriptorPool;
 	}
 
-	private static class UboDescriptor
-	{
-		long memory;
-		long buffer;
-		long offset;
-		long range;
-	}
-
-	private static UboDescriptor createUniformBuffer(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, VkDevice device)
-	{
-		int err;
-		// Create a new buffer
-		VkBufferCreateInfo bufferInfo = VkBufferCreateInfo.calloc()
-			.sType(VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO)
-			.size(16 * 4)
-			.usage(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
-		LongBuffer pUniformDataVSBuffer = memAllocLong(1);
-		err = vkCreateBuffer(device, bufferInfo, null, pUniformDataVSBuffer);
-		long uniformDataVSBuffer = pUniformDataVSBuffer.get(0);
-		memFree(pUniformDataVSBuffer);
-		bufferInfo.free();
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to create UBO buffer: " + VKUtils.translateVulkanResult(err)); }
-		// Get memory requirements including size, alignment and memory type
-		VkMemoryRequirements memReqs = VkMemoryRequirements.calloc();
-		vkGetBufferMemoryRequirements(device, uniformDataVSBuffer, memReqs);
-		long memSize = memReqs.size();
-		int memoryTypeBits = memReqs.memoryTypeBits();
-		memReqs.free();
-		// Gets the appropriate memory type for this type of buffer allocation
-		// Only memory types that are visible to the host
-		IntBuffer pMemoryTypeIndex = memAllocInt(1);
-		getMemoryType(deviceMemoryProperties, memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, pMemoryTypeIndex);
-		int memoryTypeIndex = pMemoryTypeIndex.get(0);
-		memFree(pMemoryTypeIndex);
-		// Allocate memory for the uniform buffer
-		LongBuffer pUniformDataVSMemory = memAllocLong(1);
-		VkMemoryAllocateInfo allocInfo = VkMemoryAllocateInfo.calloc()
-			.sType(VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO)
-			.allocationSize(memSize)
-			.memoryTypeIndex(memoryTypeIndex);
-		err = vkAllocateMemory(device, allocInfo, null, pUniformDataVSMemory);
-		long uniformDataVSMemory = pUniformDataVSMemory.get(0);
-		memFree(pUniformDataVSMemory);
-		allocInfo.free();
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to allocate UBO memory: " + VKUtils.translateVulkanResult(err)); }
-		// Bind memory to buffer
-		err = vkBindBufferMemory(device, uniformDataVSBuffer, uniformDataVSMemory, 0);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to bind UBO memory: " + VKUtils.translateVulkanResult(err)); }
-		UboDescriptor ret = new UboDescriptor();
-		ret.memory = uniformDataVSMemory;
-		ret.buffer = uniformDataVSBuffer;
-		ret.offset = 0L;
-		ret.range = 16 * 4;
-		return ret;
-	}
-
 	private static long createDescriptorSet(VkDevice device, long descriptorPool, long descriptorSetLayout, UboDescriptor uniformDataVSDescriptor)
 	{
 		LongBuffer pDescriptorSetLayout = memAllocLong(1);
@@ -918,26 +839,6 @@ public class VulkanStarter
 		return descriptorSetLayout;
 	}
 
-	private static void updateUbo(VkDevice device, UboDescriptor ubo, float angle)
-	{ //a UBO is a uniform buffer object
-		Matrix4f m = new Matrix4f()
-			.scale(1, -1, 1) // <- correcting viewport transformation (what Direct3D does, too)
-			.perspective((float) Math.toRadians(45.0f), (float) Window.getWidth() / Window.getHeight(), 0.1f, 10.0f, true)
-			.lookAt(0, 1, 3,
-				0, 0, 0,
-				0, 1, 0)
-			.rotateY(angle);
-		PointerBuffer pData = memAllocPointer(1);
-		int err = vkMapMemory(device, ubo.memory, 0, 16 * 4, 0, pData);
-		long data = pData.get(0);
-		memFree(pData);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to map UBO memory: " + VKUtils.translateVulkanResult(err)); }
-		ByteBuffer matrixBuffer = memByteBuffer(data, 16 * 4);
-		m.get(matrixBuffer);
-		vkUnmapMemory(device, ubo.memory);
-	}
-
 	/*
 	 * All resources that must be reallocated on window resize.
 	 */
@@ -986,10 +887,10 @@ public class VulkanStarter
 		final long renderPass = createRenderPass(device, colorAndDepthFormatAndSpace.colorFormat, colorAndDepthFormatAndSpace.depthFormat);
 		final long renderCommandPool = createCommandPool(device, queueFamilyIndex);
 		Vertices vertices = createVertices(memoryProperties, device);
-		UboDescriptor uboDescriptor = createUniformBuffer(memoryProperties, device);
+		Ubo ubo = new Ubo(memoryProperties, device);
 		final long descriptorPool = createDescriptorPool(device);
 		final long descriptorSetLayout = createDescriptorSetLayout(device);
-		final long descriptorSet = createDescriptorSet(device, descriptorPool, descriptorSetLayout, uboDescriptor);
+		final long descriptorSet = createDescriptorSet(device, descriptorPool, descriptorSetLayout, ubo.uboData);
 		final Pipeline pipeline = Pipeline.createPipeline(device, renderPass, vertices.createInfo, descriptorSetLayout);
 		final class SwapchainRecreator
 		{
@@ -1098,7 +999,7 @@ public class VulkanStarter
 			long thisTime = System.nanoTime();
 			time += (thisTime - lastTime) / 1E9f;
 			lastTime = thisTime;
-			updateUbo(device, uboDescriptor, time);
+			ubo.updateUbo(device, time);
 			// Submit to the graphics queue
 			err = vkQueueSubmit(queue, submitInfo, VK_NULL_HANDLE);
 			if (err != VK_SUCCESS)
