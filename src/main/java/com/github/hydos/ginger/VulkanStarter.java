@@ -229,7 +229,8 @@ public class VulkanStarter
 
 	public static void main(String[] args) throws IOException
 	{
-		Window.create(1200, 600, "Vulkan Ginger3D", 60, RenderAPI.Vulkan);
+		Window.create(1200, 600, "Litecraft Vulkan", 60, RenderAPI.Vulkan);
+		new VKGinger();
 		/* Look for instance extensions */
 		PointerBuffer requiredExtensions = GLFWVulkan.glfwGetRequiredInstanceExtensions();
 		if (requiredExtensions == null)
