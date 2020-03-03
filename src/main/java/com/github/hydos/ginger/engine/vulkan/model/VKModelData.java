@@ -22,8 +22,8 @@ public class VKModelData
 	
 	public void loadModel() {
         this.mesh = ModelLoader.getCubeMesh();
-        createIndexBuffer();
         createVertexBuffer();
+        createIndexBuffer();
     }
 	
     public int findMemoryType(int typeFilter, int properties) {
@@ -159,7 +159,7 @@ public class VKModelData
 
         try(MemoryStack stack = stackPush()) {
 
-            long bufferSize = 3 * mesh.getVertices().length;
+            long bufferSize = ((3 + 3 + 2) * Float.BYTES) * mesh.getVertices().length;
 
             LongBuffer pBuffer = stack.mallocLong(1);
             LongBuffer pBufferMemory = stack.mallocLong(1);
@@ -195,7 +195,16 @@ public class VKModelData
             VK12.vkFreeMemory(VKRegister.device, stagingBufferMemory, null);
         }
     }
+    
+    private void memcpyIndices(ByteBuffer buffer, int[] indices) {
 
+        for(int index : indices) {
+            buffer.putInt(index);
+        }
+
+        buffer.rewind();
+    }
+    
     private void createIndexBuffer() {
 
         try(MemoryStack stack = stackPush()) {
@@ -217,13 +226,13 @@ public class VKModelData
 
             VK12.vkMapMemory(VKRegister.device, stagingBufferMemory, 0, bufferSize, 0, data);
             {
-                memcpy(data.getByteBuffer(0, (int) bufferSize), mesh.getIndices());
+            	memcpyIndices(data.getByteBuffer(0, (int) bufferSize), mesh.getIndices());
             }
             VK12.vkUnmapMemory(VKRegister.device, stagingBufferMemory);
 
             createBuffer(bufferSize,
             	VK12.VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK12.VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-            	VK12.VK_MEMORY_HEAP_DEVICE_LOCAL_BIT,
+                    VK12.VK_MEMORY_HEAP_DEVICE_LOCAL_BIT,
                     pBuffer,
                     pBufferMemory);
 
