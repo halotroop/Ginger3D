@@ -22,6 +22,7 @@ import com.github.hydos.ginger.engine.vulkan.memory.VKMemory;
 import com.github.hydos.ginger.engine.vulkan.render.ubo.*;
 import com.github.hydos.ginger.engine.vulkan.shaders.Pipeline;
 import com.github.hydos.ginger.engine.vulkan.utils.*;
+
 /**
  * 
  * @author hydos06
@@ -129,16 +130,12 @@ public class VulkanStarter
 		err = vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, pFormatCount, surfFormats);
 		memFree(pFormatCount);
 		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to query physical device surface formats: " + VKUtils.translateVulkanResult(err)); }
+			throw new AssertionError("Failed to query physical device surface formats: " + VKUtils.translateVulkanResult(err));
 		int colorFormat;
 		if (formatCount == 1 && surfFormats.get(0).format() == VK_FORMAT_UNDEFINED)
-		{
 			colorFormat = VK_FORMAT_B8G8R8A8_UNORM;
-		}
 		else
-		{
 			colorFormat = surfFormats.get(0).format();
-		}
 		int colorSpace = surfFormats.get(0).colorSpace();
 		surfFormats.free();
 		// Find suitable depth format
@@ -163,8 +160,7 @@ public class VulkanStarter
 		long commandPool = pCmdPool.get(0);
 		cmdPoolInfo.free();
 		memFree(pCmdPool);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to create command pool: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to create command pool: " + VKUtils.translateVulkanResult(err));
 		return commandPool;
 	}
 
@@ -189,8 +185,7 @@ public class VulkanStarter
 		cmdBufAllocateInfo.free();
 		long commandBuffer = pCommandBuffer.get(0);
 		memFree(pCommandBuffer);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to allocate command buffer: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to allocate command buffer: " + VKUtils.translateVulkanResult(err));
 		return new VkCommandBuffer(commandBuffer, device);
 	}
 
@@ -208,18 +203,15 @@ public class VulkanStarter
 		// Get physical device surface properties and formats
 		VkSurfaceCapabilitiesKHR surfCaps = VkSurfaceCapabilitiesKHR.calloc();
 		err = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, surfCaps);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to get physical device surface capabilities: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to get physical device surface capabilities: " + VKUtils.translateVulkanResult(err));
 		IntBuffer pPresentModeCount = memAllocInt(1);
 		err = vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, pPresentModeCount, null);
 		int presentModeCount = pPresentModeCount.get(0);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to get number of physical device surface presentation modes: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to get number of physical device surface presentation modes: " + VKUtils.translateVulkanResult(err));
 		IntBuffer pPresentModes = memAllocInt(presentModeCount);
 		err = vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, pPresentModeCount, pPresentModes);
 		memFree(pPresentModeCount);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to get physical device surface presentation modes: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to get physical device surface presentation modes: " + VKUtils.translateVulkanResult(err));
 		// Try to use mailbox mode. Low latency and non-tearing
 		int swapchainPresentMode = VK_PRESENT_MODE_FIFO_KHR;
 		for (int i = 0; i < presentModeCount; i++)
@@ -230,13 +222,13 @@ public class VulkanStarter
 				break;
 			}
 			if ((swapchainPresentMode != VK_PRESENT_MODE_MAILBOX_KHR) && (pPresentModes.get(i) == VK_PRESENT_MODE_IMMEDIATE_KHR))
-			{ swapchainPresentMode = VK_PRESENT_MODE_IMMEDIATE_KHR; }
+				swapchainPresentMode = VK_PRESENT_MODE_IMMEDIATE_KHR;
 		}
 		memFree(pPresentModes);
 		// Determine the number of images
 		int desiredNumberOfSwapchainImages = surfCaps.minImageCount() + 1;
 		if ((surfCaps.maxImageCount() > 0) && (desiredNumberOfSwapchainImages > surfCaps.maxImageCount()))
-		{ desiredNumberOfSwapchainImages = surfCaps.maxImageCount(); }
+			desiredNumberOfSwapchainImages = surfCaps.maxImageCount();
 		VkExtent2D currentExtent = surfCaps.currentExtent();
 		int currentWidth = currentExtent.width();
 		int currentHeight = currentExtent.height();
@@ -252,13 +244,8 @@ public class VulkanStarter
 		}
 		int preTransform;
 		if ((surfCaps.supportedTransforms() & VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR) != 0)
-		{
 			preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
-		}
-		else
-		{
-			preTransform = surfCaps.currentTransform();
-		}
+		else preTransform = surfCaps.currentTransform();
 		surfCaps.free();
 		VkSwapchainCreateInfoKHR swapchainCI = VkSwapchainCreateInfoKHR.calloc()
 			.sType(VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR)
@@ -282,21 +269,17 @@ public class VulkanStarter
 		swapchainCI.free();
 		long swapChain = pSwapChain.get(0);
 		memFree(pSwapChain);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to create swap chain: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to create swap chain: " + VKUtils.translateVulkanResult(err));
 		// If we just re-created an existing swapchain, we should destroy the old swapchain at this point.
 		// Note: destroying the swapchain also cleans up all its associated presentable images once the platform is done with them.
-		if (oldSwapChain != VK_NULL_HANDLE)
-		{ vkDestroySwapchainKHR(device, oldSwapChain, null); }
+		if (oldSwapChain != VK_NULL_HANDLE) vkDestroySwapchainKHR(device, oldSwapChain, null);
 		IntBuffer pImageCount = memAllocInt(1);
 		err = vkGetSwapchainImagesKHR(device, swapChain, pImageCount, null);
 		int imageCount = pImageCount.get(0);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to get number of swapchain images: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to get number of swapchain images: " + VKUtils.translateVulkanResult(err));
 		LongBuffer pSwapchainImages = memAllocLong(imageCount);
 		err = vkGetSwapchainImagesKHR(device, swapChain, pImageCount, pSwapchainImages);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to get swapchain images: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to get swapchain images: " + VKUtils.translateVulkanResult(err));
 		memFree(pImageCount);
 		long[] images = new long[imageCount];
 		long[] imageViews = new long[imageCount];
@@ -315,8 +298,7 @@ public class VulkanStarter
 			colorAttachmentView.image(images[i]);
 			err = vkCreateImageView(device, colorAttachmentView, null, pBufferView);
 			imageViews[i] = pBufferView.get(0);
-			if (err != VK_SUCCESS)
-			{ throw new AssertionError("Failed to create image view: " + VKUtils.translateVulkanResult(err)); }
+			if (err != VK_SUCCESS) throw new AssertionError("Failed to create image view: " + VKUtils.translateVulkanResult(err));
 		}
 		colorAttachmentView.free();
 		memFree(pBufferView);
@@ -330,6 +312,7 @@ public class VulkanStarter
 
 	private static class DepthStencil
 	{
+		// What is this? - Caroline
 		long view;
 	}
 
@@ -362,8 +345,7 @@ public class VulkanStarter
 		long depthStencilImage = pDepthStencilImage.get(0);
 		memFree(pDepthStencilImage);
 		imageCreateInfo.free();
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to create depth-stencil image: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to create depth-stencil image: " + VKUtils.translateVulkanResult(err));
 		vkGetImageMemoryRequirements(device, depthStencilImage, memReqs);
 		mem_alloc.allocationSize(memReqs.size());
 		IntBuffer pMemoryTypeIndex = memAllocInt(1);
@@ -375,19 +357,16 @@ public class VulkanStarter
 		long depthStencilMem = pDepthStencilMem.get(0);
 		memFree(pDepthStencilMem);
 		mem_alloc.free();
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to create depth-stencil memory: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to create depth-stencil memory: " + VKUtils.translateVulkanResult(err));
 		err = vkBindImageMemory(device, depthStencilImage, depthStencilMem, 0);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to bind depth-stencil image to memory: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to bind depth-stencil image to memory: " + VKUtils.translateVulkanResult(err));
 		depthStencilViewCreateInfo.image(depthStencilImage);
 		LongBuffer pDepthStencilView = memAllocLong(1);
 		err = vkCreateImageView(device, depthStencilViewCreateInfo, null, pDepthStencilView);
 		long depthStencilView = pDepthStencilView.get(0);
 		memFree(pDepthStencilView);
 		depthStencilViewCreateInfo.free();
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to create depth-stencil image view: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to create depth-stencil image view: " + VKUtils.translateVulkanResult(err));
 		DepthStencil ret = new DepthStencil();
 		ret.view = depthStencilView;
 		return ret;
@@ -439,8 +418,7 @@ public class VulkanStarter
 		colorReference.free();
 		subpass.free();
 		attachments.free();
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to create clear render pass: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to create clear render pass: " + VKUtils.translateVulkanResult(err));
 		return renderPass;
 	}
 
@@ -463,8 +441,7 @@ public class VulkanStarter
 			attachments.put(0, swapchain.imageViews[i]);
 			int err = vkCreateFramebuffer(device, fci, null, pFramebuffer);
 			long framebuffer = pFramebuffer.get(0);
-			if (err != VK_SUCCESS)
-			{ throw new AssertionError("Failed to create framebuffer: " + VKUtils.translateVulkanResult(err)); }
+			if (err != VK_SUCCESS) throw new AssertionError("Failed to create framebuffer: " + VKUtils.translateVulkanResult(err));
 			framebuffers[i] = framebuffer;
 		}
 		memFree(attachments);
@@ -487,7 +464,7 @@ public class VulkanStarter
 		memFree(pCommandBuffers);
 		submitInfo.free();
 		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to submit command buffer: " + VKUtils.translateVulkanResult(err)); }
+			throw new AssertionError("Failed to submit command buffer: " + VKUtils.translateVulkanResult(err));
 	}
 
 	private static class Vertices
@@ -523,8 +500,7 @@ public class VulkanStarter
 		long verticesBuf = pBuffer.get(0);
 		memFree(pBuffer);
 		bufInfo.free();
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to create vertex buffer: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to create vertex buffer: " + VKUtils.translateVulkanResult(err));
 		vkGetBufferMemoryRequirements(device, verticesBuf, memReqs);
 		memAlloc.allocationSize(memReqs.size());
 		IntBuffer memoryTypeIndex = memAllocInt(1);
@@ -536,21 +512,18 @@ public class VulkanStarter
 		err = vkAllocateMemory(device, memAlloc, null, pMemory);
 		long verticesMem = pMemory.get(0);
 		memFree(pMemory);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to allocate vertex memory: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to allocate vertex memory: " + VKUtils.translateVulkanResult(err));
 		PointerBuffer pData = memAllocPointer(1);
 		err = vkMapMemory(device, verticesMem, 0, vertexBuffer.remaining(), 0, pData);
 		memAlloc.free();
 		long data = pData.get(0);
 		memFree(pData);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to map vertex memory: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to map vertex memory: " + VKUtils.translateVulkanResult(err));
 		memCopy(memAddress(vertexBuffer), data, vertexBuffer.remaining());
 		memFree(vertexBuffer);
 		vkUnmapMemory(device, verticesMem);
 		err = vkBindBufferMemory(device, verticesBuf, verticesMem, 0);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to bind memory to vertex buffer: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to bind memory to vertex buffer: " + VKUtils.translateVulkanResult(err));
 		// Binding description
 		VkVertexInputBindingDescription.Buffer bindingDescriptor = VkVertexInputBindingDescription.calloc(1)
 			.binding(0) // <- we bind our vertex buffer to point 0
@@ -608,8 +581,7 @@ public class VulkanStarter
 		memFree(pDescriptorPool);
 		descriptorPoolInfo.free();
 		typeCounts.free();
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to create descriptor pool: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to create descriptor pool: " + VKUtils.translateVulkanResult(err));
 		return descriptorPool;
 	}
 
@@ -627,8 +599,7 @@ public class VulkanStarter
 		memFree(pDescriptorSet);
 		allocInfo.free();
 		memFree(pDescriptorSetLayout);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to create descriptor set: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to create descriptor set: " + VKUtils.translateVulkanResult(err));
 		// Update descriptor sets determining the shader binding points
 		// For every binding point used in a shader there needs to be one
 		// descriptor set matching that binding point
@@ -669,8 +640,7 @@ public class VulkanStarter
 		memFree(pDescriptorSetLayout);
 		descriptorLayout.free();
 		layoutBinding.free();
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to create descriptor set layout: " + VKUtils.translateVulkanResult(err)); }
+		if (err != VK_SUCCESS) throw new AssertionError("Failed to create descriptor set layout: " + VKUtils.translateVulkanResult(err));
 		return descriptorSetLayout;
 	}
 
@@ -684,7 +654,7 @@ public class VulkanStarter
 
 	public static void main(String[] args) throws IOException
 	{
-		Window.create(1200, 600, "Vulkan Ginger3D", 60, RenderAPI.Vulkan);
+		Window.create(1280, 720, "Vulkan Ginger3D", 60, RenderAPI.Vulkan);
 		/* Look for instance extensions */
 		PointerBuffer requiredExtensions = glfwGetRequiredInstanceExtensions();
 		if (requiredExtensions == null)
@@ -756,8 +726,7 @@ public class VulkanStarter
 					vkDestroyFramebuffer(device, framebuffers[i], null); }
 				framebuffers = createFramebuffers(device, swapchain, renderPass, Window.getWidth(), Window.getHeight(), depthStencil);
 				// Create render command buffers
-				if (renderCommandBuffers != null)
-				{ vkResetCommandPool(device, renderCommandPool, VKUtils.VK_FLAGS_NONE); }
+				if (renderCommandBuffers != null) vkResetCommandPool(device, renderCommandPool, VKUtils.VK_FLAGS_NONE);
 				renderCommandBuffers = VKUtils.initRenderCommandBuffers(device, renderCommandPool, framebuffers, renderPass, Window.getWidth(), Window.getHeight(), pipeline, descriptorSet,
 					vertices.verticesBuf);
 				mustRecreate = false;
@@ -769,8 +738,7 @@ public class VulkanStarter
 		{
 			public void invoke(long window, int width, int height)
 			{
-				if (width <= 0 || height <= 0)
-					return;
+				if (width <= 0 || height <= 0) return;
 				swapchainRecreator.mustRecreate = true;
 			}
 		};
@@ -812,22 +780,18 @@ public class VulkanStarter
 			// Handle window messages. Resize events happen exactly here.
 			// So it is safe to use the new swapchain images and framebuffers afterwards.
 			glfwPollEvents();
-			if (swapchainRecreator.mustRecreate)
-				swapchainRecreator.recreate();
+			if (swapchainRecreator.mustRecreate) swapchainRecreator.recreate();
 			// Create a semaphore to wait for the swapchain to acquire the next image
 			err = vkCreateSemaphore(device, semaphoreCreateInfo, null, pImageAcquiredSemaphore);
-			if (err != VK_SUCCESS)
-			{ throw new AssertionError("Failed to create image acquired semaphore: " + VKUtils.translateVulkanResult(err)); }
+			if (err != VK_SUCCESS) throw new AssertionError("Failed to create image acquired semaphore: " + VKUtils.translateVulkanResult(err));
 			// Create a semaphore to wait for the render to complete, before presenting
 			err = vkCreateSemaphore(device, semaphoreCreateInfo, null, pRenderCompleteSemaphore);
-			if (err != VK_SUCCESS)
-			{ throw new AssertionError("Failed to create render complete semaphore: " + VKUtils.translateVulkanResult(err)); }
+			if (err != VK_SUCCESS) throw new AssertionError("Failed to create render complete semaphore: " + VKUtils.translateVulkanResult(err));
 			// Get next image from the swap chain (back/front buffer).
 			// This will setup the imageAquiredSemaphore to be signalled when the operation is complete
 			err = vkAcquireNextImageKHR(device, swapchain.swapchainHandle, VKConstants.MAX_UNSIGNED_INT, pImageAcquiredSemaphore.get(0), VK_NULL_HANDLE, pImageIndex);
 			currentBuffer = pImageIndex.get(0);
-			if (err != VK_SUCCESS)
-			{ throw new AssertionError("Failed to acquire next swapchain image: " + VKUtils.translateVulkanResult(err)); }
+			if (err != VK_SUCCESS) throw new AssertionError("Failed to acquire next swapchain image: " + VKUtils.translateVulkanResult(err));
 			// Select the command buffer for the current framebuffer image/attachment
 			pCommandBuffers.put(0, renderCommandBuffers[currentBuffer]);
 			// Update UBO
@@ -837,14 +801,12 @@ public class VulkanStarter
 			ubo.updateUbo(device, time);
 			// Submit to the graphics queue
 			err = vkQueueSubmit(queue, submitInfo, VK_NULL_HANDLE);
-			if (err != VK_SUCCESS)
-			{ throw new AssertionError("Failed to submit render queue: " + VKUtils.translateVulkanResult(err)); }
+			if (err != VK_SUCCESS) throw new AssertionError("Failed to submit render queue: " + VKUtils.translateVulkanResult(err));
 			// Present the current buffer to the swap chain
 			// This will display the image
 			pSwapchains.put(0, swapchain.swapchainHandle);
 			err = vkQueuePresentKHR(queue, presentInfo);
-			if (err != VK_SUCCESS)
-			{ throw new AssertionError("Failed to present the swapchain image: " + VKUtils.translateVulkanResult(err)); }
+			if (err != VK_SUCCESS) throw new AssertionError("Failed to present the swapchain image: " + VKUtils.translateVulkanResult(err));
 			// Create and submit post present barrier
 			vkQueueWaitIdle(queue);
 			// Destroy this semaphore (we will create a new one in the next frame)
