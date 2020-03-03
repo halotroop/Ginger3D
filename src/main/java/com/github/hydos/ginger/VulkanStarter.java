@@ -12,7 +12,7 @@ import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.obj.ModelLoader;
 import com.github.hydos.ginger.engine.vulkan.*;
-import com.github.hydos.ginger.engine.vulkan.api.VKGinger;
+import com.github.hydos.ginger.engine.vulkan.api.GingerVK;
 import com.github.hydos.ginger.engine.vulkan.model.*;
 import com.github.hydos.ginger.engine.vulkan.registers.VKRegister;
 import com.github.hydos.ginger.engine.vulkan.render.RenderUtils;
@@ -232,7 +232,7 @@ public class VulkanStarter
 	public static void main(String[] args) throws IOException
 	{
 		Window.create(1200, 600, "Litecraft Vulkan", 60, RenderAPI.Vulkan);
-		new VKGinger();
+		new GingerVK();
 		VKRegister.exampleVKModel = new VKModelData();
 		/* Look for instance extensions */
 		PointerBuffer requiredExtensions = GLFWVulkan.glfwGetRequiredInstanceExtensions();
@@ -401,6 +401,6 @@ public class VulkanStarter
 			VK12.vkDestroySemaphore(VKRegister.device, pImageAcquiredSemaphore.get(0), null);
 			VK12.vkDestroySemaphore(VKRegister.device, pRenderCompleteSemaphore.get(0), null);
 		}
-		VKGinger.getInstance().end(pWaitDstStageMask, pImageAcquiredSemaphore, pRenderCompleteSemaphore, pSwapchains, pCommandBuffers, semaphoreCreateInfo, submitInfo, presentInfo, vulkanInstance, debugCallbackHandle, framebufferSizeCallback, keyCallback);
+		((GingerVK)GingerVK.getInstance()).end(pWaitDstStageMask, pImageAcquiredSemaphore, pRenderCompleteSemaphore, pSwapchains, pCommandBuffers, semaphoreCreateInfo, submitInfo, presentInfo, vulkanInstance, debugCallbackHandle, framebufferSizeCallback, keyCallback);
 	}
 }

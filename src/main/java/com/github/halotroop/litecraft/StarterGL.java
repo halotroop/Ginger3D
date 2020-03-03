@@ -3,7 +3,7 @@ package com.github.halotroop.litecraft;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 
-public class Starter
+public class StarterGL
 {
 	//	private static final boolean usingEclipse = false;
 	public static void main(String[] args)

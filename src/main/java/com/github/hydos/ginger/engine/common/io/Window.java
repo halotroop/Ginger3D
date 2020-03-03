@@ -63,13 +63,14 @@ public class Window
 			System.exit(-1);
 		}
 		renderAPI = api;
-		if(renderAPI == RenderAPI.OpenGL) 
+		if(renderAPI == RenderAPI.OpenGL)
 		{
 			GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 4);
 			GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 6);
 			GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
 			GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
-		}else if (renderAPI == RenderAPI.Vulkan)
+		}
+		else if (renderAPI == RenderAPI.Vulkan)
 		{
 	        GLFW.glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	        if (!GLFWVulkan.glfwVulkanSupported()) {
@@ -210,7 +211,7 @@ public class Window
 		if(renderAPI == RenderAPI.OpenGL) {
 			if ((oldWindowHeight != Window.getHeight() || oldWindowWidth != Window.getWidth()) && Window.getHeight() > 10 && Window.getWidth() > 10)
 			{
-				GingerGL.getInstance().contrastFbo.resizeFBOs();
+				((GingerGL)GingerGL.getInstance()).contrastFbo.resizeFBOs();
 				oldWindowWidth = Window.getWidth();
 				oldWindowHeight = Window.getHeight();
 			}
