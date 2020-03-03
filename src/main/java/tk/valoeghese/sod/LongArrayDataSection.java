@@ -2,8 +2,7 @@ package tk.valoeghese.sod;
 
 import java.util.Iterator;
 
-import it.unimi.dsi.fastutil.longs.LongArrayList;
-import it.unimi.dsi.fastutil.longs.LongList;
+import it.unimi.dsi.fastutil.longs.*;
 
 public class LongArrayDataSection implements BaseDataSection<Long> {
 	public LongArrayDataSection() {

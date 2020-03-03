@@ -2,7 +2,7 @@ package com.github.halotroop.litecraft.world.gen.modifier;
 
 import java.util.Random;
 
-import com.github.halotroop.litecraft.types.block.*;
+import com.github.halotroop.litecraft.types.block.Blocks;
 import com.github.halotroop.litecraft.util.noise.OctaveSimplexNoise;
 import com.github.halotroop.litecraft.world.BlockAccess;
 import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
