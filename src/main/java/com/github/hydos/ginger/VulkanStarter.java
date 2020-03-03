@@ -354,12 +354,11 @@ public class VulkanStarter
 		float time = 0.0f;
 		while (!GLFW.glfwWindowShouldClose(Window.getWindow()))
 		{
-			// Handle window messages. Resize events happen exactly here.
-			// So it is safe to use the new swapchain images and framebuffers afterwards.
 			GLFW.glfwPollEvents();
 			if (swapchainRecreator.mustRecreate)
 				swapchainRecreator.recreate();
-			// Create a semaphore to wait for the swapchain to acquire the next image
+			
+			
 			err = VK12.vkCreateSemaphore(device, semaphoreCreateInfo, null, pImageAcquiredSemaphore);
 			if (err != VK12.VK_SUCCESS)
 			{ throw new AssertionError("Failed to create image acquired semaphore: " + VKUtils.translateVulkanResult(err)); }
@@ -381,6 +380,7 @@ public class VulkanStarter
 			lastTime = thisTime;
 			ubo.updateUbo(device, time);
 			// Submit to the graphics queue
+			
 			err = VK12.vkQueueSubmit(queue, submitInfo, VK12.VK_NULL_HANDLE);
 			if (err != VK12.VK_SUCCESS)
 			{ throw new AssertionError("Failed to submit render queue: " + VKUtils.translateVulkanResult(err)); }
