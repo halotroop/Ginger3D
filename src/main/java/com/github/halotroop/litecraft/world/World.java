@@ -85,11 +85,10 @@ public class World implements BlockAccess, WorldGenConstants
 
 	public PlayerEntity spawnPlayer(float x, float y, float z)
 	{
-		// Player model and stuff
-
 		GLTexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
 		this.playerEntity = new PlayerEntity(dirtModel, new Vector3f(x, y, z), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
 		this.playerEntity.setVisible(false);
+
 		// Generate world around player
 		long time = System.currentTimeMillis();
 		System.out.println("Generating world!");

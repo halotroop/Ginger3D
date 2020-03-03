@@ -20,8 +20,9 @@ import com.github.hydos.ginger.engine.common.obj.ModelLoader;
 import com.github.hydos.ginger.engine.opengl.api.*;
 import com.github.hydos.ginger.engine.opengl.postprocessing.PostProcessing;
 import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
-import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
 import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
+import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
+
 import tk.valoeghese.gateways.client.io.*;
 
 public class Litecraft extends Game
