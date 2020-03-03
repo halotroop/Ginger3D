@@ -1,21 +1,65 @@
 package com.github.hydos.ginger.engine.vulkan.utils;
 
-import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.util.shaderc.Shaderc.*;
-import static org.lwjgl.vulkan.EXTDebugReport.*;
-import static org.lwjgl.vulkan.KHRSurface.*;
+import static org.lwjgl.system.MemoryUtil.memAllocLong;
+import static org.lwjgl.system.MemoryUtil.memAllocPointer;
+import static org.lwjgl.system.MemoryUtil.memFree;
+import static org.lwjgl.system.MemoryUtil.memUTF8;
+import static org.lwjgl.util.shaderc.Shaderc.shaderc_anyhit_shader;
+import static org.lwjgl.util.shaderc.Shaderc.shaderc_closesthit_shader;
+import static org.lwjgl.util.shaderc.Shaderc.shaderc_compilation_status_success;
+import static org.lwjgl.util.shaderc.Shaderc.shaderc_compile_into_spv;
+import static org.lwjgl.util.shaderc.Shaderc.shaderc_compile_options_initialize;
+import static org.lwjgl.util.shaderc.Shaderc.shaderc_compile_options_set_include_callbacks;
+import static org.lwjgl.util.shaderc.Shaderc.shaderc_compile_options_set_optimization_level;
+import static org.lwjgl.util.shaderc.Shaderc.shaderc_compiler_initialize;
+import static org.lwjgl.util.shaderc.Shaderc.shaderc_compiler_release;
+import static org.lwjgl.util.shaderc.Shaderc.shaderc_fragment_shader;
+import static org.lwjgl.util.shaderc.Shaderc.shaderc_miss_shader;
+import static org.lwjgl.util.shaderc.Shaderc.shaderc_optimization_level_performance;
+import static org.lwjgl.util.shaderc.Shaderc.shaderc_raygen_shader;
+import static org.lwjgl.util.shaderc.Shaderc.shaderc_result_get_bytes;
+import static org.lwjgl.util.shaderc.Shaderc.shaderc_result_get_compilation_status;
+import static org.lwjgl.util.shaderc.Shaderc.shaderc_result_get_error_message;
+import static org.lwjgl.util.shaderc.Shaderc.shaderc_result_get_length;
+import static org.lwjgl.util.shaderc.Shaderc.shaderc_vertex_shader;
+import static org.lwjgl.vulkan.EXTDebugReport.VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT;
+import static org.lwjgl.vulkan.EXTDebugReport.vkCreateDebugReportCallbackEXT;
+import static org.lwjgl.vulkan.KHRSurface.VK_ERROR_NATIVE_WINDOW_IN_USE_KHR;
+import static org.lwjgl.vulkan.KHRSurface.VK_ERROR_SURFACE_LOST_KHR;
 
 import java.io.IOException;
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.LongBuffer;
 
-import org.lwjgl.*;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.util.shaderc.*;
-import org.lwjgl.vulkan.*;
+import org.lwjgl.util.shaderc.ShadercIncludeResolve;
+import org.lwjgl.util.shaderc.ShadercIncludeResult;
+import org.lwjgl.util.shaderc.ShadercIncludeResultRelease;
+import org.lwjgl.vulkan.EXTDebugReport;
+import org.lwjgl.vulkan.KHRDisplaySwapchain;
+import org.lwjgl.vulkan.KHRSwapchain;
+import org.lwjgl.vulkan.NVRayTracing;
+import org.lwjgl.vulkan.VK10;
+import org.lwjgl.vulkan.VK12;
+import org.lwjgl.vulkan.VkClearValue;
+import org.lwjgl.vulkan.VkCommandBuffer;
+import org.lwjgl.vulkan.VkCommandBufferAllocateInfo;
+import org.lwjgl.vulkan.VkCommandBufferBeginInfo;
+import org.lwjgl.vulkan.VkDebugReportCallbackCreateInfoEXT;
+import org.lwjgl.vulkan.VkDebugReportCallbackEXT;
+import org.lwjgl.vulkan.VkDevice;
+import org.lwjgl.vulkan.VkInstance;
+import org.lwjgl.vulkan.VkRect2D;
+import org.lwjgl.vulkan.VkRenderPassBeginInfo;
+import org.lwjgl.vulkan.VkViewport;
 
 import com.github.hydos.ginger.engine.common.tools.IOUtil;
+import com.github.hydos.ginger.engine.vulkan.VKConstants;
+import com.github.hydos.ginger.engine.vulkan.shaders.Pipeline;
 
-/** @author hydos06
+/** @author hydos
  *         a util library for Vulkan */
 public class VKUtils
 {
@@ -162,12 +206,6 @@ public class VKUtils
 		default:
 			return String.format("%s [%d]", "Is an unknown vulkan result", Integer.valueOf(vulkanResult));
 		}
-	}
-	
-	public static class Pipeline
-	{
-		public long pipeline;
-		public long layout;
 	}
 	
 	public static VkCommandBuffer[] initRenderCommandBuffers(VkDevice device, long commandPool, long[] framebuffers, long renderPass, int width, int height,

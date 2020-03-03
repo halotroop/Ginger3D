@@ -10,6 +10,8 @@ import java.nio.ByteBuffer;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.vulkan.*;
 
+import com.github.hydos.ginger.engine.vulkan.VKConstants;
+
 /** @author hydos
  *         used to load vulkan related objects such as textures */
 public class VKLoader
