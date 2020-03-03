@@ -20,8 +20,13 @@ import com.github.hydos.ginger.engine.common.obj.ModelLoader;
 import com.github.hydos.ginger.engine.opengl.api.*;
 import com.github.hydos.ginger.engine.opengl.postprocessing.PostProcessing;
 import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
+<<<<<<< Upstream, based on origin/liteCraft
 import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
 import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
+=======
+import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
+import com.github.hydos.ginger.engine.opengl.utils.GlLoader;
+>>>>>>> 9a8fdc4 yEs
 
 import tk.valoeghese.gateways.client.io.*;
 
@@ -130,7 +135,7 @@ public class Litecraft extends Game
 			// set up ginger utilities
 			GingerUtils.init();
 			//Set the player model
-			TexturedModel playerModel = ModelLoader.loadGenericCube("block/cubes/stone/brick/stonebrick.png");
+			GLTexturedModel playerModel = ModelLoader.loadGenericCube("block/cubes/stone/brick/stonebrick.png");
 			Light sun = new Light(new Vector3f(0, 105, 0), new Vector3f(0.9765625f, 0.98828125f, 0.05859375f), new Vector3f(0.002f, 0.002f, 0.002f));
 			FontType font = new FontType(GLLoader.loadFontAtlas("candara.png"), "candara.fnt");
 			this.engine = new GingerGL();

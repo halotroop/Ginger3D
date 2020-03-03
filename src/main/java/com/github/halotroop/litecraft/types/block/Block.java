@@ -3,7 +3,7 @@ package com.github.halotroop.litecraft.types.block;
 import java.util.*;
 
 import com.github.hydos.ginger.engine.common.obj.ModelLoader;
-import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
+import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
 
 public class Block
 {
@@ -36,7 +36,7 @@ public class Block
 		}
 	}
 
-	public TexturedModel model;
+	public GLTexturedModel model;
 	private final boolean visible, fullCube;
 	private final float caveCarveThreshold;
 	public final String identifier;
@@ -52,7 +52,7 @@ public class Block
 	{ return this.caveCarveThreshold; }
 
 	protected Block(Properties properties)
-	{ this((TexturedModel) null, properties); }
+	{ this((GLTexturedModel) null, properties); }
 
 	protected Block(String texture, Properties properties)
 	{ 
@@ -60,7 +60,7 @@ public class Block
 		this.texture = texture;
 	}
 
-	protected Block(TexturedModel model, Properties properties)
+	protected Block(GLTexturedModel model, Properties properties)
 	{
 		this.model = model;
 		this.visible = properties.visible;

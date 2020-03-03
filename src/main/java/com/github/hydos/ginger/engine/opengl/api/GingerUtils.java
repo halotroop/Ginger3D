@@ -9,16 +9,16 @@ import com.github.hydos.ginger.engine.opengl.render.texture.ModelTexture;
 
 public class GingerUtils
 {
-	public static TexturedModel createTexturedModel(String texturePath, String modelPath)
+	public static GLTexturedModel createTexturedModel(String texturePath, String modelPath)
 	{
-		TexturedModel model = ModelLoader.loadModel(modelPath, texturePath);
+		GLTexturedModel model = ModelLoader.loadModel(modelPath, texturePath);
 		return model;
 	}
 
-	public static TexturedModel createTexturedModel(String texturePath, String modelPath, String normalMapPath)
+	public static GLTexturedModel createTexturedModel(String texturePath, String modelPath, String normalMapPath)
 	{
 		RawModel model = NormalMappedObjLoader.loadOBJ(modelPath);
-		TexturedModel texturedModel = new TexturedModel(model, new ModelTexture(texturePath));
+		GLTexturedModel texturedModel = new GLTexturedModel(model, new ModelTexture(texturePath));
 		return texturedModel;
 	}
 

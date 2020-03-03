@@ -36,7 +36,7 @@ public class ObjectRenderer extends Renderer
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 
-	private void prepareTexturedModel(TexturedModel model)
+	private void prepareTexturedModel(GLTexturedModel model)
 	{
 		RawModel rawModel = model.getRawModel();
 		GL30.glBindVertexArray(rawModel.getVaoID());
@@ -58,9 +58,9 @@ public class ObjectRenderer extends Renderer
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
 	}
 
-	public void render(Map<TexturedModel, List<RenderObject>> entities)
+	public void render(Map<GLTexturedModel, List<RenderObject>> entities)
 	{
-		for (TexturedModel model : entities.keySet())
+		for (GLTexturedModel model : entities.keySet())
 		{
 			prepareTexturedModel(model);
 			List<RenderObject> batch = entities.get(model);
@@ -94,7 +94,7 @@ public class ObjectRenderer extends Renderer
 		{
 			if (entity != null && entity.getModel() != null)
 			{
-				TexturedModel model = entity.getModel();
+				GLTexturedModel model = entity.getModel();
 				prepareTexturedModel(model);
 				prepareInstance(entity);
 				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);

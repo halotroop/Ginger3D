@@ -60,9 +60,9 @@ public class ShadowMapEntityRenderer
 	 * 
 	 * @param entities
 	 *                 - the entities to be rendered to the shadow map. */
-	protected void render(Map<TexturedModel, List<RenderObject>> entities)
+	protected void render(Map<GLTexturedModel, List<RenderObject>> entities)
 	{
-		for (TexturedModel model : entities.keySet())
+		for (GLTexturedModel model : entities.keySet())
 		{
 			RawModel rawModel = model.getRawModel();
 			bindModel(rawModel);

@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.github.hydos.ginger.engine.common.cameras.Camera;
 import com.github.hydos.ginger.engine.common.elements.objects.*;
-import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
+import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
 
 /** This class is in charge of using all of the classes in the shadows package to
  * carry out the shadow render pass, i.e. rendering the scene to the shadow map
@@ -130,11 +130,11 @@ public class ShadowMapMasterRenderer
 	 * 
 	 * @param entities
 	 *                 - the lists of entities to be rendered. Each list is
-	 *                 associated with the {@link TexturedModel} that all of the
+	 *                 associated with the {@link GLTexturedModel} that all of the
 	 *                 entities in that list use.
 	 * @param sun
 	 *                 - the light acting as the sun in the scene. */
-	public void render(Map<TexturedModel, List<RenderObject>> entities, Light sun)
+	public void render(Map<GLTexturedModel, List<RenderObject>> entities, Light sun)
 	{
 		shadowBox.update();
 		Vector3f sunPosition = sun.getPosition();

@@ -2,12 +2,12 @@ package com.github.hydos.ginger.engine.opengl.render.models;
 
 import com.github.hydos.ginger.engine.opengl.render.texture.ModelTexture;
 
-public class TexturedModel
+public class GLTexturedModel
 {
 	private RawModel rawModel;
 	private ModelTexture texture;
 
-	public TexturedModel(RawModel model, ModelTexture texture)
+	public GLTexturedModel(RawModel model, ModelTexture texture)
 	{
 		this.rawModel = model;
 		this.texture = texture;
