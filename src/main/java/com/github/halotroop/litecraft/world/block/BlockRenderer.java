@@ -10,7 +10,7 @@ import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.math.Maths;
 import com.github.hydos.ginger.engine.opengl.render.Renderer;
-import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
+import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
 import com.github.hydos.ginger.engine.opengl.render.shaders.StaticShader;
 import com.github.hydos.ginger.engine.opengl.utils.GlLoader;
 
@@ -35,7 +35,7 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 
-	public void prepareModel(TexturedModel model)
+	public void prepareModel(GLTexturedModel model)
 	{
 		GL30.glBindVertexArray(model.getRawModel().getVaoID());
 		GL20.glEnableVertexAttribArray(0);
@@ -79,7 +79,7 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
         for (BlockInstance entity : renderList) {
             if (entity != null && entity.getModel() != null)
             {
-                TexturedModel blockModel = entity.getModel();
+                GLTexturedModel blockModel = entity.getModel();
                 GL11.glBindTexture(GL11.GL_TEXTURE_2D, blockModel.getTexture().getTextureID());
                 prepBlockInstance(entity);
                 GL11.glDrawElements(GL11.GL_TRIANGLES, blockModel.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);

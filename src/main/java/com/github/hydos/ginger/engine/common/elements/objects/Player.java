@@ -8,7 +8,7 @@ import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 import com.github.hydos.ginger.engine.common.Constants;
 import com.github.hydos.ginger.engine.common.api.GingerRegister;
 import com.github.hydos.ginger.engine.common.io.Window;
-import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
+import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
 
 public class Player extends RenderObject implements WorldGenConstants
 {
@@ -17,7 +17,7 @@ public class Player extends RenderObject implements WorldGenConstants
 	private boolean noWeight = true; // because the force of gravity on an object's mass is called WEIGHT, not gravity
 	private int chunkX, chunkY, chunkZ;
 
-	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale)
+	public Player(GLTexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale)
 	{
 		super(model, position, rotX, rotY, rotZ, scale);
 		this.chunkX = (int) position.x >> POS_SHIFT;

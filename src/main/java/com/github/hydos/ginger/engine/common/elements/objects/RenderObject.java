@@ -2,17 +2,17 @@ package com.github.hydos.ginger.engine.common.elements.objects;
 
 import org.joml.Vector3f;
 
-import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
+import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
 
 public class RenderObject
 {
-	private TexturedModel model;
+	private GLTexturedModel model;
 	public Vector3f position;
 	private float rotX = 0, rotY = 0, rotZ = 0;
 	private Vector3f scale;
 	private boolean visible = true;
 
-	public RenderObject(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale)
+	public RenderObject(GLTexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale)
 	{
 		this.model = model;
 		this.position = position;
@@ -31,7 +31,7 @@ public class RenderObject
 	public void z(float z)
 	{ this.position.z = z; }
 
-	public TexturedModel getModel()
+	public GLTexturedModel getModel()
 	{ return model; }
 
 	public Vector3f getPosition()
@@ -63,7 +63,7 @@ public class RenderObject
 		this.rotZ += dz;
 	}
 
-	public void setModel(TexturedModel model)
+	public void setModel(GLTexturedModel model)
 	{ this.model = model; }
 
 	public void setPosition(Vector3f position)

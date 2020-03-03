@@ -12,7 +12,7 @@ import com.github.hydos.ginger.engine.common.cameras.Camera;
 import com.github.hydos.ginger.engine.common.elements.GuiTexture;
 import com.github.hydos.ginger.engine.common.elements.objects.*;
 import com.github.hydos.ginger.engine.common.io.Window;
-import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
+import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
 import com.github.hydos.ginger.engine.opengl.render.renderers.*;
 import com.github.hydos.ginger.engine.opengl.render.shaders.*;
 import com.github.hydos.ginger.engine.opengl.shadow.ShadowMapMasterRenderer;
@@ -41,8 +41,8 @@ public class MasterRenderer
 	private NormalMappingRenderer normalRenderer;
 	private Matrix4f projectionMatrix;
 	private ShadowMapMasterRenderer shadowMapRenderer;
-	private Map<TexturedModel, List<RenderObject>> entities = new HashMap<TexturedModel, List<RenderObject>>();
-	private Map<TexturedModel, List<RenderObject>> normalMapEntities = new HashMap<TexturedModel, List<RenderObject>>();
+	private Map<GLTexturedModel, List<RenderObject>> entities = new HashMap<GLTexturedModel, List<RenderObject>>();
+	private Map<GLTexturedModel, List<RenderObject>> normalMapEntities = new HashMap<GLTexturedModel, List<RenderObject>>();
 
 	public MasterRenderer(Camera camera)
 	{
@@ -95,7 +95,7 @@ public class MasterRenderer
 
 	private void processEntity(RenderObject entity)
 	{
-		TexturedModel entityModel = entity.getModel();
+		GLTexturedModel entityModel = entity.getModel();
 		List<RenderObject> batch = entities.get(entityModel);
 		if (batch != null)
 		{
@@ -111,7 +111,7 @@ public class MasterRenderer
 
 	private void processEntityWithNormal(RenderObject entity)
 	{
-		TexturedModel entityModel = entity.getModel();
+		GLTexturedModel entityModel = entity.getModel();
 		List<RenderObject> batch = normalMapEntities.get(entityModel);
 		if (batch != null)
 		{

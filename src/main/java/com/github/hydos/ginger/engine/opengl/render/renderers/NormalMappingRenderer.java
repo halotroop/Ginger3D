@@ -48,7 +48,7 @@ public class NormalMappingRenderer extends Renderer
 		shader.loadOffset(0, 0);
 	}
 
-	private void prepareTexturedModel(TexturedModel model)
+	private void prepareTexturedModel(GLTexturedModel model)
 	{
 		RawModel rawModel = model.getRawModel();
 		GL30.glBindVertexArray(rawModel.getVaoID());
@@ -66,11 +66,11 @@ public class NormalMappingRenderer extends Renderer
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getNormalMap());
 	}
 
-	public void render(Map<TexturedModel, List<RenderObject>> entities, Vector4f clipPlane, List<Light> lights, Camera camera)
+	public void render(Map<GLTexturedModel, List<RenderObject>> entities, Vector4f clipPlane, List<Light> lights, Camera camera)
 	{
 		shader.start();
 		prepare(clipPlane, lights, camera);
-		for (TexturedModel model : entities.keySet())
+		for (GLTexturedModel model : entities.keySet())
 		{
 			prepareTexturedModel(model);
 			List<RenderObject> batch = entities.get(model);

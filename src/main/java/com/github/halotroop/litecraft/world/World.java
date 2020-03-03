@@ -15,7 +15,7 @@ import com.github.halotroop.litecraft.world.gen.*;
 import com.github.halotroop.litecraft.world.gen.modifier.WorldModifier;
 import com.github.hydos.ginger.engine.common.elements.objects.Player;
 import com.github.hydos.ginger.engine.common.obj.ModelLoader;
-import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
+import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
 
 import it.unimi.dsi.fastutil.longs.*;
 
@@ -86,7 +86,7 @@ public class World implements BlockAccess, WorldGenConstants
 	public Player spawnPlayer(float x, float y, float z)
 	{
 		// Player model and stuff
-		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
+		GLTexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
 		this.player = new Player(dirtModel, new Vector3f(x, y, z), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
 		this.player.setVisible(false);
 		// Generate world around player

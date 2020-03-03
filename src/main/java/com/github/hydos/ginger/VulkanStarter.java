@@ -10,9 +10,10 @@ import org.lwjgl.vulkan.*;
 
 import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
+import com.github.hydos.ginger.engine.common.obj.ModelLoader;
 import com.github.hydos.ginger.engine.vulkan.*;
 import com.github.hydos.ginger.engine.vulkan.api.VKGinger;
-import com.github.hydos.ginger.engine.vulkan.model.VKVertices;
+import com.github.hydos.ginger.engine.vulkan.model.*;
 import com.github.hydos.ginger.engine.vulkan.render.renderers.*;
 import com.github.hydos.ginger.engine.vulkan.render.ubo.*;
 import com.github.hydos.ginger.engine.vulkan.shaders.*;
@@ -265,7 +266,7 @@ public class VulkanStarter
 		final VkQueue queue = createDeviceQueue(device, queueFamilyIndex);
 		final long renderPass = ExampleRenderer.createRenderPass(device, colorAndDepthFormatAndSpace.colorFormat, colorAndDepthFormatAndSpace.depthFormat);
 		final long renderCommandPool = createCommandPool(device, queueFamilyIndex);
-		VKVertices vertices = TempMethods.createVertices(memoryProperties, device);
+		VKVertices vertices = VKModelConverter.convertModel(ModelLoader.getCubeMesh(), memoryProperties, device);
 		Ubo ubo = new Ubo(memoryProperties, device);
 		final long descriptorPool = createDescriptorPool(device);
 		final long descriptorSetLayout = createDescriptorSetLayout(device);
