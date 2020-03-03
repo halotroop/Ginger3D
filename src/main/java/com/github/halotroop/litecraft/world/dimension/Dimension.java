@@ -2,7 +2,7 @@ package com.github.halotroop.litecraft.world.dimension;
 
 import java.util.*;
 
-import com.github.halotroop.litecraft.world.gen.*;
+import com.github.halotroop.litecraft.world.gen.ChunkGenerator;
 import com.github.halotroop.litecraft.world.gen.modifier.WorldModifier;
 
 import it.unimi.dsi.fastutil.ints.*;

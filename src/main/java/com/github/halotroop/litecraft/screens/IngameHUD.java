@@ -6,7 +6,7 @@ import com.github.halotroop.litecraft.Litecraft;
 import com.github.hydos.ginger.engine.common.api.GingerRegister;
 import com.github.hydos.ginger.engine.common.font.GUIText;
 import com.github.hydos.ginger.engine.common.screen.Screen;
-import com.github.hydos.ginger.engine.opengl.api.*;
+import com.github.hydos.ginger.engine.opengl.api.GingerGL;
 
 public class IngameHUD extends Screen
 {

@@ -2,8 +2,7 @@ package tk.valoeghese.sod;
 
 import java.util.Iterator;
 
-import it.unimi.dsi.fastutil.floats.FloatArrayList;
-import it.unimi.dsi.fastutil.floats.FloatList;
+import it.unimi.dsi.fastutil.floats.*;
 
 public class FloatArrayDataSection implements BaseDataSection<Float> {
 	public FloatArrayDataSection() {

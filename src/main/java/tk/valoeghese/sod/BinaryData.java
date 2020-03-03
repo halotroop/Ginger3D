@@ -1,14 +1,7 @@
 package tk.valoeghese.sod;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 import tk.valoeghese.sod.exception.SODParseException;
 

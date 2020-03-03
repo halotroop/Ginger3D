@@ -2,8 +2,7 @@ package tk.valoeghese.sod;
 
 import java.util.Iterator;
 
-import it.unimi.dsi.fastutil.shorts.ShortArrayList;
-import it.unimi.dsi.fastutil.shorts.ShortList;
+import it.unimi.dsi.fastutil.shorts.*;
 
 public class ShortArrayDataSection implements BaseDataSection<Short> {
 	public ShortArrayDataSection() {

@@ -2,8 +2,7 @@ package tk.valoeghese.sod;
 
 import java.util.Iterator;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-import it.unimi.dsi.fastutil.doubles.DoubleList;
+import it.unimi.dsi.fastutil.doubles.*;
 
 public class DoubleArrayDataSection implements BaseDataSection<Double> {
 	public DoubleArrayDataSection() {

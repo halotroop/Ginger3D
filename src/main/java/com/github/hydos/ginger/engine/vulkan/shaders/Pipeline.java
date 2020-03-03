@@ -1,51 +1,12 @@
 package com.github.hydos.ginger.engine.vulkan.shaders;
 
-import static org.lwjgl.system.MemoryUtil.memAllocInt;
-import static org.lwjgl.system.MemoryUtil.memAllocLong;
-import static org.lwjgl.system.MemoryUtil.memFree;
-import static org.lwjgl.vulkan.VK10.VK_COMPARE_OP_ALWAYS;
-import static org.lwjgl.vulkan.VK10.VK_COMPARE_OP_LESS_OR_EQUAL;
-import static org.lwjgl.vulkan.VK10.VK_CULL_MODE_NONE;
-import static org.lwjgl.vulkan.VK10.VK_DYNAMIC_STATE_SCISSOR;
-import static org.lwjgl.vulkan.VK10.VK_DYNAMIC_STATE_VIEWPORT;
-import static org.lwjgl.vulkan.VK10.VK_FRONT_FACE_COUNTER_CLOCKWISE;
-import static org.lwjgl.vulkan.VK10.VK_NULL_HANDLE;
-import static org.lwjgl.vulkan.VK10.VK_POLYGON_MODE_FILL;
-import static org.lwjgl.vulkan.VK10.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-import static org.lwjgl.vulkan.VK10.VK_SAMPLE_COUNT_1_BIT;
-import static org.lwjgl.vulkan.VK10.VK_SHADER_STAGE_FRAGMENT_BIT;
-import static org.lwjgl.vulkan.VK10.VK_SHADER_STAGE_VERTEX_BIT;
-import static org.lwjgl.vulkan.VK10.VK_STENCIL_OP_KEEP;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
-import static org.lwjgl.vulkan.VK10.vkCreateGraphicsPipelines;
-import static org.lwjgl.vulkan.VK10.vkCreatePipelineLayout;
+import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.vulkan.VK10.*;
 
 import java.io.IOException;
-import java.nio.IntBuffer;
-import java.nio.LongBuffer;
+import java.nio.*;
 
-import org.lwjgl.vulkan.VkDevice;
-import org.lwjgl.vulkan.VkGraphicsPipelineCreateInfo;
-import org.lwjgl.vulkan.VkPipelineColorBlendAttachmentState;
-import org.lwjgl.vulkan.VkPipelineColorBlendStateCreateInfo;
-import org.lwjgl.vulkan.VkPipelineDepthStencilStateCreateInfo;
-import org.lwjgl.vulkan.VkPipelineDynamicStateCreateInfo;
-import org.lwjgl.vulkan.VkPipelineInputAssemblyStateCreateInfo;
-import org.lwjgl.vulkan.VkPipelineLayoutCreateInfo;
-import org.lwjgl.vulkan.VkPipelineMultisampleStateCreateInfo;
-import org.lwjgl.vulkan.VkPipelineRasterizationStateCreateInfo;
-import org.lwjgl.vulkan.VkPipelineShaderStageCreateInfo;
-import org.lwjgl.vulkan.VkPipelineVertexInputStateCreateInfo;
-import org.lwjgl.vulkan.VkPipelineViewportStateCreateInfo;
+import org.lwjgl.vulkan.*;
 
 import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
 

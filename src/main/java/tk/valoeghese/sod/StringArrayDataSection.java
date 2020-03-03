@@ -1,8 +1,6 @@
 package tk.valoeghese.sod;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class StringArrayDataSection implements BaseDataSection<String> {
 	public StringArrayDataSection() {

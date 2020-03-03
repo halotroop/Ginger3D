@@ -4,8 +4,7 @@ import java.util.Random;
 
 import com.github.halotroop.litecraft.types.block.*;
 import com.github.halotroop.litecraft.util.noise.OctaveSimplexNoise;
-import com.github.halotroop.litecraft.world.Chunk;
-import com.github.halotroop.litecraft.world.World;
+import com.github.halotroop.litecraft.world.*;
 
 public class EarthChunkGenerator implements ChunkGenerator, WorldGenConstants
 {
