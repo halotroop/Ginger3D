@@ -32,8 +32,8 @@ import org.lwjgl.vulkan.VkVertexInputBindingDescription;
 
 import com.github.hydos.ginger.VulkanStarter.DepthStencil;
 import com.github.hydos.ginger.VulkanStarter.Swapchain;
-import com.github.hydos.ginger.VulkanStarter.Vertices;
 import com.github.hydos.ginger.engine.vulkan.memory.VKMemory;
+import com.github.hydos.ginger.engine.vulkan.model.VKVertices;
 import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
 
 public class ExampleRenderer
@@ -119,7 +119,7 @@ public class ExampleRenderer
 		return framebuffers;
 	}
 	
-	public static Vertices createVertices(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, VkDevice device)
+	public static VKVertices createVertices(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, VkDevice device)
 	{
 		ByteBuffer vertexBuffer = memAlloc(2 * 3 * (3 + 3) * 4);
 		FloatBuffer fb = vertexBuffer.asFloatBuffer();
@@ -199,9 +199,9 @@ public class ExampleRenderer
 		vi.sType(VK12.VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO);
 		vi.pVertexBindingDescriptions(bindingDescriptor);
 		vi.pVertexAttributeDescriptions(attributeDescriptions);
-		Vertices ret = new Vertices();
+		VKVertices ret = new VKVertices();
 		ret.createInfo = vi;
-		ret.verticesBuf = verticesBuf;
+		ret.vkVerticiesBuffer = verticesBuf;
 		return ret;
 	}
 }

@@ -1,54 +1,22 @@
 package com.github.hydos.ginger;
 
 import java.io.IOException;
-import java.nio.IntBuffer;
-import java.nio.LongBuffer;
+import java.nio.*;
 
 import org.lwjgl.PointerBuffer;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.glfw.GLFWVulkan;
+import org.lwjgl.glfw.*;
 import org.lwjgl.system.MemoryUtil;
-import org.lwjgl.vulkan.EXTDebugReport;
-import org.lwjgl.vulkan.KHRSwapchain;
-import org.lwjgl.vulkan.VK12;
-import org.lwjgl.vulkan.VkCommandBuffer;
-import org.lwjgl.vulkan.VkCommandBufferAllocateInfo;
-import org.lwjgl.vulkan.VkCommandBufferBeginInfo;
-import org.lwjgl.vulkan.VkCommandPoolCreateInfo;
-import org.lwjgl.vulkan.VkDescriptorBufferInfo;
-import org.lwjgl.vulkan.VkDescriptorPoolCreateInfo;
-import org.lwjgl.vulkan.VkDescriptorPoolSize;
-import org.lwjgl.vulkan.VkDescriptorSetAllocateInfo;
-import org.lwjgl.vulkan.VkDescriptorSetLayoutBinding;
-import org.lwjgl.vulkan.VkDescriptorSetLayoutCreateInfo;
-import org.lwjgl.vulkan.VkDevice;
-import org.lwjgl.vulkan.VkFormatProperties;
-import org.lwjgl.vulkan.VkInstance;
-import org.lwjgl.vulkan.VkPhysicalDevice;
-import org.lwjgl.vulkan.VkPhysicalDeviceMemoryProperties;
-import org.lwjgl.vulkan.VkPipelineVertexInputStateCreateInfo;
-import org.lwjgl.vulkan.VkPresentInfoKHR;
-import org.lwjgl.vulkan.VkQueue;
-import org.lwjgl.vulkan.VkSemaphoreCreateInfo;
-import org.lwjgl.vulkan.VkSubmitInfo;
-import org.lwjgl.vulkan.VkWriteDescriptorSet;
+import org.lwjgl.vulkan.*;
 
 import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
-import com.github.hydos.ginger.engine.vulkan.TempMethods;
-import com.github.hydos.ginger.engine.vulkan.VKConstants;
+import com.github.hydos.ginger.engine.vulkan.*;
 import com.github.hydos.ginger.engine.vulkan.api.VKGinger;
-import com.github.hydos.ginger.engine.vulkan.render.renderers.ExampleRenderer;
-import com.github.hydos.ginger.engine.vulkan.render.renderers.VKMasterRenderer;
-import com.github.hydos.ginger.engine.vulkan.render.ubo.Ubo;
-import com.github.hydos.ginger.engine.vulkan.render.ubo.UboDescriptor;
-import com.github.hydos.ginger.engine.vulkan.shaders.Pipeline;
-import com.github.hydos.ginger.engine.vulkan.shaders.ShaderType;
-import com.github.hydos.ginger.engine.vulkan.utils.VKDeviceProperties;
-import com.github.hydos.ginger.engine.vulkan.utils.VKLoader;
-import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
+import com.github.hydos.ginger.engine.vulkan.model.VKVertices;
+import com.github.hydos.ginger.engine.vulkan.render.renderers.*;
+import com.github.hydos.ginger.engine.vulkan.render.ubo.*;
+import com.github.hydos.ginger.engine.vulkan.shaders.*;
+import com.github.hydos.ginger.engine.vulkan.utils.*;
 
 /** @author hydos06
  *         the non ARR vulkan test example */
@@ -156,12 +124,6 @@ public class VulkanStarter
 		submitInfo.free();
 		if (err != VK12.VK_SUCCESS)
 		{ throw new AssertionError("Failed to submit command buffer: " + VKUtils.translateVulkanResult(err)); }
-	}
-
-	public static class Vertices
-	{
-		public long verticesBuf;
-		public VkPipelineVertexInputStateCreateInfo createInfo;
 	}
 
 	private static long createDescriptorPool(VkDevice device)
@@ -303,7 +265,7 @@ public class VulkanStarter
 		final VkQueue queue = createDeviceQueue(device, queueFamilyIndex);
 		final long renderPass = ExampleRenderer.createRenderPass(device, colorAndDepthFormatAndSpace.colorFormat, colorAndDepthFormatAndSpace.depthFormat);
 		final long renderCommandPool = createCommandPool(device, queueFamilyIndex);
-		Vertices vertices = TempMethods.createVertices(memoryProperties, device);
+		VKVertices vertices = TempMethods.createVertices(memoryProperties, device);
 		Ubo ubo = new Ubo(memoryProperties, device);
 		final long descriptorPool = createDescriptorPool(device);
 		final long descriptorSetLayout = createDescriptorSetLayout(device);
@@ -341,7 +303,7 @@ public class VulkanStarter
 				if (renderCommandBuffers != null)
 				{ VK12.vkResetCommandPool(device, renderCommandPool, VKUtils.VK_FLAGS_NONE); }
 				renderCommandBuffers = VKUtils.initRenderCommandBuffers(device, renderCommandPool, framebuffers, renderPass, Window.getWidth(), Window.getHeight(), pipeline, descriptorSet,
-					vertices.verticesBuf);
+					vertices.vkVerticiesBuffer);
 				mustRecreate = false;
 			}
 		}

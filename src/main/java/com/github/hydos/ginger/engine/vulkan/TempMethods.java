@@ -1,37 +1,20 @@
 package com.github.hydos.ginger.engine.vulkan;
 
-import static org.lwjgl.system.MemoryUtil.memAddress;
-import static org.lwjgl.system.MemoryUtil.memAlloc;
-import static org.lwjgl.system.MemoryUtil.memAllocInt;
-import static org.lwjgl.system.MemoryUtil.memAllocLong;
-import static org.lwjgl.system.MemoryUtil.memAllocPointer;
-import static org.lwjgl.system.MemoryUtil.memCopy;
-import static org.lwjgl.system.MemoryUtil.memFree;
+import static org.lwjgl.system.MemoryUtil.*;
 
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.LongBuffer;
+import java.nio.*;
 
 import org.lwjgl.PointerBuffer;
-import org.lwjgl.vulkan.VK12;
-import org.lwjgl.vulkan.VkBufferCreateInfo;
-import org.lwjgl.vulkan.VkDevice;
-import org.lwjgl.vulkan.VkMemoryAllocateInfo;
-import org.lwjgl.vulkan.VkMemoryRequirements;
-import org.lwjgl.vulkan.VkPhysicalDeviceMemoryProperties;
-import org.lwjgl.vulkan.VkPipelineVertexInputStateCreateInfo;
-import org.lwjgl.vulkan.VkVertexInputAttributeDescription;
-import org.lwjgl.vulkan.VkVertexInputBindingDescription;
+import org.lwjgl.vulkan.*;
 
-import com.github.hydos.ginger.VulkanStarter.Vertices;
 import com.github.hydos.ginger.engine.vulkan.memory.VKMemory;
+import com.github.hydos.ginger.engine.vulkan.model.VKVertices;
 import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
 
 public class TempMethods
 {
 	
-	public static Vertices createVertices(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, VkDevice device)
+	public static VKVertices createVertices(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, VkDevice device)
 	{
 		ByteBuffer vertexBuffer = memAlloc(2 * 3 * (3 + 3) * 4);
 		FloatBuffer fb = vertexBuffer.asFloatBuffer();
@@ -111,9 +94,9 @@ public class TempMethods
 		vi.sType(VK12.VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO);
 		vi.pVertexBindingDescriptions(bindingDescriptor);
 		vi.pVertexAttributeDescriptions(attributeDescriptions);
-		Vertices ret = new Vertices();
+		VKVertices ret = new VKVertices();
 		ret.createInfo = vi;
-		ret.verticesBuf = verticesBuf;
+		ret.vkVerticiesBuffer = verticesBuf;
 		return ret;
 	}
 	
