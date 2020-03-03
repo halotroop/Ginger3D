@@ -15,6 +15,7 @@ import com.github.hydos.ginger.engine.vulkan.*;
 import com.github.hydos.ginger.engine.vulkan.api.VKGinger;
 import com.github.hydos.ginger.engine.vulkan.model.*;
 import com.github.hydos.ginger.engine.vulkan.registers.VKRegister;
+import com.github.hydos.ginger.engine.vulkan.render.RenderUtils;
 import com.github.hydos.ginger.engine.vulkan.render.renderers.*;
 import com.github.hydos.ginger.engine.vulkan.render.ubo.*;
 import com.github.hydos.ginger.engine.vulkan.shaders.*;
@@ -267,7 +268,7 @@ public class VulkanStarter
 		VKRegister.commandPool = createCommandPool(VKRegister.device, queueFamilyIndex);
 		final VkCommandBuffer setupCommandBuffer = createCommandBuffer(VKRegister.device, VKRegister.commandPool);
 		VKRegister.queue = createDeviceQueue(VKRegister.device, queueFamilyIndex);
-		final long renderPass = ExampleRenderer.createRenderPass(VKRegister.device, colorAndDepthFormatAndSpace.colorFormat, colorAndDepthFormatAndSpace.depthFormat);
+		final long renderPass = RenderUtils.createRenderPass(VKRegister.device, colorAndDepthFormatAndSpace.colorFormat, colorAndDepthFormatAndSpace.depthFormat);
 		final long renderCommandPool = createCommandPool(VKRegister.device, queueFamilyIndex);
 		VKVertices vertices = VKModelConverter.convertModel(ModelLoader.getCubeMesh(), memoryProperties, VKRegister.device);
 		Ubo ubo = new Ubo(memoryProperties, VKRegister.device);
@@ -303,11 +304,11 @@ public class VulkanStarter
 				if (framebuffers != null)
 				{ for (int i = 0; i < framebuffers.length; i++)
 					VK12.vkDestroyFramebuffer(VKRegister.device, framebuffers[i], null); }
-				framebuffers = ExampleRenderer.createFramebuffers(VKRegister.device, swapchain, renderPass, Window.getWidth(), Window.getHeight(), depthStencil);
+				framebuffers = RenderUtils.createFramebuffers(VKRegister.device, swapchain, renderPass, Window.getWidth(), Window.getHeight(), depthStencil);
 				// Create render command buffers
 				if (renderCommandBuffers != null)
 				{ VK12.vkResetCommandPool(VKRegister.device, renderCommandPool, VKUtils.VK_FLAGS_NONE); }
-				renderCommandBuffers = VKUtils.initRenderCommandBuffers(VKRegister.device, renderCommandPool, framebuffers, renderPass, Window.getWidth(), Window.getHeight(), pipeline, descriptorSet,
+				renderCommandBuffers = VKUtils.setupRenderCommandBuffer(VKRegister.device, renderCommandPool, framebuffers, renderPass, Window.getWidth(), Window.getHeight(), pipeline, descriptorSet,
 					vertices.vkVerticiesBuffer);
 				mustRecreate = false;
 			}
@@ -358,7 +359,7 @@ public class VulkanStarter
 		float time = 0.0f;
 		while (!GLFW.glfwWindowShouldClose(Window.getWindow()))
 		{
-			GLFW.glfwPollEvents();
+			Window.update();
 			if (swapchainRecreator.mustRecreate)
 				swapchainRecreator.recreate();
 			

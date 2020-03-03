@@ -13,9 +13,10 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.shaderc.*;
 import org.lwjgl.vulkan.*;
 
+import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.tools.IOUtil;
 import com.github.hydos.ginger.engine.vulkan.VKConstants;
-import com.github.hydos.ginger.engine.vulkan.registers.VKRegister;
+import com.github.hydos.ginger.engine.vulkan.render.renderers.EntityRenderer;
 import com.github.hydos.ginger.engine.vulkan.shaders.Pipeline;
 
 /** @author hydos
@@ -167,7 +168,7 @@ public class VKUtils
 		}
 	}
 	
-	public static VkCommandBuffer[] initRenderCommandBuffers(VkDevice device, long commandPool, long[] framebuffers, long renderPass, int width, int height,
+	public static VkCommandBuffer[] setupRenderCommandBuffer(VkDevice device, long commandPool, long[] framebuffers, long renderPass, int width, int height,
 		Pipeline pipeline, long descriptorSet, long verticesBuf)
 	{
 		try (MemoryStack stack = MemoryStack.stackPush())
@@ -179,9 +180,9 @@ public class VKUtils
 				.level(VK12.VK_COMMAND_BUFFER_LEVEL_PRIMARY)
 				.commandBufferCount(framebuffers.length);
 			PointerBuffer pCommandBuffer = memAllocPointer(framebuffers.length);
-			int err = VK12.vkAllocateCommandBuffers(device, cmdBufAllocateInfo, pCommandBuffer);
-			if (err != VK12.VK_SUCCESS)
-			{ throw new AssertionError("Failed to create render command buffer: " + VKUtils.translateVulkanResult(err)); }
+			int result = VK12.vkAllocateCommandBuffers(device, cmdBufAllocateInfo, pCommandBuffer);
+			if (result != VK12.VK_SUCCESS)
+			{ throw new AssertionError("Failed to create render command buffer: " + VKUtils.translateVulkanResult(result)); }
 			VkCommandBuffer[] renderCommandBuffers = new VkCommandBuffer[framebuffers.length];
 			for (int i = 0; i < framebuffers.length; i++)
 			{ renderCommandBuffers[i] = new VkCommandBuffer(pCommandBuffer.get(i), device); }
@@ -190,12 +191,12 @@ public class VKUtils
 			// Create the command buffer begin structure
 			VkCommandBufferBeginInfo cmdBufInfo = VkCommandBufferBeginInfo.calloc()
 				.sType(VK12.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO);
-			// Specify clear color (cornflower blue)
+			// Specify clear colour
 			VkClearValue.Buffer clearValues = VkClearValue.calloc(2);
 			clearValues.get(0).color()
-				.float32(0, 100 / 255.0f)
-				.float32(1, 149 / 255.0f)
-				.float32(2, 237 / 255.0f)
+				.float32(0, Window.getColour().x() / 255.0f)
+				.float32(1, Window.getColour().y() / 255.0f)
+				.float32(2, Window.getColour().z() / 255.0f)
 				.float32(3, 1.0f);
 			// Specify clear depth-stencil
 			clearValues.get(1).depthStencil().depth(1.0f).stencil(0);
@@ -211,9 +212,9 @@ public class VKUtils
 			{
 				// Set target frame buffer
 				renderPassBeginInfo.framebuffer(framebuffers[i]);
-				err = VK12.vkBeginCommandBuffer(renderCommandBuffers[i], cmdBufInfo);
-				if (err != VK12.VK_SUCCESS)
-				{ throw new AssertionError("Failed to begin render command buffer: " + VKUtils.translateVulkanResult(err)); }
+				result = VK12.vkBeginCommandBuffer(renderCommandBuffers[i], cmdBufInfo);
+				if (result != VK12.VK_SUCCESS)
+				{ throw new AssertionError("Failed to begin render command buffer: " + VKUtils.translateVulkanResult(result)); }
 				VK12.vkCmdBeginRenderPass(renderCommandBuffers[i], renderPassBeginInfo, VK12.VK_SUBPASS_CONTENTS_INLINE);
 				// Update dynamic viewport state
 				VkViewport.Buffer viewport = VkViewport.calloc(1)
@@ -235,23 +236,12 @@ public class VKUtils
 				memFree(descriptorSets);
 				// Bind the rendering pipeline (including the shaders)
 				VK12.vkCmdBindPipeline(renderCommandBuffers[i], VK12.VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.pipeline);
-				// Bind triangle vertices
-				LongBuffer offsets = memAllocLong(1);
-				offsets.put(0, 0L);
-				LongBuffer pBuffers = memAllocLong(1);
-				pBuffers.put(0, verticesBuf);
-	            LongBuffer vertexBuffers = stack.longs(VKRegister.exampleVKModel.vertexBuffer);
-				VK12.vkCmdBindVertexBuffers(renderCommandBuffers[i], 0, vertexBuffers, offsets);
-				VK12.vkCmdBindIndexBuffer(renderCommandBuffers[i], VKRegister.exampleVKModel.indexBuffer, 0, 3);// 3 = VK_INDEX_TYPE_UINT32
-				memFree(pBuffers);
-				memFree(offsets);
-				// Draw model
-//				VK12.vkCmdDraw(renderCommandBuffers[i], 6, 1, 0, 0); old method
-	            VK12.vkCmdDrawIndexed(renderCommandBuffers[i], VKRegister.exampleVKModel.mesh.getIndices().length, 1, 0, 0, 0);
+				EntityRenderer.tempStaticRender(stack, renderCommandBuffers[i]);
+
 				VK12.vkCmdEndRenderPass(renderCommandBuffers[i]);
-				err = VK12.vkEndCommandBuffer(renderCommandBuffers[i]);
-				if (err != VK12.VK_SUCCESS)
-				{ throw new AssertionError("Failed to begin render command buffer: " + VKUtils.translateVulkanResult(err)); }
+				result = VK12.vkEndCommandBuffer(renderCommandBuffers[i]);
+				if (result != VK12.VK_SUCCESS)
+				{ throw new AssertionError("Failed to begin render command buffer: " + VKUtils.translateVulkanResult(result)); }
 			}
 			renderPassBeginInfo.free();
 			clearValues.free();

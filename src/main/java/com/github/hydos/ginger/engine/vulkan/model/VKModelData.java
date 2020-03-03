@@ -125,25 +125,6 @@ public class VKModelData
             endSingleTimeCommands(commandBuffer);
         }
     }
-    
-
-    private void memcpy(ByteBuffer buffer, int[] vertices) {
-    	int i = 1;
-        for(int vertex : vertices) {
-            buffer.putFloat(vertex);
-            if(i == 3) {
-                buffer.putFloat(1);
-                buffer.putFloat(1);
-                buffer.putFloat(1);
-
-                buffer.putFloat(1);
-                buffer.putFloat(1);
-            	i = 0;
-            }
-            //TODO: Finish
-            i++;
-        }
-    }
 
     
     private void memcpy(ByteBuffer buffer, float[] indices) {

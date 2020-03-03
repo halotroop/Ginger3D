@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.vulkan.render.renderers;
+package com.github.hydos.ginger.engine.vulkan.render;
 
 import static org.lwjgl.system.MemoryUtil.memAddress;
 import static org.lwjgl.system.MemoryUtil.memAlloc;
@@ -36,7 +36,7 @@ import com.github.hydos.ginger.engine.vulkan.memory.VKMemory;
 import com.github.hydos.ginger.engine.vulkan.model.VKVertices;
 import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
 
-public class ExampleRenderer
+public class RenderUtils
 {
 	
 	public static long createRenderPass(VkDevice device, int colorFormat, int depthFormat)

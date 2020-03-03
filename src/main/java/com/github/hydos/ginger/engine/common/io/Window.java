@@ -207,22 +207,22 @@ public class Window
 
 	public static void update()
 	{
-		// Hack to make the FBO update when the screen size is changed
-		if ((oldWindowHeight != Window.getHeight() || oldWindowWidth != Window.getWidth()) && Window.getHeight() > 10 && Window.getWidth() > 10)
-		{
-			GingerGL.getInstance().contrastFbo.resizeFBOs();
-			oldWindowWidth = Window.getWidth();
-			oldWindowHeight = Window.getHeight();
+		if(renderAPI == RenderAPI.OpenGL) {
+			if ((oldWindowHeight != Window.getHeight() || oldWindowWidth != Window.getWidth()) && Window.getHeight() > 10 && Window.getWidth() > 10)
+			{
+				GingerGL.getInstance().contrastFbo.resizeFBOs();
+				oldWindowWidth = Window.getWidth();
+				oldWindowHeight = Window.getHeight();
+			}
+			GL11.glViewport(0, 0, width, height);
+			GL11.glClearColor(backgroundColour.x/255, backgroundColour.y/255, backgroundColour.z/255, 1.0f);
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		}
-		
 		IntBuffer widthBuffer = BufferUtils.createIntBuffer(1);
 		IntBuffer heightBuffer = BufferUtils.createIntBuffer(1);
 		GLFW.glfwGetWindowSize(getWindow(), widthBuffer, heightBuffer);
 		width = widthBuffer.get(0);
 		height = heightBuffer.get(0);
-		GL11.glViewport(0, 0, width, height);
-		GL11.glClearColor(backgroundColour.x/255, backgroundColour.y/255, backgroundColour.z/255, 1.0f);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		GLFW.glfwPollEvents();
 		newX = Window.getMouseX();
 		newY = Window.getMouseY();
