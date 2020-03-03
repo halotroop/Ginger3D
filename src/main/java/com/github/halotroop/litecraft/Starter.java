@@ -1,9 +1,7 @@
-package com.github.hydos.ginger;
+package com.github.halotroop.litecraft;
 
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
-
-import com.github.halotroop.litecraft.Litecraft;
 
 public class Starter
 {

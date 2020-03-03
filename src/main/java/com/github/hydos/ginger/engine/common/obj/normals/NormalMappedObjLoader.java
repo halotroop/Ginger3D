@@ -6,7 +6,7 @@ import java.util.*;
 import org.joml.*;
 
 import com.github.hydos.ginger.engine.opengl.render.models.RawModel;
-import com.github.hydos.ginger.engine.opengl.utils.GlLoader;
+import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
 
 public class NormalMappedObjLoader
 {
@@ -133,7 +133,7 @@ public class NormalMappedObjLoader
 		float[] normalsArray = new float[vertices.size() * 3];
 		float[] tangentsArray = new float[vertices.size() * 3];
 		int[] indicesArray = convertIndicesListToArray(indices);
-		return GlLoader.loadToVAO(verticesArray, indicesArray, normalsArray, tangentsArray, texturesArray);
+		return GLLoader.loadToVAO(verticesArray, indicesArray, normalsArray, tangentsArray, texturesArray);
 	}
 
 	private static VertexNM processVertex(String[] vertex, List<VertexNM> vertices,

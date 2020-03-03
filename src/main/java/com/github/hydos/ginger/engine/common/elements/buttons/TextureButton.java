@@ -7,7 +7,7 @@ import org.lwjgl.glfw.GLFW;
 
 import com.github.hydos.ginger.engine.common.elements.GuiTexture;
 import com.github.hydos.ginger.engine.common.io.Window;
-import com.github.hydos.ginger.engine.opengl.utils.GlLoader;
+import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
 
 public class TextureButton
 {
@@ -20,7 +20,7 @@ public class TextureButton
 	public TextureButton(String texture, Vector2f position, Vector2f scale)
 	{
 		resourceLocation = texture;
-		guiTexture = new GuiTexture(GlLoader.loadTextureDirectly(texture), position, scale);
+		guiTexture = new GuiTexture(GLLoader.loadTextureDirectly(texture), position, scale);
 	}
 
 	public void hide(List<GuiTexture> guiTextureList)

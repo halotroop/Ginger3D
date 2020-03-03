@@ -30,8 +30,8 @@ public class PlayerEntity extends Entity implements WorldGenConstants
 		float ry = (float) Math.toRadians(GingerRegister.getInstance().game.data.camera.getYaw());
 		switch (direction)
 		{
-		case FORWARD:
 		default:
+		case FORWARD:
 			position.z -= Math.cos(ry) * Constants.movementSpeed;
 			position.x += Math.sin(ry) * Constants.movementSpeed;
 			break;

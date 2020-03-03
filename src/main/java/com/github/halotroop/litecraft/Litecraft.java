@@ -18,9 +18,10 @@ import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.obj.ModelLoader;
 import com.github.hydos.ginger.engine.opengl.api.*;
+import com.github.hydos.ginger.engine.opengl.postprocessing.PostProcessing;
 import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
 import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
-import com.github.hydos.ginger.engine.opengl.utils.GlLoader;
+import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
 
 import tk.valoeghese.gateways.client.io.*;
 
@@ -30,13 +31,9 @@ public class Litecraft extends Game
 	private World world;
 	private LitecraftSave save;
 	private GingerGL engine;
-	public PlayerEntity playerEntity;
-	private Camera camera;
 	public int fps, ups, tps;
 	public Vector4i dbgStats = new Vector4i();
 	private long frameTimer;
-
-	public int threadWaitlist = 0;
 
 	public Litecraft()
 	{
@@ -61,7 +58,7 @@ public class Litecraft extends Game
 			System.out.println("Saving chunks...");
 			long time = System.currentTimeMillis();
 			this.world.unloadAllChunks();
-			this.getSave().saveGlobalData(this.world.getSeed(), this.playerEntity);
+			this.getSave().saveGlobalData(this.world.getSeed(), ((PlayerEntity) this.player));
 			System.out.println("Saved world in " + (System.currentTimeMillis() - time) + " milliseconds");
 		}
 		engine.cleanup();
@@ -80,7 +77,7 @@ public class Litecraft extends Game
 		// Render shadows
 		GingerRegister.getInstance().masterRenderer.renderShadowMap(data.entities, data.lights.get(0));
 		// If there's a world, render it!
-		if (this.world != null) this.engine.renderWorld(this);
+		if (this.world != null) renderWorld(this);
 		// Render any overlays (GUIs, HUDs)
 		this.engine.renderOverlays(this);
 		// Put what's stored in the inactive framebuffer on the screen
@@ -90,16 +87,27 @@ public class Litecraft extends Game
 	// Updates the debug stats once per real-time second, regardless of how many frames have been rendered
 	private void updateDebugStats()
 	{
-		this.dbgStats.set(fps, ups, tps, threadWaitlist);
+		this.dbgStats.set(fps, ups, tps, 0);
 		this.fps=0;
 		this.ups=0;
 		this.tps=0;
 		this.frameTimer += 1000;
 	}
 	
+	public void renderWorld(Game game)
+	{
+		GameData data = game.data;
+		GingerUtils.preRenderScene(engine.getRegistry().masterRenderer);
+		engine.contrastFbo.bindFBO();
+		engine.getRegistry().masterRenderer.renderScene(data.entities, data.normalMapEntities, data.lights, data.camera, data.clippingPlane);
+		engine.contrastFbo.unbindFBO();
+		PostProcessing.doPostProcessing(engine.contrastFbo.colorTexture);
+		if (data.handleGuis) engine.renderOverlays(game);
+	}
+	
 	public void update()
 	{
-		Input.invokeAllListeners();
+		ups += 1;
 	}
 
 	private void setupConstants()
@@ -124,17 +132,17 @@ public class Litecraft extends Game
 			//Set the player model
 			TexturedModel playerModel = ModelLoader.loadGenericCube("block/cubes/stone/brick/stonebrick.png");
 			Light sun = new Light(new Vector3f(0, 105, 0), new Vector3f(0.9765625f, 0.98828125f, 0.05859375f), new Vector3f(0.002f, 0.002f, 0.002f));
-			FontType font = new FontType(GlLoader.loadFontAtlas("candara.png"), "candara.fnt");
+			FontType font = new FontType(GLLoader.loadFontAtlas("candara.png"), "candara.fnt");
 			this.engine = new GingerGL();
-			this.playerEntity = new PlayerEntity(playerModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
-			this.camera = new FirstPersonCamera(playerEntity);
-			this.playerEntity.setVisible(false);
-			this.data = new GameData(this.playerEntity, this.camera, 20);
+			this.player = new PlayerEntity(playerModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
+			this.camera = new FirstPersonCamera(player);
+			this.player.setVisible(false);
+			this.data = new GameData(this.player, this.camera, 20);
 			this.data.handleGuis = false;
 			this.engine.setup(new MasterRenderer(this.camera), INSTANCE);
 			this.engine.setGlobalFont(font);
 			this.data.lights.add(sun);
-			this.data.entities.add(this.playerEntity);
+			this.data.entities.add(this.player);
 		}
 	}
 
@@ -143,12 +151,12 @@ public class Litecraft extends Game
 		Input.addPressCallback(Keybind.EXIT, this::exit);
 		Input.addInitialPressCallback(Keybind.FULLSCREEN, Window::fullscreen);
 		Input.addInitialPressCallback(Keybind.WIREFRAME, GingerRegister.getInstance()::toggleWireframe);
-		Input.addPressCallback(Keybind.MOVE_FORWARD, () -> this.playerEntity.move(RelativeDirection.FORWARD));
-		Input.addPressCallback(Keybind.MOVE_BACKWARD, () -> this.playerEntity.move(RelativeDirection.BACKWARD));
-		Input.addPressCallback(Keybind.STRAFE_LEFT, () -> this.playerEntity.move(RelativeDirection.LEFT));
-		Input.addPressCallback(Keybind.STRAFE_RIGHT, () -> this.playerEntity.move(RelativeDirection.RIGHT));
-		Input.addPressCallback(Keybind.FLY_UP, () -> this.playerEntity.move(RelativeDirection.UP));
-		Input.addPressCallback(Keybind.FLY_DOWN, () -> this.playerEntity.move(RelativeDirection.DOWN));
+		Input.addPressCallback(Keybind.MOVE_FORWARD, () -> ((PlayerEntity) this.player).move(RelativeDirection.FORWARD));
+		Input.addPressCallback(Keybind.MOVE_BACKWARD, () -> ((PlayerEntity) this.player).move(RelativeDirection.BACKWARD));
+		Input.addPressCallback(Keybind.STRAFE_LEFT, () -> ((PlayerEntity) this.player).move(RelativeDirection.LEFT));
+		Input.addPressCallback(Keybind.STRAFE_RIGHT, () -> ((PlayerEntity) this.player).move(RelativeDirection.RIGHT));
+		Input.addPressCallback(Keybind.FLY_UP, () -> ((PlayerEntity) this.player).move(RelativeDirection.UP));
+		Input.addPressCallback(Keybind.FLY_DOWN, () -> ((PlayerEntity) this.player).move(RelativeDirection.DOWN));
 	}
 
 	/**
@@ -158,13 +166,14 @@ public class Litecraft extends Game
 	@Override
 	public void tick()
 	{
+		tps += 1;
 		// Open the title screen if it's not already open.
-		if (GingerRegister.getInstance().currentScreen == null && world == null)
-			engine.openScreen(new TitleScreen());
+		if (GingerRegister.getInstance().currentScreen == null && world == null) engine.openScreen(new TitleScreen());
 		
-		if (data.playerEntity != null && data.camera != null)
+		if (this.player instanceof PlayerEntity && camera != null)
 		{
-			data.playerEntity.updateMovement();
+			Input.invokeAllListeners();
+			((PlayerEntity) this.player).updateMovement();
 			data.camera.updateMovement();
 		}
 	}
@@ -187,4 +196,10 @@ public class Litecraft extends Game
 	
 	public void setSave(LitecraftSave save)
 	{ this.save = save; }
+
+	@Override
+	public void renderScene()
+	{
+		world.render(GingerRegister.getInstance().masterRenderer.blockRenderer);
+	}
 }

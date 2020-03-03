@@ -3,7 +3,7 @@ package com.github.hydos.ginger.engine.common.cameras;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.*;
 
-import com.github.halotroop.litecraft.types.entity.PlayerEntity;
+import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
 import com.github.hydos.ginger.engine.common.io.Window;
 
 public class Camera
@@ -13,15 +13,15 @@ public class Camera
 	private Vector3f position = new Vector3f(0, 0, 0);
 	private float pitch, yaw;
 	private float roll;
-	public PlayerEntity playerEntity;
+	public RenderObject player;
 
-	public Camera(PlayerEntity playerEntity)
-	{ this.playerEntity = playerEntity; }
+	public Camera(RenderObject playerEntity)
+	{ this.player = playerEntity; }
 
-	public Camera(Vector3f vector3f, PlayerEntity playerEntity)
+	public Camera(Vector3f vector3f, RenderObject player)
 	{
 		this.position = vector3f;
-		this.playerEntity = playerEntity;
+		this.player = player;
 	}
 
 	private void calculateAngleAroundPlayer()
@@ -35,12 +35,12 @@ public class Camera
 
 	private void calculateCameraPosition(float horizDistance, float verticDistance)
 	{
-		float theta = playerEntity.getRotY() + angleAroundPlayer;
+		float theta = player.getRotY() + angleAroundPlayer;
 		float offsetX = (float) (horizDistance * Math.sin(Math.toRadians(theta)));
 		float offsetZ = (float) (horizDistance * Math.cos(Math.toRadians(theta)));
-		position.x = playerEntity.getPosition().x - offsetX;
-		position.z = playerEntity.getPosition().z - offsetZ;
-		position.y = playerEntity.getPosition().y + verticDistance;
+		position.x = player.getPosition().x - offsetX;
+		position.z = player.getPosition().z - offsetZ;
+		position.y = player.getPosition().y + verticDistance;
 	}
 
 	private float calculateHorizontalDistance()
@@ -105,7 +105,7 @@ public class Camera
 		float horizontalDistance = calculateHorizontalDistance();
 		float verticalDistance = calculateVerticalDistance();
 		calculateCameraPosition(horizontalDistance, verticalDistance);
-		this.yaw = 180 - (playerEntity.getRotY() + angleAroundPlayer);
+		this.yaw = 180 - (player.getRotY() + angleAroundPlayer);
 	}
 
 	public void setPitch(float pitch)

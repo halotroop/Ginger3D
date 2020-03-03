@@ -2,7 +2,7 @@ package com.github.hydos.ginger.engine.common.cameras;
 
 import org.joml.Vector3f;
 
-import com.github.halotroop.litecraft.types.entity.PlayerEntity;
+import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
 import com.github.hydos.ginger.engine.common.io.Window;
 
 public class FirstPersonCamera extends Camera
@@ -11,7 +11,7 @@ public class FirstPersonCamera extends Camera
 	private float pitch, yaw;
 	private float roll;
 
-	public FirstPersonCamera(PlayerEntity playerEntity)
+	public FirstPersonCamera(RenderObject playerEntity)
 	{
 		super(playerEntity);
 		playerEntity.setVisible(false);
@@ -36,11 +36,11 @@ public class FirstPersonCamera extends Camera
 	@Override
 	public void updateMovement()
 	{
-		position.x = playerEntity.getPosition().x;
-		position.z = playerEntity.getPosition().z;
-		position.y = playerEntity.getPosition().y;
-		roll = playerEntity.getRotX();
-		yaw = -playerEntity.getRotY() + 180 + Window.getNormalizedMouseCoordinates().x() * 70;
-		pitch = playerEntity.getRotZ() + -Window.getNormalizedMouseCoordinates().y() * 70;
+		position.x = player.getPosition().x;
+		position.z = player.getPosition().z;
+		position.y = player.getPosition().y;
+		roll = player.getRotX();
+		yaw = -player.getRotY() + 180 + Window.getNormalizedMouseCoordinates().x() * 70;
+		pitch = player.getRotZ() + -Window.getNormalizedMouseCoordinates().y() * 70;
 	}
 }

@@ -37,7 +37,7 @@ public class IngameHUD extends Screen
 		long freeMemory = Runtime.getRuntime().freeMemory();
 		long usedMemory = (totalMemory - freeMemory) / 1024 / 1024;
 		Vector4i dbg = litecraft.dbgStats;
-		Vector3f position = GingerRegister.getInstance().game.data.playerEntity.getPosition();
+		Vector3f position = GingerRegister.getInstance().game.data.playerObject.getPosition();
 		debugText.setText("FPS: " + dbg.x() + " UPS: " + dbg.y() + " TPS: " + dbg.z() + " TWL: " + dbg.w() + " Mem: " + usedMemory + "MB");
 		positionText.setText("Position: " + (int) position.x() + ", " + (int) position.y() + ", "+ (int) position.z() );
 	}

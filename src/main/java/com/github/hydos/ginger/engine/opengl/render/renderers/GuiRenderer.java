@@ -10,7 +10,7 @@ import com.github.hydos.ginger.engine.common.math.Maths;
 import com.github.hydos.ginger.engine.opengl.render.Renderer;
 import com.github.hydos.ginger.engine.opengl.render.models.RawModel;
 import com.github.hydos.ginger.engine.opengl.render.shaders.GuiShader;
-import com.github.hydos.ginger.engine.opengl.utils.GlLoader;
+import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
 
 public class GuiRenderer extends Renderer
 {
@@ -24,7 +24,7 @@ public class GuiRenderer extends Renderer
 		{
 			-1, 1, -1, -1, 1, 1, 1, -1
 		};
-		quad = GlLoader.loadToVAO(positions, 2);
+		quad = GLLoader.loadToVAO(positions, 2);
 	}
 
 	public void cleanUp()

@@ -4,7 +4,7 @@ import java.util.*;
 
 import com.github.hydos.ginger.engine.opengl.api.GingerGL;
 import com.github.hydos.ginger.engine.opengl.render.renderers.FontRenderer;
-import com.github.hydos.ginger.engine.opengl.utils.GlLoader;
+import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
 
 public class TextMaster
 {
@@ -21,7 +21,7 @@ public class TextMaster
 	{
 		FontType font = text.getFont();
 		TextMeshData data = font.loadText(text);
-		int vao = GlLoader.loadToVAO(data.getVertexPositions(), data.getTextureCoords());
+		int vao = GLLoader.loadToVAO(data.getVertexPositions(), data.getTextureCoords());
 		text.setMeshInfo(vao, data.getVertexCount());
 		List<GUIText> textBatch = texts.get(font);
 		if (textBatch == null)

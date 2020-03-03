@@ -10,10 +10,10 @@ import java.util.function.LongConsumer;
 
 import org.joml.Vector3f;
 
+import com.github.halotroop.litecraft.render.BlockRenderer;
 import com.github.halotroop.litecraft.save.LitecraftSave;
 import com.github.halotroop.litecraft.types.block.*;
 import com.github.halotroop.litecraft.types.entity.PlayerEntity;
-import com.github.halotroop.litecraft.world.block.BlockRenderer;
 import com.github.halotroop.litecraft.world.dimension.Dimension;
 import com.github.halotroop.litecraft.world.gen.*;
 import com.github.halotroop.litecraft.world.gen.modifier.WorldModifier;

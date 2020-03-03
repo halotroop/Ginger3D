@@ -6,8 +6,8 @@ import java.util.*;
 import org.joml.*;
 import org.lwjgl.opengl.*;
 
-import com.github.halotroop.litecraft.world.World;
-import com.github.halotroop.litecraft.world.block.BlockRenderer;
+import com.github.halotroop.litecraft.render.BlockRenderer;
+import com.github.hydos.ginger.engine.common.api.GingerRegister;
 import com.github.hydos.ginger.engine.common.cameras.Camera;
 import com.github.hydos.ginger.engine.common.elements.GuiTexture;
 import com.github.hydos.ginger.engine.common.elements.objects.*;
@@ -156,12 +156,12 @@ public class MasterRenderer
 		normalRenderer.render(normalMapEntities, clipPlane, lights, camera);
 	}
 
-	public void renderScene(List<RenderObject> entities, List<RenderObject> normalEntities, List<Light> lights, Camera camera, Vector4f clipPlane, World world)
+	public void renderScene(List<RenderObject> entities, List<RenderObject> normalEntities, List<Light> lights, Camera camera, Vector4f clipPlane)
 	{
 		prepare();
 		renderEntities(entities, camera, lights);
-		world.render(blockRenderer);
 		renderNormalEntities(normalEntities, lights, camera, clipPlane);
+		GingerRegister.getInstance().game.renderScene();
 //		skyboxRenderer.render(camera);
 	}
 

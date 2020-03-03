@@ -6,8 +6,8 @@ import java.util.function.ToIntFunction;
 import org.joml.Vector3f;
 
 import com.github.halotroop.litecraft.logic.SODSerializable;
+import com.github.halotroop.litecraft.render.BlockRenderer;
 import com.github.halotroop.litecraft.types.block.*;
-import com.github.halotroop.litecraft.world.block.BlockRenderer;
 import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 
 import it.unimi.dsi.fastutil.ints.*;

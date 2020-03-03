@@ -20,16 +20,16 @@ import com.github.hydos.ginger.engine.opengl.api.GingerGL;
 public class TitleScreen extends Screen
 {
 	private GUIText debugText;
-	private GingerGL ginger3D = GingerGL.getInstance();
+	private GingerGL engine = GingerGL.getInstance();
 	private TextureButton playButton;
 	private Litecraft litecraft = Litecraft.getInstance();
 
 	public TitleScreen()
 	{
 		elements = new ArrayList<GuiTexture>();
-		playButton = ginger3D.registerButton("/textures/guis/playbutton.png", new Vector2f(0, 0), new Vector2f(0.25f, 0.1f));
+		playButton = engine.registerButton("/textures/guis/playbutton.png", new Vector2f(0, 0), new Vector2f(0.25f, 0.1f));
 		playButton.show(Litecraft.getInstance().data.guis);
-		debugText = ginger3D.registerText("Loading...", 2, new Vector2f(0, 0), 1f, true, "debugInfo");
+		debugText = engine.registerText("Loading...", 2, new Vector2f(0, 0), 1f, true, "debugInfo");
 		debugText.setBorderWidth(0.5f);
 	}
 
@@ -51,11 +51,11 @@ public class TitleScreen extends Screen
 			{
 				Litecraft.getInstance().setSave(new LitecraftSave("SegregatedOrdinalData", false));
 				Litecraft.getInstance().changeWorld(Litecraft.getInstance().getSave().getWorldOrCreate(Dimensions.OVERWORLD));
-				ginger3D.setGingerPlayer(Litecraft.getInstance().getWorld().playerEntity);
+				engine.setGingerPlayer(Litecraft.getInstance().getWorld().playerEntity);
 			}
 			if (Litecraft.getInstance().getWorld() != null)
 			{
-				ginger3D.openScreen(new IngameHUD());
+				engine.openScreen(new IngameHUD());
 				this.cleanup();
 			}
 			//TODO: add world creation gui so it takes u to world creation place
