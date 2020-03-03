@@ -86,15 +86,10 @@ public class World implements BlockAccess, WorldGenConstants
 	public PlayerEntity spawnPlayer(float x, float y, float z)
 	{
 		// Player model and stuff
-<<<<<<< Upstream, based on origin/liteCraft
-		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
+
+		GLTexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
 		this.playerEntity = new PlayerEntity(dirtModel, new Vector3f(x, y, z), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
 		this.playerEntity.setVisible(false);
-=======
-		GLTexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
-		this.player = new Player(dirtModel, new Vector3f(x, y, z), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
-		this.player.setVisible(false);
->>>>>>> 9a8fdc4 yEs
 		// Generate world around player
 		long time = System.currentTimeMillis();
 		System.out.println("Generating world!");

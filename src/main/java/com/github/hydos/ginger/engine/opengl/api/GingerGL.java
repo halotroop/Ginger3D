@@ -3,7 +3,7 @@ package com.github.hydos.ginger.engine.opengl.api;
 import org.joml.Vector2f;
 
 import com.github.hydos.ginger.engine.common.api.GingerRegister;
-import com.github.hydos.ginger.engine.common.api.game.*;
+import com.github.hydos.ginger.engine.common.api.game.Game;
 import com.github.hydos.ginger.engine.common.elements.buttons.TextureButton;
 import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
 import com.github.hydos.ginger.engine.common.font.*;

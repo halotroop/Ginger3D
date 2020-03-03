@@ -11,7 +11,7 @@ import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.opengl.render.models.RawModel;
 import com.github.hydos.ginger.engine.opengl.render.texture.Image;
 
-public class GlLoader
+public class GLLoader
 {
 	private static List<Integer> vaos = new ArrayList<Integer>();
 	private static List<Integer> vbos = new ArrayList<Integer>();

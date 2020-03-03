@@ -12,7 +12,7 @@ import com.github.hydos.ginger.engine.common.math.Maths;
 import com.github.hydos.ginger.engine.opengl.render.Renderer;
 import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
 import com.github.hydos.ginger.engine.opengl.render.shaders.StaticShader;
-import com.github.hydos.ginger.engine.opengl.utils.GlLoader;
+import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
 
 public class BlockRenderer extends Renderer implements WorldGenConstants
 {
@@ -25,7 +25,7 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
-		this.atlasID = GlLoader.createBlockAtlas();
+		this.atlasID = GLLoader.createBlockAtlas();
 	}
 
 	private void prepBlockInstance(RenderObject entity)

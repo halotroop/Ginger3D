@@ -20,14 +20,8 @@ import com.github.hydos.ginger.engine.common.obj.ModelLoader;
 import com.github.hydos.ginger.engine.opengl.api.*;
 import com.github.hydos.ginger.engine.opengl.postprocessing.PostProcessing;
 import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
-<<<<<<< Upstream, based on origin/liteCraft
-import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
 import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
-=======
 import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
-import com.github.hydos.ginger.engine.opengl.utils.GlLoader;
->>>>>>> 9a8fdc4 yEs
-
 import tk.valoeghese.gateways.client.io.*;
 
 public class Litecraft extends Game
