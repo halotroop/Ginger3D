@@ -12,7 +12,12 @@ import static org.lwjgl.vulkan.VK10.*;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.vma.*;
 import org.lwjgl.vulkan.*;
-
+/**
+ * 
+ * @author hydos
+ * used to make the vulkan api more readable
+ *
+ */
 public class VulkanFuncWrapper
 {
 	public static VmaVulkanFunctions VmaVulkanFunctions(MemoryStack stack)

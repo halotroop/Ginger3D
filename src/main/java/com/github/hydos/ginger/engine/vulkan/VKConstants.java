@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.vulkan.utils;
+package com.github.hydos.ginger.engine.vulkan;
 
 import java.nio.ByteBuffer;
 

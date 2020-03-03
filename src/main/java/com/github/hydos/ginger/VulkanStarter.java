@@ -1,25 +1,194 @@
 package com.github.hydos.ginger;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFWVulkan.*;
-import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.vulkan.EXTDebugReport.*;
-import static org.lwjgl.vulkan.KHRSurface.*;
-import static org.lwjgl.vulkan.KHRSwapchain.*;
-import static org.lwjgl.vulkan.VK10.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
+import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSetFramebufferSizeCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
+import static org.lwjgl.glfw.GLFW.glfwShowWindow;
+import static org.lwjgl.glfw.GLFW.glfwTerminate;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+import static org.lwjgl.glfw.GLFWVulkan.glfwCreateWindowSurface;
+import static org.lwjgl.glfw.GLFWVulkan.glfwGetRequiredInstanceExtensions;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memAddress;
+import static org.lwjgl.system.MemoryUtil.memAlloc;
+import static org.lwjgl.system.MemoryUtil.memAllocInt;
+import static org.lwjgl.system.MemoryUtil.memAllocLong;
+import static org.lwjgl.system.MemoryUtil.memAllocPointer;
+import static org.lwjgl.system.MemoryUtil.memByteBuffer;
+import static org.lwjgl.system.MemoryUtil.memCopy;
+import static org.lwjgl.system.MemoryUtil.memFree;
+import static org.lwjgl.system.MemoryUtil.memUTF8;
+import static org.lwjgl.vulkan.EXTDebugReport.VK_DEBUG_REPORT_ERROR_BIT_EXT;
+import static org.lwjgl.vulkan.EXTDebugReport.VK_DEBUG_REPORT_WARNING_BIT_EXT;
+import static org.lwjgl.vulkan.EXTDebugReport.vkDestroyDebugReportCallbackEXT;
+import static org.lwjgl.vulkan.KHRSurface.VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+import static org.lwjgl.vulkan.KHRSurface.VK_PRESENT_MODE_FIFO_KHR;
+import static org.lwjgl.vulkan.KHRSurface.VK_PRESENT_MODE_IMMEDIATE_KHR;
+import static org.lwjgl.vulkan.KHRSurface.VK_PRESENT_MODE_MAILBOX_KHR;
+import static org.lwjgl.vulkan.KHRSurface.VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
+import static org.lwjgl.vulkan.KHRSurface.vkGetPhysicalDeviceSurfaceCapabilitiesKHR;
+import static org.lwjgl.vulkan.KHRSurface.vkGetPhysicalDeviceSurfaceFormatsKHR;
+import static org.lwjgl.vulkan.KHRSurface.vkGetPhysicalDeviceSurfacePresentModesKHR;
+import static org.lwjgl.vulkan.KHRSurface.vkGetPhysicalDeviceSurfaceSupportKHR;
+import static org.lwjgl.vulkan.KHRSwapchain.VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+import static org.lwjgl.vulkan.KHRSwapchain.VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+import static org.lwjgl.vulkan.KHRSwapchain.VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+import static org.lwjgl.vulkan.KHRSwapchain.vkAcquireNextImageKHR;
+import static org.lwjgl.vulkan.KHRSwapchain.vkCreateSwapchainKHR;
+import static org.lwjgl.vulkan.KHRSwapchain.vkDestroySwapchainKHR;
+import static org.lwjgl.vulkan.KHRSwapchain.vkGetSwapchainImagesKHR;
+import static org.lwjgl.vulkan.KHRSwapchain.vkQueuePresentKHR;
+import static org.lwjgl.vulkan.VK10.VK_ATTACHMENT_LOAD_OP_CLEAR;
+import static org.lwjgl.vulkan.VK10.VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+import static org.lwjgl.vulkan.VK10.VK_ATTACHMENT_STORE_OP_DONT_CARE;
+import static org.lwjgl.vulkan.VK10.VK_ATTACHMENT_STORE_OP_STORE;
+import static org.lwjgl.vulkan.VK10.VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+import static org.lwjgl.vulkan.VK10.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+import static org.lwjgl.vulkan.VK10.VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+import static org.lwjgl.vulkan.VK10.VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+import static org.lwjgl.vulkan.VK10.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+import static org.lwjgl.vulkan.VK10.VK_FORMAT_B8G8R8A8_UNORM;
+import static org.lwjgl.vulkan.VK10.VK_FORMAT_D16_UNORM;
+import static org.lwjgl.vulkan.VK10.VK_FORMAT_D16_UNORM_S8_UINT;
+import static org.lwjgl.vulkan.VK10.VK_FORMAT_D24_UNORM_S8_UINT;
+import static org.lwjgl.vulkan.VK10.VK_FORMAT_D32_SFLOAT;
+import static org.lwjgl.vulkan.VK10.VK_FORMAT_D32_SFLOAT_S8_UINT;
+import static org.lwjgl.vulkan.VK10.VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
+import static org.lwjgl.vulkan.VK10.VK_FORMAT_R32G32B32_SFLOAT;
+import static org.lwjgl.vulkan.VK10.VK_FORMAT_UNDEFINED;
+import static org.lwjgl.vulkan.VK10.VK_IMAGE_ASPECT_COLOR_BIT;
+import static org.lwjgl.vulkan.VK10.VK_IMAGE_ASPECT_DEPTH_BIT;
+import static org.lwjgl.vulkan.VK10.VK_IMAGE_ASPECT_STENCIL_BIT;
+import static org.lwjgl.vulkan.VK10.VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+import static org.lwjgl.vulkan.VK10.VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+import static org.lwjgl.vulkan.VK10.VK_IMAGE_LAYOUT_UNDEFINED;
+import static org.lwjgl.vulkan.VK10.VK_IMAGE_TILING_OPTIMAL;
+import static org.lwjgl.vulkan.VK10.VK_IMAGE_TYPE_2D;
+import static org.lwjgl.vulkan.VK10.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+import static org.lwjgl.vulkan.VK10.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+import static org.lwjgl.vulkan.VK10.VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+import static org.lwjgl.vulkan.VK10.VK_IMAGE_VIEW_TYPE_2D;
+import static org.lwjgl.vulkan.VK10.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+import static org.lwjgl.vulkan.VK10.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
+import static org.lwjgl.vulkan.VK10.VK_NULL_HANDLE;
+import static org.lwjgl.vulkan.VK10.VK_PIPELINE_BIND_POINT_GRAPHICS;
+import static org.lwjgl.vulkan.VK10.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+import static org.lwjgl.vulkan.VK10.VK_QUEUE_GRAPHICS_BIT;
+import static org.lwjgl.vulkan.VK10.VK_SAMPLE_COUNT_1_BIT;
+import static org.lwjgl.vulkan.VK10.VK_SHADER_STAGE_VERTEX_BIT;
+import static org.lwjgl.vulkan.VK10.VK_SHARING_MODE_EXCLUSIVE;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_SUBMIT_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
+import static org.lwjgl.vulkan.VK10.VK_TRUE;
+import static org.lwjgl.vulkan.VK10.VK_VERTEX_INPUT_RATE_VERTEX;
+import static org.lwjgl.vulkan.VK10.vkAllocateCommandBuffers;
+import static org.lwjgl.vulkan.VK10.vkAllocateDescriptorSets;
+import static org.lwjgl.vulkan.VK10.vkAllocateMemory;
+import static org.lwjgl.vulkan.VK10.vkBeginCommandBuffer;
+import static org.lwjgl.vulkan.VK10.vkBindBufferMemory;
+import static org.lwjgl.vulkan.VK10.vkBindImageMemory;
+import static org.lwjgl.vulkan.VK10.vkCreateBuffer;
+import static org.lwjgl.vulkan.VK10.vkCreateCommandPool;
+import static org.lwjgl.vulkan.VK10.vkCreateDescriptorPool;
+import static org.lwjgl.vulkan.VK10.vkCreateDescriptorSetLayout;
+import static org.lwjgl.vulkan.VK10.vkCreateFramebuffer;
+import static org.lwjgl.vulkan.VK10.vkCreateImage;
+import static org.lwjgl.vulkan.VK10.vkCreateImageView;
+import static org.lwjgl.vulkan.VK10.vkCreateRenderPass;
+import static org.lwjgl.vulkan.VK10.vkCreateSemaphore;
+import static org.lwjgl.vulkan.VK10.vkDestroyFramebuffer;
+import static org.lwjgl.vulkan.VK10.vkDestroySemaphore;
+import static org.lwjgl.vulkan.VK10.vkEndCommandBuffer;
+import static org.lwjgl.vulkan.VK10.vkGetBufferMemoryRequirements;
+import static org.lwjgl.vulkan.VK10.vkGetDeviceQueue;
+import static org.lwjgl.vulkan.VK10.vkGetImageMemoryRequirements;
+import static org.lwjgl.vulkan.VK10.vkGetPhysicalDeviceFormatProperties;
+import static org.lwjgl.vulkan.VK10.vkGetPhysicalDeviceQueueFamilyProperties;
+import static org.lwjgl.vulkan.VK10.vkMapMemory;
+import static org.lwjgl.vulkan.VK10.vkQueueSubmit;
+import static org.lwjgl.vulkan.VK10.vkQueueWaitIdle;
+import static org.lwjgl.vulkan.VK10.vkResetCommandPool;
+import static org.lwjgl.vulkan.VK10.vkUnmapMemory;
+import static org.lwjgl.vulkan.VK10.vkUpdateDescriptorSets;
 
 import java.io.IOException;
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
 
 import org.joml.Matrix4f;
 import org.lwjgl.PointerBuffer;
-import org.lwjgl.glfw.*;
-import org.lwjgl.vulkan.*;
+import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
+import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.vulkan.VkAttachmentDescription;
+import org.lwjgl.vulkan.VkAttachmentReference;
+import org.lwjgl.vulkan.VkBufferCreateInfo;
+import org.lwjgl.vulkan.VkCommandBuffer;
+import org.lwjgl.vulkan.VkCommandBufferAllocateInfo;
+import org.lwjgl.vulkan.VkCommandBufferBeginInfo;
+import org.lwjgl.vulkan.VkCommandPoolCreateInfo;
+import org.lwjgl.vulkan.VkDescriptorBufferInfo;
+import org.lwjgl.vulkan.VkDescriptorPoolCreateInfo;
+import org.lwjgl.vulkan.VkDescriptorPoolSize;
+import org.lwjgl.vulkan.VkDescriptorSetAllocateInfo;
+import org.lwjgl.vulkan.VkDescriptorSetLayoutBinding;
+import org.lwjgl.vulkan.VkDescriptorSetLayoutCreateInfo;
+import org.lwjgl.vulkan.VkDevice;
+import org.lwjgl.vulkan.VkExtent2D;
+import org.lwjgl.vulkan.VkFormatProperties;
+import org.lwjgl.vulkan.VkFramebufferCreateInfo;
+import org.lwjgl.vulkan.VkImageCreateInfo;
+import org.lwjgl.vulkan.VkImageViewCreateInfo;
+import org.lwjgl.vulkan.VkInstance;
+import org.lwjgl.vulkan.VkMemoryAllocateInfo;
+import org.lwjgl.vulkan.VkMemoryRequirements;
+import org.lwjgl.vulkan.VkPhysicalDevice;
+import org.lwjgl.vulkan.VkPhysicalDeviceMemoryProperties;
+import org.lwjgl.vulkan.VkPipelineShaderStageCreateInfo;
+import org.lwjgl.vulkan.VkPipelineVertexInputStateCreateInfo;
+import org.lwjgl.vulkan.VkPresentInfoKHR;
+import org.lwjgl.vulkan.VkQueue;
+import org.lwjgl.vulkan.VkQueueFamilyProperties;
+import org.lwjgl.vulkan.VkRenderPassCreateInfo;
+import org.lwjgl.vulkan.VkSemaphoreCreateInfo;
+import org.lwjgl.vulkan.VkSubmitInfo;
+import org.lwjgl.vulkan.VkSubpassDescription;
+import org.lwjgl.vulkan.VkSurfaceCapabilitiesKHR;
+import org.lwjgl.vulkan.VkSurfaceFormatKHR;
+import org.lwjgl.vulkan.VkSwapchainCreateInfoKHR;
+import org.lwjgl.vulkan.VkVertexInputAttributeDescription;
+import org.lwjgl.vulkan.VkVertexInputBindingDescription;
+import org.lwjgl.vulkan.VkWriteDescriptorSet;
 
 import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
-import com.github.hydos.ginger.engine.vulkan.utils.*;
-import com.github.hydos.ginger.engine.vulkan.utils.VKUtils.Pipeline;
+import com.github.hydos.ginger.engine.vulkan.VKConstants;
+import com.github.hydos.ginger.engine.vulkan.shaders.Pipeline;
+import com.github.hydos.ginger.engine.vulkan.shaders.VKShaderManager;
+import com.github.hydos.ginger.engine.vulkan.utils.VKDeviceProperties;
+import com.github.hydos.ginger.engine.vulkan.utils.VKLoader;
+import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
 /**
  * 
  * @author hydos06
@@ -28,80 +197,6 @@ import com.github.hydos.ginger.engine.vulkan.utils.VKUtils.Pipeline;
  */
 public class VulkanStarter
 {
-	private static VkPhysicalDevice getFirstPhysicalDevice(VkInstance instance)
-	{
-		IntBuffer pPhysicalDeviceCount = memAllocInt(1);
-		int err = vkEnumeratePhysicalDevices(instance, pPhysicalDeviceCount, null);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to get number of physical devices: " + VKUtils.translateVulkanResult(err)); }
-		PointerBuffer pPhysicalDevices = memAllocPointer(pPhysicalDeviceCount.get(0));
-		err = vkEnumeratePhysicalDevices(instance, pPhysicalDeviceCount, pPhysicalDevices);
-		long physicalDevice = pPhysicalDevices.get(0);
-		memFree(pPhysicalDeviceCount);
-		memFree(pPhysicalDevices);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to get physical devices: " + VKUtils.translateVulkanResult(err)); }
-		return new VkPhysicalDevice(physicalDevice, instance);
-	}
-
-	private static class DeviceAndGraphicsQueueFamily
-	{
-		VkDevice device;
-		int queueFamilyIndex;
-		VkPhysicalDeviceMemoryProperties memoryProperties;
-	}
-
-	private static DeviceAndGraphicsQueueFamily createDeviceAndGetGraphicsQueueFamily(VkPhysicalDevice physicalDevice)
-	{
-		IntBuffer pQueueFamilyPropertyCount = memAllocInt(1);
-		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, pQueueFamilyPropertyCount, null);
-		int queueCount = pQueueFamilyPropertyCount.get(0);
-		VkQueueFamilyProperties.Buffer queueProps = VkQueueFamilyProperties.calloc(queueCount);
-		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, pQueueFamilyPropertyCount, queueProps);
-		memFree(pQueueFamilyPropertyCount);
-		int graphicsQueueFamilyIndex;
-		for (graphicsQueueFamilyIndex = 0; graphicsQueueFamilyIndex < queueCount; graphicsQueueFamilyIndex++)
-		{ if ((queueProps.get(graphicsQueueFamilyIndex).queueFlags() & VK_QUEUE_GRAPHICS_BIT) != 0)
-			break; }
-		queueProps.free();
-		FloatBuffer pQueuePriorities = memAllocFloat(1).put(0.0f);
-		pQueuePriorities.flip();
-		VkDeviceQueueCreateInfo.Buffer queueCreateInfo = VkDeviceQueueCreateInfo.calloc(1)
-			.sType(VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO)
-			.queueFamilyIndex(graphicsQueueFamilyIndex)
-			.pQueuePriorities(pQueuePriorities);
-		PointerBuffer extensions = memAllocPointer(1);
-		ByteBuffer VK_KHR_SWAPCHAIN_EXTENSION = memUTF8(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
-		extensions.put(VK_KHR_SWAPCHAIN_EXTENSION);
-		extensions.flip();
-		PointerBuffer ppEnabledLayerNames = memAllocPointer(VKConstants.layers.length);
-		for (int i = 0; VKConstants.debug && i < VKConstants.layers.length; i++)
-			ppEnabledLayerNames.put(VKConstants.layers[i]);
-		ppEnabledLayerNames.flip();
-		VkDeviceCreateInfo deviceCreateInfo = VkDeviceCreateInfo.calloc()
-			.sType(VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO)
-			.pQueueCreateInfos(queueCreateInfo)
-			.ppEnabledExtensionNames(extensions)
-			.ppEnabledLayerNames(ppEnabledLayerNames);
-		PointerBuffer pDevice = memAllocPointer(1);
-		int err = vkCreateDevice(physicalDevice, deviceCreateInfo, null, pDevice);
-		long device = pDevice.get(0);
-		memFree(pDevice);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to create device: " + VKUtils.translateVulkanResult(err)); }
-		VkPhysicalDeviceMemoryProperties memoryProperties = VkPhysicalDeviceMemoryProperties.calloc();
-		vkGetPhysicalDeviceMemoryProperties(physicalDevice, memoryProperties);
-		DeviceAndGraphicsQueueFamily ret = new DeviceAndGraphicsQueueFamily();
-		ret.device = new VkDevice(device, physicalDevice, deviceCreateInfo);
-		ret.queueFamilyIndex = graphicsQueueFamilyIndex;
-		ret.memoryProperties = memoryProperties;
-		deviceCreateInfo.free();
-		memFree(ppEnabledLayerNames);
-		memFree(VK_KHR_SWAPCHAIN_EXTENSION);
-		memFree(extensions);
-		memFree(pQueuePriorities);
-		return ret;
-	}
 
 	private static boolean getSupportedDepthFormat(VkPhysicalDevice physicalDevice, IntBuffer depthFormat)
 	{
@@ -562,32 +657,6 @@ public class VulkanStarter
 		{ throw new AssertionError("Failed to submit command buffer: " + VKUtils.translateVulkanResult(err)); }
 	}
 
-	private static long loadShader(String classPath, VkDevice device, int stage) throws IOException
-	{
-		ByteBuffer shaderCode = VKUtils.glslToSpirv(classPath, stage);
-		int err;
-		VkShaderModuleCreateInfo moduleCreateInfo = VkShaderModuleCreateInfo.calloc()
-			.sType(VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO)
-			.pCode(shaderCode);
-		LongBuffer pShaderModule = memAllocLong(1);
-		err = vkCreateShaderModule(device, moduleCreateInfo, null, pShaderModule);
-		long shaderModule = pShaderModule.get(0);
-		memFree(pShaderModule);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to create shader module: " + VKUtils.translateVulkanResult(err)); }
-		return shaderModule;
-	}
-
-	private static VkPipelineShaderStageCreateInfo loadShader(VkDevice device, String classPath, int stage) throws IOException
-	{
-		VkPipelineShaderStageCreateInfo shaderStage = VkPipelineShaderStageCreateInfo.calloc()
-			.sType(VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO)
-			.stage(stage)
-			.module(loadShader(classPath, device, stage))
-			.pName(memUTF8("main"));
-		return shaderStage;
-	}
-
 	private static boolean getMemoryType(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, int typeBits, int properties, IntBuffer typeIndex)
 	{
 		int bits = typeBits;
@@ -849,116 +918,6 @@ public class VulkanStarter
 		return descriptorSetLayout;
 	}
 
-	private static Pipeline createPipeline(VkDevice device, long renderPass, VkPipelineVertexInputStateCreateInfo vi, long descriptorSetLayout) throws IOException
-	{
-		int err;
-		// Vertex input state
-		// Describes the topoloy used with this pipeline
-		VkPipelineInputAssemblyStateCreateInfo inputAssemblyState = VkPipelineInputAssemblyStateCreateInfo.calloc()
-			.sType(VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO)
-			.topology(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
-		// Rasterization state
-		VkPipelineRasterizationStateCreateInfo rasterizationState = VkPipelineRasterizationStateCreateInfo.calloc()
-			.sType(VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO)
-			.polygonMode(VK_POLYGON_MODE_FILL)
-			.cullMode(VK_CULL_MODE_NONE) // <- VK_CULL_MODE_BACK_BIT would work here, too!
-			.frontFace(VK_FRONT_FACE_COUNTER_CLOCKWISE)
-			.lineWidth(1.0f);
-		// Color blend state
-		// Describes blend modes and color masks
-		VkPipelineColorBlendAttachmentState.Buffer colorWriteMask = VkPipelineColorBlendAttachmentState.calloc(1)
-			.colorWriteMask(0xF); // <- RGBA
-		VkPipelineColorBlendStateCreateInfo colorBlendState = VkPipelineColorBlendStateCreateInfo.calloc()
-			.sType(VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO)
-			.pAttachments(colorWriteMask);
-		// Viewport state
-		VkPipelineViewportStateCreateInfo viewportState = VkPipelineViewportStateCreateInfo.calloc()
-			.sType(VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO)
-			.viewportCount(1) // <- one viewport
-			.scissorCount(1); // <- one scissor rectangle
-		// Enable dynamic states
-		// Describes the dynamic states to be used with this pipeline
-		// Dynamic states can be set even after the pipeline has been created
-		// So there is no need to create new pipelines just for changing
-		// a viewport's dimensions or a scissor box
-		IntBuffer pDynamicStates = memAllocInt(2);
-		pDynamicStates.put(VK_DYNAMIC_STATE_VIEWPORT).put(VK_DYNAMIC_STATE_SCISSOR).flip();
-		VkPipelineDynamicStateCreateInfo dynamicState = VkPipelineDynamicStateCreateInfo.calloc()
-			// The dynamic state properties themselves are stored in the command buffer
-			.sType(VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO)
-			.pDynamicStates(pDynamicStates);
-		// Depth and stencil state
-		// Describes depth and stenctil test and compare ops
-		VkPipelineDepthStencilStateCreateInfo depthStencilState = VkPipelineDepthStencilStateCreateInfo.calloc()
-			// No depth test/write and no stencil used 
-			.sType(VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO)
-			.depthTestEnable(true)
-			.depthWriteEnable(true)
-			.depthCompareOp(VK_COMPARE_OP_LESS_OR_EQUAL);
-		depthStencilState.back()
-			.failOp(VK_STENCIL_OP_KEEP)
-			.passOp(VK_STENCIL_OP_KEEP)
-			.compareOp(VK_COMPARE_OP_ALWAYS);
-		depthStencilState.front(depthStencilState.back());
-		// Multi sampling state
-		// No multi sampling used in this example
-		VkPipelineMultisampleStateCreateInfo multisampleState = VkPipelineMultisampleStateCreateInfo.calloc()
-			.sType(VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO)
-			.rasterizationSamples(VK_SAMPLE_COUNT_1_BIT);
-		// Load shaders
-		VkPipelineShaderStageCreateInfo.Buffer shaderStages = VkPipelineShaderStageCreateInfo.calloc(2);
-		shaderStages.get(0).set(loadShader(device, "/vulkan/shaders/entityVertexShader.glsl", VK_SHADER_STAGE_VERTEX_BIT));
-		shaderStages.get(1).set(loadShader(device, "/vulkan/shaders/entityFragmentShader.glsl", VK_SHADER_STAGE_FRAGMENT_BIT));
-		// Create the pipeline layout that is used to generate the rendering pipelines that
-		// are based on this descriptor set layout
-		LongBuffer pDescriptorSetLayout = memAllocLong(1).put(0, descriptorSetLayout);
-		VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo = VkPipelineLayoutCreateInfo.calloc()
-			.sType(VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO)
-			.pSetLayouts(pDescriptorSetLayout);
-		LongBuffer pPipelineLayout = memAllocLong(1);
-		err = vkCreatePipelineLayout(device, pipelineLayoutCreateInfo, null, pPipelineLayout);
-		long layout = pPipelineLayout.get(0);
-		memFree(pPipelineLayout);
-		pipelineLayoutCreateInfo.free();
-		memFree(pDescriptorSetLayout);
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to create pipeline layout: " + VKUtils.translateVulkanResult(err)); }
-		// Assign states
-		VkGraphicsPipelineCreateInfo.Buffer pipelineCreateInfo = VkGraphicsPipelineCreateInfo.calloc(1)
-			.sType(VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO)
-			.layout(layout) // <- the layout used for this pipeline (NEEDS TO BE SET! even though it is basically empty)
-			.renderPass(renderPass) // <- renderpass this pipeline is attached to
-			.pVertexInputState(vi)
-			.pInputAssemblyState(inputAssemblyState)
-			.pRasterizationState(rasterizationState)
-			.pColorBlendState(colorBlendState)
-			.pMultisampleState(multisampleState)
-			.pViewportState(viewportState)
-			.pDepthStencilState(depthStencilState)
-			.pStages(shaderStages)
-			.pDynamicState(dynamicState);
-		// Create rendering pipeline
-		LongBuffer pPipelines = memAllocLong(1);
-		err = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, pipelineCreateInfo, null, pPipelines);
-		long pipeline = pPipelines.get(0);
-		shaderStages.free();
-		multisampleState.free();
-		depthStencilState.free();
-		dynamicState.free();
-		memFree(pDynamicStates);
-		viewportState.free();
-		colorBlendState.free();
-		colorWriteMask.free();
-		rasterizationState.free();
-		inputAssemblyState.free();
-		if (err != VK_SUCCESS)
-		{ throw new AssertionError("Failed to create pipeline: " + VKUtils.translateVulkanResult(err)); }
-		Pipeline ret = new Pipeline();
-		ret.layout = layout;
-		ret.pipeline = pipeline;
-		return ret;
-	}
-
 	private static void updateUbo(VkDevice device, UboDescriptor ubo, float angle)
 	{ //a UBO is a uniform buffer object
 		Matrix4f m = new Matrix4f()
@@ -998,8 +957,8 @@ public class VulkanStarter
 		final VkInstance instance = VKLoader.createInstance(requiredExtensions);
 		VKUtils.setupVulkanDebugCallback();
 		final long debugCallbackHandle = VKUtils.startVulkanDebugging(instance, VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT, VKConstants.debugCallback);
-		final VkPhysicalDevice physicalDevice = getFirstPhysicalDevice(instance);
-		final DeviceAndGraphicsQueueFamily deviceAndGraphicsQueueFamily = createDeviceAndGetGraphicsQueueFamily(physicalDevice);
+		final VkPhysicalDevice physicalDevice = VKDeviceProperties.getFirstPhysicalDevice(instance);
+		final VKDeviceProperties deviceAndGraphicsQueueFamily = VKDeviceProperties.initDeviceProperties(physicalDevice);
 		final VkDevice device = deviceAndGraphicsQueueFamily.device;
 		int queueFamilyIndex = deviceAndGraphicsQueueFamily.queueFamilyIndex;
 		final VkPhysicalDeviceMemoryProperties memoryProperties = deviceAndGraphicsQueueFamily.memoryProperties;
@@ -1026,12 +985,12 @@ public class VulkanStarter
 		final VkQueue queue = createDeviceQueue(device, queueFamilyIndex);
 		final long renderPass = createRenderPass(device, colorAndDepthFormatAndSpace.colorFormat, colorAndDepthFormatAndSpace.depthFormat);
 		final long renderCommandPool = createCommandPool(device, queueFamilyIndex);
-		final Vertices vertices = createVertices(memoryProperties, device);
+		Vertices vertices = createVertices(memoryProperties, device);
 		UboDescriptor uboDescriptor = createUniformBuffer(memoryProperties, device);
 		final long descriptorPool = createDescriptorPool(device);
 		final long descriptorSetLayout = createDescriptorSetLayout(device);
 		final long descriptorSet = createDescriptorSet(device, descriptorPool, descriptorSetLayout, uboDescriptor);
-		final Pipeline pipeline = createPipeline(device, renderPass, vertices.createInfo, descriptorSetLayout);
+		final Pipeline pipeline = Pipeline.createPipeline(device, renderPass, vertices.createInfo, descriptorSetLayout);
 		final class SwapchainRecreator
 		{
 			boolean mustRecreate = true;
