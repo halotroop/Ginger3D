@@ -51,7 +51,7 @@ public class TitleScreen extends Screen
 			{
 				Litecraft.getInstance().setSave(new LitecraftSave("SegregatedOrdinalData", false));
 				Litecraft.getInstance().changeWorld(Litecraft.getInstance().getSave().getWorldOrCreate(Dimensions.OVERWORLD));
-				ginger3D.setGingerPlayer(Litecraft.getInstance().getWorld().player);
+				ginger3D.setGingerPlayer(Litecraft.getInstance().getWorld().playerEntity);
 			}
 			if (Litecraft.getInstance().getWorld() != null)
 			{

@@ -6,10 +6,10 @@ import java.util.Random;
 import org.joml.Vector3f;
 
 import com.github.halotroop.litecraft.Litecraft;
+import com.github.halotroop.litecraft.types.entity.PlayerEntity;
 import com.github.halotroop.litecraft.world.*;
 import com.github.halotroop.litecraft.world.dimension.Dimension;
 import com.github.hydos.ginger.engine.common.cameras.Camera;
-import com.github.hydos.ginger.engine.common.elements.objects.Player;
 
 import tk.valoeghese.sod.*;
 
@@ -125,13 +125,13 @@ public final class LitecraftSave
 		}
 	}
 
-	public void saveGlobalData(long seed, Player player)
+	public void saveGlobalData(long seed, PlayerEntity playerEntity)
 	{
 		try
 		{
 			File globalDataFile = new File(this.file.getPath() + "/global_data.sod");
 			globalDataFile.createNewFile(); // create world file if it doesn't exist.
-			writeGlobalData(globalDataFile, seed, player.getPosition());
+			writeGlobalData(globalDataFile, seed, playerEntity.getPosition());
 		}
 		catch (IOException e)
 		{

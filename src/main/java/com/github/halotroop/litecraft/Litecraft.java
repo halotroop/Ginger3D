@@ -5,6 +5,7 @@ import org.joml.*;
 import com.github.halotroop.litecraft.save.LitecraftSave;
 import com.github.halotroop.litecraft.screens.*;
 import com.github.halotroop.litecraft.types.block.Blocks;
+import com.github.halotroop.litecraft.types.entity.PlayerEntity;
 import com.github.halotroop.litecraft.util.RelativeDirection;
 import com.github.halotroop.litecraft.world.World;
 import com.github.hydos.ginger.engine.common.Constants;
@@ -29,7 +30,7 @@ public class Litecraft extends Game
 	private World world;
 	private LitecraftSave save;
 	private GingerGL engine;
-	public Player player;
+	public PlayerEntity playerEntity;
 	private Camera camera;
 	public int fps, ups, tps;
 	public Vector4i dbgStats = new Vector4i();
@@ -60,7 +61,7 @@ public class Litecraft extends Game
 			System.out.println("Saving chunks...");
 			long time = System.currentTimeMillis();
 			this.world.unloadAllChunks();
-			this.getSave().saveGlobalData(this.world.getSeed(), this.player);
+			this.getSave().saveGlobalData(this.world.getSeed(), this.playerEntity);
 			System.out.println("Saved world in " + (System.currentTimeMillis() - time) + " milliseconds");
 		}
 		engine.cleanup();
@@ -125,15 +126,15 @@ public class Litecraft extends Game
 			Light sun = new Light(new Vector3f(0, 105, 0), new Vector3f(0.9765625f, 0.98828125f, 0.05859375f), new Vector3f(0.002f, 0.002f, 0.002f));
 			FontType font = new FontType(GlLoader.loadFontAtlas("candara.png"), "candara.fnt");
 			this.engine = new GingerGL();
-			this.player = new Player(playerModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
-			this.camera = new FirstPersonCamera(player);
-			this.player.setVisible(false);
-			this.data = new GameData(this.player, this.camera, 20);
+			this.playerEntity = new PlayerEntity(playerModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
+			this.camera = new FirstPersonCamera(playerEntity);
+			this.playerEntity.setVisible(false);
+			this.data = new GameData(this.playerEntity, this.camera, 20);
 			this.data.handleGuis = false;
 			this.engine.setup(new MasterRenderer(this.camera), INSTANCE);
 			this.engine.setGlobalFont(font);
 			this.data.lights.add(sun);
-			this.data.entities.add(this.player);
+			this.data.entities.add(this.playerEntity);
 		}
 	}
 
@@ -142,12 +143,12 @@ public class Litecraft extends Game
 		Input.addPressCallback(Keybind.EXIT, this::exit);
 		Input.addInitialPressCallback(Keybind.FULLSCREEN, Window::fullscreen);
 		Input.addInitialPressCallback(Keybind.WIREFRAME, GingerRegister.getInstance()::toggleWireframe);
-		Input.addPressCallback(Keybind.MOVE_FORWARD, () -> this.player.move(RelativeDirection.FORWARD));
-		Input.addPressCallback(Keybind.MOVE_BACKWARD, () -> this.player.move(RelativeDirection.BACKWARD));
-		Input.addPressCallback(Keybind.STRAFE_LEFT, () -> this.player.move(RelativeDirection.LEFT));
-		Input.addPressCallback(Keybind.STRAFE_RIGHT, () -> this.player.move(RelativeDirection.RIGHT));
-		Input.addPressCallback(Keybind.FLY_UP, () -> this.player.move(RelativeDirection.UP));
-		Input.addPressCallback(Keybind.FLY_DOWN, () -> this.player.move(RelativeDirection.DOWN));
+		Input.addPressCallback(Keybind.MOVE_FORWARD, () -> this.playerEntity.move(RelativeDirection.FORWARD));
+		Input.addPressCallback(Keybind.MOVE_BACKWARD, () -> this.playerEntity.move(RelativeDirection.BACKWARD));
+		Input.addPressCallback(Keybind.STRAFE_LEFT, () -> this.playerEntity.move(RelativeDirection.LEFT));
+		Input.addPressCallback(Keybind.STRAFE_RIGHT, () -> this.playerEntity.move(RelativeDirection.RIGHT));
+		Input.addPressCallback(Keybind.FLY_UP, () -> this.playerEntity.move(RelativeDirection.UP));
+		Input.addPressCallback(Keybind.FLY_DOWN, () -> this.playerEntity.move(RelativeDirection.DOWN));
 	}
 
 	/**
@@ -161,9 +162,9 @@ public class Litecraft extends Game
 		if (GingerRegister.getInstance().currentScreen == null && world == null)
 			engine.openScreen(new TitleScreen());
 		
-		if (data.player != null && data.camera != null)
+		if (data.playerEntity != null && data.camera != null)
 		{
-			data.player.updateMovement();
+			data.playerEntity.updateMovement();
 			data.camera.updateMovement();
 		}
 	}

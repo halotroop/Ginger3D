@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.common.elements.objects;
+package com.github.halotroop.litecraft.types.entity;
 
 import org.joml.Vector3f;
 
@@ -10,14 +10,14 @@ import com.github.hydos.ginger.engine.common.api.GingerRegister;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
 
-public class Player extends RenderObject implements WorldGenConstants
+public class PlayerEntity extends Entity implements WorldGenConstants
 {
 	private boolean isInAir = false;
 	private double upwardsSpeed;
-	private boolean noWeight = true; // because the force of gravity on an object's mass is called WEIGHT, not gravity
+	private boolean noWeight = true;
 	private int chunkX, chunkY, chunkZ;
 
-	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale)
+	public PlayerEntity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale)
 	{
 		super(model, position, rotX, rotY, rotZ, scale);
 		this.chunkX = (int) position.x >> POS_SHIFT;

@@ -12,11 +12,11 @@ import org.joml.Vector3f;
 
 import com.github.halotroop.litecraft.save.LitecraftSave;
 import com.github.halotroop.litecraft.types.block.*;
+import com.github.halotroop.litecraft.types.entity.PlayerEntity;
 import com.github.halotroop.litecraft.world.block.BlockRenderer;
 import com.github.halotroop.litecraft.world.dimension.Dimension;
 import com.github.halotroop.litecraft.world.gen.*;
 import com.github.halotroop.litecraft.world.gen.modifier.WorldModifier;
-import com.github.hydos.ginger.engine.common.elements.objects.Player;
 import com.github.hydos.ginger.engine.common.obj.ModelLoader;
 import com.github.hydos.ginger.engine.opengl.render.models.TexturedModel;
 
@@ -32,7 +32,7 @@ public class World implements BlockAccess, WorldGenConstants
 	private final long seed;
 	private final int dimension;
 	private final ForkJoinPool threadPool;
-	public Player player;
+	public PlayerEntity playerEntity;
 	int renderBound;
 	int renderBoundVertical;
 	// dummy block instance for retrieving the default block model
@@ -86,19 +86,19 @@ public class World implements BlockAccess, WorldGenConstants
 		this.spawnPlayer(0, y, -3);
 	}
 
-	public Player spawnPlayer(float x, float y, float z)
+	public PlayerEntity spawnPlayer(float x, float y, float z)
 	{
 		// Player model and stuff
 		TexturedModel dirtModel = ModelLoader.loadGenericCube("block/cubes/soil/dirt.png");
-		this.player = new Player(dirtModel, new Vector3f(x, y, z), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
-		this.player.setVisible(false);
+		this.playerEntity = new PlayerEntity(dirtModel, new Vector3f(x, y, z), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
+		this.playerEntity.setVisible(false);
 		// Generate world around player
 		long time = System.currentTimeMillis();
 		System.out.println("Generating world!");
-		this.updateLoadedChunks(this.player.getChunkX(), this.player.getChunkY(), this.player.getChunkZ());
+		this.updateLoadedChunks(this.playerEntity.getChunkX(), this.playerEntity.getChunkY(), this.playerEntity.getChunkZ());
 		System.out.println("Generated world in " + (System.currentTimeMillis() - time) + " milliseconds");
 		// return player
-		return this.player;
+		return this.playerEntity;
 	}
 
 	public Chunk getChunk(int chunkX, int chunkY, int chunkZ)

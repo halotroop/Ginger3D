@@ -5,10 +5,10 @@ import org.joml.Vector2f;
 import com.github.halotroop.litecraft.Litecraft;
 import com.github.halotroop.litecraft.logic.Timer;
 import com.github.halotroop.litecraft.logic.Timer.TickListener;
+import com.github.halotroop.litecraft.types.entity.PlayerEntity;
 import com.github.hydos.ginger.engine.common.api.GingerRegister;
 import com.github.hydos.ginger.engine.common.api.game.*;
 import com.github.hydos.ginger.engine.common.elements.buttons.TextureButton;
-import com.github.hydos.ginger.engine.common.elements.objects.Player;
 import com.github.hydos.ginger.engine.common.font.*;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.screen.Screen;
@@ -51,13 +51,13 @@ public class GingerGL
 		registry.currentScreen = screen;
 	}
 	
-	public void setGingerPlayer(Player player)
+	public void setGingerPlayer(PlayerEntity playerEntity)
 	{
-		registry.game.data.entities.remove(Litecraft.getInstance().player); // remove the old player
-		registry.game.data.player = player; // set all the player variables
-		Litecraft.getInstance().player = player;
-		Litecraft.getInstance().getCamera().player = player;
-		registry.game.data.entities.add(player); // add the new player
+		registry.game.data.entities.remove(Litecraft.getInstance().playerEntity); // remove the old player
+		registry.game.data.playerEntity = playerEntity; // set all the player variables
+		Litecraft.getInstance().playerEntity = playerEntity;
+		Litecraft.getInstance().getCamera().playerEntity = playerEntity;
+		registry.game.data.entities.add(playerEntity); // add the new player
 	}
 
 	public TextureButton registerButton(String resourceLocation, Vector2f position, Vector2f scale)
