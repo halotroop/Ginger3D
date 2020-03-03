@@ -14,6 +14,7 @@ import com.github.hydos.ginger.engine.common.obj.ModelLoader;
 import com.github.hydos.ginger.engine.vulkan.*;
 import com.github.hydos.ginger.engine.vulkan.api.VKGinger;
 import com.github.hydos.ginger.engine.vulkan.model.*;
+import com.github.hydos.ginger.engine.vulkan.registers.VKRegister;
 import com.github.hydos.ginger.engine.vulkan.render.renderers.*;
 import com.github.hydos.ginger.engine.vulkan.render.ubo.*;
 import com.github.hydos.ginger.engine.vulkan.shaders.*;
@@ -231,6 +232,7 @@ public class VulkanStarter
 	{
 		Window.create(1200, 600, "Litecraft Vulkan", 60, RenderAPI.Vulkan);
 		new VKGinger();
+		VKRegister.exampleVKModel = new VKModelData();
 		/* Look for instance extensions */
 		PointerBuffer requiredExtensions = GLFWVulkan.glfwGetRequiredInstanceExtensions();
 		if (requiredExtensions == null)
@@ -239,9 +241,9 @@ public class VulkanStarter
 		final VkInstance vulkanInstance = VKLoader.createInstance(requiredExtensions);
 		VKUtils.setupVulkanDebugCallback();
 		final long debugCallbackHandle = VKUtils.startVulkanDebugging(vulkanInstance, EXTDebugReport.VK_DEBUG_REPORT_ERROR_BIT_EXT | EXTDebugReport.VK_DEBUG_REPORT_WARNING_BIT_EXT, VKConstants.debugCallback);
-		final VkPhysicalDevice physicalDevice = VKDeviceProperties.getFirstPhysicalDevice(vulkanInstance);
-		final VKDeviceProperties deviceAndGraphicsQueueFamily = VKDeviceProperties.initDeviceProperties(physicalDevice);
-		final VkDevice device = deviceAndGraphicsQueueFamily.device;
+		VKRegister.physicalDevice = VKDeviceProperties.getFirstPhysicalDevice(vulkanInstance);
+		final VKDeviceProperties deviceAndGraphicsQueueFamily = VKDeviceProperties.initDeviceProperties(VKRegister.physicalDevice);
+		VKRegister.device = deviceAndGraphicsQueueFamily.device;
 		int queueFamilyIndex = deviceAndGraphicsQueueFamily.queueFamilyIndex;
 		final VkPhysicalDeviceMemoryProperties memoryProperties = deviceAndGraphicsQueueFamily.memoryProperties;
 		GLFWKeyCallback keyCallback;
@@ -261,18 +263,19 @@ public class VulkanStarter
 		if (err != VK12.VK_SUCCESS)
 		{ throw new AssertionError("Failed to create surface: " + VKUtils.translateVulkanResult(err)); }
 		// Create static Vulkan resources
-		final ColorAndDepthFormatAndSpace colorAndDepthFormatAndSpace = VKMasterRenderer.getColorFormatAndSpace(physicalDevice, surface);
-		final long commandPool = createCommandPool(device, queueFamilyIndex);
-		final VkCommandBuffer setupCommandBuffer = createCommandBuffer(device, commandPool);
-		final VkQueue queue = createDeviceQueue(device, queueFamilyIndex);
-		final long renderPass = ExampleRenderer.createRenderPass(device, colorAndDepthFormatAndSpace.colorFormat, colorAndDepthFormatAndSpace.depthFormat);
-		final long renderCommandPool = createCommandPool(device, queueFamilyIndex);
-		VKVertices vertices = VKModelConverter.convertModel(ModelLoader.getCubeMesh(), memoryProperties, device);
-		Ubo ubo = new Ubo(memoryProperties, device);
-		final long descriptorPool = createDescriptorPool(device);
-		final long descriptorSetLayout = createDescriptorSetLayout(device);
-		final long descriptorSet = createDescriptorSet(device, descriptorPool, descriptorSetLayout, ubo.uboData);
-		final Pipeline pipeline = Pipeline.createPipeline(device, renderPass, vertices.createInfo, descriptorSetLayout);
+		final ColorAndDepthFormatAndSpace colorAndDepthFormatAndSpace = VKMasterRenderer.getColorFormatAndSpace(VKRegister.physicalDevice, surface);
+		VKRegister.commandPool = createCommandPool(VKRegister.device, queueFamilyIndex);
+		final VkCommandBuffer setupCommandBuffer = createCommandBuffer(VKRegister.device, VKRegister.commandPool);
+		VKRegister.queue = createDeviceQueue(VKRegister.device, queueFamilyIndex);
+		final long renderPass = ExampleRenderer.createRenderPass(VKRegister.device, colorAndDepthFormatAndSpace.colorFormat, colorAndDepthFormatAndSpace.depthFormat);
+		final long renderCommandPool = createCommandPool(VKRegister.device, queueFamilyIndex);
+		VKVertices vertices = VKModelConverter.convertModel(ModelLoader.getCubeMesh(), memoryProperties, VKRegister.device);
+		Ubo ubo = new Ubo(memoryProperties, VKRegister.device);
+		final long descriptorPool = createDescriptorPool(VKRegister.device);
+		final long descriptorSetLayout = createDescriptorSetLayout(VKRegister.device);
+		final long descriptorSet = createDescriptorSet(VKRegister.device, descriptorPool, descriptorSetLayout, ubo.uboData);
+		final Pipeline pipeline = Pipeline.createPipeline(VKRegister.device, renderPass, vertices.createInfo, descriptorSetLayout);
+		VKRegister.exampleVKModel.loadModel();
 		final class SwapchainRecreator
 		{
 			boolean mustRecreate = true;
@@ -288,23 +291,23 @@ public class VulkanStarter
 				{ throw new AssertionError("Failed to begin setup command buffer: " + VKUtils.translateVulkanResult(err)); }
 				long oldChain = swapchain != null ? swapchain.swapchainHandle : VK12.VK_NULL_HANDLE;
 				// Create the swapchain (this will also add a memory barrier to initialize the framebuffer images)
-				swapchain = VKMasterRenderer.createSwapChain(device, physicalDevice, surface, oldChain, setupCommandBuffer,
+				swapchain = VKMasterRenderer.createSwapChain(VKRegister.device, VKRegister.physicalDevice, surface, oldChain, setupCommandBuffer,
 					Window.getWidth(), Window.getHeight(), colorAndDepthFormatAndSpace.colorFormat, colorAndDepthFormatAndSpace.colorSpace);
 				// Create depth-stencil image
-				depthStencil = VKMasterRenderer.createDepthStencil(device, memoryProperties, colorAndDepthFormatAndSpace.depthFormat, setupCommandBuffer);
+				depthStencil = VKMasterRenderer.createDepthStencil(VKRegister.device, memoryProperties, colorAndDepthFormatAndSpace.depthFormat, setupCommandBuffer);
 				err = VK12.vkEndCommandBuffer(setupCommandBuffer);
 				if (err != VK12.VK_SUCCESS)
 				{ throw new AssertionError("Failed to end setup command buffer: " + VKUtils.translateVulkanResult(err)); }
-				submitCommandBuffer(queue, setupCommandBuffer);
-				VK12.vkQueueWaitIdle(queue);
+				submitCommandBuffer(VKRegister.queue, setupCommandBuffer);
+				VK12.vkQueueWaitIdle(VKRegister.queue);
 				if (framebuffers != null)
 				{ for (int i = 0; i < framebuffers.length; i++)
-					VK12.vkDestroyFramebuffer(device, framebuffers[i], null); }
-				framebuffers = ExampleRenderer.createFramebuffers(device, swapchain, renderPass, Window.getWidth(), Window.getHeight(), depthStencil);
+					VK12.vkDestroyFramebuffer(VKRegister.device, framebuffers[i], null); }
+				framebuffers = ExampleRenderer.createFramebuffers(VKRegister.device, swapchain, renderPass, Window.getWidth(), Window.getHeight(), depthStencil);
 				// Create render command buffers
 				if (renderCommandBuffers != null)
-				{ VK12.vkResetCommandPool(device, renderCommandPool, VKUtils.VK_FLAGS_NONE); }
-				renderCommandBuffers = VKUtils.initRenderCommandBuffers(device, renderCommandPool, framebuffers, renderPass, Window.getWidth(), Window.getHeight(), pipeline, descriptorSet,
+				{ VK12.vkResetCommandPool(VKRegister.device, renderCommandPool, VKUtils.VK_FLAGS_NONE); }
+				renderCommandBuffers = VKUtils.initRenderCommandBuffers(VKRegister.device, renderCommandPool, framebuffers, renderPass, Window.getWidth(), Window.getHeight(), pipeline, descriptorSet,
 					vertices.vkVerticiesBuffer);
 				mustRecreate = false;
 			}
@@ -360,16 +363,16 @@ public class VulkanStarter
 				swapchainRecreator.recreate();
 			
 			
-			err = VK12.vkCreateSemaphore(device, semaphoreCreateInfo, null, pImageAcquiredSemaphore);
+			err = VK12.vkCreateSemaphore(VKRegister.device, semaphoreCreateInfo, null, pImageAcquiredSemaphore);
 			if (err != VK12.VK_SUCCESS)
 			{ throw new AssertionError("Failed to create image acquired semaphore: " + VKUtils.translateVulkanResult(err)); }
 			// Create a semaphore to wait for the render to complete, before presenting
-			err = VK12.vkCreateSemaphore(device, semaphoreCreateInfo, null, pRenderCompleteSemaphore);
+			err = VK12.vkCreateSemaphore(VKRegister.device, semaphoreCreateInfo, null, pRenderCompleteSemaphore);
 			if (err != VK12.VK_SUCCESS)
 			{ throw new AssertionError("Failed to create render complete semaphore: " + VKUtils.translateVulkanResult(err)); }
 			// Get next image from the swap chain (back/front buffer).
 			// This will setup the imageAquiredSemaphore to be signalled when the operation is complete
-			err = KHRSwapchain.vkAcquireNextImageKHR(device, swapchain.swapchainHandle, VKConstants.MAX_UNSIGNED_INT, pImageAcquiredSemaphore.get(0), VK12.VK_NULL_HANDLE, pImageIndex);
+			err = KHRSwapchain.vkAcquireNextImageKHR(VKRegister.device, swapchain.swapchainHandle, VKConstants.MAX_UNSIGNED_INT, pImageAcquiredSemaphore.get(0), VK12.VK_NULL_HANDLE, pImageIndex);
 			currentBuffer = pImageIndex.get(0);
 			if (err != VK12.VK_SUCCESS)
 			{ throw new AssertionError("Failed to acquire next swapchain image: " + VKUtils.translateVulkanResult(err)); }
@@ -379,23 +382,23 @@ public class VulkanStarter
 			long thisTime = System.nanoTime();
 			time += (thisTime - lastTime) / 1E9f;
 			lastTime = thisTime;
-			ubo.updateUbo(device, time);
+			ubo.updateUbo(VKRegister.device, time);
 			// Submit to the graphics queue
 			
-			err = VK12.vkQueueSubmit(queue, submitInfo, VK12.VK_NULL_HANDLE);
+			err = VK12.vkQueueSubmit(VKRegister.queue, submitInfo, VK12.VK_NULL_HANDLE);
 			if (err != VK12.VK_SUCCESS)
 			{ throw new AssertionError("Failed to submit render queue: " + VKUtils.translateVulkanResult(err)); }
 			// Present the current buffer to the swap chain
 			// This will display the image
 			pSwapchains.put(0, swapchain.swapchainHandle);
-			err = KHRSwapchain.vkQueuePresentKHR(queue, presentInfo);
+			err = KHRSwapchain.vkQueuePresentKHR(VKRegister.queue, presentInfo);
 			if (err != VK12.VK_SUCCESS)
 			{ throw new AssertionError("Failed to present the swapchain image: " + VKUtils.translateVulkanResult(err)); }
 			// Create and submit post present barrier
-			VK12.vkQueueWaitIdle(queue);
+			VK12.vkQueueWaitIdle(VKRegister.queue);
 			// Destroy this semaphore (we will create a new one in the next frame)
-			VK12.vkDestroySemaphore(device, pImageAcquiredSemaphore.get(0), null);
-			VK12.vkDestroySemaphore(device, pRenderCompleteSemaphore.get(0), null);
+			VK12.vkDestroySemaphore(VKRegister.device, pImageAcquiredSemaphore.get(0), null);
+			VK12.vkDestroySemaphore(VKRegister.device, pRenderCompleteSemaphore.get(0), null);
 		}
 		VKGinger.getInstance().end(pWaitDstStageMask, pImageAcquiredSemaphore, pRenderCompleteSemaphore, pSwapchains, pCommandBuffers, semaphoreCreateInfo, submitInfo, presentInfo, vulkanInstance, debugCallbackHandle, framebufferSizeCallback, keyCallback);
 	}
