@@ -22,8 +22,6 @@ import com.github.hydos.ginger.engine.opengl.postprocessing.PostProcessing;
 import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
 import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
 import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
-import com.github.hydos.ginger.engine.vulkan.api.GingerVK;
-
 import tk.valoeghese.gateways.client.io.*;
 
 public class Litecraft extends Game
@@ -152,7 +150,6 @@ public class Litecraft extends Game
 				}
 				case Vulkan:
 				{
-					this.engine = new GingerVK();
 					// TODO: Setup Vulkan
 					exit();
 					break;

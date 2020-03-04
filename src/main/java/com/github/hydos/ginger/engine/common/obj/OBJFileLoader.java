@@ -6,7 +6,7 @@ import org.lwjgl.assimp.AIVector3D.Buffer;
 
 public class OBJFileLoader
 {
-	public static String resourceLocation = "~/Desktop/Ginger3D/src/main/resources/models/";
+	public static String resourceLocation = "C:/Users/Hayden/Desktop/Litecraft3D/src/main/resources/models/";
 
 	public static Mesh loadModel(String filePath)
 	{
@@ -15,7 +15,10 @@ public class OBJFileLoader
 		{
 			scene = Assimp.aiImportFile(resourceLocation + filePath, Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate);
 			if (scene == null)
-			{ return new Mesh(new float[0], new float[0], new float[0], new int[0], 1F); }
+			{ 
+				System.err.println("The model " + resourceLocation + filePath + " has failed to load");
+				return new Mesh(new float[0], new float[0], new float[0], new int[0], 1F); 
+			}
 			AIMesh mesh = AIMesh.create(scene.mMeshes().get(0));
 			int vertexCount = mesh.mNumVertices();
 			AIVector3D.Buffer vertices = mesh.mVertices();

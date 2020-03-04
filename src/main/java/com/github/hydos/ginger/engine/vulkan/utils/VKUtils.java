@@ -1,266 +1,242 @@
 package com.github.hydos.ginger.engine.vulkan.utils;
 
-import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.util.shaderc.Shaderc.*;
-import static org.lwjgl.vulkan.EXTDebugReport.*;
-import static org.lwjgl.vulkan.KHRSurface.*;
+import java.nio.IntBuffer;
+import java.util.stream.IntStream;
 
-import java.io.IOException;
-import java.nio.*;
-
-import org.lwjgl.*;
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.glfw.*;
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.util.shaderc.*;
 import org.lwjgl.vulkan.*;
 
-import com.github.hydos.ginger.engine.common.io.Window;
-import com.github.hydos.ginger.engine.common.tools.IOUtil;
-import com.github.hydos.ginger.engine.vulkan.VKConstants;
-import com.github.hydos.ginger.engine.vulkan.render.renderers.EntityRenderer;
-import com.github.hydos.ginger.engine.vulkan.shaders.Pipeline;
+import com.github.hydos.ginger.engine.vulkan.VkConstants;
 
-/** @author hydos
- *         a util library for Vulkan */
-public class VKUtils
+public class VkUtils
 {
 	
-	public static final int VK_FLAGS_NONE = 0;
+    private static PointerBuffer getRequiredExtensions() {
 
-	public static long startVulkanDebugging(VkInstance instance, int flags, VkDebugReportCallbackEXT callback)
-	{
-		VkDebugReportCallbackCreateInfoEXT dbgCreateInfo = VkDebugReportCallbackCreateInfoEXT.calloc()
-			.sType(VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT)
-			.pfnCallback(callback)
-			.flags(flags);
-		LongBuffer pCallback = memAllocLong(1);
-		int err = vkCreateDebugReportCallbackEXT(instance, dbgCreateInfo, null, pCallback);
-		long callbackHandle = pCallback.get(0);
-		memFree(pCallback);
-		dbgCreateInfo.free();
-		if (err != VK12.VK_SUCCESS)
-		{ throw new AssertionError("Failed to create VkInstance: " + VKUtils.translateVulkanResult(err)); }
-		return callbackHandle;
+        PointerBuffer glfwExtensions = GLFWVulkan.glfwGetRequiredInstanceExtensions();
+
+        return glfwExtensions;
+    }
+
+	
+    public static void createInstance() {
+
+        try(MemoryStack stack = MemoryStack.stackPush()) {
+
+            // Use calloc to initialize the structs with 0s. Otherwise, the program can crash due to random values
+
+            VkApplicationInfo appInfo = VkApplicationInfo.callocStack(stack);
+
+            appInfo.sType(VK12.VK_STRUCTURE_TYPE_APPLICATION_INFO);
+            appInfo.pApplicationName(stack.UTF8Safe("GingerGame"));
+            appInfo.applicationVersion(VK12.VK_MAKE_VERSION(1, 0, 0));
+            appInfo.pEngineName(stack.UTF8Safe("Ginger2"));
+            appInfo.engineVersion(VK12.VK_MAKE_VERSION(2, 0, 0));
+            appInfo.apiVersion(VK12.VK_API_VERSION_1_2);
+
+            VkInstanceCreateInfo createInfo = VkInstanceCreateInfo.callocStack(stack);
+
+            createInfo.sType(VK12.VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO);
+            createInfo.pApplicationInfo(appInfo);
+            // enabledExtensionCount is implicitly set when you call ppEnabledExtensionNames
+            createInfo.ppEnabledExtensionNames(getRequiredExtensions());
+
+            // We need to retrieve the pointer of the created instance
+            PointerBuffer instancePtr = stack.mallocPointer(1);
+
+            if(VK12.vkCreateInstance(createInfo, null, instancePtr) != VK12.VK_SUCCESS) {
+                throw new RuntimeException("Failed to create instance");
+            }
+
+            VkConstants.vulkanInstance = new VkInstance(instancePtr.get(0), createInfo);
+        }
+    }
+	
+	public static void createPhysicalDevice() {
+        try(MemoryStack stack = MemoryStack.stackPush()) {
+
+            IntBuffer deviceCount = stack.ints(0);
+
+            VK12.vkEnumeratePhysicalDevices(VkConstants.vulkanInstance, deviceCount, null);
+
+            if(deviceCount.get(0) == 0) {
+                throw new RuntimeException("Failed to find GPUs with Vulkan support");
+            }
+
+            PointerBuffer ppPhysicalDevices = stack.mallocPointer(deviceCount.get(0));
+
+            VK12.vkEnumeratePhysicalDevices(VkConstants.vulkanInstance, deviceCount, ppPhysicalDevices);
+
+            VkPhysicalDevice device = null;
+
+            for(int i = 0;i < ppPhysicalDevices.capacity();i++) {
+
+                device = new VkPhysicalDevice(ppPhysicalDevices.get(i), VkConstants.vulkanInstance);
+
+            }
+
+            if(device == null) {
+                throw new RuntimeException("Failed to find a suitable GPU");
+            }
+
+            VkConstants.physicalDevice = device;
+        }
 	}
 	
-	private static int vulkanStageToShaderc(int stage)
-	{
-		switch (stage)
-		{
-		case VK10.VK_SHADER_STAGE_VERTEX_BIT:
-			return shaderc_vertex_shader;
-		case VK10.VK_SHADER_STAGE_FRAGMENT_BIT:
-			return shaderc_fragment_shader;
-		case NVRayTracing.VK_SHADER_STAGE_RAYGEN_BIT_NV:
-			return shaderc_raygen_shader;
-		case NVRayTracing.VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV:
-			return shaderc_closesthit_shader;
-		case NVRayTracing.VK_SHADER_STAGE_MISS_BIT_NV:
-			return shaderc_miss_shader;
-		case NVRayTracing.VK_SHADER_STAGE_ANY_HIT_BIT_NV:
-			return shaderc_anyhit_shader;
-		default:
-			throw new IllegalArgumentException("Shader stage: " + stage);
-		}
-	}
+	
+    public static class QueueFamilyIndices {
 
-	public static ByteBuffer glslToSpirv(String classPath, int vulkanStage) throws IOException
-	{
-		System.out.println("Converting shader: " + classPath + " to SPIRV");
-		ByteBuffer src = IOUtil.ioResourceToByteBuffer(classPath, 1024);
-		long compiler = shaderc_compiler_initialize();
-		long options = shaderc_compile_options_initialize();
-		ShadercIncludeResolve resolver;
-		ShadercIncludeResultRelease releaser;
-		shaderc_compile_options_set_optimization_level(options, shaderc_optimization_level_performance);
-		shaderc_compile_options_set_include_callbacks(options, resolver = new ShadercIncludeResolve()
-		{
-			public long invoke(long user_data, long requested_source, int type, long requesting_source, long include_depth)
-			{
-				ShadercIncludeResult res = ShadercIncludeResult.calloc();
-				try
-				{
-					String src = classPath.substring(0, classPath.lastIndexOf('/')) + "/" + memUTF8(requested_source);
-					res.content(IOUtil.ioResourceToByteBuffer(src, 1024));
-					res.source_name(memUTF8(src));
-					return res.address();
-				}
-				catch (IOException e)
-				{
-					throw new AssertionError("Failed to resolve include: " + src);
-				}
-			}
-		}, releaser = new ShadercIncludeResultRelease()
-		{
-			public void invoke(long user_data, long include_result)
-			{
-				ShadercIncludeResult result = ShadercIncludeResult.create(include_result);
-				memFree(result.source_name());
-				result.free();
-			}
-		}, 0L);
-		long res;
-		try (MemoryStack stack = MemoryStack.stackPush())
-		{
-			res = shaderc_compile_into_spv(compiler, src, vulkanStageToShaderc(vulkanStage),
-				stack.UTF8(classPath), stack.UTF8("main"), options);
-			if (res == 0L)
-				throw new AssertionError("Internal error during compilation!");
-		}
-		if (shaderc_result_get_compilation_status(res) != shaderc_compilation_status_success)
-		{ throw new AssertionError("Shader compilation failed: " + shaderc_result_get_error_message(res)); }
-		int size = (int) shaderc_result_get_length(res);
-		ByteBuffer resultBytes = BufferUtils.createByteBuffer(size);
-		resultBytes.put(shaderc_result_get_bytes(res));
-		resultBytes.flip();
-		shaderc_compiler_release(res);
-		shaderc_compiler_release(compiler);
-		releaser.free();
-		resolver.free();
-		return resultBytes;
-	}
+        // We use Integer to use null as the empty value
+        private Integer graphicsFamily;
+        private Integer presentFamily;
 
-	public static String translateVulkanResult(int vulkanResult)
+        public boolean isComplete() {
+            return graphicsFamily != null && presentFamily != null;
+        }
+
+        public int[] unique() {
+            return IntStream.of(graphicsFamily, presentFamily).distinct().toArray();
+        }
+    }
+    
+    
+	public static void createLogicalDevice() 
 	{
-		switch (vulkanResult)
+		try(MemoryStack stack = MemoryStack.stackPush()) 
 		{
-		case VK10.VK_SUCCESS:
-			return "Command successfully completed.";
-		case VK10.VK_NOT_READY:
-			return "A query has not yet been completed.";
-		case VK10.VK_TIMEOUT:
-			return "A wait operation has timed out.";
-		case VK10.VK_INCOMPLETE:
-			return "A return array was too small for the result.";
-		case KHRSwapchain.VK_SUBOPTIMAL_KHR:
-			return "A swapchain no longer matches the surface properties exactly, but can still be used to present to the surface successfully.";
-		case VK10.VK_ERROR_OUT_OF_HOST_MEMORY:
-			return "A host memory allocation has failed.";
-		case VK10.VK_ERROR_OUT_OF_DEVICE_MEMORY:
-			return "A device memory allocation has failed.";
-		case VK10.VK_ERROR_INITIALIZATION_FAILED:
-			return "Initialization of an object could not be completed for implementation-specific reasons.";
-		case VK10.VK_ERROR_DEVICE_LOST:
-			return "The logical or physical device has been lost.";
-		case VK10.VK_ERROR_MEMORY_MAP_FAILED:
-			return "Mapping of a memory object has failed.";
-		case VK10.VK_ERROR_LAYER_NOT_PRESENT:
-			return "A requested layer is not present or could not be loaded.";
-		case VK10.VK_ERROR_EXTENSION_NOT_PRESENT:
-			return "A requested extension is not supported.";
-		case VK10.VK_ERROR_FEATURE_NOT_PRESENT:
-			return "A requested feature is not supported.";
-		case VK10.VK_ERROR_INCOMPATIBLE_DRIVER:
-			return "The requested version of Vulkan is not supported by the driver or is otherwise incompatible for implementation-specific reasons.";
-		case VK10.VK_ERROR_TOO_MANY_OBJECTS:
-			return "Too many objects of the same type have already been created.";
-		case VK10.VK_ERROR_FORMAT_NOT_SUPPORTED:
-			return "The requested format is not supported.";
-		case VK_ERROR_SURFACE_LOST_KHR:
-			return "The window is no longer available.";
-		case VK_ERROR_NATIVE_WINDOW_IN_USE_KHR:
-			return "The requested window is already connected to a VkSurfaceKHR, or to some other non-Vulkan API.";
-		case KHRDisplaySwapchain.VK_ERROR_INCOMPATIBLE_DISPLAY_KHR:
-			return "The display used by a swapchain does not use the same presentable image layout, or is incompatible in a way that prevents sharing an" + " image.";
-		case EXTDebugReport.VK_ERROR_VALIDATION_FAILED_EXT:
-			return "A validation layer found an error.";
-		default:
-			return String.format("%s [%d]", "Is an unknown vulkan result", Integer.valueOf(vulkanResult));
+			QueueFamilyIndices indices = findQueueFamilies();
+
+            int[] uniqueQueueFamilies = indices.unique();
+
+            VkDeviceQueueCreateInfo.Buffer queueCreateInfos = VkDeviceQueueCreateInfo.callocStack(uniqueQueueFamilies.length, stack);
+
+            for(int i = 0;i < uniqueQueueFamilies.length;i++) {
+                VkDeviceQueueCreateInfo queueCreateInfo = queueCreateInfos.get(i);
+                queueCreateInfo.sType(VK12.VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO);
+                queueCreateInfo.queueFamilyIndex(uniqueQueueFamilies[i]);
+                queueCreateInfo.pQueuePriorities(stack.floats(1.0f));
+            }
+
+
+            VkDeviceCreateInfo createInfo = VkDeviceCreateInfo.callocStack(stack);
+
+            createInfo.sType(VK12.VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO);
+            createInfo.pQueueCreateInfos(queueCreateInfos);
+            // queueCreateInfoCount is automatically set
+
+
+            PointerBuffer pDevice = stack.pointers(VK12.VK_NULL_HANDLE);
+
+            if(VK12.vkCreateDevice(VkConstants.physicalDevice, createInfo, null, pDevice) != VK12.VK_SUCCESS) {
+                throw new RuntimeException("Failed to create logical device");
+            }
+
+            VkConstants.device = new VkDevice(pDevice.get(0), VkConstants.physicalDevice, createInfo);
+
+            PointerBuffer pQueue = stack.pointers(VK12.VK_NULL_HANDLE);
+
+            VK12.vkGetDeviceQueue(VkConstants.device, indices.graphicsFamily, 0, pQueue);
+            VkConstants.graphicsQueue = new VkQueue(pQueue.get(0), VkConstants.device);
+
+            VK12.vkGetDeviceQueue(VkConstants.device, indices.presentFamily, 0, pQueue);
+            VkConstants.presentQueue = new VkQueue(pQueue.get(0), VkConstants.device);
 		}
 	}
 	
-	public static VkCommandBuffer[] setupRenderCommandBuffer(VkDevice device, long commandPool, long[] framebuffers, long renderPass, int width, int height,
-		Pipeline pipeline, long descriptorSet, long verticesBuf)
-	{
-		try (MemoryStack stack = MemoryStack.stackPush())
-		{
-			// Create the render command buffers (one command buffer per framebuffer image)
-			VkCommandBufferAllocateInfo cmdBufAllocateInfo = VkCommandBufferAllocateInfo.calloc()
-				.sType(VK12.VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO)
-				.commandPool(commandPool)
-				.level(VK12.VK_COMMAND_BUFFER_LEVEL_PRIMARY)
-				.commandBufferCount(framebuffers.length);
-			PointerBuffer pCommandBuffer = memAllocPointer(framebuffers.length);
-			int result = VK12.vkAllocateCommandBuffers(device, cmdBufAllocateInfo, pCommandBuffer);
-			if (result != VK12.VK_SUCCESS)
-			{ throw new AssertionError("Failed to create render command buffer: " + VKUtils.translateVulkanResult(result)); }
-			VkCommandBuffer[] renderCommandBuffers = new VkCommandBuffer[framebuffers.length];
-			for (int i = 0; i < framebuffers.length; i++)
-			{ renderCommandBuffers[i] = new VkCommandBuffer(pCommandBuffer.get(i), device); }
-			memFree(pCommandBuffer);
-			cmdBufAllocateInfo.free();
-			// Create the command buffer begin structure
-			VkCommandBufferBeginInfo cmdBufInfo = VkCommandBufferBeginInfo.calloc()
-				.sType(VK12.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO);
-			// Specify clear colour
-			VkClearValue.Buffer clearValues = VkClearValue.calloc(2);
-			clearValues.get(0).color()
-				.float32(0, Window.getColour().x() / 255.0f)
-				.float32(1, Window.getColour().y() / 255.0f)
-				.float32(2, Window.getColour().z() / 255.0f)
-				.float32(3, 1.0f);
-			// Specify clear depth-stencil
-			clearValues.get(1).depthStencil().depth(1.0f).stencil(0);
-			// Specify everything to begin a render pass
-			VkRenderPassBeginInfo renderPassBeginInfo = VkRenderPassBeginInfo.calloc()
-				.sType(VK12.VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO)
-				.renderPass(renderPass)
-				.pClearValues(clearValues);
-			VkRect2D renderArea = renderPassBeginInfo.renderArea();
-			renderArea.offset().set(0, 0);
-			renderArea.extent().set(width, height);
-			for (int i = 0; i < renderCommandBuffers.length; ++i)
-			{
-				// Set target frame buffer
-				renderPassBeginInfo.framebuffer(framebuffers[i]);
-				result = VK12.vkBeginCommandBuffer(renderCommandBuffers[i], cmdBufInfo);
-				if (result != VK12.VK_SUCCESS)
-				{ throw new AssertionError("Failed to begin render command buffer: " + VKUtils.translateVulkanResult(result)); }
-				VK12.vkCmdBeginRenderPass(renderCommandBuffers[i], renderPassBeginInfo, VK12.VK_SUBPASS_CONTENTS_INLINE);
-				// Update dynamic viewport state
-				VkViewport.Buffer viewport = VkViewport.calloc(1)
-					.height(height)
-					.width(width)
-					.minDepth(0.0f)
-					.maxDepth(1.0f);
-				VK12.vkCmdSetViewport(renderCommandBuffers[i], 0, viewport);
-				viewport.free();
-				// Update dynamic scissor state
-				VkRect2D.Buffer scissor = VkRect2D.calloc(1);
-				scissor.extent().set(width, height);
-				scissor.offset().set(0, 0);
-				VK12.vkCmdSetScissor(renderCommandBuffers[i], 0, scissor);
-				scissor.free();
-				// Bind descriptor sets describing shader binding points
-				LongBuffer descriptorSets = memAllocLong(1).put(0, descriptorSet);
-				VK12.vkCmdBindDescriptorSets(renderCommandBuffers[i], VK12.VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.layout, 0, descriptorSets, null);
-				memFree(descriptorSets);
-				// Bind the rendering pipeline (including the shaders)
-				VK12.vkCmdBindPipeline(renderCommandBuffers[i], VK12.VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.pipeline);
-				EntityRenderer.tempStaticRender(stack, renderCommandBuffers[i]);
+    private static QueueFamilyIndices findQueueFamilies() {
 
-				VK12.vkCmdEndRenderPass(renderCommandBuffers[i]);
-				result = VK12.vkEndCommandBuffer(renderCommandBuffers[i]);
-				if (result != VK12.VK_SUCCESS)
-				{ throw new AssertionError("Failed to begin render command buffer: " + VKUtils.translateVulkanResult(result)); }
-			}
-			renderPassBeginInfo.free();
-			clearValues.free();
-			cmdBufInfo.free();
-			return renderCommandBuffers;
-		}
-		
+        QueueFamilyIndices indices = new QueueFamilyIndices();
 
-	}
+        try(MemoryStack stack = MemoryStack.stackPush()) {
 
-	public static void setupVulkanDebugCallback()
-	{
-		VKConstants.debugCallback = new VkDebugReportCallbackEXT()
-		{
-			public int invoke(int flags, int objectType, long object, long location, int messageCode, long pLayerPrefix, long pMessage, long pUserData)
-			{
-				System.err.println("ERROR OCCURED: " + VkDebugReportCallbackEXT.getString(pMessage));
-				return 0;
-			}
-		};
-	}
+            IntBuffer queueFamilyCount = stack.ints(0);
+
+            VK12.vkGetPhysicalDeviceQueueFamilyProperties(VkConstants.physicalDevice, queueFamilyCount, null);
+
+            VkQueueFamilyProperties.Buffer queueFamilies = VkQueueFamilyProperties.mallocStack(queueFamilyCount.get(0), stack);
+
+            VK12.vkGetPhysicalDeviceQueueFamilyProperties(VkConstants.physicalDevice, queueFamilyCount, queueFamilies);
+
+            IntBuffer presentSupport = stack.ints(VK12.VK_FALSE);
+
+            for(int i = 0;i < queueFamilies.capacity() || !indices.isComplete();i++) {
+
+                if((queueFamilies.get(i).queueFlags() & VK12.VK_QUEUE_GRAPHICS_BIT) != 0) {
+                    indices.graphicsFamily = i;
+                }
+
+                KHRSurface.vkGetPhysicalDeviceSurfaceSupportKHR(
+                	VkConstants.physicalDevice, 
+                	i, VkConstants.windowSurface, 
+                	presentSupport);
+
+                if(presentSupport.get(0) == VK12.VK_TRUE) {
+                    indices.presentFamily = i;
+                }
+            }
+
+            return indices;
+        }
+    }
+    
+    //some code from LWJGL examples for debugging (has changes)
+    public static String translateVulkanResult(int result) {
+        switch (result) {
+        // Success codes
+        case VK12.VK_SUCCESS:
+            return "Command successfully completed.";
+        case VK12.VK_NOT_READY:
+            return "A fence or query has not yet completed.";
+        case VK12.VK_TIMEOUT:
+            return "A wait operation has not completed in the specified time.";
+        case VK12.VK_EVENT_SET:
+            return "An event is signaled.";
+        case VK12.VK_EVENT_RESET:
+            return "An event is unsignaled.";
+        case VK12.VK_INCOMPLETE:
+            return "A return array was too small for the result.";
+        case KHRSwapchain.VK_SUBOPTIMAL_KHR:
+            return "A swapchain no longer matches the surface properties exactly, but can still be used to present to the surface successfully.";
+
+            // Error codes
+        case VK12.VK_ERROR_OUT_OF_HOST_MEMORY:
+            return "A host memory allocation has failed.";
+        case VK12.VK_ERROR_OUT_OF_DEVICE_MEMORY:
+            return "A device memory allocation has failed.";
+        case VK12.VK_ERROR_INITIALIZATION_FAILED:
+            return "Initialization of an object could not be completed for implementation-specific reasons.";
+        case VK12.VK_ERROR_DEVICE_LOST:
+            return "The logical or physical device has been lost.";
+        case VK12.VK_ERROR_MEMORY_MAP_FAILED:
+            return "Mapping of a memory object has failed.";
+        case VK12.VK_ERROR_LAYER_NOT_PRESENT:
+            return "A requested layer is not present or could not be loaded.";
+        case VK12.VK_ERROR_EXTENSION_NOT_PRESENT:
+            return "A requested extension is not supported.";
+        case VK12.VK_ERROR_FEATURE_NOT_PRESENT:
+            return "A requested feature is not supported.";
+        case VK12.VK_ERROR_INCOMPATIBLE_DRIVER:
+            return "The requested version of Vulkan is not supported by the driver or is otherwise incompatible for implementation-specific reasons.";
+        case VK12.VK_ERROR_TOO_MANY_OBJECTS:
+            return "Too many objects of the type have already been created.";
+        case VK12.VK_ERROR_FORMAT_NOT_SUPPORTED:
+            return "A requested format is not supported on this device.";
+        case KHRSurface.VK_ERROR_SURFACE_LOST_KHR:
+            return "A surface is no longer available.";
+        case KHRSurface.VK_ERROR_NATIVE_WINDOW_IN_USE_KHR:
+            return "The requested window is already connected to a VkSurfaceKHR, or to some other non-Vulkan API.";
+        case KHRSwapchain.VK_ERROR_OUT_OF_DATE_KHR:
+            return "A surface has changed in such a way that it is no longer compatible with the swapchain, and further presentation requests using the "
+                    + "swapchain will fail. Applications must query the new surface properties and recreate their swapchain if they wish to continue" + "presenting to the surface.";
+        case KHRDisplaySwapchain.VK_ERROR_INCOMPATIBLE_DISPLAY_KHR:
+            return "The display used by a swapchain does not use the same presentable image layout, or is incompatible in a way that prevents sharing an" + " image.";
+        case EXTDebugReport.VK_ERROR_VALIDATION_FAILED_EXT:
+            return "A validation layer found an error.";
+        default:
+            return String.format("%s [%d]", "Unknown", Integer.valueOf(result));
+        }
+    }
+	
 }
