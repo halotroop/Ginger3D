@@ -11,7 +11,7 @@ import org.lwjgl.system.Callback;
 import com.github.hydos.ginger.engine.common.fbo.FboCallbackHandler;
 import com.github.hydos.ginger.engine.common.io.Window;
 
-public class Fbo
+public class FrameBufferObject
 {
 	long window;
 	int width = 1024;
@@ -34,7 +34,7 @@ public class Fbo
 	GLFWFramebufferSizeCallback fbCallback;
 	Callback debugProc;
 
-	public Fbo(FboCallbackHandler handler)
+	public FrameBufferObject(FboCallbackHandler handler)
 	{
 		this.handler = handler;
 		this.window = Window.getWindow();

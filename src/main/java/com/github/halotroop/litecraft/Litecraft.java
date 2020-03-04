@@ -21,7 +21,8 @@ import com.github.hydos.ginger.engine.opengl.api.*;
 import com.github.hydos.ginger.engine.opengl.postprocessing.PostProcessing;
 import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
 import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
-import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
+import com.github.hydos.ginger.engine.opengl.utils.*;
+
 import tk.valoeghese.gateways.client.io.*;
 
 public class Litecraft extends Game
@@ -98,7 +99,7 @@ public class Litecraft extends Game
 	public void renderWorld(Game game)
 	{
 		GameData data = game.data;
-		GingerUtils.preRenderScene(((GingerGL)engine).getRegistry().masterRenderer);
+		GLUtils.preRenderScene(((GingerGL)engine).getRegistry().masterRenderer);
 		((GingerGL)engine).contrastFbo.bindFBO();
 		((GingerGL)engine).getRegistry().masterRenderer.renderScene(data.entities, data.normalMapEntities, data.lights, data.camera, data.clippingPlane);
 		((GingerGL)engine).contrastFbo.unbindFBO();
@@ -129,7 +130,7 @@ public class Litecraft extends Game
 			KeyCallbackHandler.trackWindow(Window.getWindow());
 			MouseCallbackHandler.trackWindow(Window.getWindow());
 			// set up ginger utilities
-			GingerUtils.init();
+			GLUtils.init();
 			
 			switch (Window.renderAPI)
 			{

@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.opengl.api;
+package com.github.hydos.ginger.engine.opengl.utils;
 
 import com.github.hydos.ginger.engine.common.font.TextMaster;
 import com.github.hydos.ginger.engine.common.obj.ModelLoader;
@@ -7,7 +7,7 @@ import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
 import com.github.hydos.ginger.engine.opengl.render.models.*;
 import com.github.hydos.ginger.engine.opengl.render.texture.ModelTexture;
 
-public class GingerUtils
+public class GLUtils
 {
 	public static GLTexturedModel createTexturedModel(String texturePath, String modelPath)
 	{

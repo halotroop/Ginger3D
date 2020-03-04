@@ -6,7 +6,7 @@ import com.github.hydos.ginger.engine.common.api.game.Game;
 import com.github.hydos.ginger.engine.common.elements.buttons.TextureButton;
 import com.github.hydos.ginger.engine.common.font.GUIText;
 import com.github.hydos.ginger.engine.common.screen.Screen;
-import com.github.hydos.ginger.engine.opengl.postprocessing.Fbo;
+import com.github.hydos.ginger.engine.opengl.postprocessing.FrameBufferObject;
 import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
 
 /** Used if a game wants to access engine variables safely */
@@ -20,7 +20,7 @@ public class GingerRegister
 
 	public List<GUIText> texts;
 	public List<TextureButton> guiButtons;
-	public List<Fbo> fbos;
+	public List<FrameBufferObject> frameBufferObjects;
 	public Game game;
 	public Screen currentScreen;
 	public boolean wireframe = false;
