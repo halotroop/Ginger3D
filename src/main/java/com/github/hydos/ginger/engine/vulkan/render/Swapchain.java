@@ -109,18 +109,14 @@ public class Swapchain
                 imageCount.put(0, swapChainSupport.capabilities.maxImageCount());
             }
 
-            VkSwapchainCreateInfoKHR createInfo = VkSwapchainCreateInfoKHR.callocStack(stack);
-
-            createInfo.sType(KHRSwapchain.VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR);
-            createInfo.surface(VKConstants.windowSurface);
-
-            // Image settings
-            createInfo.minImageCount(imageCount.get(0));
-            createInfo.imageFormat(surfaceFormat.format());
-            createInfo.imageColorSpace(surfaceFormat.colorSpace());
-            createInfo.imageExtent(extent);
-            createInfo.imageArrayLayers(1);
-            createInfo.imageUsage(VK12.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
+            VkSwapchainCreateInfoKHR createInfo = VkSwapchainCreateInfoKHR.callocStack(stack)
+            	.sType(KHRSwapchain.VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR)
+            	.minImageCount(imageCount.get(0))
+            	.imageFormat(surfaceFormat.format())
+            	.imageColorSpace(surfaceFormat.colorSpace())
+            	.imageExtent(extent)
+            	.imageArrayLayers(1)
+            	.imageUsage(VK12.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
 
             QueueFamilyIndices indices = VKUtils.findQueueFamilies();
 
@@ -140,8 +136,7 @@ public class Swapchain
 
             LongBuffer pSwapChain = stack.longs(VK12.VK_NULL_HANDLE);
 
-            int result = KHRSwapchain.vkCreateSwapchainKHR(
-            	VKConstants.device, createInfo, null, pSwapChain);
+            int result = KHRSwapchain.vkCreateSwapchainKHR(VKConstants.device, createInfo, null, pSwapChain);
             if(result != VK12.VK_SUCCESS) {
                 throw new RuntimeException("Failed to create swap chain reason: " + VKUtils.translateVulkanResult(result));
             }
