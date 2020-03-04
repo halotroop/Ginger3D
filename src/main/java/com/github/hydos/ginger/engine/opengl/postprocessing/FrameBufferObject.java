@@ -8,10 +8,10 @@ import java.nio.ByteBuffer;
 import org.lwjgl.glfw.*;
 import org.lwjgl.system.Callback;
 
-import com.github.hydos.ginger.engine.common.fbo.FboCallbackHandler;
+import com.github.hydos.ginger.engine.common.fbo.FBOCallbackHandler;
 import com.github.hydos.ginger.engine.common.io.Window;
 
-public class Fbo
+public class FrameBufferObject
 {
 	long window;
 	int width = 1024;
@@ -20,7 +20,7 @@ public class Fbo
 	boolean destroyed;
 	Object lock = new Object();
 	/* cool ginger feature which handles fbos once they need to be rendered */
-	public FboCallbackHandler handler;
+	public FBOCallbackHandler handler;
 	/* Multisampled FBO objects */
 	public int multisampledColorRenderBuffer;
 	int multisampledDepthRenderBuffer;
@@ -34,7 +34,7 @@ public class Fbo
 	GLFWFramebufferSizeCallback fbCallback;
 	Callback debugProc;
 
-	public Fbo(FboCallbackHandler handler)
+	public FrameBufferObject(FBOCallbackHandler handler)
 	{
 		this.handler = handler;
 		this.window = Window.getWindow();

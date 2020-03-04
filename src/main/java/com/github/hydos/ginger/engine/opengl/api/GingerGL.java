@@ -19,7 +19,7 @@ public class GingerGL extends GingerEngine
 {
 	public MousePicker picker;
 	public FontType globalFont;
-	public Fbo contrastFbo;
+	public FrameBufferObject contrastFbo;
 
 	public void cleanup()
 	{
@@ -60,9 +60,9 @@ public class GingerGL extends GingerEngine
 		return text;
 	}
 
-	public void renderOverlays(Game game)
+	public void renderOverlays()
 	{
-		getRegistry().masterRenderer.renderGuis(game.data.guis);
+		getRegistry().masterRenderer.renderGuis(getRegistry().game.data.guis);
 		if (getRegistry().currentScreen != null) getRegistry().masterRenderer.renderGuis(getRegistry().currentScreen.elements);
 		TextMaster.render();
 	}
@@ -77,7 +77,7 @@ public class GingerGL extends GingerEngine
 		getRegistry().registerGame(game);
 		timer = new Timer(game.data.tickSpeed);
 		timer.addTickListener(gameTickListener);
-		contrastFbo = new Fbo(new ContrastChanger());
+		contrastFbo = new FrameBufferObject(new ContrastChanger());
 		getRegistry().masterRenderer = masterRenderer;
 		picker = new MousePicker(game.data.camera, masterRenderer.getProjectionMatrix());
 		PostProcessing.init();

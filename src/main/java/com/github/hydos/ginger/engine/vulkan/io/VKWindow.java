@@ -8,14 +8,13 @@ import org.lwjgl.vulkan.VK12;
 
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.vulkan.VKConstants;
-import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
+import com.github.hydos.ginger.engine.vulkan.utils.*;
 
 /**
  * used for window related vulkan only things
  * @author hydos
- *
  */
-public class VkWindow
+public class VKWindow
 {
 	public static void createSurface()
 	{

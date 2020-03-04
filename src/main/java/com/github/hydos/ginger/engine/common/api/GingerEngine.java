@@ -1,11 +1,10 @@
 package com.github.hydos.ginger.engine.common.api;
 
-import com.github.hydos.ginger.engine.common.api.game.Game;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.screen.Screen;
 import com.github.hydos.ginger.engine.common.util.Timer;
 import com.github.hydos.ginger.engine.common.util.Timer.TickListener;
-import com.github.hydos.ginger.engine.opengl.api.GingerUtils;
+import com.github.hydos.ginger.engine.opengl.utils.GLUtils;
 
 public abstract class GingerEngine
 {
@@ -42,7 +41,7 @@ public abstract class GingerEngine
 	// Things that should be run as often as possible, without limits
 	public void update()
 	{
-		GingerUtils.update();
+		GLUtils.update();
 		Window.update();
 	}
 
@@ -50,5 +49,5 @@ public abstract class GingerEngine
 
 	public abstract void openScreen(Screen screen);
 
-	public abstract void renderOverlays(Game game);
+	public abstract void renderOverlays();
 }

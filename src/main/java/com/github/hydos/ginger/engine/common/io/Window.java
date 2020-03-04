@@ -48,7 +48,7 @@ public class Window
 	static double newY = 0;
 	public static GLCapabilities glContext;
 	public static int actualWidth, actualHeight;
-	//temp stuff to test out fbo fixes
+	// FIXME: temp stuff to test out FBO fixes
 	private static int oldWindowWidth = Window.getWidth();
 	private static int oldWindowHeight = Window.getHeight();
 

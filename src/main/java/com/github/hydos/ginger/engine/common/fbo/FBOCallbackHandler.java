@@ -1,6 +1,6 @@
 package com.github.hydos.ginger.engine.common.fbo;
 
-public abstract class FboCallbackHandler
+public abstract class FBOCallbackHandler
 {
 	public void cleanUp()
 	{}
