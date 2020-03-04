@@ -166,7 +166,12 @@ public class VKModelData
             long stagingBuffer = pBuffer.get(0);
             long stagingBufferMemory = pBufferMemory.get(0);
 
+            PointerBuffer data = stack.mallocPointer(1);
 
+            VK12.vkMapMemory(VKRegister.device, stagingBufferMemory, 0, bufferSize, 0, data);
+            {
+                memcpy(data.getByteBuffer(0, (int) bufferSize), mesh.getVertices());
+            }
             VK12.vkUnmapMemory(VKRegister.device, stagingBufferMemory);
 
             createBuffer(bufferSize,

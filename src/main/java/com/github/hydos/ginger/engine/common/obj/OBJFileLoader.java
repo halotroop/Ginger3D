@@ -59,7 +59,7 @@ public class OBJFileLoader
 	{
 		float[] verticies = new float[vertexList.length * 3];
 		float[] textureCoords = new float[vertexList.length * 2];
-		//texture coords where stored in the vertices so there should be as many as there are vertices
+		//texture cords where stored in the vertices so there should be as many as there are vertices
 		int j = 0;
 		int i = 0;
 		for (Vertex vertex : vertexList)
