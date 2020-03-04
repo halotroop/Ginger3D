@@ -127,15 +127,28 @@ public class VKModelData
     }
 
     
-    private void memcpy(ByteBuffer buffer, float[] indices) {
+    private void memcpy(ByteBuffer buffer, float[] vertices) {
 
-        for(float index : indices) {
-            buffer.putFloat(index);
+//        buffer.putFloat(vertex.color.x());
+//        buffer.putFloat(vertex.color.y());
+//        buffer.putFloat(vertex.color.z());
+//
+//        buffer.putFloat(vertex.texCoords.x());
+//        buffer.putFloat(vertex.texCoords.y());
+        int i = 0;
+    	for(float vertex : vertices) {
+            buffer.putFloat(vertex);
+            if(i == 2) {
+            	i = 0;
+                buffer.putFloat(1);
+                buffer.putFloat(1);
+                buffer.putFloat(1);
+            }
+            i++;
+            
         }
-
-        buffer.rewind();
     }
-	
+
     private void createVertexBuffer() {
 
         try(MemoryStack stack = stackPush()) {
@@ -153,12 +166,7 @@ public class VKModelData
             long stagingBuffer = pBuffer.get(0);
             long stagingBufferMemory = pBufferMemory.get(0);
 
-            PointerBuffer data = stack.mallocPointer(1);
 
-            VK12.vkMapMemory(VKRegister.device, stagingBufferMemory, 0, bufferSize, 0, data);
-            {
-                memcpy(data.getByteBuffer(0, (int) bufferSize), mesh.getVertices());
-            }
             VK12.vkUnmapMemory(VKRegister.device, stagingBufferMemory);
 
             createBuffer(bufferSize,
@@ -177,7 +185,7 @@ public class VKModelData
         }
     }
     
-    private void memcpyIndices(ByteBuffer buffer, int[] indices) {
+    private void memcpy(ByteBuffer buffer, int[] indices) {
 
         for(int index : indices) {
             buffer.putInt(index);
@@ -207,13 +215,13 @@ public class VKModelData
 
             VK12.vkMapMemory(VKRegister.device, stagingBufferMemory, 0, bufferSize, 0, data);
             {
-            	memcpyIndices(data.getByteBuffer(0, (int) bufferSize), mesh.getIndices());
+            	memcpy(data.getByteBuffer(0, (int) bufferSize), mesh.getIndices());
             }
             VK12.vkUnmapMemory(VKRegister.device, stagingBufferMemory);
 
             createBuffer(bufferSize,
             	VK12.VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK12.VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-                    VK12.VK_MEMORY_HEAP_DEVICE_LOCAL_BIT,
+            	VK12.VK_MEMORY_HEAP_DEVICE_LOCAL_BIT,
                     pBuffer,
                     pBufferMemory);
 

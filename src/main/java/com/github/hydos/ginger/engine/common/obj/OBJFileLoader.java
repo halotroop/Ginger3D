@@ -74,6 +74,8 @@ public class OBJFileLoader
 			textureCoords[j * 2 + 1] = 1 - vertex.getTextureIndex().y;
 			j++;
 		}
-		return new Mesh(verticies, textureCoords, new float[normals.sizeof()], indicesList, i);
+		Mesh mesh = new Mesh(verticies, textureCoords, new float[normals.sizeof()], indicesList, i);
+		mesh.vkVertices = vertexList;
+		return mesh;
 	}
 }

@@ -7,6 +7,7 @@ public class Mesh
 	private float[] normals;
 	private int[] indices;
 	private float furthestPoint;
+	public Vertex[] vkVertices;//may not be set only used for vulkan
 
 	public Mesh(float[] vertices, float[] textureCoords, float[] normals, int[] indices,
 		float furthestPoint)
