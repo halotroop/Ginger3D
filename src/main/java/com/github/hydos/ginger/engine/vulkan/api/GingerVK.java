@@ -1,18 +1,16 @@
 package com.github.hydos.ginger.engine.vulkan.api;
 
 import com.github.hydos.ginger.engine.vulkan.io.VkWindow;
-import com.github.hydos.ginger.engine.vulkan.utils.VkUtils;
+import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
 
-public class GingerVk
+public class GingerVK
 {
-	
-	public void start(String gameName) {
+	public void start(String gameName)
+	{
 		System.out.println("Game " + gameName + " successfuly started in Vulkan mode.");
-		VkUtils.createInstance();
+		VKUtils.createInstance();
 		VkWindow.createSurface();
-		VkUtils.createPhysicalDevice();
-		VkUtils.createLogicalDevice();
+		VKUtils.createPhysicalDevice();
+		VKUtils.createLogicalDevice();
 	}
-	
-	
 }

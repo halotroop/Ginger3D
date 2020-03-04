@@ -8,9 +8,9 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
 
-import com.github.hydos.ginger.engine.vulkan.VkConstants;
+import com.github.hydos.ginger.engine.vulkan.VKConstants;
 
-public class VkUtils
+public class VKUtils
 {
 	
     private static PointerBuffer getRequiredExtensions() {
@@ -50,7 +50,7 @@ public class VkUtils
                 throw new RuntimeException("Failed to create instance");
             }
 
-            VkConstants.vulkanInstance = new VkInstance(instancePtr.get(0), createInfo);
+            VKConstants.vulkanInstance = new VkInstance(instancePtr.get(0), createInfo);
         }
     }
 	
@@ -59,7 +59,7 @@ public class VkUtils
 
             IntBuffer deviceCount = stack.ints(0);
 
-            VK12.vkEnumeratePhysicalDevices(VkConstants.vulkanInstance, deviceCount, null);
+            VK12.vkEnumeratePhysicalDevices(VKConstants.vulkanInstance, deviceCount, null);
 
             if(deviceCount.get(0) == 0) {
                 throw new RuntimeException("Failed to find GPUs with Vulkan support");
@@ -67,13 +67,13 @@ public class VkUtils
 
             PointerBuffer ppPhysicalDevices = stack.mallocPointer(deviceCount.get(0));
 
-            VK12.vkEnumeratePhysicalDevices(VkConstants.vulkanInstance, deviceCount, ppPhysicalDevices);
+            VK12.vkEnumeratePhysicalDevices(VKConstants.vulkanInstance, deviceCount, ppPhysicalDevices);
 
             VkPhysicalDevice device = null;
 
             for(int i = 0;i < ppPhysicalDevices.capacity();i++) {
 
-                device = new VkPhysicalDevice(ppPhysicalDevices.get(i), VkConstants.vulkanInstance);
+                device = new VkPhysicalDevice(ppPhysicalDevices.get(i), VKConstants.vulkanInstance);
 
             }
 
@@ -81,7 +81,7 @@ public class VkUtils
                 throw new RuntimeException("Failed to find a suitable GPU");
             }
 
-            VkConstants.physicalDevice = device;
+            VKConstants.physicalDevice = device;
         }
 	}
 	
@@ -129,19 +129,19 @@ public class VkUtils
 
             PointerBuffer pDevice = stack.pointers(VK12.VK_NULL_HANDLE);
 
-            if(VK12.vkCreateDevice(VkConstants.physicalDevice, createInfo, null, pDevice) != VK12.VK_SUCCESS) {
+            if(VK12.vkCreateDevice(VKConstants.physicalDevice, createInfo, null, pDevice) != VK12.VK_SUCCESS) {
                 throw new RuntimeException("Failed to create logical device");
             }
 
-            VkConstants.device = new VkDevice(pDevice.get(0), VkConstants.physicalDevice, createInfo);
+            VKConstants.device = new VkDevice(pDevice.get(0), VKConstants.physicalDevice, createInfo);
 
             PointerBuffer pQueue = stack.pointers(VK12.VK_NULL_HANDLE);
 
-            VK12.vkGetDeviceQueue(VkConstants.device, indices.graphicsFamily, 0, pQueue);
-            VkConstants.graphicsQueue = new VkQueue(pQueue.get(0), VkConstants.device);
+            VK12.vkGetDeviceQueue(VKConstants.device, indices.graphicsFamily, 0, pQueue);
+            VKConstants.graphicsQueue = new VkQueue(pQueue.get(0), VKConstants.device);
 
-            VK12.vkGetDeviceQueue(VkConstants.device, indices.presentFamily, 0, pQueue);
-            VkConstants.presentQueue = new VkQueue(pQueue.get(0), VkConstants.device);
+            VK12.vkGetDeviceQueue(VKConstants.device, indices.presentFamily, 0, pQueue);
+            VKConstants.presentQueue = new VkQueue(pQueue.get(0), VKConstants.device);
 		}
 	}
 	
@@ -153,11 +153,11 @@ public class VkUtils
 
             IntBuffer queueFamilyCount = stack.ints(0);
 
-            VK12.vkGetPhysicalDeviceQueueFamilyProperties(VkConstants.physicalDevice, queueFamilyCount, null);
+            VK12.vkGetPhysicalDeviceQueueFamilyProperties(VKConstants.physicalDevice, queueFamilyCount, null);
 
             VkQueueFamilyProperties.Buffer queueFamilies = VkQueueFamilyProperties.mallocStack(queueFamilyCount.get(0), stack);
 
-            VK12.vkGetPhysicalDeviceQueueFamilyProperties(VkConstants.physicalDevice, queueFamilyCount, queueFamilies);
+            VK12.vkGetPhysicalDeviceQueueFamilyProperties(VKConstants.physicalDevice, queueFamilyCount, queueFamilies);
 
             IntBuffer presentSupport = stack.ints(VK12.VK_FALSE);
 
@@ -168,8 +168,8 @@ public class VkUtils
                 }
 
                 KHRSurface.vkGetPhysicalDeviceSurfaceSupportKHR(
-                	VkConstants.physicalDevice, 
-                	i, VkConstants.windowSurface, 
+                	VKConstants.physicalDevice, 
+                	i, VKConstants.windowSurface, 
                 	presentSupport);
 
                 if(presentSupport.get(0) == VK12.VK_TRUE) {

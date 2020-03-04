@@ -2,7 +2,7 @@ package com.github.hydos.ginger.engine.vulkan;
 
 import org.lwjgl.vulkan.*;
 
-public class VkConstants
+public class VKConstants
 {
 	
 	public static VkInstance vulkanInstance;
