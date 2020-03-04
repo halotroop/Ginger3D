@@ -10,7 +10,7 @@ import com.github.hydos.ginger.engine.vulkan.api.*;
  *         the non ARR vulkan test example */
 public class VulkanStarter
 {
-    private static class HelloTriangleApplication {
+    private static class BasicGinger2VulkanExample {
 
         private static final int WIDTH = 800;
         private static final int HEIGHT = 600;
@@ -53,7 +53,7 @@ public class VulkanStarter
 
     public static void main(String[] args) {
 
-        HelloTriangleApplication app = new HelloTriangleApplication();
+        BasicGinger2VulkanExample app = new BasicGinger2VulkanExample();
 
         app.run();
     }
