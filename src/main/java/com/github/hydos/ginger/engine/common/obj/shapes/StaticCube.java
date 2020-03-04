@@ -83,8 +83,7 @@ public class StaticCube
 
 	public static Mesh getCube()
 	{
-		if (mesh == null)
-		{ mesh = new Mesh(vertices, textureCoords, new float[vertices.length], indices, vertices.length); }
+		if (mesh == null) mesh = new Mesh(vertices, textureCoords, new float[vertices.length], indices, vertices.length);
 		return mesh;
 	}
 }

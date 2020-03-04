@@ -60,9 +60,9 @@ public class GingerGL extends GingerEngine
 		return text;
 	}
 
-	public void renderOverlays(Game game)
+	public void renderOverlays()
 	{
-		getRegistry().masterRenderer.renderGuis(game.data.guis);
+		getRegistry().masterRenderer.renderGuis(getRegistry().game.data.guis);
 		if (getRegistry().currentScreen != null) getRegistry().masterRenderer.renderGuis(getRegistry().currentScreen.elements);
 		TextMaster.render();
 	}

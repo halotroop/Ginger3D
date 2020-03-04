@@ -81,7 +81,7 @@ public class Litecraft extends Game
 		// If there's a world, render it!
 		if (this.world != null) renderWorld(this);
 		// Render any overlays (GUIs, HUDs)
-		this.engine.renderOverlays(this);
+		this.engine.renderOverlays();
 		// Put what's stored in the inactive framebuffer on the screen
 		Window.swapBuffers();
 	}
@@ -104,7 +104,6 @@ public class Litecraft extends Game
 		((GingerGL)engine).getRegistry().masterRenderer.renderScene(data.entities, data.normalMapEntities, data.lights, data.camera, data.clippingPlane);
 		((GingerGL)engine).contrastFbo.unbindFBO();
 		PostProcessing.doPostProcessing(((GingerGL)engine).contrastFbo.colorTexture);
-		if (data.handleGuis) ((GingerGL)engine).renderOverlays(game);
 	}
 	
 	public void update()

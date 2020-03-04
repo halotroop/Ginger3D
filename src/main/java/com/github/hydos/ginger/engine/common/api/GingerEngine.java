@@ -1,6 +1,5 @@
 package com.github.hydos.ginger.engine.common.api;
 
-import com.github.hydos.ginger.engine.common.api.game.Game;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.screen.Screen;
 import com.github.hydos.ginger.engine.common.util.Timer;
@@ -50,5 +49,5 @@ public abstract class GingerEngine
 
 	public abstract void openScreen(Screen screen);
 
-	public abstract void renderOverlays(Game game);
+	public abstract void renderOverlays();
 }
