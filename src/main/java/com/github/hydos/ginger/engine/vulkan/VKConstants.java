@@ -2,9 +2,10 @@ package com.github.hydos.ginger.engine.vulkan;
 
 import org.lwjgl.vulkan.*;
 
-public class VkConstants
+public class VKConstants
 {
 	
+	public static final long UINT64_MAX = -1L;
 	public static VkInstance vulkanInstance;
 	public static VkPhysicalDevice physicalDevice;
 	public static VkDevice device;
