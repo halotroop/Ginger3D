@@ -178,14 +178,11 @@ public class World implements BlockAccess, WorldGenConstants
 	public void render(BlockRenderer blockRenderer)
 	{
 		blockRenderer.prepareModel(this.dummy.getModel());
-		try
+		this.chunks.forEach((pos, c) -> 
 		{
-			this.chunks.forEach((pos, c) -> c.render(blockRenderer));
-		}
-		catch (NullPointerException e)
-		{
-			System.out.println("Null chunk - we should look into fixing this");
-		}
+			if (c != null && c.isFullyGenerated())
+				c.render(blockRenderer);
+		});
 		blockRenderer.unbindModel();
 	}
 

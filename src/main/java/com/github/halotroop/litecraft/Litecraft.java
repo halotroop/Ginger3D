@@ -37,15 +37,19 @@ public class Litecraft extends Game
 	public Vector4i dbgStats = new Vector4i();
 	private long frameTimer;
 
-	public Litecraft()
+	public Litecraft(int windowWidth, int windowHeight, float frameLimit)
 	{
 		Litecraft.INSTANCE = this;
 		// set constants
 		this.setupConstants();
-		this.setupGinger(1280, 720, 60);
-		Blocks.init(); // make sure blocks are initialised
+		this.setupGinger(windowWidth, windowHeight, frameLimit);
+		// make sure blocks are initialised ??? (Currently does nothing)
+		Blocks.init();
 		this.frameTimer = System.currentTimeMillis();
-		setupKeybinds(); // setup keybinds
+		// setup keybinds
+		setupKeybinds();
+		// Open the title screen if nothing is already open.
+		if (GingerRegister.getInstance().currentScreen == null && world == null) ((GingerGL)engine).openScreen(new TitleScreen());
 		// start the game loop
 		this.engine.startGameLoop();
 	}
@@ -79,7 +83,7 @@ public class Litecraft extends Game
 		// Render shadows
 		GingerRegister.getInstance().masterRenderer.renderShadowMap(data.entities, data.lights.get(0));
 		// If there's a world, render it!
-		if (this.world != null) renderWorld(this);
+		if (this.world != null) renderWorld();
 		// Render any overlays (GUIs, HUDs)
 		this.engine.renderOverlays();
 		// Put what's stored in the inactive framebuffer on the screen
@@ -96,14 +100,17 @@ public class Litecraft extends Game
 		this.frameTimer += 1000;
 	}
 	
-	public void renderWorld(Game game)
+	public void renderWorld()
 	{
-		GameData data = game.data;
-		GLUtils.preRenderScene(((GingerGL)engine).getRegistry().masterRenderer);
-		((GingerGL)engine).contrastFbo.bindFBO();
-		((GingerGL)engine).getRegistry().masterRenderer.renderScene(data.entities, data.normalMapEntities, data.lights, data.camera, data.clippingPlane);
-		((GingerGL)engine).contrastFbo.unbindFBO();
-		PostProcessing.doPostProcessing(((GingerGL)engine).contrastFbo.colorTexture);
+		GameData data = GingerRegister.getInstance().game.data;
+		if (Window.renderAPI == RenderAPI.OpenGL)
+		{
+			GLUtils.preRenderScene(((GingerGL)engine).getRegistry().masterRenderer);
+			((GingerGL)engine).contrastFbo.bindFBO();
+			((GingerGL)engine).getRegistry().masterRenderer.renderScene(data.entities, data.normalMapEntities, data.lights, data.camera, data.clippingPlane);
+			((GingerGL)engine).contrastFbo.unbindFBO();
+			PostProcessing.doPostProcessing(((GingerGL)engine).contrastFbo.colorTexture);
+		}
 	}
 	
 	public void update()
@@ -180,10 +187,7 @@ public class Litecraft extends Game
 	@Override
 	public void tick()
 	{
-		tps += 1;
-		// Open the title screen if it's not already open.
-		if (GingerRegister.getInstance().currentScreen == null && world == null) ((GingerGL)engine).openScreen(new TitleScreen());
-		
+		tps += 1;		
 		if (this.player instanceof PlayerEntity && camera != null)
 		{
 			Input.invokeAllListeners();

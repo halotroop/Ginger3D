@@ -11,6 +11,7 @@ public class StarterGL
 		System.out.println("GLFW version: " + GLFW.glfwGetVersionString());
 		System.out.println("LWJGL version: " + Version.getVersion());
 		// Put SoundSystem version here
-		new Litecraft();
+		// TODO: Put a commandline reader here to check for desired width, height, and frame limit!
+		new Litecraft(1280, 720, 60);
 	}
 }
