@@ -189,7 +189,7 @@ public class Litecraft extends Game
 		{
 			Input.invokeAllListeners();
 			((PlayerEntity) this.player).updateMovement();
-			data.camera.updateMovement();
+			camera.updateMovement();
 		}
 	}
 	
