@@ -9,7 +9,7 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
 
 import com.github.hydos.ginger.VulkanLitecraft;
-import com.github.hydos.ginger.engine.vulkan.model.VKVertex;
+import com.github.hydos.ginger.VulkanLitecraft.VulkanDemoGinger2.Vertex;
 import com.github.hydos.ginger.engine.vulkan.shaders.*;
 import com.github.hydos.ginger.engine.vulkan.shaders.VKShaderUtils.SPIRV;
 
@@ -47,8 +47,8 @@ public class VKPipelineManager
 
             VkPipelineVertexInputStateCreateInfo vertexInputInfo = VkPipelineVertexInputStateCreateInfo.callocStack(stack);
             vertexInputInfo.sType(VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO);
-            vertexInputInfo.pVertexBindingDescriptions(VKVertex.getBindingDescription());
-            vertexInputInfo.pVertexAttributeDescriptions(VKVertex.getAttributeDescriptions());
+            vertexInputInfo.pVertexBindingDescriptions(Vertex.getBindingDescription());
+            vertexInputInfo.pVertexAttributeDescriptions(Vertex.getAttributeDescriptions());
 
             // ASSEMBLY STAGE
 

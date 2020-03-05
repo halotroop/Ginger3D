@@ -78,6 +78,7 @@ public class OBJFileLoader
 			j++;
 		}
 		Mesh mesh = new Mesh(verticies, textureCoords, new float[normals.sizeof()], indicesList, i);
+		mesh.vkVertices = vertexList;
 		return mesh;
 	}
 }
