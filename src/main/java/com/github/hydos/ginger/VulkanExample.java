@@ -1512,7 +1512,7 @@ public class VulkanExample {
                 renderPassInfo.renderArea(renderArea);
 
                 VkClearValue.Buffer clearValues = VkClearValue.callocStack(2, stack);
-                clearValues.get(0).color().float32(stack.floats(0.0f, 0.0f, 0.0f, 1.0f));
+                clearValues.get(0).color().float32(stack.floats(Window.getColour().x / 255, Window.getColour().y / 255, Window.getColour().z / 255, 1.0f)); //The screens clear colour
                 clearValues.get(1).depthStencil().set(1.0f, 0);
 
                 renderPassInfo.pClearValues(clearValues);
