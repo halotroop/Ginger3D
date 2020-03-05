@@ -1,7 +1,6 @@
 package com.github.hydos.ginger;
 
 import static java.util.stream.Collectors.toSet;
-import static org.lwjgl.assimp.Assimp.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFWVulkan.*;
 import static org.lwjgl.stb.STBImage.*;
@@ -12,7 +11,6 @@ import static org.lwjgl.vulkan.KHRSurface.*;
 import static org.lwjgl.vulkan.KHRSwapchain.*;
 import static org.lwjgl.vulkan.VK10.*;
 
-import java.io.File;
 import java.lang.Math;
 import java.net.*;
 import java.nio.*;
@@ -27,9 +25,9 @@ import org.lwjgl.vulkan.*;
 
 import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
+import com.github.hydos.ginger.engine.common.obj.*;
 import com.github.hydos.ginger.engine.vulkan.misc.*;
-import com.github.hydos.ginger.engine.vulkan.misc.ModelLoader.Model;
-import com.github.hydos.ginger.engine.vulkan.pipelines.VKPipelineManager;
+import com.github.hydos.ginger.engine.vulkan.model.VKVertex;
 import com.github.hydos.ginger.engine.vulkan.swapchain.VKSwapchainManager;
 
 public class VulkanLitecraft {
@@ -124,66 +122,6 @@ public class VulkanLitecraft {
             }
         }
 
-        public static class Vertex {
-
-            private static final int SIZEOF = (3 + 3 + 2) * Float.BYTES;
-            private static final int OFFSETOF_POS = 0;
-            private static final int OFFSETOF_COLOR = 3 * Float.BYTES;
-            private static final int OFFSETOF_TEXTCOORDS = (3 + 3) * Float.BYTES;
-
-            private Vector3fc pos;
-            private Vector3fc color;
-            private Vector2fc texCoords;
-
-            public Vertex(Vector3fc pos, Vector3fc color, Vector2fc texCoords) {
-                this.pos = pos;
-                this.color = color;
-                this.texCoords = texCoords;
-            }
-
-            public static VkVertexInputBindingDescription.Buffer getBindingDescription() {
-
-                VkVertexInputBindingDescription.Buffer bindingDescription =
-                        VkVertexInputBindingDescription.callocStack(1);
-
-                bindingDescription.binding(0);
-                bindingDescription.stride(Vertex.SIZEOF);
-                bindingDescription.inputRate(VK_VERTEX_INPUT_RATE_VERTEX);
-
-                return bindingDescription;
-            }
-
-            public static VkVertexInputAttributeDescription.Buffer getAttributeDescriptions() {
-
-                VkVertexInputAttributeDescription.Buffer attributeDescriptions =
-                        VkVertexInputAttributeDescription.callocStack(3);
-
-                // Position
-                VkVertexInputAttributeDescription posDescription = attributeDescriptions.get(0);
-                posDescription.binding(0);
-                posDescription.location(0);
-                posDescription.format(VK_FORMAT_R32G32B32_SFLOAT);
-                posDescription.offset(OFFSETOF_POS);
-
-                // Color
-                VkVertexInputAttributeDescription colorDescription = attributeDescriptions.get(1);
-                colorDescription.binding(0);
-                colorDescription.location(1);
-                colorDescription.format(VK_FORMAT_R32G32B32_SFLOAT);
-                colorDescription.offset(OFFSETOF_COLOR);
-
-                // Texture coordinates
-                VkVertexInputAttributeDescription texCoordsDescription = attributeDescriptions.get(2);
-                texCoordsDescription.binding(0);
-                texCoordsDescription.location(2);
-                texCoordsDescription.format(VK_FORMAT_R32G32_SFLOAT);
-                texCoordsDescription.offset(OFFSETOF_TEXTCOORDS);
-
-                return attributeDescriptions.rewind();
-            }
-
-        }
-
         // ======= FIELDS ======= //
 
         private VkInstance instance;
@@ -227,7 +165,7 @@ public class VulkanLitecraft {
         private static long textureImageView;
         private static long textureSampler;
 
-        private Vertex[] vertices;
+        private VKVertex[] vertices;
         public static int[] indices;
         private static long vertexBuffer;
         private long vertexBufferMemory;
@@ -1207,27 +1145,23 @@ public class VulkanLitecraft {
 
         private void loadModel() {
 
-            File modelFile = new File(ClassLoader.getSystemClassLoader().getResource("models/chalet.obj").getFile());
+            Mesh optimisedMesh = ModelLoader.getCubeMesh();
 
-            Model model = ModelLoader.loadModel(modelFile, aiProcess_FlipUVs | aiProcess_DropNormals);
+            final int vertexCount = optimisedMesh.vertices.length;
 
-            final int vertexCount = model.positions.size();
-
-            vertices = new Vertex[vertexCount];
+            vertices = new VKVertex[vertexCount];
 
             final Vector3fc color = new Vector3f(1.0f, 1.0f, 1.0f);
 
             for(int i = 0;i < vertexCount;i++) {
-                vertices[i] = new Vertex(
-                        model.positions.get(i),
-                        color,
-                        model.texCoords.get(i));
+            	System.out.println(optimisedMesh.positions.get(i));
+                vertices[i] = new VKVertex(optimisedMesh.positions.get(i), color, optimisedMesh.texCoords.get(i));
             }
 
-            indices = new int[model.indices.size()];
+            indices = new int[optimisedMesh.indices.length];
 
             for(int i = 0;i < indices.length;i++) {
-                indices[i] = model.indices.get(i);
+                indices[i] = optimisedMesh.indices.length;
             }
         }
 
@@ -1235,7 +1169,7 @@ public class VulkanLitecraft {
 
             try(MemoryStack stack = stackPush()) {
 
-                long bufferSize = Vertex.SIZEOF * vertices.length;
+                long bufferSize = VKVertex.SIZEOF * vertices.length;
 
                 LongBuffer pBuffer = stack.mallocLong(1);
                 LongBuffer pBufferMemory = stack.mallocLong(1);
@@ -1518,8 +1452,8 @@ public class VulkanLitecraft {
             }
         }
 
-        private void memcpy(ByteBuffer buffer, Vertex[] vertices) {
-            for(Vertex vertex : vertices) {
+        private void memcpy(ByteBuffer buffer, VKVertex[] vertices) {
+            for(VKVertex vertex : vertices) {
                 buffer.putFloat(vertex.pos.x());
                 buffer.putFloat(vertex.pos.y());
                 buffer.putFloat(vertex.pos.z());
