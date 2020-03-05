@@ -10,6 +10,7 @@ import com.github.hydos.ginger.engine.common.api.GingerRegister;
 import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.math.Maths;
+import com.github.hydos.ginger.engine.common.render.Renderer;
 import com.github.hydos.ginger.engine.opengl.render.*;
 import com.github.hydos.ginger.engine.opengl.render.models.*;
 import com.github.hydos.ginger.engine.opengl.render.shaders.StaticShader;

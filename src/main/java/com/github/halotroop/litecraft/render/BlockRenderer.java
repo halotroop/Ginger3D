@@ -9,7 +9,7 @@ import com.github.hydos.ginger.engine.common.api.GingerRegister;
 import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.math.Maths;
-import com.github.hydos.ginger.engine.opengl.render.Renderer;
+import com.github.hydos.ginger.engine.common.render.Renderer;
 import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
 import com.github.hydos.ginger.engine.opengl.render.shaders.StaticShader;
 import com.github.hydos.ginger.engine.opengl.utils.GLLoader;

@@ -7,7 +7,7 @@ import org.lwjgl.opengl.*;
 
 import com.github.hydos.ginger.engine.common.elements.GuiTexture;
 import com.github.hydos.ginger.engine.common.math.Maths;
-import com.github.hydos.ginger.engine.opengl.render.Renderer;
+import com.github.hydos.ginger.engine.common.render.Renderer;
 import com.github.hydos.ginger.engine.opengl.render.models.RawModel;
 import com.github.hydos.ginger.engine.opengl.render.shaders.GuiShader;
 import com.github.hydos.ginger.engine.opengl.utils.GLLoader;

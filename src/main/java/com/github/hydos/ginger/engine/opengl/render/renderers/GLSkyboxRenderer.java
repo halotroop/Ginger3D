@@ -4,7 +4,7 @@ import org.joml.Matrix4f;
 import org.lwjgl.opengl.*;
 
 import com.github.hydos.ginger.engine.common.cameras.Camera;
-import com.github.hydos.ginger.engine.opengl.render.Renderer;
+import com.github.hydos.ginger.engine.common.render.Renderer;
 import com.github.hydos.ginger.engine.opengl.render.models.RawModel;
 import com.github.hydos.ginger.engine.opengl.render.shaders.SkyboxShader;
 import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
