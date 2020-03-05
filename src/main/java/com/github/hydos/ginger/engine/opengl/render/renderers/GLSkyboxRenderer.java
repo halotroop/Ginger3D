@@ -9,7 +9,7 @@ import com.github.hydos.ginger.engine.opengl.render.models.RawModel;
 import com.github.hydos.ginger.engine.opengl.render.shaders.SkyboxShader;
 import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
 
-public class SkyboxRenderer extends Renderer
+public class GLSkyboxRenderer extends Renderer
 {
 	//TODO: use these vertices for cubes
 	private static final float SIZE = 50f;
@@ -60,7 +60,7 @@ public class SkyboxRenderer extends Renderer
 	private int texture;
 	private SkyboxShader shader;
 
-	public SkyboxRenderer(Matrix4f projectionMatrix)
+	public GLSkyboxRenderer(Matrix4f projectionMatrix)
 	{
 		cube = GLLoader.loadToVAO(VERTICES, 3);
 		texture = GLLoader.loadCubeMap(TEXTURE_FILES);

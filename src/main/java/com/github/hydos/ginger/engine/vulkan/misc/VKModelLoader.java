@@ -1,20 +1,15 @@
 package com.github.hydos.ginger.engine.vulkan.misc;
 
-import org.joml.Vector2f;
-import org.joml.Vector2fc;
-import org.joml.Vector3f;
-import org.joml.Vector3fc;
-import org.lwjgl.PointerBuffer;
-import org.lwjgl.assimp.*;
+import static java.util.Objects.requireNonNull;
+import static org.lwjgl.assimp.Assimp.*;
 
 import java.io.File;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
+import java.util.*;
 
-import static java.util.Objects.requireNonNull;
-import static org.lwjgl.assimp.Assimp.*;
+import org.joml.*;
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.assimp.*;
 
 public class VKModelLoader {
 
@@ -22,21 +17,13 @@ public class VKModelLoader {
 
         try(AIScene scene = aiImportFile(file.getAbsolutePath(), flags)) {
 
-            Logger logger = Logger.getLogger(VKModelLoader.class.getSimpleName());
-
-            logger.info("Loading model " + file.getPath() + "...");
-
             if(scene == null || scene.mRootNode() == null) {
                 throw new RuntimeException("Could not load model: " + aiGetErrorString());
             }
 
             VKMesh model = new VKMesh();
 
-            long startTime = System.nanoTime();
-
             processNode(scene.mRootNode(), scene, model);
-
-            logger.info("Model loaded in " + ((System.nanoTime() - startTime) / 1e6) + "ms");
 
             return model;
         }

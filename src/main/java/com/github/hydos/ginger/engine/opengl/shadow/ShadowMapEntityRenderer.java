@@ -7,7 +7,7 @@ import org.lwjgl.opengl.*;
 
 import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
 import com.github.hydos.ginger.engine.common.math.Maths;
-import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
+import com.github.hydos.ginger.engine.opengl.render.GLRenderManager;
 import com.github.hydos.ginger.engine.opengl.render.models.*;
 
 public class ShadowMapEntityRenderer
@@ -69,7 +69,7 @@ public class ShadowMapEntityRenderer
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
 			if (model.getTexture().isTransparent())
-			{ MasterRenderer.disableCulling(); }
+			{ GLRenderManager.disableCulling(); }
 			for (RenderObject entity : entities.get(model))
 			{
 				prepareInstance(entity);
@@ -77,7 +77,7 @@ public class ShadowMapEntityRenderer
 					GL11.GL_UNSIGNED_INT, 0);
 			}
 			if (model.getTexture().isTransparent())
-			{ MasterRenderer.enableCulling(); }
+			{ GLRenderManager.enableCulling(); }
 		}
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);

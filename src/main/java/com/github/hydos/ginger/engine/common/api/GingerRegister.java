@@ -7,13 +7,13 @@ import com.github.hydos.ginger.engine.common.elements.buttons.TextureButton;
 import com.github.hydos.ginger.engine.common.font.GUIText;
 import com.github.hydos.ginger.engine.common.screen.Screen;
 import com.github.hydos.ginger.engine.opengl.postprocessing.FrameBufferObject;
-import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
+import com.github.hydos.ginger.engine.opengl.render.GLRenderManager;
 
 /** Used if a game wants to access engine variables safely */
 public class GingerRegister
 {
 	private static GingerRegister INSTANCE;
-	public MasterRenderer masterRenderer;
+	public GLRenderManager masterRenderer;
 
 	public static GingerRegister getInstance()
 	{ return INSTANCE; }

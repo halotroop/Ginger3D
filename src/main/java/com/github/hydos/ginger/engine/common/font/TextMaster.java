@@ -5,19 +5,19 @@ import java.util.*;
 import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.opengl.api.GingerGL;
-import com.github.hydos.ginger.engine.opengl.render.renderers.FontRenderer;
+import com.github.hydos.ginger.engine.opengl.render.renderers.GLFontRenderer;
 import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
 
 public class TextMaster
 {
 	private static Map<FontType, List<GUIText>> texts = new HashMap<FontType, List<GUIText>>();
-	private static FontRenderer renderer;
+	private static GLFontRenderer renderer;
 
 	public static void cleanUp()
 	{ renderer.cleanUp(); }
 
 	public static void init()
-	{ renderer = new FontRenderer(); }
+	{ renderer = new GLFontRenderer(); }
 
 	public static void loadText(GUIText text)
 	{

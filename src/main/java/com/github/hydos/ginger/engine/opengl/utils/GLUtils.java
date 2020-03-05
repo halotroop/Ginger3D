@@ -3,7 +3,7 @@ package com.github.hydos.ginger.engine.opengl.utils;
 import com.github.hydos.ginger.engine.common.font.TextMaster;
 import com.github.hydos.ginger.engine.common.obj.ModelLoader;
 import com.github.hydos.ginger.engine.common.obj.normals.NormalMappedObjLoader;
-import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
+import com.github.hydos.ginger.engine.opengl.render.GLRenderManager;
 import com.github.hydos.ginger.engine.opengl.render.models.*;
 import com.github.hydos.ginger.engine.opengl.render.texture.ModelTexture;
 
@@ -25,7 +25,7 @@ public class GLUtils
 	public static void init()
 	{ TextMaster.init(); }
 
-	public static void preRenderScene(MasterRenderer renderer)
+	public static void preRenderScene(GLRenderManager renderer)
 	{}
 
 	public static void update()

@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.vulkan.pipelines;
+package com.github.hydos.ginger.engine.vulkan.render.pipelines;
 
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.vulkan.VK10.*;

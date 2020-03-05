@@ -17,7 +17,7 @@ import com.github.hydos.ginger.engine.opengl.render.renderers.*;
 import com.github.hydos.ginger.engine.opengl.render.shaders.*;
 import com.github.hydos.ginger.engine.opengl.shadow.ShadowMapMasterRenderer;
 
-public class MasterRenderer
+public class GLRenderManager
 {
 	public static final float FOV = 80f;
 	public static final float NEAR_PLANE = 0.1f;
@@ -34,25 +34,25 @@ public class MasterRenderer
 
 	public BlockRenderer blockRenderer;
 	private StaticShader entityShader;
-	public ObjectRenderer entityRenderer;
+	public GLObjectRenderer entityRenderer;
 	private GuiShader guiShader;
-	private GuiRenderer guiRenderer;
+	private GLGuiRenderer guiRenderer;
 //	private SkyboxRenderer skyboxRenderer;
-	private NormalMappingRenderer normalRenderer;
+	private GLNormalMappingRenderer normalRenderer;
 	private Matrix4f projectionMatrix;
 	private ShadowMapMasterRenderer shadowMapRenderer;
 	private Map<GLTexturedModel, List<RenderObject>> entities = new HashMap<GLTexturedModel, List<RenderObject>>();
 	private Map<GLTexturedModel, List<RenderObject>> normalMapEntities = new HashMap<GLTexturedModel, List<RenderObject>>();
 
-	public MasterRenderer(Camera camera)
+	public GLRenderManager(Camera camera)
 	{
 		createProjectionMatrix();
 		entityShader = new StaticShader();
 		blockRenderer = new BlockRenderer(entityShader, projectionMatrix);
-		entityRenderer = new ObjectRenderer(entityShader, projectionMatrix);
+		entityRenderer = new GLObjectRenderer(entityShader, projectionMatrix);
 		guiShader = new GuiShader();
-		guiRenderer = new GuiRenderer(guiShader);
-		normalRenderer = new NormalMappingRenderer(projectionMatrix);
+		guiRenderer = new GLGuiRenderer(guiShader);
+		normalRenderer = new GLNormalMappingRenderer(projectionMatrix);
 		shadowMapRenderer = new ShadowMapMasterRenderer(camera);
 	}
 

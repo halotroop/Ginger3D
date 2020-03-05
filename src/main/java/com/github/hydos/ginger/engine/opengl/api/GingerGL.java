@@ -12,7 +12,7 @@ import com.github.hydos.ginger.engine.common.screen.Screen;
 import com.github.hydos.ginger.engine.common.tools.MousePicker;
 import com.github.hydos.ginger.engine.common.util.Timer;
 import com.github.hydos.ginger.engine.opengl.postprocessing.*;
-import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
+import com.github.hydos.ginger.engine.opengl.render.GLRenderManager;
 import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
 
 public class GingerGL extends GingerEngine
@@ -70,7 +70,7 @@ public class GingerGL extends GingerEngine
 	public void setGlobalFont(FontType font)
 	{ this.globalFont = font; }
 
-	public void setup(MasterRenderer masterRenderer, Game game)
+	public void setup(GLRenderManager masterRenderer, Game game)
 	{
 		INSTANCE = this;
 		registry = new GingerRegister();

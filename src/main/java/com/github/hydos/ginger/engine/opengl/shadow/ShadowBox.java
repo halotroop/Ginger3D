@@ -6,7 +6,7 @@ import org.joml.*;
 
 import com.github.hydos.ginger.engine.common.cameras.Camera;
 import com.github.hydos.ginger.engine.common.io.Window;
-import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
+import com.github.hydos.ginger.engine.opengl.render.GLRenderManager;
 
 /** Represents the 3D cuboidal area of the world in which objects will cast
  * shadows (basically represents the orthographic projection area for the shadow
@@ -120,9 +120,9 @@ public class ShadowBox
 	 * but means that distant objects wouldn't cast shadows. */
 	private void calculateWidthsAndHeights()
 	{
-		farWidth = (float) (SHADOW_DISTANCE * Math.tan(Math.toRadians(MasterRenderer.FOV)));
-		nearWidth = (float) (MasterRenderer.NEAR_PLANE
-			* Math.tan(Math.toRadians(MasterRenderer.FOV)));
+		farWidth = (float) (SHADOW_DISTANCE * Math.tan(Math.toRadians(GLRenderManager.FOV)));
+		nearWidth = (float) (GLRenderManager.NEAR_PLANE
+			* Math.tan(Math.toRadians(GLRenderManager.FOV)));
 		farHeight = farWidth / getAspectRatio();
 		nearHeight = nearWidth / getAspectRatio();
 	}
@@ -171,7 +171,7 @@ public class ShadowBox
 		Vector3f toFar = new Vector3f(forwardVector);
 		toFar.mul(SHADOW_DISTANCE);
 		Vector3f toNear = new Vector3f(forwardVector);
-		toNear.mul(MasterRenderer.NEAR_PLANE);
+		toNear.mul(GLRenderManager.NEAR_PLANE);
 		Vector3f centerNear = toNear.add(cam.getPosition());
 		Vector3f centerFar = toFar.add(cam.getPosition());
 		Vector4f[] points = calculateFrustumVertices(rotation, forwardVector, centerNear,

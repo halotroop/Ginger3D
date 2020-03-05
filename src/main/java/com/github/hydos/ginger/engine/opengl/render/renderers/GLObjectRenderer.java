@@ -15,11 +15,11 @@ import com.github.hydos.ginger.engine.opengl.render.models.*;
 import com.github.hydos.ginger.engine.opengl.render.shaders.StaticShader;
 import com.github.hydos.ginger.engine.opengl.render.texture.ModelTexture;
 
-public class ObjectRenderer extends Renderer
+public class GLObjectRenderer extends Renderer
 {
 	private StaticShader shader;
 
-	public ObjectRenderer(StaticShader shader, Matrix4f projectionMatrix)
+	public GLObjectRenderer(StaticShader shader, Matrix4f projectionMatrix)
 	{
 		this.shader = shader;
 		shader.start();
@@ -46,11 +46,11 @@ public class ObjectRenderer extends Renderer
 		ModelTexture texture = model.getTexture();
 		if (texture.isTransparent())
 		{
-			MasterRenderer.disableCulling();
+			GLRenderManager.disableCulling();
 		}
 		else
 		{
-			MasterRenderer.enableCulling();
+			GLRenderManager.enableCulling();
 		}
 		shader.loadFakeLightingVariable(texture.isUseFakeLighting());
 		shader.loadShine(texture.getShineDamper(), texture.getReflectivity());

@@ -19,7 +19,7 @@ import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.obj.ModelLoader;
 import com.github.hydos.ginger.engine.opengl.api.*;
 import com.github.hydos.ginger.engine.opengl.postprocessing.PostProcessing;
-import com.github.hydos.ginger.engine.opengl.render.MasterRenderer;
+import com.github.hydos.ginger.engine.opengl.render.GLRenderManager;
 import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
 import com.github.hydos.ginger.engine.opengl.utils.*;
 
@@ -150,7 +150,7 @@ public class Litecraft extends Game
 					this.camera = new FirstPersonCamera(player);
 					this.data = new GameData(this.player, this.camera, 20);
 					this.data.handleGuis = false;
-					((GingerGL)engine).setup(new MasterRenderer(this.camera), INSTANCE);
+					((GingerGL)engine).setup(new GLRenderManager(this.camera), INSTANCE);
 					((GingerGL)engine).setGlobalFont(font);
 					this.data.entities.add(this.player);
 					break;

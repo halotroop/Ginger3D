@@ -14,11 +14,11 @@ import com.github.hydos.ginger.engine.opengl.render.models.*;
 import com.github.hydos.ginger.engine.opengl.render.shaders.NormalMappingShader;
 import com.github.hydos.ginger.engine.opengl.render.texture.ModelTexture;
 
-public class NormalMappingRenderer extends Renderer
+public class GLNormalMappingRenderer extends Renderer
 {
 	private NormalMappingShader shader;
 
-	public NormalMappingRenderer(Matrix4f projectionMatrix)
+	public GLNormalMappingRenderer(Matrix4f projectionMatrix)
 	{
 		this.shader = new NormalMappingShader();
 		shader.start();
@@ -58,7 +58,7 @@ public class NormalMappingRenderer extends Renderer
 		GL20.glEnableVertexAttribArray(3);
 		ModelTexture texture = model.getTexture();
 		if (texture.isTransparent())
-		{ MasterRenderer.disableCulling(); }
+		{ GLRenderManager.disableCulling(); }
 		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
@@ -87,7 +87,7 @@ public class NormalMappingRenderer extends Renderer
 
 	private void unbindTexturedModel()
 	{
-		MasterRenderer.enableCulling();
+		GLRenderManager.enableCulling();
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
 		GL20.glDisableVertexAttribArray(2);

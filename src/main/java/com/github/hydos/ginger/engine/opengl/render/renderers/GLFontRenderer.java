@@ -8,11 +8,11 @@ import com.github.hydos.ginger.engine.common.font.*;
 import com.github.hydos.ginger.engine.opengl.render.Renderer;
 import com.github.hydos.ginger.engine.opengl.render.shaders.FontShader;
 
-public class FontRenderer extends Renderer
+public class GLFontRenderer extends Renderer
 {
 	private FontShader shader;
 
-	public FontRenderer()
+	public GLFontRenderer()
 	{ shader = new FontShader(); }
 
 	public void cleanUp()

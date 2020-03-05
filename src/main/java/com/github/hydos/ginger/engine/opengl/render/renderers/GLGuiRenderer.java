@@ -12,12 +12,12 @@ import com.github.hydos.ginger.engine.opengl.render.models.RawModel;
 import com.github.hydos.ginger.engine.opengl.render.shaders.GuiShader;
 import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
 
-public class GuiRenderer extends Renderer
+public class GLGuiRenderer extends Renderer
 {
 	private final RawModel quad;
 	private GuiShader shader;
 
-	public GuiRenderer(GuiShader shader)
+	public GLGuiRenderer(GuiShader shader)
 	{
 		this.shader = shader;
 		float[] positions =
