@@ -1,18 +1,8 @@
 package com.github.hydos.ginger.engine.vulkan.misc;
 
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
+import java.util.*;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
-import static java.util.Objects.requireNonNull;
+import org.joml.*;
 
 /**
  * An utility class for dealing with alignments in Uniform Buffer Objects
