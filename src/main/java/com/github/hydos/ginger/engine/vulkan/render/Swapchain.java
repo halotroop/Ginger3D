@@ -4,6 +4,7 @@ import java.nio.*;
 import java.util.*;
 
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.vulkan.*;
 
 import com.github.hydos.ginger.engine.common.io.Window;
@@ -109,7 +110,7 @@ public class Swapchain
                 imageCount.put(0, swapChainSupport.capabilities.maxImageCount());
             }
 
-            VkSwapchainCreateInfoKHR createInfo = VkSwapchainCreateInfoKHR.callocStack(stack)
+            VkSwapchainCreateInfoKHR createInfo = VkSwapchainCreateInfoKHR.calloc()
             	.sType(KHRSwapchain.VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR)
             	.minImageCount(imageCount.get(0))
             	.imageFormat(surfaceFormat.format())
@@ -132,11 +133,18 @@ public class Swapchain
             createInfo.presentMode(presentMode);
             createInfo.clipped(true);
 
-            createInfo.oldSwapchain(VK12.VK_NULL_HANDLE);
+            createInfo.oldSwapchain(1);
 
-            LongBuffer pSwapChain = stack.longs(VK12.VK_NULL_HANDLE);
+            LongBuffer pSwapChain = MemoryUtil.memAllocLong(1);
 
-            int result = KHRSwapchain.vkCreateSwapchainKHR(VKConstants.device, createInfo, null, pSwapChain);
+            int result = KHRSwapchain.
+            	vkCreateSwapchainKHR
+            	(
+            		VKConstants.device, 
+            		createInfo, 
+            		null, 
+            		pSwapChain
+            	);
             if(result != VK12.VK_SUCCESS) {
                 throw new RuntimeException("Failed to create swap chain reason: " + VKUtils.translateVulkanResult(result));
             }
