@@ -11,19 +11,19 @@ import org.lwjgl.vulkan.*;
 import com.github.hydos.ginger.VulkanLitecraft;
 import com.github.hydos.ginger.VulkanLitecraft.VulkanDemoGinger2.Vertex;
 import com.github.hydos.ginger.engine.vulkan.shaders.*;
-import com.github.hydos.ginger.engine.vulkan.shaders.SPIRVUtils.SPIRV;
+import com.github.hydos.ginger.engine.vulkan.shaders.VKShaderUtils.SPIRV;
 
-public class PipelineManager
+public class VKPipelineManager
 {
 	
     public static void createGraphicsPipeline() {
 
         try(MemoryStack stack = stackPush()) {
-            SPIRV vertShaderSPIRV = SPIRVUtils.compileShaderFile("vulkan/shaders/entity.vert", SPIRVUtils.ShaderType.VERTEX_SHADER);
-            SPIRV fragShaderSPIRV = SPIRVUtils.compileShaderFile("vulkan/shaders/entity.frag", SPIRVUtils.ShaderType.FRAGMENT_SHADER);
+            SPIRV vertShaderSPIRV = VKShaderUtils.compileShaderFile("vulkan/shaders/entity.vert", VKShaderUtils.ShaderType.VERTEX_SHADER);
+            SPIRV fragShaderSPIRV = VKShaderUtils.compileShaderFile("vulkan/shaders/entity.frag", VKShaderUtils.ShaderType.FRAGMENT_SHADER);
 
-            long vertShaderModule = ShaderManager.createShaderModule(vertShaderSPIRV.bytecode());
-            long fragShaderModule = ShaderManager.createShaderModule(fragShaderSPIRV.bytecode());
+            long vertShaderModule = VKShaderManager.createShaderModule(vertShaderSPIRV.bytecode());
+            long fragShaderModule = VKShaderManager.createShaderModule(fragShaderSPIRV.bytecode());
 
             ByteBuffer entryPoint = stack.UTF8("main");
 
@@ -102,8 +102,8 @@ public class PipelineManager
             depthStencil.depthWriteEnable(true);
             depthStencil.depthCompareOp(VK_COMPARE_OP_LESS);
             depthStencil.depthBoundsTestEnable(false);
-            depthStencil.minDepthBounds(0.0f); // Optional
-            depthStencil.maxDepthBounds(1.0f); // Optional
+            depthStencil.minDepthBounds(0.0f);
+            depthStencil.maxDepthBounds(1.0f);
             depthStencil.stencilTestEnable(false);
 
             // COLOR BLENDING

@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import static java.util.Objects.requireNonNull;
 import static org.lwjgl.assimp.Assimp.*;
 
+@Deprecated
 public class ModelLoader {
 
     public static Model loadModel(File file, int flags) {

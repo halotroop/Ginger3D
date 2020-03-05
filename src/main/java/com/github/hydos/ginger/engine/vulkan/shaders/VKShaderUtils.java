@@ -13,7 +13,7 @@ import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.util.shaderc.Shaderc.*;
 
-public class SPIRVUtils {
+public class VKShaderUtils {
 
     public static SPIRV compileShaderFile(String shaderFile, ShaderType shaderKind) {
         return compileShaderAbsoluteFile(getSystemClassLoader().getResource(shaderFile).toExternalForm(), shaderKind);

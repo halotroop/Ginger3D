@@ -29,7 +29,8 @@ import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.vulkan.misc.*;
 import com.github.hydos.ginger.engine.vulkan.misc.ModelLoader.Model;
-import com.github.hydos.ginger.engine.vulkan.pipelines.PipelineManager;
+import com.github.hydos.ginger.engine.vulkan.pipelines.VKPipelineManager;
+import com.github.hydos.ginger.engine.vulkan.swapchain.VKSwapchainManager;
 
 public class VulkanLitecraft {
 
@@ -85,11 +86,11 @@ public class VulkanLitecraft {
 
         }
 
-        private class QueueFamilyIndices {
+        public static class QueueFamilyIndices {
 
             // We use Integer to use null as the empty value
-            private Integer graphicsFamily;
-            private Integer presentFamily;
+            public Integer graphicsFamily;
+            public Integer presentFamily;
 
             private boolean isComplete() {
                 return graphicsFamily != null && presentFamily != null;
@@ -100,11 +101,11 @@ public class VulkanLitecraft {
             }
         }
 
-        private class SwapChainSupportDetails {
+        public static class SwapChainSupportDetails {
 
-            private VkSurfaceCapabilitiesKHR capabilities;
-            private VkSurfaceFormatKHR.Buffer formats;
-            private IntBuffer presentModes;
+            public VkSurfaceCapabilitiesKHR capabilities;
+            public VkSurfaceFormatKHR.Buffer formats;
+            public IntBuffer presentModes;
 
         }
 
@@ -187,56 +188,56 @@ public class VulkanLitecraft {
 
         private VkInstance instance;
         private long debugMessenger;
-        private long surface;
+        public static long surface;
 
-        private VkPhysicalDevice physicalDevice;
+        public static VkPhysicalDevice physicalDevice;
         public static int msaaSamples = VK_SAMPLE_COUNT_1_BIT;
         public static VkDevice device;
 
-        private VkQueue graphicsQueue;
+        private static VkQueue graphicsQueue;
         private VkQueue presentQueue;
 
-        private long swapChain;
-        private List<Long> swapChainImages;
-        private int swapChainImageFormat;
+        public static long swapChain;
+        public static List<Long> swapChainImages;
+        public static int swapChainImageFormat;
         public static VkExtent2D swapChainExtent;
-        private List<Long> swapChainImageViews;
-        private List<Long> swapChainFramebuffers;
+        public static List<Long> swapChainImageViews;
+        public static List<Long> swapChainFramebuffers;
 
         public static long renderPass;
-        private long descriptorPool;
+        public static long descriptorPool;
         public static long descriptorSetLayout;
-        private List<Long> descriptorSets;
+        private static List<Long> descriptorSets;
         public static long pipelineLayout;
         public static long graphicsPipeline;
 
-        private long commandPool;
+        public static long commandPool;
 
-        private long colorImage;
-        private long colorImageMemory;
-        private long colorImageView;
+        public static long colorImage;
+        public static long colorImageMemory;
+        public static long colorImageView;
 
-        private long depthImage;
-        private long depthImageMemory;
-        private long depthImageView;
+        public static long depthImage;
+        public static long depthImageMemory;
+        public static long depthImageView;
 
         private int mipLevels;
         private long textureImage;
         private long textureImageMemory;
-        private long textureImageView;
-        private long textureSampler;
+        private static long textureImageView;
+        private static long textureSampler;
 
         private Vertex[] vertices;
-        private int[] indices;
-        private long vertexBuffer;
+        public static int[] indices;
+        private static long vertexBuffer;
         private long vertexBufferMemory;
-        private long indexBuffer;
+        private static long indexBuffer;
         private long indexBufferMemory;
 
-        private List<Long> uniformBuffers;
-        private List<Long> uniformBuffersMemory;
+        public static List<Long> uniformBuffers;
+        public static List<Long> uniformBuffersMemory;
 
-        private List<VkCommandBuffer> commandBuffers;
+        public static List<VkCommandBuffer> commandBuffers;
 
         private List<Frame> inFlightFrames;
         private Map<Integer, Frame> imagesInFlight;
@@ -278,7 +279,7 @@ public class VulkanLitecraft {
             createVertexBuffer();
             createIndexBuffer();
             createDescriptorSetLayout();
-            createSwapChainObjects();
+            VKSwapchainManager.createSwapChainObjects();
             createSyncObjects();
         }
 
@@ -295,39 +296,9 @@ public class VulkanLitecraft {
             vkDeviceWaitIdle(device);
         }
 
-        private void cleanupSwapChain() {
-
-            vkDestroyImageView(device, colorImageView, null);
-            vkDestroyImage(device, colorImage, null);
-            vkFreeMemory(device, colorImageMemory, null);
-
-            vkDestroyImageView(device, depthImageView, null);
-            vkDestroyImage(device, depthImage, null);
-            vkFreeMemory(device, depthImageMemory, null);
-
-            uniformBuffers.forEach(ubo -> vkDestroyBuffer(device, ubo, null));
-            uniformBuffersMemory.forEach(uboMemory -> vkFreeMemory(device, uboMemory, null));
-
-            vkDestroyDescriptorPool(device, descriptorPool, null);
-
-            swapChainFramebuffers.forEach(framebuffer -> vkDestroyFramebuffer(device, framebuffer, null));
-
-            vkFreeCommandBuffers(device, commandPool, asPointerBuffer(commandBuffers));
-
-            vkDestroyPipeline(device, graphicsPipeline, null);
-
-            vkDestroyPipelineLayout(device, pipelineLayout, null);
-
-            vkDestroyRenderPass(device, renderPass, null);
-
-            swapChainImageViews.forEach(imageView -> vkDestroyImageView(device, imageView, null));
-
-            vkDestroySwapchainKHR(device, swapChain, null);
-        }
-
         private void cleanup() {
 
-            cleanupSwapChain();
+        	VKSwapchainManager.cleanupSwapChain();
 
             vkDestroySampler(device, textureSampler, null);
             vkDestroyImageView(device, textureImageView, null);
@@ -365,40 +336,6 @@ public class VulkanLitecraft {
             glfwDestroyWindow(Window.getWindow());
 
             glfwTerminate();
-        }
-
-        private void recreateSwapChain() {
-
-            try(MemoryStack stack = stackPush()) {
-
-                IntBuffer width = stack.ints(0);
-                IntBuffer height = stack.ints(0);
-
-                while(width.get(0) == 0 && height.get(0) == 0) {
-                    glfwGetFramebufferSize(Window.getWindow(), width, height);
-                    glfwWaitEvents();
-                }
-            }
-
-            vkDeviceWaitIdle(device);
-
-            cleanupSwapChain();
-
-            createSwapChainObjects();
-        }
-
-        private void createSwapChainObjects() {
-            createSwapChain();
-            createImageViews();
-            createRenderPass();
-            PipelineManager.createGraphicsPipeline();
-            createColorResources();
-            createDepthResources();
-            createFramebuffers();
-            createUniformBuffers();
-            createDescriptorPool();
-            createDescriptorSets();
-            createCommandBuffers();
         }
 
         private void createInstance() {
@@ -575,77 +512,7 @@ public class VulkanLitecraft {
             }
         }
 
-        private void createSwapChain() {
-
-            try(MemoryStack stack = stackPush()) {
-
-                SwapChainSupportDetails swapChainSupport = querySwapChainSupport(physicalDevice, stack);
-
-                VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
-                int presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
-                VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities);
-
-                IntBuffer imageCount = stack.ints(swapChainSupport.capabilities.minImageCount() + 1);
-
-                if(swapChainSupport.capabilities.maxImageCount() > 0 && imageCount.get(0) > swapChainSupport.capabilities.maxImageCount()) {
-                    imageCount.put(0, swapChainSupport.capabilities.maxImageCount());
-                }
-
-                VkSwapchainCreateInfoKHR createInfo = VkSwapchainCreateInfoKHR.callocStack(stack);
-
-                createInfo.sType(VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR);
-                createInfo.surface(surface);
-
-                // Image settings
-                createInfo.minImageCount(imageCount.get(0));
-                createInfo.imageFormat(surfaceFormat.format());
-                createInfo.imageColorSpace(surfaceFormat.colorSpace());
-                createInfo.imageExtent(extent);
-                createInfo.imageArrayLayers(1);
-                createInfo.imageUsage(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
-
-                QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
-
-                if(!indices.graphicsFamily.equals(indices.presentFamily)) {
-                    createInfo.imageSharingMode(VK_SHARING_MODE_CONCURRENT);
-                    createInfo.pQueueFamilyIndices(stack.ints(indices.graphicsFamily, indices.presentFamily));
-                } else {
-                    createInfo.imageSharingMode(VK_SHARING_MODE_EXCLUSIVE);
-                }
-
-                createInfo.preTransform(swapChainSupport.capabilities.currentTransform());
-                createInfo.compositeAlpha(VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR);
-                createInfo.presentMode(presentMode);
-                createInfo.clipped(true);
-
-                createInfo.oldSwapchain(VK_NULL_HANDLE);
-
-                LongBuffer pSwapChain = stack.longs(VK_NULL_HANDLE);
-
-                if(vkCreateSwapchainKHR(device, createInfo, null, pSwapChain) != VK_SUCCESS) {
-                    throw new RuntimeException("Failed to create swap chain");
-                }
-
-                swapChain = pSwapChain.get(0);
-
-                vkGetSwapchainImagesKHR(device, swapChain, imageCount, null);
-
-                LongBuffer pSwapchainImages = stack.mallocLong(imageCount.get(0));
-
-                vkGetSwapchainImagesKHR(device, swapChain, imageCount, pSwapchainImages);
-
-                swapChainImages = new ArrayList<>(imageCount.get(0));
-
-                for(int i = 0;i < pSwapchainImages.capacity();i++) {
-                    swapChainImages.add(pSwapchainImages.get(i));
-                }
-
-                swapChainImageFormat = surfaceFormat.format();
-                swapChainExtent = VkExtent2D.create().set(extent);
-            }
-        }
-
-        private void createImageViews() {
+        public static void createImageViews() {
 
             swapChainImageViews = new ArrayList<>(swapChainImages.size());
 
@@ -654,7 +521,7 @@ public class VulkanLitecraft {
             }
         }
 
-        private void createRenderPass() {
+        public static void createRenderPass() {
 
             try(MemoryStack stack = stackPush()) {
 
@@ -774,7 +641,7 @@ public class VulkanLitecraft {
             }
         }
 
-        private void createFramebuffers() {
+        public static void createFramebuffers() {
 
             swapChainFramebuffers = new ArrayList<>(swapChainImageViews.size());
 
@@ -826,7 +693,7 @@ public class VulkanLitecraft {
             }
         }
 
-        private void createColorResources() {
+        public static void createColorResources() {
 
             try(MemoryStack stack = stackPush()) {
 
@@ -852,7 +719,7 @@ public class VulkanLitecraft {
             }
         }
 
-        private void createDepthResources() {
+        public static void createDepthResources() {
 
             try(MemoryStack stack = stackPush()) {
 
@@ -885,7 +752,7 @@ public class VulkanLitecraft {
             }
         }
 
-        private int findSupportedFormat(IntBuffer formatCandidates, int tiling, int features) {
+        private static int findSupportedFormat(IntBuffer formatCandidates, int tiling, int features) {
 
             try(MemoryStack stack = stackPush()) {
 
@@ -910,14 +777,14 @@ public class VulkanLitecraft {
         }
 
 
-        private int findDepthFormat() {
+        private static int findDepthFormat() {
             return findSupportedFormat(
                     stackGet().ints(VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT),
                     VK_IMAGE_TILING_OPTIMAL,
                     VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
         }
 
-        private boolean hasStencilComponent(int format) {
+        private static boolean hasStencilComponent(int format) {
             return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
         }
 
@@ -1162,7 +1029,7 @@ public class VulkanLitecraft {
             }
         }
 
-        private long createImageView(long image, int format, int aspectFlags, int mipLevels) {
+        private static long createImageView(long image, int format, int aspectFlags, int mipLevels) {
 
             try(MemoryStack stack = stackPush()) {
 
@@ -1187,7 +1054,7 @@ public class VulkanLitecraft {
             }
         }
 
-        private void createImage(int width, int height, int mipLevels, int numSamples, int format, int tiling, int usage, int memProperties,
+        private static void createImage(int width, int height, int mipLevels, int numSamples, int format, int tiling, int usage, int memProperties,
                                  LongBuffer pTextureImage, LongBuffer pTextureImageMemory) {
 
             try(MemoryStack stack = stackPush()) {
@@ -1227,7 +1094,7 @@ public class VulkanLitecraft {
             }
         }
 
-        private void transitionImageLayout(long image, int format, int oldLayout, int newLayout, int mipLevels) {
+        private static void transitionImageLayout(long image, int format, int oldLayout, int newLayout, int mipLevels) {
 
             try(MemoryStack stack = stackPush()) {
 
@@ -1446,7 +1313,7 @@ public class VulkanLitecraft {
             }
         }
 
-        private void createUniformBuffers() {
+        public static void createUniformBuffers() {
 
             try(MemoryStack stack = stackPush()) {
 
@@ -1471,7 +1338,7 @@ public class VulkanLitecraft {
         }
 
 
-        private void createDescriptorPool() {
+        public static void createDescriptorPool() {
 
             try(MemoryStack stack = stackPush()) {
 
@@ -1500,7 +1367,7 @@ public class VulkanLitecraft {
             }
         }
 
-        private void createDescriptorSets() {
+        public static void createDescriptorSets() {
 
             try(MemoryStack stack = stackPush()) {
 
@@ -1565,7 +1432,7 @@ public class VulkanLitecraft {
             }
         }
 
-        private void createBuffer(long size, int usage, int properties, LongBuffer pBuffer, LongBuffer pBufferMemory) {
+        private static void createBuffer(long size, int usage, int properties, LongBuffer pBuffer, LongBuffer pBufferMemory) {
 
             try(MemoryStack stack = stackPush()) {
 
@@ -1595,7 +1462,7 @@ public class VulkanLitecraft {
             }
         }
 
-        private VkCommandBuffer beginSingleTimeCommands() {
+        private static VkCommandBuffer beginSingleTimeCommands() {
 
             try(MemoryStack stack = stackPush()) {
 
@@ -1619,7 +1486,7 @@ public class VulkanLitecraft {
             }
         }
 
-        private void endSingleTimeCommands(VkCommandBuffer commandBuffer) {
+        private static void endSingleTimeCommands(VkCommandBuffer commandBuffer) {
 
             try(MemoryStack stack = stackPush()) {
 
@@ -1684,7 +1551,7 @@ public class VulkanLitecraft {
             ubo.proj.get(AlignmentUtils.alignas(mat4Size * 2, AlignmentUtils.alignof(ubo.view)), buffer);
         }
 
-        private int findMemoryType(int typeFilter, int properties) {
+        private static int findMemoryType(int typeFilter, int properties) {
 
             VkPhysicalDeviceMemoryProperties memProperties = VkPhysicalDeviceMemoryProperties.mallocStack();
             vkGetPhysicalDeviceMemoryProperties(physicalDevice, memProperties);
@@ -1698,7 +1565,7 @@ public class VulkanLitecraft {
             throw new RuntimeException("Failed to find suitable memory type");
         }
 
-        private void createCommandBuffers() {
+        public static void createCommandBuffers() {
 
             final int commandBuffersCount = swapChainFramebuffers.size();
 
@@ -1763,7 +1630,11 @@ public class VulkanLitecraft {
                         vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
                         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                pipelineLayout, 0, stack.longs(descriptorSets.get(i)), null);
+                                pipelineLayout,
+                                0, stack.longs(
+                                	descriptorSets.get(i)
+                                	), 
+                                null);
 
                         vkCmdDrawIndexed(commandBuffer, indices.length, 1, 0, 0, 0);
                     }
@@ -1847,7 +1718,7 @@ public class VulkanLitecraft {
                         thisFrame.imageAvailableSemaphore(), VK_NULL_HANDLE, pImageIndex);
 
                 if(vkResult == VK_ERROR_OUT_OF_DATE_KHR) {
-                    recreateSwapChain();
+                	VKSwapchainManager.recreateSwapChain();
                     return;
                 } else if(vkResult != VK_SUCCESS) {
                     throw new RuntimeException("Cannot get image");
@@ -1895,7 +1766,7 @@ public class VulkanLitecraft {
 
                 if(vkResult == VK_ERROR_OUT_OF_DATE_KHR || vkResult == VK_SUBOPTIMAL_KHR || framebufferResize) {
                     framebufferResize = false;
-                    recreateSwapChain();
+                    VKSwapchainManager.recreateSwapChain();
                 } else if(vkResult != VK_SUCCESS) {
                     throw new RuntimeException("Failed to present swap chain image");
                 }
@@ -1904,7 +1775,7 @@ public class VulkanLitecraft {
             }
         }
 
-        private VkSurfaceFormatKHR chooseSwapSurfaceFormat(VkSurfaceFormatKHR.Buffer availableFormats) {
+        public static VkSurfaceFormatKHR chooseSwapSurfaceFormat(VkSurfaceFormatKHR.Buffer availableFormats) {
             return availableFormats.stream()
                     .filter(availableFormat -> availableFormat.format() == VK_FORMAT_B8G8R8_SRGB)
                     .filter(availableFormat -> availableFormat.colorSpace() == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
@@ -1912,7 +1783,7 @@ public class VulkanLitecraft {
                     .orElse(availableFormats.get(0));
         }
 
-        private int chooseSwapPresentMode(IntBuffer availablePresentModes) {
+        public static int chooseSwapPresentMode(IntBuffer availablePresentModes) {
 
             for(int i = 0;i < availablePresentModes.capacity();i++) {
                 if(availablePresentModes.get(i) == VK_PRESENT_MODE_MAILBOX_KHR) {
@@ -1923,7 +1794,7 @@ public class VulkanLitecraft {
             return VK_PRESENT_MODE_FIFO_KHR;
         }
 
-        private VkExtent2D chooseSwapExtent(VkSurfaceCapabilitiesKHR capabilities) {
+        public static VkExtent2D chooseSwapExtent(VkSurfaceCapabilitiesKHR capabilities) {
 
             if(capabilities.currentExtent().width() != UINT32_MAX) {
                 return capabilities.currentExtent();
@@ -1945,7 +1816,7 @@ public class VulkanLitecraft {
             return actualExtent;
         }
 
-        private int clamp(int min, int max, int value) {
+        private static int clamp(int min, int max, int value) {
             return Math.max(min, Math.min(max, value));
         }
 
@@ -1984,7 +1855,7 @@ public class VulkanLitecraft {
             }
         }
 
-        private SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device, MemoryStack stack) {
+        public static SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device, MemoryStack stack) {
 
             SwapChainSupportDetails details = new SwapChainSupportDetails();
 
@@ -2010,7 +1881,7 @@ public class VulkanLitecraft {
             return details;
         }
 
-        private QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
+        public static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
 
             QueueFamilyIndices indices = new QueueFamilyIndices();
 
@@ -2056,7 +1927,7 @@ public class VulkanLitecraft {
             return buffer.rewind();
         }
 
-        private PointerBuffer asPointerBuffer(List<? extends Pointer> list) {
+        public static PointerBuffer asPointerBuffer(List<? extends Pointer> list) {
 
             MemoryStack stack = stackGet();
 

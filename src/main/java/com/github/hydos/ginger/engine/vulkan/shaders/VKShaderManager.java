@@ -15,7 +15,7 @@ import com.github.hydos.ginger.VulkanLitecraft;
  * @author hydos
  *
  */
-public class ShaderManager
+public class VKShaderManager
 {
     public static long createShaderModule(ByteBuffer spirvCode) {
 
