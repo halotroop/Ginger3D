@@ -8,7 +8,7 @@ import java.nio.*;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.VkShaderModuleCreateInfo;
 
-import com.github.hydos.ginger.VulkanLitecraft;
+import com.github.hydos.ginger.VulkanExample;
 
 /**
  * will be used in the future to manage multiple shaders
@@ -28,7 +28,7 @@ public class VKShaderManager
 
             LongBuffer pShaderModule = stack.mallocLong(1);
 
-            if(vkCreateShaderModule(VulkanLitecraft.VulkanDemoGinger2.device, createInfo, null, pShaderModule) != VK_SUCCESS) {
+            if(vkCreateShaderModule(VulkanExample.VulkanDemoGinger2.device, createInfo, null, pShaderModule) != VK_SUCCESS) {
                 throw new RuntimeException("Failed to create shader module");
             }
 

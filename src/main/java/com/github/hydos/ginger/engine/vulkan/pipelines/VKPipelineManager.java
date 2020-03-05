@@ -8,8 +8,8 @@ import java.nio.*;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
 
-import com.github.hydos.ginger.VulkanLitecraft;
-import com.github.hydos.ginger.VulkanLitecraft.VulkanDemoGinger2.Vertex;
+import com.github.hydos.ginger.VulkanExample;
+import com.github.hydos.ginger.VulkanExample.VulkanDemoGinger2.Vertex;
 import com.github.hydos.ginger.engine.vulkan.shaders.*;
 import com.github.hydos.ginger.engine.vulkan.shaders.VKShaderUtils.SPIRV;
 
@@ -62,14 +62,14 @@ public class VKPipelineManager
             VkViewport.Buffer viewport = VkViewport.callocStack(1, stack);
             viewport.x(0.0f);
             viewport.y(0.0f);
-            viewport.width(VulkanLitecraft.VulkanDemoGinger2.swapChainExtent.width());
-            viewport.height(VulkanLitecraft.VulkanDemoGinger2.swapChainExtent.height());
+            viewport.width(VulkanExample.VulkanDemoGinger2.swapChainExtent.width());
+            viewport.height(VulkanExample.VulkanDemoGinger2.swapChainExtent.height());
             viewport.minDepth(0.0f);
             viewport.maxDepth(1.0f);
 
             VkRect2D.Buffer scissor = VkRect2D.callocStack(1, stack);
             scissor.offset(VkOffset2D.callocStack(stack).set(0, 0));
-            scissor.extent(VulkanLitecraft.VulkanDemoGinger2.swapChainExtent);
+            scissor.extent(VulkanExample.VulkanDemoGinger2.swapChainExtent);
 
             VkPipelineViewportStateCreateInfo viewportState = VkPipelineViewportStateCreateInfo.callocStack(stack);
             viewportState.sType(VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO);
@@ -94,7 +94,7 @@ public class VKPipelineManager
             multisampling.sType(VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO);
             multisampling.sampleShadingEnable(true);
             multisampling.minSampleShading(0.2f); // Enable sample shading in the pipeline
-            multisampling.rasterizationSamples(VulkanLitecraft.VulkanDemoGinger2.msaaSamples); // Min fraction for sample shading; closer to one is smoother
+            multisampling.rasterizationSamples(VulkanExample.VulkanDemoGinger2.msaaSamples); // Min fraction for sample shading; closer to one is smoother
 
             VkPipelineDepthStencilStateCreateInfo depthStencil = VkPipelineDepthStencilStateCreateInfo.callocStack(stack);
             depthStencil.sType(VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO);
@@ -123,15 +123,15 @@ public class VKPipelineManager
 
             VkPipelineLayoutCreateInfo pipelineLayoutInfo = VkPipelineLayoutCreateInfo.callocStack(stack);
             pipelineLayoutInfo.sType(VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO);
-            pipelineLayoutInfo.pSetLayouts(stack.longs(VulkanLitecraft.VulkanDemoGinger2.descriptorSetLayout));
+            pipelineLayoutInfo.pSetLayouts(stack.longs(VulkanExample.VulkanDemoGinger2.descriptorSetLayout));
 
             LongBuffer pPipelineLayout = stack.longs(VK_NULL_HANDLE);
 
-            if(vkCreatePipelineLayout(VulkanLitecraft.VulkanDemoGinger2.device, pipelineLayoutInfo, null, pPipelineLayout) != VK_SUCCESS) {
+            if(vkCreatePipelineLayout(VulkanExample.VulkanDemoGinger2.device, pipelineLayoutInfo, null, pPipelineLayout) != VK_SUCCESS) {
                 throw new RuntimeException("Failed to create pipeline layout");
             }
 
-            VulkanLitecraft.VulkanDemoGinger2.pipelineLayout = pPipelineLayout.get(0);
+            VulkanExample.VulkanDemoGinger2.pipelineLayout = pPipelineLayout.get(0);
 
             VkGraphicsPipelineCreateInfo.Buffer pipelineInfo = VkGraphicsPipelineCreateInfo.callocStack(1, stack);
             pipelineInfo.sType(VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO);
@@ -143,24 +143,24 @@ public class VKPipelineManager
             pipelineInfo.pMultisampleState(multisampling);
             pipelineInfo.pDepthStencilState(depthStencil);
             pipelineInfo.pColorBlendState(colorBlending);
-            pipelineInfo.layout(VulkanLitecraft.VulkanDemoGinger2.pipelineLayout);
-            pipelineInfo.renderPass(VulkanLitecraft.VulkanDemoGinger2.renderPass);
+            pipelineInfo.layout(VulkanExample.VulkanDemoGinger2.pipelineLayout);
+            pipelineInfo.renderPass(VulkanExample.VulkanDemoGinger2.renderPass);
             pipelineInfo.subpass(0);
             pipelineInfo.basePipelineHandle(VK_NULL_HANDLE);
             pipelineInfo.basePipelineIndex(-1);
 
             LongBuffer pGraphicsPipeline = stack.mallocLong(1);
 
-            if(vkCreateGraphicsPipelines(VulkanLitecraft.VulkanDemoGinger2.device, VK_NULL_HANDLE, pipelineInfo, null, pGraphicsPipeline) != VK_SUCCESS) {
+            if(vkCreateGraphicsPipelines(VulkanExample.VulkanDemoGinger2.device, VK_NULL_HANDLE, pipelineInfo, null, pGraphicsPipeline) != VK_SUCCESS) {
                 throw new RuntimeException("Failed to create graphics pipeline");
             }
 
-            VulkanLitecraft.VulkanDemoGinger2.graphicsPipeline = pGraphicsPipeline.get(0);
+            VulkanExample.VulkanDemoGinger2.graphicsPipeline = pGraphicsPipeline.get(0);
 
             // Cleanup
 
-            vkDestroyShaderModule(VulkanLitecraft.VulkanDemoGinger2.device, vertShaderModule, null);
-            vkDestroyShaderModule(VulkanLitecraft.VulkanDemoGinger2.device, fragShaderModule, null);
+            vkDestroyShaderModule(VulkanExample.VulkanDemoGinger2.device, vertShaderModule, null);
+            vkDestroyShaderModule(VulkanExample.VulkanDemoGinger2.device, fragShaderModule, null);
 
             vertShaderSPIRV.free();
             fragShaderSPIRV.free();

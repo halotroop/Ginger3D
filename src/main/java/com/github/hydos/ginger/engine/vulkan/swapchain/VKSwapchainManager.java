@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
 
-import com.github.hydos.ginger.VulkanLitecraft.VulkanDemoGinger2;
-import com.github.hydos.ginger.VulkanLitecraft.VulkanDemoGinger2.*;
+import com.github.hydos.ginger.VulkanExample.VulkanDemoGinger2;
+import com.github.hydos.ginger.VulkanExample.VulkanDemoGinger2.*;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.vulkan.pipelines.VKPipelineManager;
 

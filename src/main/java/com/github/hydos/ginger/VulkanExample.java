@@ -6,8 +6,6 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFWVulkan.*;
 import static org.lwjgl.stb.STBImage.*;
 import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
-import static org.lwjgl.vulkan.EXTDebugUtils.*;
 import static org.lwjgl.vulkan.KHRSurface.*;
 import static org.lwjgl.vulkan.KHRSwapchain.*;
 import static org.lwjgl.vulkan.VK10.*;
@@ -31,7 +29,7 @@ import com.github.hydos.ginger.engine.vulkan.misc.*;
 import com.github.hydos.ginger.engine.vulkan.misc.VKModelLoader.VKMesh;
 import com.github.hydos.ginger.engine.vulkan.swapchain.VKSwapchainManager;
 
-public class VulkanLitecraft {
+public class VulkanExample {
 
     public static class VulkanDemoGinger2 {
 
@@ -40,50 +38,10 @@ public class VulkanLitecraft {
 
         private static final int MAX_FRAMES_IN_FLIGHT = 2;
 
-        private static final boolean ENABLE_VALIDATION_LAYERS = false;
-
-        private static final Set<String> VALIDATION_LAYERS;
-        static {
-            if(ENABLE_VALIDATION_LAYERS) {
-                VALIDATION_LAYERS = new HashSet<>();
-                VALIDATION_LAYERS.add("VK_LAYER_KHRONOS_validation");
-            } else {
-                // We are not going to use it, so we don't create it
-                VALIDATION_LAYERS = null;
-            }
-        }
-
         private static final Set<String> DEVICE_EXTENSIONS = Stream.of(VK_KHR_SWAPCHAIN_EXTENSION_NAME)
                 .collect(toSet());
 
 
-
-        private static int debugCallback(int messageSeverity, int messageType, long pCallbackData, long pUserData) {
-
-            VkDebugUtilsMessengerCallbackDataEXT callbackData = VkDebugUtilsMessengerCallbackDataEXT.create(pCallbackData);
-
-            System.err.println("Validation layer: " + callbackData.pMessageString());
-
-            return VK_FALSE;
-        }
-
-        private static int createDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerCreateInfoEXT createInfo,
-                                                        VkAllocationCallbacks allocationCallbacks, LongBuffer pDebugMessenger) {
-
-            if(vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT") != NULL) {
-                return vkCreateDebugUtilsMessengerEXT(instance, createInfo, allocationCallbacks, pDebugMessenger);
-            }
-
-            return VK_ERROR_EXTENSION_NOT_PRESENT;
-        }
-
-        private static void destroyDebugUtilsMessengerEXT(VkInstance instance, long debugMessenger, VkAllocationCallbacks allocationCallbacks) {
-
-            if(vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT") != NULL) {
-                vkDestroyDebugUtilsMessengerEXT(instance, debugMessenger, allocationCallbacks);
-            }
-
-        }
 
         public static class QueueFamilyIndices {
 
@@ -186,7 +144,6 @@ public class VulkanLitecraft {
         // ======= FIELDS ======= //
 
         private VkInstance instance;
-        private long debugMessenger;
         public static long surface;
 
         public static VkPhysicalDevice physicalDevice;
@@ -266,7 +223,6 @@ public class VulkanLitecraft {
 
         private void initVulkan() {
             createInstance();
-            setupDebugMessenger();
             createSurface();
             pickPhysicalDevice();
             createLogicalDevice();
@@ -324,10 +280,6 @@ public class VulkanLitecraft {
 
             vkDestroyDevice(device, null);
 
-            if(ENABLE_VALIDATION_LAYERS) {
-                destroyDebugUtilsMessengerEXT(instance, debugMessenger, null);
-            }
-
             vkDestroySurfaceKHR(instance, surface, null);
 
             vkDestroyInstance(instance, null);
@@ -359,15 +311,6 @@ public class VulkanLitecraft {
                 // enabledExtensionCount is implicitly set when you call ppEnabledExtensionNames
                 createInfo.ppEnabledExtensionNames(getRequiredExtensions());
 
-                if(ENABLE_VALIDATION_LAYERS) {
-
-                    createInfo.ppEnabledLayerNames(asPointerBuffer(VALIDATION_LAYERS));
-
-                    VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = VkDebugUtilsMessengerCreateInfoEXT.callocStack(stack);
-                    populateDebugMessengerCreateInfo(debugCreateInfo);
-                    createInfo.pNext(debugCreateInfo.address());
-                }
-
                 // We need to retrieve the pointer of the created instance
                 PointerBuffer instancePtr = stack.mallocPointer(1);
 
@@ -376,35 +319,6 @@ public class VulkanLitecraft {
                 }
 
                 instance = new VkInstance(instancePtr.get(0), createInfo);
-            }
-        }
-
-        private void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo) {
-            debugCreateInfo.sType(VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT);
-            debugCreateInfo.messageSeverity(VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT);
-            debugCreateInfo.messageType(VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT);
-            debugCreateInfo.pfnUserCallback(VulkanDemoGinger2::debugCallback);
-        }
-
-        private void setupDebugMessenger() {
-
-            if(!ENABLE_VALIDATION_LAYERS) {
-                return;
-            }
-
-            try(MemoryStack stack = stackPush()) {
-
-                VkDebugUtilsMessengerCreateInfoEXT createInfo = VkDebugUtilsMessengerCreateInfoEXT.callocStack(stack);
-
-                populateDebugMessengerCreateInfo(createInfo);
-
-                LongBuffer pDebugMessenger = stack.longs(VK_NULL_HANDLE);
-
-                if(createDebugUtilsMessengerEXT(instance, createInfo, null, pDebugMessenger) != VK_SUCCESS) {
-                    throw new RuntimeException("Failed to set up debug messenger");
-                }
-
-                debugMessenger = pDebugMessenger.get(0);
             }
         }
 
@@ -488,10 +402,6 @@ public class VulkanLitecraft {
                 createInfo.pEnabledFeatures(deviceFeatures);
 
                 createInfo.ppEnabledExtensionNames(asPointerBuffer(DEVICE_EXTENSIONS));
-
-                if(ENABLE_VALIDATION_LAYERS) {
-                    createInfo.ppEnabledLayerNames(asPointerBuffer(VALIDATION_LAYERS));
-                }
 
                 PointerBuffer pDevice = stack.pointers(VK_NULL_HANDLE);
 
@@ -1940,19 +1850,6 @@ public class VulkanLitecraft {
         private PointerBuffer getRequiredExtensions() {
 
             PointerBuffer glfwExtensions = glfwGetRequiredInstanceExtensions();
-
-            if(ENABLE_VALIDATION_LAYERS) {
-
-                MemoryStack stack = stackGet();
-
-                PointerBuffer extensions = stack.mallocPointer(glfwExtensions.capacity() + 1);
-
-                extensions.put(glfwExtensions);
-                extensions.put(stack.UTF8(VK_EXT_DEBUG_UTILS_EXTENSION_NAME));
-
-                // Rewind the buffer before returning it to reset its position back to 0
-                return extensions.rewind();
-            }
 
             return glfwExtensions;
         }
