@@ -29,17 +29,14 @@ import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.vulkan.misc.*;
 import com.github.hydos.ginger.engine.vulkan.misc.ModelLoader.Model;
-import com.github.hydos.ginger.engine.vulkan.misc.ShaderSPIRVUtils.SPIRV;
+import com.github.hydos.ginger.engine.vulkan.pipelines.PipelineManager;
 
 public class VulkanLitecraft {
 
-    private static class HelloTriangleApplication {
+    public static class VulkanDemoGinger2 {
 
         private static final int UINT32_MAX = 0xFFFFFFFF;
         private static final long UINT64_MAX = 0xFFFFFFFFFFFFFFFFL;
-
-        private static final int WIDTH = 800;
-        private static final int HEIGHT = 600;
 
         private static final int MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -101,10 +98,6 @@ public class VulkanLitecraft {
             public int[] unique() {
                 return IntStream.of(graphicsFamily, presentFamily).distinct().toArray();
             }
-
-            public int[] array() {
-                return new int[] {graphicsFamily, presentFamily};
-            }
         }
 
         private class SwapChainSupportDetails {
@@ -130,7 +123,7 @@ public class VulkanLitecraft {
             }
         }
 
-        private static class Vertex {
+        public static class Vertex {
 
             private static final int SIZEOF = (3 + 3 + 2) * Float.BYTES;
             private static final int OFFSETOF_POS = 0;
@@ -147,7 +140,7 @@ public class VulkanLitecraft {
                 this.texCoords = texCoords;
             }
 
-            private static VkVertexInputBindingDescription.Buffer getBindingDescription() {
+            public static VkVertexInputBindingDescription.Buffer getBindingDescription() {
 
                 VkVertexInputBindingDescription.Buffer bindingDescription =
                         VkVertexInputBindingDescription.callocStack(1);
@@ -159,7 +152,7 @@ public class VulkanLitecraft {
                 return bindingDescription;
             }
 
-            private static VkVertexInputAttributeDescription.Buffer getAttributeDescriptions() {
+            public static VkVertexInputAttributeDescription.Buffer getAttributeDescriptions() {
 
                 VkVertexInputAttributeDescription.Buffer attributeDescriptions =
                         VkVertexInputAttributeDescription.callocStack(3);
@@ -192,15 +185,13 @@ public class VulkanLitecraft {
 
         // ======= FIELDS ======= //
 
-        private long window;
-
         private VkInstance instance;
         private long debugMessenger;
         private long surface;
 
         private VkPhysicalDevice physicalDevice;
-        private int msaaSamples = VK_SAMPLE_COUNT_1_BIT;
-        private VkDevice device;
+        public static int msaaSamples = VK_SAMPLE_COUNT_1_BIT;
+        public static VkDevice device;
 
         private VkQueue graphicsQueue;
         private VkQueue presentQueue;
@@ -208,16 +199,16 @@ public class VulkanLitecraft {
         private long swapChain;
         private List<Long> swapChainImages;
         private int swapChainImageFormat;
-        private VkExtent2D swapChainExtent;
+        public static VkExtent2D swapChainExtent;
         private List<Long> swapChainImageViews;
         private List<Long> swapChainFramebuffers;
 
-        private long renderPass;
+        public static long renderPass;
         private long descriptorPool;
-        private long descriptorSetLayout;
+        public static long descriptorSetLayout;
         private List<Long> descriptorSets;
-        private long pipelineLayout;
-        private long graphicsPipeline;
+        public static long pipelineLayout;
+        public static long graphicsPipeline;
 
         private long commandPool;
 
@@ -264,8 +255,7 @@ public class VulkanLitecraft {
 
         private void initWindow() {
         	Window.create(1200, 800, "Vulkan Ginger2", 60, RenderAPI.Vulkan);
-        	window = Window.getWindow();
-            glfwSetFramebufferSizeCallback(window, this::framebufferResizeCallback);
+            glfwSetFramebufferSizeCallback(Window.getWindow(), this::framebufferResizeCallback);
         }
 
         private void framebufferResizeCallback(long window, int width, int height) {
@@ -372,7 +362,7 @@ public class VulkanLitecraft {
 
             vkDestroyInstance(instance, null);
 
-            glfwDestroyWindow(window);
+            glfwDestroyWindow(Window.getWindow());
 
             glfwTerminate();
         }
@@ -385,7 +375,7 @@ public class VulkanLitecraft {
                 IntBuffer height = stack.ints(0);
 
                 while(width.get(0) == 0 && height.get(0) == 0) {
-                    glfwGetFramebufferSize(window, width, height);
+                    glfwGetFramebufferSize(Window.getWindow(), width, height);
                     glfwWaitEvents();
                 }
             }
@@ -401,7 +391,7 @@ public class VulkanLitecraft {
             createSwapChain();
             createImageViews();
             createRenderPass();
-            createGraphicsPipeline();
+            PipelineManager.createGraphicsPipeline();
             createColorResources();
             createDepthResources();
             createFramebuffers();
@@ -457,7 +447,7 @@ public class VulkanLitecraft {
             debugCreateInfo.sType(VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT);
             debugCreateInfo.messageSeverity(VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT);
             debugCreateInfo.messageType(VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT);
-            debugCreateInfo.pfnUserCallback(HelloTriangleApplication::debugCallback);
+            debugCreateInfo.pfnUserCallback(VulkanDemoGinger2::debugCallback);
         }
 
         private void setupDebugMessenger() {
@@ -488,7 +478,7 @@ public class VulkanLitecraft {
 
                 LongBuffer pSurface = stack.longs(VK_NULL_HANDLE);
 
-                if(glfwCreateWindowSurface(instance, window, null, pSurface) != VK_SUCCESS) {
+                if(glfwCreateWindowSurface(instance, Window.getWindow(), null, pSurface) != VK_SUCCESS) {
                     throw new RuntimeException("Failed to create window surface");
                 }
 
@@ -781,160 +771,6 @@ public class VulkanLitecraft {
                     throw new RuntimeException("Failed to create descriptor set layout");
                 }
                 descriptorSetLayout = pDescriptorSetLayout.get(0);
-            }
-        }
-
-        private void createGraphicsPipeline() {
-
-            try(MemoryStack stack = stackPush()) {
-
-                // Let's compile the GLSL shaders into SPIR-V at runtime using the shaderc library
-                // Check ShaderSPIRVUtils class to see how it can be done
-                SPIRV vertShaderSPIRV = ShaderSPIRVUtils.compileShaderFile("shaders/26_shader_depth.vert", ShaderSPIRVUtils.ShaderKind.VERTEX_SHADER);
-                SPIRV fragShaderSPIRV = ShaderSPIRVUtils.compileShaderFile("shaders/26_shader_depth.frag", ShaderSPIRVUtils.ShaderKind.FRAGMENT_SHADER);
-
-                long vertShaderModule = createShaderModule(vertShaderSPIRV.bytecode());
-                long fragShaderModule = createShaderModule(fragShaderSPIRV.bytecode());
-
-                ByteBuffer entryPoint = stack.UTF8("main");
-
-                VkPipelineShaderStageCreateInfo.Buffer shaderStages = VkPipelineShaderStageCreateInfo.callocStack(2, stack);
-
-                VkPipelineShaderStageCreateInfo vertShaderStageInfo = shaderStages.get(0);
-
-                vertShaderStageInfo.sType(VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO);
-                vertShaderStageInfo.stage(VK_SHADER_STAGE_VERTEX_BIT);
-                vertShaderStageInfo.module(vertShaderModule);
-                vertShaderStageInfo.pName(entryPoint);
-
-                VkPipelineShaderStageCreateInfo fragShaderStageInfo = shaderStages.get(1);
-
-                fragShaderStageInfo.sType(VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO);
-                fragShaderStageInfo.stage(VK_SHADER_STAGE_FRAGMENT_BIT);
-                fragShaderStageInfo.module(fragShaderModule);
-                fragShaderStageInfo.pName(entryPoint);
-
-                // ===> VERTEX STAGE <===
-
-                VkPipelineVertexInputStateCreateInfo vertexInputInfo = VkPipelineVertexInputStateCreateInfo.callocStack(stack);
-                vertexInputInfo.sType(VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO);
-                vertexInputInfo.pVertexBindingDescriptions(Vertex.getBindingDescription());
-                vertexInputInfo.pVertexAttributeDescriptions(Vertex.getAttributeDescriptions());
-
-                // ===> ASSEMBLY STAGE <===
-
-                VkPipelineInputAssemblyStateCreateInfo inputAssembly = VkPipelineInputAssemblyStateCreateInfo.callocStack(stack);
-                inputAssembly.sType(VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO);
-                inputAssembly.topology(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
-                inputAssembly.primitiveRestartEnable(false);
-
-                // ===> VIEWPORT & SCISSOR
-
-                VkViewport.Buffer viewport = VkViewport.callocStack(1, stack);
-                viewport.x(0.0f);
-                viewport.y(0.0f);
-                viewport.width(swapChainExtent.width());
-                viewport.height(swapChainExtent.height());
-                viewport.minDepth(0.0f);
-                viewport.maxDepth(1.0f);
-
-                VkRect2D.Buffer scissor = VkRect2D.callocStack(1, stack);
-                scissor.offset(VkOffset2D.callocStack(stack).set(0, 0));
-                scissor.extent(swapChainExtent);
-
-                VkPipelineViewportStateCreateInfo viewportState = VkPipelineViewportStateCreateInfo.callocStack(stack);
-                viewportState.sType(VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO);
-                viewportState.pViewports(viewport);
-                viewportState.pScissors(scissor);
-
-                // ===> RASTERIZATION STAGE <===
-
-                VkPipelineRasterizationStateCreateInfo rasterizer = VkPipelineRasterizationStateCreateInfo.callocStack(stack);
-                rasterizer.sType(VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO);
-                rasterizer.depthClampEnable(false);
-                rasterizer.rasterizerDiscardEnable(false);
-                rasterizer.polygonMode(VK_POLYGON_MODE_FILL);
-                rasterizer.lineWidth(1.0f);
-                rasterizer.cullMode(VK_CULL_MODE_BACK_BIT);
-                rasterizer.frontFace(VK_FRONT_FACE_COUNTER_CLOCKWISE);
-                rasterizer.depthBiasEnable(false);
-
-                // ===> MULTISAMPLING <===
-
-                VkPipelineMultisampleStateCreateInfo multisampling = VkPipelineMultisampleStateCreateInfo.callocStack(stack);
-                multisampling.sType(VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO);
-                multisampling.sampleShadingEnable(true);
-                multisampling.minSampleShading(0.2f); // Enable sample shading in the pipeline
-                multisampling.rasterizationSamples(msaaSamples); // Min fraction for sample shading; closer to one is smoother
-
-                VkPipelineDepthStencilStateCreateInfo depthStencil = VkPipelineDepthStencilStateCreateInfo.callocStack(stack);
-                depthStencil.sType(VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO);
-                depthStencil.depthTestEnable(true);
-                depthStencil.depthWriteEnable(true);
-                depthStencil.depthCompareOp(VK_COMPARE_OP_LESS);
-                depthStencil.depthBoundsTestEnable(false);
-                depthStencil.minDepthBounds(0.0f); // Optional
-                depthStencil.maxDepthBounds(1.0f); // Optional
-                depthStencil.stencilTestEnable(false);
-
-                // ===> COLOR BLENDING <===
-
-                VkPipelineColorBlendAttachmentState.Buffer colorBlendAttachment = VkPipelineColorBlendAttachmentState.callocStack(1, stack);
-                colorBlendAttachment.colorWriteMask(VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT);
-                colorBlendAttachment.blendEnable(false);
-
-                VkPipelineColorBlendStateCreateInfo colorBlending = VkPipelineColorBlendStateCreateInfo.callocStack(stack);
-                colorBlending.sType(VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO);
-                colorBlending.logicOpEnable(false);
-                colorBlending.logicOp(VK_LOGIC_OP_COPY);
-                colorBlending.pAttachments(colorBlendAttachment);
-                colorBlending.blendConstants(stack.floats(0.0f, 0.0f, 0.0f, 0.0f));
-
-                // ===> PIPELINE LAYOUT CREATION <===
-
-                VkPipelineLayoutCreateInfo pipelineLayoutInfo = VkPipelineLayoutCreateInfo.callocStack(stack);
-                pipelineLayoutInfo.sType(VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO);
-                pipelineLayoutInfo.pSetLayouts(stack.longs(descriptorSetLayout));
-
-                LongBuffer pPipelineLayout = stack.longs(VK_NULL_HANDLE);
-
-                if(vkCreatePipelineLayout(device, pipelineLayoutInfo, null, pPipelineLayout) != VK_SUCCESS) {
-                    throw new RuntimeException("Failed to create pipeline layout");
-                }
-
-                pipelineLayout = pPipelineLayout.get(0);
-
-                VkGraphicsPipelineCreateInfo.Buffer pipelineInfo = VkGraphicsPipelineCreateInfo.callocStack(1, stack);
-                pipelineInfo.sType(VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO);
-                pipelineInfo.pStages(shaderStages);
-                pipelineInfo.pVertexInputState(vertexInputInfo);
-                pipelineInfo.pInputAssemblyState(inputAssembly);
-                pipelineInfo.pViewportState(viewportState);
-                pipelineInfo.pRasterizationState(rasterizer);
-                pipelineInfo.pMultisampleState(multisampling);
-                pipelineInfo.pDepthStencilState(depthStencil);
-                pipelineInfo.pColorBlendState(colorBlending);
-                pipelineInfo.layout(pipelineLayout);
-                pipelineInfo.renderPass(renderPass);
-                pipelineInfo.subpass(0);
-                pipelineInfo.basePipelineHandle(VK_NULL_HANDLE);
-                pipelineInfo.basePipelineIndex(-1);
-
-                LongBuffer pGraphicsPipeline = stack.mallocLong(1);
-
-                if(vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, pipelineInfo, null, pGraphicsPipeline) != VK_SUCCESS) {
-                    throw new RuntimeException("Failed to create graphics pipeline");
-                }
-
-                graphicsPipeline = pGraphicsPipeline.get(0);
-
-                // ===> RELEASE RESOURCES <===
-
-                vkDestroyShaderModule(device, vertShaderModule, null);
-                vkDestroyShaderModule(device, fragShaderModule, null);
-
-                vertShaderSPIRV.free();
-                fragShaderSPIRV.free();
             }
         }
 
@@ -2068,25 +1904,6 @@ public class VulkanLitecraft {
             }
         }
 
-        private long createShaderModule(ByteBuffer spirvCode) {
-
-            try(MemoryStack stack = stackPush()) {
-
-                VkShaderModuleCreateInfo createInfo = VkShaderModuleCreateInfo.callocStack(stack);
-
-                createInfo.sType(VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO);
-                createInfo.pCode(spirvCode);
-
-                LongBuffer pShaderModule = stack.mallocLong(1);
-
-                if(vkCreateShaderModule(device, createInfo, null, pShaderModule) != VK_SUCCESS) {
-                    throw new RuntimeException("Failed to create shader module");
-                }
-
-                return pShaderModule.get(0);
-            }
-        }
-
         private VkSurfaceFormatKHR chooseSwapSurfaceFormat(VkSurfaceFormatKHR.Buffer availableFormats) {
             return availableFormats.stream()
                     .filter(availableFormat -> availableFormat.format() == VK_FORMAT_B8G8R8_SRGB)
@@ -2115,7 +1932,7 @@ public class VulkanLitecraft {
             IntBuffer width = stackGet().ints(0);
             IntBuffer height = stackGet().ints(0);
 
-            glfwGetFramebufferSize(window, width, height);
+            glfwGetFramebufferSize(Window.getWindow(), width, height);
 
             VkExtent2D actualExtent = VkExtent2D.mallocStack().set(width.get(0), height.get(0));
 
@@ -2270,31 +2087,11 @@ public class VulkanLitecraft {
             return glfwExtensions;
         }
 
-        private boolean checkValidationLayerSupport() {
-
-            try(MemoryStack stack = stackPush()) {
-
-                IntBuffer layerCount = stack.ints(0);
-
-                vkEnumerateInstanceLayerProperties(layerCount, null);
-
-                VkLayerProperties.Buffer availableLayers = VkLayerProperties.mallocStack(layerCount.get(0), stack);
-
-                vkEnumerateInstanceLayerProperties(layerCount, availableLayers);
-
-                Set<String> availableLayerNames = availableLayers.stream()
-                        .map(VkLayerProperties::layerNameString)
-                        .collect(toSet());
-
-                return availableLayerNames.containsAll(VALIDATION_LAYERS);
-            }
-        }
-
     }
 
     public static void main(String[] args) {
 
-        HelloTriangleApplication app = new HelloTriangleApplication();
+        VulkanDemoGinger2 app = new VulkanDemoGinger2();
 
         app.run();
     }

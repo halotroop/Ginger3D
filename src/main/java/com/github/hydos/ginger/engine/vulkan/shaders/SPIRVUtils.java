@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.vulkan.misc;
+package com.github.hydos.ginger.engine.vulkan.shaders;
 
 import org.lwjgl.system.NativeResource;
 
@@ -13,13 +13,13 @@ import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.util.shaderc.Shaderc.*;
 
-public class ShaderSPIRVUtils {
+public class SPIRVUtils {
 
-    public static SPIRV compileShaderFile(String shaderFile, ShaderKind shaderKind) {
+    public static SPIRV compileShaderFile(String shaderFile, ShaderType shaderKind) {
         return compileShaderAbsoluteFile(getSystemClassLoader().getResource(shaderFile).toExternalForm(), shaderKind);
     }
 
-    public static SPIRV compileShaderAbsoluteFile(String shaderFile, ShaderKind shaderKind) {
+    public static SPIRV compileShaderAbsoluteFile(String shaderFile, ShaderType shaderKind) {
         try {
             String source = new String(Files.readAllBytes(Paths.get(new URI(shaderFile))));
             return compileShader(shaderFile, source, shaderKind);
@@ -29,7 +29,7 @@ public class ShaderSPIRVUtils {
         return null;
     }
 
-    public static SPIRV compileShader(String filename, String source, ShaderKind shaderKind) {
+    public static SPIRV compileShader(String filename, String source, ShaderType shaderKind) {
 
         long compiler = shaderc_compiler_initialize();
 
@@ -52,7 +52,7 @@ public class ShaderSPIRVUtils {
         return new SPIRV(result, shaderc_result_get_bytes(result));
     }
 
-    public enum ShaderKind {
+    public enum ShaderType {
 
         VERTEX_SHADER(shaderc_glsl_vertex_shader),
         GEOMETRY_SHADER(shaderc_glsl_geometry_shader),
@@ -60,7 +60,7 @@ public class ShaderSPIRVUtils {
 
         private final int kind;
 
-        ShaderKind(int kind) {
+        ShaderType(int kind) {
             this.kind = kind;
         }
     }
