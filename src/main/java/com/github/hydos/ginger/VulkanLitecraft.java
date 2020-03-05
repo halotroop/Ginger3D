@@ -28,8 +28,7 @@ import org.lwjgl.vulkan.*;
 import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.vulkan.misc.*;
-import com.github.hydos.ginger.engine.vulkan.misc.ModelLoader.Model;
-import com.github.hydos.ginger.engine.vulkan.pipelines.VKPipelineManager;
+import com.github.hydos.ginger.engine.vulkan.misc.VKModelLoader.VKMesh;
 import com.github.hydos.ginger.engine.vulkan.swapchain.VKSwapchainManager;
 
 public class VulkanLitecraft {
@@ -1209,7 +1208,7 @@ public class VulkanLitecraft {
 
             File modelFile = new File(ClassLoader.getSystemClassLoader().getResource("models/chalet.obj").getFile());
 
-            Model model = ModelLoader.loadModel(modelFile, aiProcess_FlipUVs | aiProcess_DropNormals);
+            VKMesh model = VKModelLoader.loadModel(modelFile, aiProcess_FlipUVs | aiProcess_DropNormals);
 
             final int vertexCount = model.positions.size();
 

@@ -16,14 +16,13 @@ import java.util.logging.Logger;
 import static java.util.Objects.requireNonNull;
 import static org.lwjgl.assimp.Assimp.*;
 
-@Deprecated
-public class ModelLoader {
+public class VKModelLoader {
 
-    public static Model loadModel(File file, int flags) {
+    public static VKMesh loadModel(File file, int flags) {
 
         try(AIScene scene = aiImportFile(file.getAbsolutePath(), flags)) {
 
-            Logger logger = Logger.getLogger(ModelLoader.class.getSimpleName());
+            Logger logger = Logger.getLogger(VKModelLoader.class.getSimpleName());
 
             logger.info("Loading model " + file.getPath() + "...");
 
@@ -31,7 +30,7 @@ public class ModelLoader {
                 throw new RuntimeException("Could not load model: " + aiGetErrorString());
             }
 
-            Model model = new Model();
+            VKMesh model = new VKMesh();
 
             long startTime = System.nanoTime();
 
@@ -43,7 +42,7 @@ public class ModelLoader {
         }
     }
 
-    private static void processNode(AINode node, AIScene scene, Model model) {
+    private static void processNode(AINode node, AIScene scene, VKMesh model) {
 
         if(node.mMeshes() != null) {
             processNodeMeshes(scene, node, model);
@@ -61,7 +60,7 @@ public class ModelLoader {
 
     }
 
-    private static void processNodeMeshes(AIScene scene, AINode node, Model model) {
+    private static void processNodeMeshes(AIScene scene, AINode node, VKMesh model) {
 
         PointerBuffer pMeshes = scene.mMeshes();
         IntBuffer meshIndices = node.mMeshes();
@@ -73,7 +72,7 @@ public class ModelLoader {
 
     }
 
-    private static void processMesh(AIScene scene, AIMesh mesh, Model model) {
+    private static void processMesh(AIScene scene, AIMesh mesh, VKMesh model) {
 
         processPositions(mesh, model.positions);
         processTexCoords(mesh, model.texCoords);
@@ -117,13 +116,13 @@ public class ModelLoader {
 
     }
 
-    public static class Model {
+    public static class VKMesh {
 
         public final List<Vector3fc> positions;
         public final List<Vector2fc> texCoords;
         public final List<Integer> indices;
 
-        public Model() {
+        public VKMesh() {
             this.positions = new ArrayList<>();
             this.texCoords = new ArrayList<>();
             this.indices = new ArrayList<>();
