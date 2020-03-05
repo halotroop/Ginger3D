@@ -27,6 +27,8 @@ import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.vulkan.misc.*;
 import com.github.hydos.ginger.engine.vulkan.misc.VKModelLoader.VKMesh;
+import com.github.hydos.ginger.engine.vulkan.render.VKRenderManager;
+import com.github.hydos.ginger.engine.vulkan.render.renderers.EntityRenderer;
 import com.github.hydos.ginger.engine.vulkan.swapchain.VKSwapchainManager;
 
 public class VulkanExample {
@@ -163,7 +165,7 @@ public class VulkanExample {
         public static long renderPass;
         public static long descriptorPool;
         public static long descriptorSetLayout;
-        private static List<Long> descriptorSets;
+        public static List<Long> descriptorSets;
         public static long pipelineLayout;
         public static long graphicsPipeline;
 
@@ -185,9 +187,9 @@ public class VulkanExample {
 
         private Vertex[] vertices;
         public static int[] indices;
-        private static long vertexBuffer;
+        public static long vertexBuffer;
         private long vertexBufferMemory;
-        private static long indexBuffer;
+        public static long indexBuffer;
         private long indexBufferMemory;
 
         public static List<Long> uniformBuffers;
@@ -200,6 +202,7 @@ public class VulkanExample {
         private int currentFrame;
 
         boolean framebufferResize;
+		private static VKRenderManager renderManager;
 
         // ======= METHODS ======= //
 
@@ -216,14 +219,18 @@ public class VulkanExample {
         }
 
         private void framebufferResizeCallback(long window, int width, int height) {
-            // HelloTriangleApplication app = MemoryUtil.memGlobalRefToObject(glfwGetWindowUserPointer(window));
-            // app.framebufferResize = true;
             framebufferResize = true;
+        }
+        
+        public void createRenderers() {
+        	renderManager.addRenderer(new EntityRenderer());
         }
 
         private void initVulkan() {
             createInstance();
             createSurface();
+            initGinger();
+            createRenderers();
             pickPhysicalDevice();
             createLogicalDevice();
             createCommandPool();
@@ -236,6 +243,10 @@ public class VulkanExample {
             createDescriptorSetLayout();
             VKSwapchainManager.createSwapChainObjects();
             createSyncObjects();
+        }
+        
+        public void initGinger() {
+        	renderManager = new VKRenderManager();
         }
 
         private void mainLoop() {
@@ -1531,21 +1542,7 @@ public class VulkanExample {
                     vkCmdBeginRenderPass(commandBuffer, renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
                     {
                         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
-
-                        LongBuffer vertexBuffers = stack.longs(vertexBuffer);
-                        LongBuffer offsets = stack.longs(0);
-                        vkCmdBindVertexBuffers(commandBuffer, 0, vertexBuffers, offsets);
-
-                        vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-
-                        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                pipelineLayout,
-                                0, stack.longs(
-                                	descriptorSets.get(i)
-                                	), 
-                                null);
-
-                        vkCmdDrawIndexed(commandBuffer, indices.length, 1, 0, 0, 0);
+                        renderManager.render(stack, commandBuffer, i);
                     }
                     vkCmdEndRenderPass(commandBuffer);
 
@@ -1622,15 +1619,14 @@ public class VulkanExample {
                 vkWaitForFences(device, thisFrame.pFence(), true, UINT64_MAX);
 
                 IntBuffer pImageIndex = stack.mallocInt(1);
-
+                
+                
                 int vkResult = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX,
                         thisFrame.imageAvailableSemaphore(), VK_NULL_HANDLE, pImageIndex);
 
                 if(vkResult == VK_ERROR_OUT_OF_DATE_KHR) {
                 	VKSwapchainManager.recreateSwapChain();
                     return;
-                } else if(vkResult != VK_SUCCESS) {
-                    throw new RuntimeException("Cannot get image");
                 }
 
                 final int imageIndex = pImageIndex.get(0);

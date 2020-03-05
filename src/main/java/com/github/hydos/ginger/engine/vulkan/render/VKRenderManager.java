@@ -1,6 +1,10 @@
-package com.github.hydos.ginger.engine.vulkan.render.renderers;
+package com.github.hydos.ginger.engine.vulkan.render;
 
 import java.util.*;
+
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.vulkan.VkCommandBuffer;
+import org.lwjgl.vulkan.VkRenderPassBeginInfo;
 
 import com.github.hydos.ginger.engine.common.exceptions.GingerException;
 import com.github.hydos.ginger.engine.common.render.Renderer;
@@ -14,7 +18,10 @@ public class VKRenderManager
 	public List<Renderer> renderers;
 
 	public VKRenderManager()
-	{ instance = this; }
+	{ 
+		instance = this; 
+		renderers = new ArrayList<Renderer>();
+	}
 
 	public void addRenderer(Renderer renderer)
 	{
@@ -34,10 +41,18 @@ public class VKRenderManager
 		}
 	}
 
-	public VKRenderManager getInstance()
+	public static VKRenderManager getInstance()
 	{
 		if (instance == null)
 		{ throw new GingerException("The Vulkan render manager is not setup"); }
 		return instance;
+	}
+
+	public void render(MemoryStack stack, VkCommandBuffer commandBuffer, int index)
+	{
+		for(Renderer renderer: renderers)
+		{
+			renderer.VKRender(stack, commandBuffer, index);
+		}
 	}
 }
