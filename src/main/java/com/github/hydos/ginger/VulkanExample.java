@@ -173,7 +173,7 @@ public class VulkanExample {
 		}
 	}
 
-	public static class Vertex {
+	public static class VKVertex {
 
 		private static final int SIZEOF = (3 + 3 + 2) * Float.BYTES;
 		private static final int OFFSETOF_POS = 0;
@@ -184,7 +184,7 @@ public class VulkanExample {
 		private Vector3fc color;
 		private Vector2fc texCoords;
 
-		public Vertex(Vector3fc pos, Vector3fc color, Vector2fc texCoords) {
+		public VKVertex(Vector3fc pos, Vector3fc color, Vector2fc texCoords) {
 			this.pos = pos;
 			this.color = color;
 			this.texCoords = texCoords;
@@ -196,7 +196,7 @@ public class VulkanExample {
 				VkVertexInputBindingDescription.callocStack(1);
 
 			bindingDescription.binding(0);
-			bindingDescription.stride(Vertex.SIZEOF);
+			bindingDescription.stride(VKVertex.SIZEOF);
 			bindingDescription.inputRate(VK_VERTEX_INPUT_RATE_VERTEX);
 
 			return bindingDescription;
@@ -1162,12 +1162,12 @@ public class VulkanExample {
 
 		final int vertexCount = model.positions.size();
 
-		VKVariables.vertices = new Vertex[vertexCount];
+		VKVariables.vertices = new VKVertex[vertexCount];
 
 		final Vector3fc color = new Vector3f(1.0f, 1.0f, 1.0f);
 
 		for(int i = 0;i < vertexCount;i++) {
-			VKVariables.vertices[i] = new Vertex(
+			VKVariables.vertices[i] = new VKVertex(
 				model.positions.get(i),
 				color,
 				model.texCoords.get(i));
@@ -1184,7 +1184,7 @@ public class VulkanExample {
 
 		try(MemoryStack stack = stackPush()) {
 
-			long bufferSize = Vertex.SIZEOF * VKVariables.vertices.length;
+			long bufferSize = VKVertex.SIZEOF * VKVariables.vertices.length;
 
 			LongBuffer pBuffer = stack.mallocLong(1);
 			LongBuffer pBufferMemory = stack.mallocLong(1);
@@ -1467,8 +1467,8 @@ public class VulkanExample {
 		}
 	}
 
-	private void memcpy(ByteBuffer buffer, Vertex[] vertices) {
-		for(Vertex vertex : vertices) {
+	private void memcpy(ByteBuffer buffer, VKVertex[] vertices) {
+		for(VKVertex vertex : vertices) {
 			buffer.putFloat(vertex.pos.x());
 			buffer.putFloat(vertex.pos.y());
 			buffer.putFloat(vertex.pos.z());

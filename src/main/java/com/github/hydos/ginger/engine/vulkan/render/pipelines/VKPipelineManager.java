@@ -48,7 +48,7 @@ import org.lwjgl.vulkan.VkPipelineViewportStateCreateInfo;
 import org.lwjgl.vulkan.VkRect2D;
 import org.lwjgl.vulkan.VkViewport;
 
-import com.github.hydos.ginger.VulkanExample.Vertex;
+import com.github.hydos.ginger.VulkanExample.VKVertex;
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
 import com.github.hydos.ginger.engine.vulkan.shaders.VKShaderManager;
 import com.github.hydos.ginger.engine.vulkan.shaders.VKShaderUtils;
@@ -88,8 +88,8 @@ public class VKPipelineManager
 
             VkPipelineVertexInputStateCreateInfo vertexInputInfo = VkPipelineVertexInputStateCreateInfo.callocStack(stack);
             vertexInputInfo.sType(VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO);
-            vertexInputInfo.pVertexBindingDescriptions(Vertex.getBindingDescription());
-            vertexInputInfo.pVertexAttributeDescriptions(Vertex.getAttributeDescriptions());
+            vertexInputInfo.pVertexBindingDescriptions(VKVertex.getBindingDescription());
+            vertexInputInfo.pVertexAttributeDescriptions(VKVertex.getAttributeDescriptions());
 
             // ASSEMBLY STAGE
 

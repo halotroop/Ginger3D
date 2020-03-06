@@ -12,7 +12,7 @@ import org.lwjgl.vulkan.VkInstance;
 import org.lwjgl.vulkan.VkPhysicalDevice;
 import org.lwjgl.vulkan.VkQueue;
 
-import com.github.hydos.ginger.VulkanExample.Vertex;
+import com.github.hydos.ginger.VulkanExample.VKVertex;
 import com.github.hydos.ginger.engine.vulkan.misc.Frame;
 import com.github.hydos.ginger.engine.vulkan.render.VKRenderManager;
 
@@ -29,9 +29,10 @@ public class VKVariables
     public static long surface;
 
     public static VkPhysicalDevice physicalDevice;
-    public static int msaaSamples = VK_SAMPLE_COUNT_1_BIT;
     public static VkDevice device;
-
+    
+    public static int msaaSamples = VK_SAMPLE_COUNT_1_BIT;
+    
     public static VkQueue graphicsQueue;
     public static VkQueue presentQueue;
 
@@ -43,10 +44,13 @@ public class VKVariables
     public static List<Long> swapChainFramebuffers;
 
     public static long renderPass;
+    
     public static long descriptorPool;
     public static long descriptorSetLayout;
     public static List<Long> descriptorSets;
+    
     public static long pipelineLayout;
+    
     public static long graphicsPipeline;
 
     public static long commandPool;
@@ -65,8 +69,9 @@ public class VKVariables
     public static long textureImageView;
     public static long textureSampler;
 
-    public static Vertex[] vertices;
+    public static VKVertex[] vertices; //TODO: remove and properly add model loading
     public static int[] indices;
+    
     public static long vertexBuffer;
     public static long vertexBufferMemory;
     public static long indexBuffer;
