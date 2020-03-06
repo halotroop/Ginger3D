@@ -1,8 +1,30 @@
 package com.github.hydos.ginger.engine.vulkan.misc;
 
+import static org.lwjgl.system.MemoryStack.stackGet;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.vulkan.KHRSwapchain.VK_ERROR_OUT_OF_DATE_KHR;
+import static org.lwjgl.vulkan.KHRSwapchain.VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+import static org.lwjgl.vulkan.KHRSwapchain.VK_SUBOPTIMAL_KHR;
+import static org.lwjgl.vulkan.KHRSwapchain.vkAcquireNextImageKHR;
+import static org.lwjgl.vulkan.KHRSwapchain.vkQueuePresentKHR;
+import static org.lwjgl.vulkan.VK10.VK_NULL_HANDLE;
+import static org.lwjgl.vulkan.VK10.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_SUBMIT_INFO;
+import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
+import static org.lwjgl.vulkan.VK10.vkQueueSubmit;
+import static org.lwjgl.vulkan.VK10.vkResetFences;
+import static org.lwjgl.vulkan.VK10.vkWaitForFences;
+
+import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 
-import static org.lwjgl.system.MemoryStack.stackGet;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.vulkan.VkPresentInfoKHR;
+import org.lwjgl.vulkan.VkSubmitInfo;
+
+import com.github.hydos.ginger.VulkanExample;
+import com.github.hydos.ginger.engine.vulkan.VKVariables;
+import com.github.hydos.ginger.engine.vulkan.swapchain.VKSwapchainManager;
 
 /**
  * Wraps the needed sync objects for an in flight frame
@@ -44,4 +66,75 @@ public class Frame {
     public LongBuffer pFence() {
         return stackGet().longs(fence);
     }
+    
+	public static void drawFrame() {
+
+		try(MemoryStack stack = stackPush()) {
+
+			Frame thisFrame = VKVariables.inFlightFrames.get(VKVariables.currentFrame);
+
+			vkWaitForFences(VKVariables.device, thisFrame.pFence(), true, VulkanExample.UINT64_MAX);
+
+			IntBuffer pImageIndex = stack.mallocInt(1);
+
+
+			int vkResult = vkAcquireNextImageKHR(VKVariables.device, VKVariables.swapChain, VulkanExample.UINT64_MAX,
+				thisFrame.imageAvailableSemaphore(), VK_NULL_HANDLE, pImageIndex);
+
+			if(vkResult == VK_ERROR_OUT_OF_DATE_KHR) {
+				VKSwapchainManager.recreateSwapChain();
+				return;
+			}
+
+			final int imageIndex = pImageIndex.get(0);
+
+			VulkanExample.updateUniformBuffer(imageIndex);
+
+			if(VKVariables.imagesInFlight.containsKey(imageIndex)) {
+				vkWaitForFences(VKVariables.device, VKVariables.imagesInFlight.get(imageIndex).fence(), true, VulkanExample.UINT64_MAX);
+			}
+
+			VKVariables.imagesInFlight.put(imageIndex, thisFrame);
+
+			VkSubmitInfo submitInfo = VkSubmitInfo.callocStack(stack);
+			submitInfo.sType(VK_STRUCTURE_TYPE_SUBMIT_INFO);
+
+			submitInfo.waitSemaphoreCount(1);
+			submitInfo.pWaitSemaphores(thisFrame.pImageAvailableSemaphore());
+			submitInfo.pWaitDstStageMask(stack.ints(VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT));
+
+			submitInfo.pSignalSemaphores(thisFrame.pRenderFinishedSemaphore());
+
+			submitInfo.pCommandBuffers(stack.pointers(VKVariables.commandBuffers.get(imageIndex)));
+
+			vkResetFences(VKVariables.device, thisFrame.pFence());
+
+			if((vkResult = vkQueueSubmit(VKVariables.graphicsQueue, submitInfo, thisFrame.fence())) != VK_SUCCESS) {
+				vkResetFences(VKVariables.device, thisFrame.pFence());
+				throw new RuntimeException("Failed to submit draw command buffer: " + vkResult);
+			}
+
+			VkPresentInfoKHR presentInfo = VkPresentInfoKHR.callocStack(stack);
+			presentInfo.sType(VK_STRUCTURE_TYPE_PRESENT_INFO_KHR);
+
+			presentInfo.pWaitSemaphores(thisFrame.pRenderFinishedSemaphore());
+
+			presentInfo.swapchainCount(1);
+			presentInfo.pSwapchains(stack.longs(VKVariables.swapChain));
+
+			presentInfo.pImageIndices(pImageIndex);
+
+			vkResult = vkQueuePresentKHR(VKVariables.presentQueue, presentInfo);
+
+			if(vkResult == VK_ERROR_OUT_OF_DATE_KHR || vkResult == VK_SUBOPTIMAL_KHR || VKVariables.framebufferResize) {
+				VKVariables.framebufferResize = false;
+				VKSwapchainManager.recreateSwapChain();
+			} else if(vkResult != VK_SUCCESS) {
+				throw new RuntimeException("Failed to present swap chain image");
+			}
+
+			VKVariables.currentFrame = (VKVariables.currentFrame + 1) % VulkanExample.MAX_FRAMES_IN_FLIGHT;
+		}
+	}
+    
 }
