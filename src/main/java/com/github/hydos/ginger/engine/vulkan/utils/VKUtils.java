@@ -21,9 +21,202 @@ import com.github.hydos.ginger.engine.vulkan.VKVariables;
 import com.github.hydos.ginger.engine.vulkan.managers.CommandBufferManager;
 import com.github.hydos.ginger.engine.vulkan.misc.*;
 import com.github.hydos.ginger.engine.vulkan.render.VKBufferMesh;
+import com.github.hydos.ginger.engine.vulkan.swapchain.VKSwapchainManager;
 
 public class VKUtils
 {
+	
+	public static void cleanup() {
+		VKSwapchainManager.cleanupSwapChain();
+
+		vkDestroySampler(VKVariables.device, VKVariables.textureSampler, null);
+		vkDestroyImageView(VKVariables.device, VKVariables.textureImageView, null);
+		vkDestroyImage(VKVariables.device, VKVariables.textureImage, null);
+		vkFreeMemory(VKVariables.device, VKVariables.textureImageMemory, null);
+
+		vkDestroyDescriptorSetLayout(VKVariables.device, VKVariables.descriptorSetLayout, null);
+
+		vkDestroyBuffer(VKVariables.device, VKVariables.indexBuffer, null);
+		vkFreeMemory(VKVariables.device, VKVariables.indexBufferMemory, null);
+
+		vkDestroyBuffer(VKVariables.device, VKVariables.vertexBuffer, null);
+		vkFreeMemory(VKVariables.device, VKVariables.vertexBufferMemory, null);
+
+		VKVariables.inFlightFrames.forEach(frame -> {
+
+			vkDestroySemaphore(VKVariables.device, frame.renderFinishedSemaphore(), null);
+			vkDestroySemaphore(VKVariables.device, frame.imageAvailableSemaphore(), null);
+			vkDestroyFence(VKVariables.device, frame.fence(), null);
+		});
+		VKVariables.inFlightFrames.clear();
+
+		vkDestroyCommandPool(VKVariables.device, VKVariables.commandPool, null);
+
+		vkDestroyDevice(VKVariables.device, null);
+
+		vkDestroySurfaceKHR(VKVariables.instance, VKVariables.surface, null);
+
+		vkDestroyInstance(VKVariables.instance, null);
+		
+		Window.destroy();
+	}
+
+	public static void createImageViews() {
+
+		VKVariables.swapChainImageViews = new ArrayList<>(VKVariables.swapChainImages.size());
+
+		for(long swapChainImage : VKVariables.swapChainImages) {
+			VKVariables.swapChainImageViews.add(VulkanExample.createImageView(swapChainImage, VKVariables.swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1));
+		}
+	}
+
+	public static void createDescriptorSetLayout() {
+
+		try(MemoryStack stack = stackPush()) {
+
+			VkDescriptorSetLayoutBinding.Buffer bindings = VkDescriptorSetLayoutBinding.callocStack(2, stack);
+
+			VkDescriptorSetLayoutBinding uboLayoutBinding = bindings.get(0);
+			uboLayoutBinding.binding(0);
+			uboLayoutBinding.descriptorCount(1);
+			uboLayoutBinding.descriptorType(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
+			uboLayoutBinding.pImmutableSamplers(null);
+			uboLayoutBinding.stageFlags(VK_SHADER_STAGE_VERTEX_BIT);
+
+			VkDescriptorSetLayoutBinding samplerLayoutBinding = bindings.get(1);
+			samplerLayoutBinding.binding(1);
+			samplerLayoutBinding.descriptorCount(1);
+			samplerLayoutBinding.descriptorType(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
+			samplerLayoutBinding.pImmutableSamplers(null);
+			samplerLayoutBinding.stageFlags(VK_SHADER_STAGE_FRAGMENT_BIT);
+
+			VkDescriptorSetLayoutCreateInfo layoutInfo = VkDescriptorSetLayoutCreateInfo.callocStack(stack);
+			layoutInfo.sType(VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO);
+			layoutInfo.pBindings(bindings);
+
+			LongBuffer pDescriptorSetLayout = stack.mallocLong(1);
+
+			if(vkCreateDescriptorSetLayout(VKVariables.device, layoutInfo, null, pDescriptorSetLayout) != VK_SUCCESS) {
+				throw new RuntimeException("Failed to create descriptor set layout");
+			}
+			VKVariables.descriptorSetLayout = pDescriptorSetLayout.get(0);
+		}
+	}
+
+	public static void createFramebuffers() {
+
+		VKVariables.swapChainFramebuffers = new ArrayList<>(VKVariables.swapChainImageViews.size());
+
+		try(MemoryStack stack = stackPush()) {
+
+			LongBuffer attachments = stack.longs(VKVariables.colorImageView, VKVariables.depthImageView, VK_NULL_HANDLE);
+			LongBuffer pFramebuffer = stack.mallocLong(1);
+
+			// Lets allocate the create info struct once and just update the pAttachments field each iteration
+			VkFramebufferCreateInfo framebufferInfo = VkFramebufferCreateInfo.callocStack(stack);
+			framebufferInfo.sType(VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO);
+			framebufferInfo.renderPass(VKVariables.renderPass);
+			framebufferInfo.width(VKVariables.swapChainExtent.width());
+			framebufferInfo.height(VKVariables.swapChainExtent.height());
+			framebufferInfo.layers(1);
+
+			for(long imageView : VKVariables.swapChainImageViews) {
+
+				attachments.put(2, imageView);
+
+				framebufferInfo.pAttachments(attachments);
+
+				if(vkCreateFramebuffer(VKVariables.device, framebufferInfo, null, pFramebuffer) != VK_SUCCESS) {
+					throw new RuntimeException("Failed to create framebuffer");
+				}
+
+				VKVariables.swapChainFramebuffers.add(pFramebuffer.get(0));
+			}
+		}
+	}
+
+	public static void createColorResources() {
+
+		try(MemoryStack stack = stackPush()) {
+
+			LongBuffer pColorImage = stack.mallocLong(1);
+			LongBuffer pColorImageMemory = stack.mallocLong(1);
+
+			VulkanExample.createImage(VKVariables.swapChainExtent.width(), VKVariables.swapChainExtent.height(),
+				1,
+				VKVariables.msaaSamples,
+				VKVariables.swapChainImageFormat,
+				VK_IMAGE_TILING_OPTIMAL,
+				VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+				pColorImage,
+				pColorImageMemory);
+
+			VKVariables.colorImage = pColorImage.get(0);
+			VKVariables.colorImageMemory = pColorImageMemory.get(0);
+
+			VKVariables.colorImageView = VulkanExample.createImageView(VKVariables.colorImage, VKVariables.swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
+
+			VKUtils.transitionImageLayout(VKVariables.colorImage, VKVariables.swapChainImageFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1);
+		}
+	}
+
+	public static void createDepthResources() {
+
+		try(MemoryStack stack = stackPush()) {
+
+			int depthFormat = VulkanExample.findDepthFormat();
+
+			LongBuffer pDepthImage = stack.mallocLong(1);
+			LongBuffer pDepthImageMemory = stack.mallocLong(1);
+
+			VulkanExample.createImage(
+				VKVariables.swapChainExtent.width(), VKVariables.swapChainExtent.height(),
+				1,
+				VKVariables. msaaSamples,
+				depthFormat,
+				VK_IMAGE_TILING_OPTIMAL,
+				VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
+				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+				pDepthImage,
+				pDepthImageMemory);
+
+			VKVariables.depthImage = pDepthImage.get(0);
+			VKVariables.depthImageMemory = pDepthImageMemory.get(0);
+
+			VKVariables.depthImageView = VulkanExample.createImageView(VKVariables.depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1);
+
+			// Explicitly transitioning the depth image
+			VKUtils.transitionImageLayout(VKVariables.depthImage, depthFormat,
+				VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+				1);
+
+		}
+	}
+
+	public static int findSupportedFormat(IntBuffer formatCandidates, int tiling, int features) {
+
+		try(MemoryStack stack = stackPush()) {
+
+			VkFormatProperties props = VkFormatProperties.callocStack(stack);
+
+			for(int i = 0; i < formatCandidates.capacity(); ++i) {
+
+				int format = formatCandidates.get(i);
+
+				vkGetPhysicalDeviceFormatProperties(VKVariables.physicalDevice, format, props);
+
+				if(tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures() & features) == features) {
+					return format;
+				} else if(tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures() & features) == features) {
+					return format;
+				}
+
+			}
+		}
+
+		throw new RuntimeException("Failed to find supported format");
+	}
 
 	public static void createCommandPool() {
 
