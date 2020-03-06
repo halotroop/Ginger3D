@@ -240,4 +240,11 @@ public class Window
 	{
 		return window;
 	}
+
+	public static void destroy()
+	{
+		GLFW.glfwDestroyWindow(Window.getWindow());
+
+		GLFW.glfwTerminate();
+	}
 }
