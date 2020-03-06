@@ -130,7 +130,9 @@ public class VulkanExample {
 	private static final long UINT64_MAX = 0xFFFFFFFFFFFFFFFFL;
 
 	private static final int MAX_FRAMES_IN_FLIGHT = 2;
-
+	
+	public static EntityRenderer entityRenderer;
+	
 	private static final Set<String> DEVICE_EXTENSIONS = Stream.of(VK_KHR_SWAPCHAIN_EXTENSION_NAME)
 		.collect(toSet());
 
@@ -253,7 +255,8 @@ public class VulkanExample {
 	}
 
 	public void createRenderers() {
-		VKVariables.renderManager.addRenderer(new EntityRenderer());
+		entityRenderer = new EntityRenderer();
+		VKVariables.renderManager.addRenderer(entityRenderer);
 	}
 
 	private void initVulkan() {
@@ -291,7 +294,6 @@ public class VulkanExample {
 	}
 
 	private void cleanup() {
-
 		VKSwapchainManager.cleanupSwapChain();
 
 		vkDestroySampler(VKVariables.device, VKVariables.textureSampler, null);
@@ -1158,8 +1160,7 @@ public class VulkanExample {
 		File modelFile = new File(ClassLoader.getSystemClassLoader().getResource("models/chalet.obj").getFile());
 
 		VKMesh model = VKModelLoader.loadModel(modelFile, aiProcess_FlipUVs | aiProcess_DropNormals);
-		EntityRenderer renderer = (EntityRenderer) VKRenderManager.getInstance().renderers.get(0); //tmp
-		renderer.processEntity(model);
+		entityRenderer.processEntity(model);
 	}
 
 	public static VKBufferMesh createVertexBuffer(VKBufferMesh processedMesh) {
