@@ -1,40 +1,11 @@
 package com.github.hydos.ginger.engine.vulkan.managers;
 
-import static org.lwjgl.stb.STBImage.STBI_rgb_alpha;
-import static org.lwjgl.stb.STBImage.stbi_image_free;
-import static org.lwjgl.stb.STBImage.stbi_load;
+import static org.lwjgl.stb.STBImage.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.vulkan.VK10.VK_BORDER_COLOR_INT_OPAQUE_BLACK;
-import static org.lwjgl.vulkan.VK10.VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-import static org.lwjgl.vulkan.VK10.VK_COMPARE_OP_ALWAYS;
-import static org.lwjgl.vulkan.VK10.VK_FILTER_LINEAR;
-import static org.lwjgl.vulkan.VK10.VK_FORMAT_R8G8B8A8_SRGB;
-import static org.lwjgl.vulkan.VK10.VK_IMAGE_ASPECT_COLOR_BIT;
-import static org.lwjgl.vulkan.VK10.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-import static org.lwjgl.vulkan.VK10.VK_IMAGE_LAYOUT_UNDEFINED;
-import static org.lwjgl.vulkan.VK10.VK_IMAGE_TILING_OPTIMAL;
-import static org.lwjgl.vulkan.VK10.VK_IMAGE_USAGE_SAMPLED_BIT;
-import static org.lwjgl.vulkan.VK10.VK_IMAGE_USAGE_TRANSFER_DST_BIT;
-import static org.lwjgl.vulkan.VK10.VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-import static org.lwjgl.vulkan.VK10.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-import static org.lwjgl.vulkan.VK10.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
-import static org.lwjgl.vulkan.VK10.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
-import static org.lwjgl.vulkan.VK10.VK_SAMPLER_ADDRESS_MODE_REPEAT;
-import static org.lwjgl.vulkan.VK10.VK_SAMPLER_MIPMAP_MODE_LINEAR;
-import static org.lwjgl.vulkan.VK10.VK_SAMPLE_COUNT_1_BIT;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
-import static org.lwjgl.vulkan.VK10.vkCreateSampler;
-import static org.lwjgl.vulkan.VK10.vkDestroyBuffer;
-import static org.lwjgl.vulkan.VK10.vkFreeMemory;
-import static org.lwjgl.vulkan.VK10.vkMapMemory;
-import static org.lwjgl.vulkan.VK10.vkUnmapMemory;
+import static org.lwjgl.vulkan.VK10.*;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.nio.LongBuffer;
+import java.net.*;
+import java.nio.*;
 import java.nio.file.Paths;
 
 import org.lwjgl.PointerBuffer;
@@ -43,7 +14,7 @@ import org.lwjgl.vulkan.VkSamplerCreateInfo;
 
 import com.github.hydos.ginger.VulkanExample;
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
-import com.github.hydos.ginger.engine.vulkan.utils.VKBufferUtils;
+import com.github.hydos.ginger.engine.vulkan.utils.*;
 
 public class VKTextureManager
 {
@@ -80,7 +51,7 @@ public class VKTextureManager
 			PointerBuffer data = stack.mallocPointer(1);
 			vkMapMemory(VKVariables.device, pStagingBufferMemory.get(0), 0, imageSize, 0, data);
 			{
-				VulkanExample.memcpy(data.getByteBuffer(0, (int)imageSize), pixels, imageSize);
+				VKUtils.memcpy(data.getByteBuffer(0, (int)imageSize), pixels, imageSize);
 			}
 			vkUnmapMemory(VKVariables.device, pStagingBufferMemory.get(0));
 
@@ -99,13 +70,13 @@ public class VKTextureManager
 			VKVariables.textureImage = pTextureImage.get(0);
 			VKVariables.textureImageMemory = pTextureImageMemory.get(0);
 
-			VulkanExample.transitionImageLayout(VKVariables.textureImage,
+			VKUtils.transitionImageLayout(VKVariables.textureImage,
 				VK_FORMAT_R8G8B8A8_SRGB,
 				VK_IMAGE_LAYOUT_UNDEFINED,
 				VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 				VKVariables.mipLevels);
 
-			VulkanExample.copyBufferToImage(pStagingBuffer.get(0), VKVariables.textureImage, pWidth.get(0), pHeight.get(0));
+			VKUtils.copyBufferToImage(pStagingBuffer.get(0), VKVariables.textureImage, pWidth.get(0), pHeight.get(0));
 
 			// Transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
 			VulkanExample.generateMipmaps(VKVariables.textureImage, VK_FORMAT_R8G8B8A8_SRGB, pWidth.get(0), pHeight.get(0), VKVariables.mipLevels);

@@ -64,7 +64,7 @@ public class VKSwapchainManager
 
         VKVariables.swapChainFramebuffers.forEach(framebuffer -> vkDestroyFramebuffer(VKVariables.device, framebuffer, null));
 
-        vkFreeCommandBuffers(VKVariables.device, VKVariables.commandPool, VulkanExample.asPointerBuffer(VKVariables.commandBuffers));
+        vkFreeCommandBuffers(VKVariables.device, VKVariables.commandPool, VKUtils.asPointerBuffer(VKVariables.commandBuffers));
 
         vkDestroyPipeline(VKVariables.device, VKVariables.graphicsPipeline, null);
 
@@ -101,11 +101,11 @@ public class VKSwapchainManager
 
         try(MemoryStack stack = stackPush()) {
 
-            SwapChainSupportDetails swapChainSupport = VulkanExample.querySwapChainSupport(VKVariables.physicalDevice, stack);
+            SwapChainSupportDetails swapChainSupport = VKUtils.querySwapChainSupport(VKVariables.physicalDevice, stack);
 
-            VkSurfaceFormatKHR surfaceFormat = VulkanExample.chooseSwapSurfaceFormat(swapChainSupport.formats);
-            int presentMode = VulkanExample.chooseSwapPresentMode(swapChainSupport.presentModes);
-            VkExtent2D extent = VulkanExample.chooseSwapExtent(swapChainSupport.capabilities);
+            VkSurfaceFormatKHR surfaceFormat = VKUtils.chooseSwapSurfaceFormat(swapChainSupport.formats);
+            int presentMode = VKUtils.chooseSwapPresentMode(swapChainSupport.presentModes);
+            VkExtent2D extent = VKUtils.chooseSwapExtent(swapChainSupport.capabilities);
 
             IntBuffer imageCount = stack.ints(swapChainSupport.capabilities.minImageCount() + 1);
 
@@ -126,7 +126,7 @@ public class VKSwapchainManager
             createInfo.imageArrayLayers(1);
             createInfo.imageUsage(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
 
-            QueueFamilyIndices indices = VulkanExample.findQueueFamilies(VKVariables.physicalDevice);
+            QueueFamilyIndices indices = VKUtils.findQueueFamilies(VKVariables.physicalDevice);
 
             if(!indices.graphicsFamily.equals(indices.presentFamily)) {
                 createInfo.imageSharingMode(VK_SHARING_MODE_CONCURRENT);
@@ -179,8 +179,8 @@ public class VKSwapchainManager
         VulkanExample.createColorResources();
         VulkanExample.createDepthResources();
         VulkanExample.createFramebuffers();
-        VulkanExample.createUniformBuffers();
-        VulkanExample.createDescriptorPool();
+        VKUtils.createUniformBuffers();
+        VKUtils.createDescriptorPool();
         VKUtils.createDescriptorSets();
         CommandBufferManager.createCommandBuffers();
     }

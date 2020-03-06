@@ -1,30 +1,18 @@
 package com.github.hydos.ginger.engine.vulkan.misc;
 
-import static org.lwjgl.system.MemoryStack.stackGet;
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.vulkan.KHRSwapchain.VK_ERROR_OUT_OF_DATE_KHR;
-import static org.lwjgl.vulkan.KHRSwapchain.VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-import static org.lwjgl.vulkan.KHRSwapchain.VK_SUBOPTIMAL_KHR;
-import static org.lwjgl.vulkan.KHRSwapchain.vkAcquireNextImageKHR;
-import static org.lwjgl.vulkan.KHRSwapchain.vkQueuePresentKHR;
-import static org.lwjgl.vulkan.VK10.VK_NULL_HANDLE;
-import static org.lwjgl.vulkan.VK10.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_SUBMIT_INFO;
-import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
-import static org.lwjgl.vulkan.VK10.vkQueueSubmit;
-import static org.lwjgl.vulkan.VK10.vkResetFences;
-import static org.lwjgl.vulkan.VK10.vkWaitForFences;
+import static org.lwjgl.system.MemoryStack.*;
+import static org.lwjgl.vulkan.KHRSwapchain.*;
+import static org.lwjgl.vulkan.VK10.*;
 
-import java.nio.IntBuffer;
-import java.nio.LongBuffer;
+import java.nio.*;
 
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.vulkan.VkPresentInfoKHR;
-import org.lwjgl.vulkan.VkSubmitInfo;
+import org.lwjgl.vulkan.*;
 
 import com.github.hydos.ginger.VulkanExample;
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
 import com.github.hydos.ginger.engine.vulkan.swapchain.VKSwapchainManager;
+import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
 
 /**
  * Wraps the needed sync objects for an in flight frame
@@ -88,7 +76,7 @@ public class Frame {
 
 			final int imageIndex = pImageIndex.get(0);
 
-			VulkanExample.updateUniformBuffer(imageIndex);
+			VKUtils.updateUniformBuffer(imageIndex);
 
 			if(VKVariables.imagesInFlight.containsKey(imageIndex)) {
 				vkWaitForFences(VKVariables.device, VKVariables.imagesInFlight.get(imageIndex).fence(), true, VulkanExample.UINT64_MAX);

@@ -7,7 +7,7 @@ import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
 
-import com.github.hydos.ginger.VulkanExample;
+import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
 
 public class VKRegister
 {
@@ -32,7 +32,7 @@ public class VKRegister
 			createInfo.sType(VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO);
 			createInfo.pApplicationInfo(appInfo);
 			// enabledExtensionCount is implicitly set when you call ppEnabledExtensionNames
-			createInfo.ppEnabledExtensionNames(VulkanExample.getRequiredExtensions());
+			createInfo.ppEnabledExtensionNames(VKUtils.getRequiredExtensions());
 
 			// We need to retrieve the pointer of the created instance
 			PointerBuffer instancePtr = stack.mallocPointer(1);

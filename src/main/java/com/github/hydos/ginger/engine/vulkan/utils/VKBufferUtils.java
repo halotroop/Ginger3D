@@ -1,26 +1,13 @@
 package com.github.hydos.ginger.engine.vulkan.utils;
 
 import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.vulkan.VK10.VK_SHARING_MODE_EXCLUSIVE;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
-import static org.lwjgl.vulkan.VK10.vkAllocateMemory;
-import static org.lwjgl.vulkan.VK10.vkBindBufferMemory;
-import static org.lwjgl.vulkan.VK10.vkCmdCopyBuffer;
-import static org.lwjgl.vulkan.VK10.vkCreateBuffer;
-import static org.lwjgl.vulkan.VK10.vkGetBufferMemoryRequirements;
+import static org.lwjgl.vulkan.VK10.*;
 
 import java.nio.LongBuffer;
 
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.vulkan.VkBufferCopy;
-import org.lwjgl.vulkan.VkBufferCreateInfo;
-import org.lwjgl.vulkan.VkCommandBuffer;
-import org.lwjgl.vulkan.VkMemoryAllocateInfo;
-import org.lwjgl.vulkan.VkMemoryRequirements;
+import org.lwjgl.vulkan.*;
 
-import com.github.hydos.ginger.VulkanExample;
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
 import com.github.hydos.ginger.engine.vulkan.managers.CommandBufferManager;
 
@@ -47,7 +34,7 @@ public class VKBufferUtils
 			VkMemoryAllocateInfo allocInfo = VkMemoryAllocateInfo.callocStack(stack);
 			allocInfo.sType(VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO);
 			allocInfo.allocationSize(memRequirements.size());
-			allocInfo.memoryTypeIndex(VulkanExample.findMemoryType(memRequirements.memoryTypeBits(), properties));
+			allocInfo.memoryTypeIndex(VKUtils.findMemoryType(memRequirements.memoryTypeBits(), properties));
 
 			if(vkAllocateMemory(VKVariables.device, allocInfo, null, pBufferMemory) != VK_SUCCESS) {
 				throw new RuntimeException("Failed to allocate vertex buffer memory");

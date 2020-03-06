@@ -32,7 +32,7 @@ public class VKDeviceManager
 
 		try(MemoryStack stack = stackPush()) {
 
-			QueueFamilyIndices indices = VulkanExample.findQueueFamilies(VKVariables.physicalDevice);
+			QueueFamilyIndices indices = VKUtils.findQueueFamilies(VKVariables.physicalDevice);
 
 			int[] uniqueQueueFamilies = indices.unique();
 
@@ -57,7 +57,7 @@ public class VKDeviceManager
 
 			createInfo.pEnabledFeatures(deviceFeatures);
 
-			createInfo.ppEnabledExtensionNames(VulkanExample.asPointerBuffer(VulkanExample.DEVICE_EXTENSIONS));
+			createInfo.ppEnabledExtensionNames(VKUtils.asPointerBuffer(VulkanExample.DEVICE_EXTENSIONS));
 
 			PointerBuffer pDevice = stack.pointers(VK_NULL_HANDLE);
 
@@ -115,15 +115,15 @@ public class VKDeviceManager
 	
 	private static boolean isDeviceSuitable(VkPhysicalDevice device) {
 
-		QueueFamilyIndices indices = VulkanExample.findQueueFamilies(device);
+		QueueFamilyIndices indices = VKUtils.findQueueFamilies(device);
 
-		boolean extensionsSupported = VulkanExample.checkDeviceExtensionSupport(device);
+		boolean extensionsSupported = VKUtils.checkDeviceExtensionSupport(device);
 		boolean swapChainAdequate = false;
 		boolean anisotropySupported = false;
 
 		if(extensionsSupported) {
 			try(MemoryStack stack = stackPush()) {
-				SwapChainSupportDetails swapChainSupport = VulkanExample.querySwapChainSupport(device, stack);
+				SwapChainSupportDetails swapChainSupport = VKUtils.querySwapChainSupport(device, stack);
 				swapChainAdequate = swapChainSupport.formats.hasRemaining() && swapChainSupport.presentModes.hasRemaining();
 				VkPhysicalDeviceFeatures supportedFeatures = VkPhysicalDeviceFeatures.mallocStack(stack);
 				vkGetPhysicalDeviceFeatures(device, supportedFeatures);
