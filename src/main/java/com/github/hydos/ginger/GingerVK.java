@@ -1,7 +1,7 @@
 package com.github.hydos.ginger;
 
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
-import com.github.hydos.ginger.engine.vulkan.render.VKRenderManager;
+import com.github.hydos.ginger.engine.vulkan.render.*;
 import com.github.hydos.ginger.engine.vulkan.render.renderers.EntityRenderer;
 
 public class GingerVK
@@ -23,6 +23,13 @@ public class GingerVK
 	public void createRenderers() {
 		entityRenderer = new EntityRenderer();
 		VKVariables.renderManager.addRenderer(entityRenderer);
+	}
+
+	public void cleanup()
+	{
+		for(VKBufferMesh bufferMesh: entityRenderer.entities) {
+			bufferMesh.cleanup();
+		}
 	}
 	
 }

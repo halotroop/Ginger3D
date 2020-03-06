@@ -36,12 +36,6 @@ public class VKUtils
 
 		vkDestroyDescriptorSetLayout(VKVariables.device, VKVariables.descriptorSetLayout, null);
 
-		vkDestroyBuffer(VKVariables.device, VKVariables.indexBuffer, null);
-		vkFreeMemory(VKVariables.device, VKVariables.indexBufferMemory, null);
-
-		vkDestroyBuffer(VKVariables.device, VKVariables.vertexBuffer, null);
-		vkFreeMemory(VKVariables.device, VKVariables.vertexBufferMemory, null);
-
 		VKVariables.inFlightFrames.forEach(frame -> {
 
 			vkDestroySemaphore(VKVariables.device, frame.renderFinishedSemaphore(), null);

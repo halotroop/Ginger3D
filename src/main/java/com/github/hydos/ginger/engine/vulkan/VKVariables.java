@@ -70,11 +70,6 @@ public class VKVariables
 
     public static VKVertex[] vertices; //TODO: remove and properly add model loading
     public static int[] indices;
-    
-    public static long vertexBuffer;
-    public static long vertexBufferMemory;
-    public static long indexBuffer;
-    public static long indexBufferMemory;
 
     public static List<Long> uniformBuffers;
     public static List<Long> uniformBuffersMemory;
