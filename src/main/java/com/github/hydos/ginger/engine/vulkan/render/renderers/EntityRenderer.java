@@ -11,8 +11,8 @@ import org.lwjgl.vulkan.VkCommandBuffer;
 
 import com.github.hydos.ginger.engine.common.render.Renderer;
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
-import com.github.hydos.ginger.engine.vulkan.misc.VKModelLoader.VKMesh;
-import com.github.hydos.ginger.engine.vulkan.misc.VKVertex;
+import com.github.hydos.ginger.engine.vulkan.model.VKVertex;
+import com.github.hydos.ginger.engine.vulkan.model.VKModelLoader.VKMesh;
 import com.github.hydos.ginger.engine.vulkan.render.VKBufferMesh;
 import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
 

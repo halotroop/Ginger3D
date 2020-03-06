@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.vulkan.misc;
+package com.github.hydos.ginger.engine.vulkan.utils;
 
 import java.util.*;
 

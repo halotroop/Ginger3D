@@ -1,7 +1,7 @@
 package com.github.hydos.ginger.engine.vulkan.render;
 
-import com.github.hydos.ginger.engine.vulkan.misc.VKModelLoader.VKMesh;
-import com.github.hydos.ginger.engine.vulkan.misc.VKVertex;
+import com.github.hydos.ginger.engine.vulkan.model.VKVertex;
+import com.github.hydos.ginger.engine.vulkan.model.VKModelLoader.VKMesh;
 
 public class VKBufferMesh
 {

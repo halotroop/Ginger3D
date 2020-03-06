@@ -19,8 +19,8 @@ import com.github.hydos.ginger.VulkanExample.*;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
 import com.github.hydos.ginger.engine.vulkan.managers.CommandBufferManager;
-import com.github.hydos.ginger.engine.vulkan.misc.*;
-import com.github.hydos.ginger.engine.vulkan.render.VKBufferMesh;
+import com.github.hydos.ginger.engine.vulkan.model.VKVertex;
+import com.github.hydos.ginger.engine.vulkan.render.*;
 import com.github.hydos.ginger.engine.vulkan.swapchain.VKSwapchainManager;
 
 public class VKUtils

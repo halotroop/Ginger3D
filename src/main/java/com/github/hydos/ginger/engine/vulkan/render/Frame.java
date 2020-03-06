@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.vulkan.misc;
+package com.github.hydos.ginger.engine.vulkan.render;
 
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.vulkan.KHRSwapchain.*;

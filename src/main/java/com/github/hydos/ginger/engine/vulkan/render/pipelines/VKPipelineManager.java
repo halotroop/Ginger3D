@@ -49,7 +49,7 @@ import org.lwjgl.vulkan.VkRect2D;
 import org.lwjgl.vulkan.VkViewport;
 
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
-import com.github.hydos.ginger.engine.vulkan.misc.VKVertex;
+import com.github.hydos.ginger.engine.vulkan.model.VKVertex;
 import com.github.hydos.ginger.engine.vulkan.shaders.VKShaderManager;
 import com.github.hydos.ginger.engine.vulkan.shaders.VKShaderUtils;
 import com.github.hydos.ginger.engine.vulkan.shaders.VKShaderUtils.SPIRV;

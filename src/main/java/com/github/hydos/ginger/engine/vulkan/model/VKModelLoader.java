@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.vulkan.misc;
+package com.github.hydos.ginger.engine.vulkan.model;
 
 import static java.util.Objects.requireNonNull;
 import static org.lwjgl.assimp.Assimp.*;

@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.vulkan.misc;
+package com.github.hydos.ginger.engine.vulkan.model;
 
 import static org.lwjgl.vulkan.VK10.VK_FORMAT_R32G32B32_SFLOAT;
 import static org.lwjgl.vulkan.VK10.VK_FORMAT_R32G32_SFLOAT;

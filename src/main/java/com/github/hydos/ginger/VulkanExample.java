@@ -19,8 +19,9 @@ import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.vulkan.*;
 import com.github.hydos.ginger.engine.vulkan.io.VKWindow;
 import com.github.hydos.ginger.engine.vulkan.managers.VKTextureManager;
-import com.github.hydos.ginger.engine.vulkan.misc.*;
-import com.github.hydos.ginger.engine.vulkan.misc.VKModelLoader.VKMesh;
+import com.github.hydos.ginger.engine.vulkan.model.VKModelLoader;
+import com.github.hydos.ginger.engine.vulkan.model.VKModelLoader.VKMesh;
+import com.github.hydos.ginger.engine.vulkan.render.Frame;
 import com.github.hydos.ginger.engine.vulkan.swapchain.VKSwapchainManager;
 import com.github.hydos.ginger.engine.vulkan.utils.*;
 
@@ -38,7 +39,6 @@ public class VulkanExample {
 
 	public static class QueueFamilyIndices {
 
-		// We use Integer to use null as the empty value
 		public Integer graphicsFamily;
 		public Integer presentFamily;
 
@@ -73,8 +73,6 @@ public class VulkanExample {
 			proj = new Matrix4f();
 		}
 	}
-
-	// ======= METHODS ======= //
 
 	public void run() {
 		initWindow();
