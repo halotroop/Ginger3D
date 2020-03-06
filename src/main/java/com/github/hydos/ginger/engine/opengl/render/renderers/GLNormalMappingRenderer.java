@@ -41,7 +41,7 @@ public class GLNormalMappingRenderer extends Renderer
 		shader.loadViewMatrix(viewMatrix);
 	}
 
-	private void prepareInstance(RenderObject entity)
+	private void prepareInstance(GLRenderObject entity)
 	{
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),
 			entity.getRotY(), entity.getRotZ(), entity.getScale());
@@ -67,15 +67,15 @@ public class GLNormalMappingRenderer extends Renderer
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getNormalMap());
 	}
 
-	public void render(Map<GLTexturedModel, List<RenderObject>> entities, Vector4f clipPlane, List<Light> lights, Camera camera)
+	public void render(Map<GLTexturedModel, List<GLRenderObject>> entities, Vector4f clipPlane, List<Light> lights, Camera camera)
 	{
 		shader.start();
 		prepare(clipPlane, lights, camera);
 		for (GLTexturedModel model : entities.keySet())
 		{
 			prepareTexturedModel(model);
-			List<RenderObject> batch = entities.get(model);
-			for (RenderObject entity : batch)
+			List<GLRenderObject> batch = entities.get(model);
+			for (GLRenderObject entity : batch)
 			{
 				prepareInstance(entity);
 				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);

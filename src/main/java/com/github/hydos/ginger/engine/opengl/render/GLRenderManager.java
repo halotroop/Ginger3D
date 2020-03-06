@@ -41,8 +41,8 @@ public class GLRenderManager
 	private GLNormalMappingRenderer normalRenderer;
 	private Matrix4f projectionMatrix;
 	private ShadowMapMasterRenderer shadowMapRenderer;
-	private Map<GLTexturedModel, List<RenderObject>> entities = new HashMap<GLTexturedModel, List<RenderObject>>();
-	private Map<GLTexturedModel, List<RenderObject>> normalMapEntities = new HashMap<GLTexturedModel, List<RenderObject>>();
+	private Map<GLTexturedModel, List<GLRenderObject>> entities = new HashMap<GLTexturedModel, List<GLRenderObject>>();
+	private Map<GLTexturedModel, List<GLRenderObject>> normalMapEntities = new HashMap<GLTexturedModel, List<GLRenderObject>>();
 
 	public GLRenderManager(Camera camera)
 	{
@@ -93,41 +93,41 @@ public class GLRenderManager
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 	}
 
-	private void processEntity(RenderObject entity)
+	private void processEntity(GLRenderObject entity)
 	{
 		GLTexturedModel entityModel = (GLTexturedModel) entity.getModel();
-		List<RenderObject> batch = entities.get(entityModel);
+		List<GLRenderObject> batch = entities.get(entityModel);
 		if (batch != null)
 		{
 			batch.add(entity);
 		}
 		else
 		{
-			List<RenderObject> newBatch = new ArrayList<RenderObject>();
+			List<GLRenderObject> newBatch = new ArrayList<GLRenderObject>();
 			newBatch.add(entity);
 			entities.put(entityModel, newBatch);
 		}
 	}
 
-	private void processEntityWithNormal(RenderObject entity)
+	private void processEntityWithNormal(GLRenderObject entity)
 	{
 		GLTexturedModel entityModel = (GLTexturedModel) entity.getModel();
-		List<RenderObject> batch = normalMapEntities.get(entityModel);
+		List<GLRenderObject> batch = normalMapEntities.get(entityModel);
 		if (batch != null)
 		{
 			batch.add(entity);
 		}
 		else
 		{
-			List<RenderObject> newBatch = new ArrayList<RenderObject>();
+			List<GLRenderObject> newBatch = new ArrayList<GLRenderObject>();
 			newBatch.add(entity);
 			normalMapEntities.put(entityModel, newBatch);
 		}
 	}
 
-	private void renderEntities(List<RenderObject> entities, Camera camera, List<Light> lights)
+	private void renderEntities(List<GLRenderObject> entities, Camera camera, List<Light> lights)
 	{
-		for (RenderObject entity : entities)
+		for (GLRenderObject entity : entities)
 		{ processEntity(entity); }
 		entityRenderer.prepare();
 		entityShader.start();
@@ -149,14 +149,14 @@ public class GLRenderManager
 	public void renderGuis(List<GLGuiTexture> guis)
 	{ guiRenderer.render(guis); }
 
-	private void renderNormalEntities(List<RenderObject> normalEntities, List<Light> lights, Camera camera, Vector4f clipPlane)
+	private void renderNormalEntities(List<GLRenderObject> normalEntities, List<Light> lights, Camera camera, Vector4f clipPlane)
 	{
-		for (RenderObject entity : normalEntities)
+		for (GLRenderObject entity : normalEntities)
 		{ processEntityWithNormal(entity); }
 		normalRenderer.render(normalMapEntities, clipPlane, lights, camera);
 	}
 
-	public void renderScene(List<RenderObject> entities, List<RenderObject> normalEntities, List<Light> lights, Camera camera, Vector4f clipPlane)
+	public void renderScene(List<GLRenderObject> entities, List<GLRenderObject> normalEntities, List<Light> lights, Camera camera, Vector4f clipPlane)
 	{
 		prepare();
 		renderEntities(entities, camera, lights);
@@ -165,9 +165,9 @@ public class GLRenderManager
 //		skyboxRenderer.render(camera);
 	}
 
-	public void renderShadowMap(List<RenderObject> entityList, Light sun)
+	public void renderShadowMap(List<GLRenderObject> entityList, Light sun)
 	{
-		for (RenderObject entity : entityList)
+		for (GLRenderObject entity : entityList)
 		{ processEntity(entity); }
 		shadowMapRenderer.render(entities, sun);
 		entities.clear();

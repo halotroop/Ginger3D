@@ -11,12 +11,13 @@ import java.nio.IntBuffer;
 import java.util.Set;
 import java.util.stream.*;
 
-import org.joml.Matrix4f;
+import org.joml.*;
 import org.lwjgl.vulkan.*;
 
 import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.vulkan.*;
+import com.github.hydos.ginger.engine.vulkan.elements.VKRenderObject;
 import com.github.hydos.ginger.engine.vulkan.io.VKWindow;
 import com.github.hydos.ginger.engine.vulkan.managers.VKTextureManager;
 import com.github.hydos.ginger.engine.vulkan.model.VKModelLoader;
@@ -86,7 +87,8 @@ public class VulkanExample {
 		File modelFile = new File(ClassLoader.getSystemClassLoader().getResource("models/chalet.obj").getFile());
 
 		VKMesh model = VKModelLoader.loadModel(modelFile, aiProcess_FlipUVs | aiProcess_DropNormals);
-		GingerVK.getInstance().entityRenderer.processEntity(model);
+		VKRenderObject object = new VKRenderObject(model, new Vector3f(), 1, 1, 1, new Vector3f());
+		GingerVK.getInstance().entityRenderer.processEntity(object);
 	}
 
 	private void initWindow() {

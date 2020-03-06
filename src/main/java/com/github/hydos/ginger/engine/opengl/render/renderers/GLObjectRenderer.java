@@ -7,7 +7,7 @@ import org.lwjgl.opengl.*;
 
 import com.github.halotroop.litecraft.types.block.BlockInstance;
 import com.github.hydos.ginger.engine.common.api.GingerRegister;
-import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
+import com.github.hydos.ginger.engine.common.elements.objects.GLRenderObject;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.math.Maths;
 import com.github.hydos.ginger.engine.common.render.Renderer;
@@ -31,7 +31,7 @@ public class GLObjectRenderer extends Renderer
 	public void prepare()
 	{ GL11.glEnable(GL11.GL_DEPTH_TEST); }
 
-	private void prepareInstance(RenderObject entity)
+	private void prepareInstance(GLRenderObject entity)
 	{
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
@@ -59,13 +59,13 @@ public class GLObjectRenderer extends Renderer
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
 	}
 
-	public void render(Map<GLTexturedModel, List<RenderObject>> entities)
+	public void render(Map<GLTexturedModel, List<GLRenderObject>> entities)
 	{
 		for (GLTexturedModel model : entities.keySet())
 		{
 			prepareTexturedModel(model);
-			List<RenderObject> batch = entities.get(model);
-			for (RenderObject entity : batch)
+			List<GLRenderObject> batch = entities.get(model);
+			for (GLRenderObject entity : batch)
 			{
 				if (entity.isVisible())
 				{
@@ -91,7 +91,7 @@ public class GLObjectRenderer extends Renderer
 		shader.start();
 		shader.loadSkyColour(Window.getColour());
 		shader.loadViewMatrix(GingerRegister.getInstance().game.data.camera);
-		for (RenderObject entity : renderList)
+		for (GLRenderObject entity : renderList)
 		{
 			if (entity != null && entity.getModel() != null)
 			{

@@ -5,7 +5,7 @@ import org.joml.Vector2f;
 import com.github.hydos.ginger.engine.common.api.*;
 import com.github.hydos.ginger.engine.common.api.game.Game;
 import com.github.hydos.ginger.engine.common.elements.buttons.TextureButton;
-import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
+import com.github.hydos.ginger.engine.common.elements.objects.GLRenderObject;
 import com.github.hydos.ginger.engine.common.font.*;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.screen.Screen;
@@ -36,7 +36,7 @@ public class GingerGL extends GingerEngine
 		getRegistry().currentScreen = screen;
 	}
 	
-	public void setGingerPlayer(RenderObject player)
+	public void setGingerPlayer(GLRenderObject player)
 	{
 		registry.game.data.entities.remove(registry.game.player); // remove the old player
 		registry.game.data.playerObject = player; // set all the player variables

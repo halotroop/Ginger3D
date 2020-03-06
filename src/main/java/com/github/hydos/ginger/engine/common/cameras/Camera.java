@@ -2,11 +2,11 @@ package com.github.hydos.ginger.engine.common.cameras;
 
 import org.joml.Vector3f;
 
-import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
+import com.github.hydos.ginger.engine.common.elements.objects.GLRenderObject;
 
 public abstract class Camera
 {
-	public RenderObject player;
+	public GLRenderObject player;
 	private float pitch, yaw, roll;
 	private Vector3f position = new Vector3f(0, 0, 0);
 

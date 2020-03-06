@@ -6,7 +6,7 @@ import org.lwjgl.opengl.*;
 import com.github.halotroop.litecraft.types.block.BlockInstance;
 import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 import com.github.hydos.ginger.engine.common.api.GingerRegister;
-import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
+import com.github.hydos.ginger.engine.common.elements.objects.GLRenderObject;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.math.Maths;
 import com.github.hydos.ginger.engine.common.render.Renderer;
@@ -28,7 +28,7 @@ public class GLBlockRenderer extends Renderer implements WorldGenConstants
 		this.atlasID = GLLoader.createBlockAtlas();
 	}
 
-	private void prepBlockInstance(RenderObject entity)
+	private void prepBlockInstance(GLRenderObject entity)
 	{
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),
 			entity.getRotY(), entity.getRotZ(), entity.getScale());

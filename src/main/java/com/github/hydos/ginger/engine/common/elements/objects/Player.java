@@ -10,7 +10,7 @@ import com.github.hydos.ginger.engine.common.api.GingerRegister;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
 
-public class Player extends RenderObject implements WorldGenConstants
+public class Player extends GLRenderObject implements WorldGenConstants
 {
 	private boolean isInAir = false;
 	private double upwardsSpeed;

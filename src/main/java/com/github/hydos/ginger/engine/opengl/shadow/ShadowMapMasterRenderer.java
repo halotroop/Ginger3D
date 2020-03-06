@@ -134,7 +134,7 @@ public class ShadowMapMasterRenderer
 	 *                 entities in that list use.
 	 * @param sun
 	 *                 - the light acting as the sun in the scene. */
-	public void render(Map<GLTexturedModel, List<RenderObject>> entities, Light sun)
+	public void render(Map<GLTexturedModel, List<GLRenderObject>> entities, Light sun)
 	{
 		shadowBox.update();
 		Vector3f sunPosition = sun.getPosition();

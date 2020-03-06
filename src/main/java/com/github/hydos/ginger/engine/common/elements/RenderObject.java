@@ -1,25 +1,15 @@
-package com.github.hydos.ginger.engine.common.elements.objects;
+package com.github.hydos.ginger.engine.common.elements;
 
 import org.joml.Vector3f;
 
-public class RenderObject
+public abstract class RenderObject
 {
-	private TexturedModel model;
+	
 	public Vector3f position;
-	private float rotX = 0, rotY = 0, rotZ = 0;
-	private Vector3f scale;
-	private boolean visible = true;
-
-	public RenderObject(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale)
-	{
-		this.model = model;
-		this.position = position;
-		this.rotX = rotX;
-		this.rotY = rotY;
-		this.rotZ = rotZ;
-		this.scale = scale;
-	}
-
+	public float rotX = 0, rotY = 0, rotZ = 0;
+	public Vector3f scale;
+	public boolean visible = true;
+	
 	public void x(float x)
 	{ this.position.x = x; }
 
@@ -28,9 +18,7 @@ public class RenderObject
 
 	public void z(float z)
 	{ this.position.z = z; }
-
-	public TexturedModel getModel()
-	{ return model; }
+	
 
 	public Vector3f getPosition()
 	{ return position; }
@@ -61,9 +49,6 @@ public class RenderObject
 		this.rotZ += dz;
 	}
 
-	public void setModel(TexturedModel model)
-	{ this.model = model; }
-
 	public void setPosition(Vector3f position)
 	{ this.position = position; }
 
@@ -88,4 +73,5 @@ public class RenderObject
 	{
 		this.visible = visible;
 	}
+	
 }

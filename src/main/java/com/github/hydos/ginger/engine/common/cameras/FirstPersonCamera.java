@@ -2,7 +2,7 @@ package com.github.hydos.ginger.engine.common.cameras;
 
 import org.joml.Vector3f;
 
-import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
+import com.github.hydos.ginger.engine.common.elements.objects.GLRenderObject;
 import com.github.hydos.ginger.engine.common.io.Window;
 
 public class FirstPersonCamera extends Camera
@@ -11,7 +11,7 @@ public class FirstPersonCamera extends Camera
 	private float pitch, yaw;
 	private float roll;
 
-	public FirstPersonCamera(RenderObject playerEntity)
+	public FirstPersonCamera(GLRenderObject playerEntity)
 	{
 		this.player = playerEntity;
 		playerEntity.setVisible(false);

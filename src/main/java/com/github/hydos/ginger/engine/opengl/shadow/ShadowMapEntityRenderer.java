@@ -5,7 +5,7 @@ import java.util.*;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.*;
 
-import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
+import com.github.hydos.ginger.engine.common.elements.objects.GLRenderObject;
 import com.github.hydos.ginger.engine.common.math.Maths;
 import com.github.hydos.ginger.engine.opengl.render.GLRenderManager;
 import com.github.hydos.ginger.engine.opengl.render.models.*;
@@ -47,7 +47,7 @@ public class ShadowMapEntityRenderer
 	 * 
 	 * @param entity
 	 *               - the entity to be prepared for rendering. */
-	private void prepareInstance(RenderObject entity)
+	private void prepareInstance(GLRenderObject entity)
 	{
 		Matrix4f modelMatrix = Maths.createTransformationMatrix(entity.getPosition(),
 			entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
@@ -60,7 +60,7 @@ public class ShadowMapEntityRenderer
 	 * 
 	 * @param entities
 	 *                 - the entities to be rendered to the shadow map. */
-	protected void render(Map<GLTexturedModel, List<RenderObject>> entities)
+	protected void render(Map<GLTexturedModel, List<GLRenderObject>> entities)
 	{
 		for (GLTexturedModel model : entities.keySet())
 		{
@@ -70,7 +70,7 @@ public class ShadowMapEntityRenderer
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
 			if (model.getTexture().isTransparent())
 			{ GLRenderManager.disableCulling(); }
-			for (RenderObject entity : entities.get(model))
+			for (GLRenderObject entity : entities.get(model))
 			{
 				prepareInstance(entity);
 				GL11.glDrawElements(GL11.GL_TRIANGLES, rawModel.getVertexCount(),

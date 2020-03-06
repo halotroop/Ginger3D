@@ -2,12 +2,12 @@ package com.github.hydos.ginger.engine.common.cameras;
 
 import org.lwjgl.glfw.*;
 
-import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
+import com.github.hydos.ginger.engine.common.elements.objects.GLRenderObject;
 import com.github.hydos.ginger.engine.common.io.Window;
 
 public class ThirdPersonCamera extends Camera
 {
-	public ThirdPersonCamera(RenderObject playerEntity)
+	public ThirdPersonCamera(GLRenderObject playerEntity)
 	{
 		this.player = playerEntity;
 	}

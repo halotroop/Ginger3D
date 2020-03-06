@@ -15,22 +15,22 @@ import com.github.hydos.ginger.engine.common.elements.objects.*;
 public class GameData
 {
 	public List<GLGuiTexture> guis;
-	public List<RenderObject> entities;
+	public List<GLRenderObject> entities;
 	public List<Light> lights;
-	public List<RenderObject> normalMapEntities;
-	public RenderObject playerObject;
+	public List<GLRenderObject> normalMapEntities;
+	public GLRenderObject playerObject;
 	public Camera camera;
 	public Vector4f clippingPlane;
 	public boolean handleGuis = true;
 	public int tickSpeed = 20;
 
-	public GameData(RenderObject playerEntity, Camera camera, int tickSpeed)
+	public GameData(GLRenderObject playerEntity, Camera camera, int tickSpeed)
 	{
 		clippingPlane = new Vector4f(0, -1, 0, 100000);
 		guis = new ArrayList<GLGuiTexture>();
-		entities = new ArrayList<RenderObject>();
+		entities = new ArrayList<GLRenderObject>();
 		lights = new ArrayList<Light>();
-		normalMapEntities = new ArrayList<RenderObject>();
+		normalMapEntities = new ArrayList<GLRenderObject>();
 		this.playerObject = playerEntity;
 		this.camera = camera;
 		this.tickSpeed = tickSpeed;

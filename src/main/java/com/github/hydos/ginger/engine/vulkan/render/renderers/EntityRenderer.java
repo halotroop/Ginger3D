@@ -11,6 +11,7 @@ import org.lwjgl.vulkan.VkCommandBuffer;
 
 import com.github.hydos.ginger.engine.common.render.Renderer;
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
+import com.github.hydos.ginger.engine.vulkan.elements.VKRenderObject;
 import com.github.hydos.ginger.engine.vulkan.model.VKVertex;
 import com.github.hydos.ginger.engine.vulkan.model.VKModelLoader.VKMesh;
 import com.github.hydos.ginger.engine.vulkan.render.VKBufferMesh;
@@ -18,15 +19,15 @@ import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
 
 public class EntityRenderer extends Renderer
 {
-	
-	public List<VKBufferMesh> entities;//TODO: batch rendering
+	public List<VKRenderObject> entities;//TODO: batch rendering
 	
 	public EntityRenderer() {
 		priority = 1;
-		entities = new ArrayList<VKBufferMesh>();
+		entities = new ArrayList<VKRenderObject>();
 	}
 	
-	public void processEntity(VKMesh mesh) {
+	public void processEntity(VKRenderObject entity) {
+		VKMesh mesh = entity.getRawModel();
 		VKBufferMesh processedMesh = new VKBufferMesh();
 		processedMesh.vkMesh = mesh;
 		int vertexCount = mesh.positions.size();
@@ -50,20 +51,24 @@ public class EntityRenderer extends Renderer
 		
 		processedMesh = VKUtils.createVertexBuffer(processedMesh);
 		processedMesh = VKUtils.createIndexBuffer(processedMesh);
-		entities.add(processedMesh);
+		entity.setModel(processedMesh);
+		entities.add(entity);
 	}
 	
 	@Override
 	public void VKRender(MemoryStack stack, VkCommandBuffer commandBuffer, int index) 
 	{
 		
-		for(VKBufferMesh entity : entities)
+		for(VKRenderObject entity : entities)
 		{
-	        LongBuffer vertexBuffers = stack.longs(entity.vertexBuffer);
+			VKBufferMesh mesh = entity.getModel();
+			VKUtils.updateUniformBuffer(VKVariables.currentImageIndex, entity);//TODO: move this to entitiy renderer and update before every entity is drawn
+
+	        LongBuffer vertexBuffers = stack.longs(mesh.vertexBuffer);
 	        LongBuffer offsets = stack.longs(0);
 	        vkCmdBindVertexBuffers(commandBuffer, 0, vertexBuffers, offsets);
 
-	        vkCmdBindIndexBuffer(commandBuffer, entity.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+	        vkCmdBindIndexBuffer(commandBuffer, mesh.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
 	        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
 	        	VKVariables.pipelineLayout,
@@ -72,7 +77,7 @@ public class EntityRenderer extends Renderer
 	                	), 
 	                null);
 
-	        vkCmdDrawIndexed(commandBuffer, entity.vkMesh.indices.size(), 1, 0, 0, 0);
+	        vkCmdDrawIndexed(commandBuffer, mesh.vkMesh.indices.size(), 1, 0, 0, 0);
 		}
 
 	}

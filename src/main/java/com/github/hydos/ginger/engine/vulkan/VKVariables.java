@@ -82,5 +82,6 @@ public class VKVariables
 
     public static boolean framebufferResize;
     public static VKRenderManager renderManager;
+	public static int currentImageIndex;
 	
 }

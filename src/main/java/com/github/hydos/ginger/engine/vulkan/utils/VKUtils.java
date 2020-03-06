@@ -18,6 +18,7 @@ import com.github.hydos.ginger.VulkanExample;
 import com.github.hydos.ginger.VulkanExample.*;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
+import com.github.hydos.ginger.engine.vulkan.elements.VKRenderObject;
 import com.github.hydos.ginger.engine.vulkan.managers.CommandBufferManager;
 import com.github.hydos.ginger.engine.vulkan.model.VKVertex;
 import com.github.hydos.ginger.engine.vulkan.render.*;
@@ -782,7 +783,7 @@ public class VKUtils
 		buffer.rewind();
 	}
 
-	private static void memcpy(ByteBuffer buffer, UniformBufferObject ubo) {
+	private static void putUBOInMemory(ByteBuffer buffer, UniformBufferObject ubo) {
 
 		final int mat4Size = 16 * Float.BYTES;
 
@@ -840,7 +841,7 @@ public class VKUtils
 		}
 	}
 
-	public static void updateUniformBuffer(int currentImage) {
+	public static void updateUniformBuffer(int currentImage, VKRenderObject renderObject) {
 
 		try(MemoryStack stack = stackPush()) {
 
@@ -857,7 +858,7 @@ public class VKUtils
 			PointerBuffer data = stack.mallocPointer(1);
 			vkMapMemory(VKVariables.device, VKVariables.uniformBuffersMemory.get(currentImage), 0, UniformBufferObject.SIZEOF, 0, data);
 			{
-				memcpy(data.getByteBuffer(0, UniformBufferObject.SIZEOF), ubo);
+				putUBOInMemory(data.getByteBuffer(0, UniformBufferObject.SIZEOF), ubo);
 			}
 			vkUnmapMemory(VKVariables.device, VKVariables.uniformBuffersMemory.get(currentImage));
 		}
