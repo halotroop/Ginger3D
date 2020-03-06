@@ -13,14 +13,14 @@ import com.github.hydos.ginger.engine.common.math.Maths;
 import com.github.hydos.ginger.engine.common.render.Renderer;
 import com.github.hydos.ginger.engine.opengl.render.*;
 import com.github.hydos.ginger.engine.opengl.render.models.*;
-import com.github.hydos.ginger.engine.opengl.render.shaders.StaticShader;
+import com.github.hydos.ginger.engine.opengl.render.shaders.GLStaticShader;
 import com.github.hydos.ginger.engine.opengl.render.texture.ModelTexture;
 
 public class GLObjectRenderer extends Renderer
 {
-	private StaticShader shader;
+	private GLStaticShader shader;
 
-	public GLObjectRenderer(StaticShader shader, Matrix4f projectionMatrix)
+	public GLObjectRenderer(GLStaticShader shader, Matrix4f projectionMatrix)
 	{
 		this.shader = shader;
 		shader.start();
@@ -95,7 +95,7 @@ public class GLObjectRenderer extends Renderer
 		{
 			if (entity != null && entity.getModel() != null)
 			{
-				GLTexturedModel model = entity.getModel();
+				GLTexturedModel model = (GLTexturedModel) entity.getModel();
 				prepareTexturedModel(model);
 				prepareInstance(entity);
 				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);

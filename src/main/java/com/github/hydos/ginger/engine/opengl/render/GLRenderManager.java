@@ -6,10 +6,10 @@ import java.util.*;
 import org.joml.*;
 import org.lwjgl.opengl.*;
 
-import com.github.halotroop.litecraft.render.BlockRenderer;
+import com.github.halotroop.litecraft.render.GLBlockRenderer;
 import com.github.hydos.ginger.engine.common.api.GingerRegister;
 import com.github.hydos.ginger.engine.common.cameras.Camera;
-import com.github.hydos.ginger.engine.common.elements.GuiTexture;
+import com.github.hydos.ginger.engine.common.elements.GLGuiTexture;
 import com.github.hydos.ginger.engine.common.elements.objects.*;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
@@ -32,8 +32,8 @@ public class GLRenderManager
 		//		GL11.glCullFace(GL11.GL_BACK);
 	}
 
-	public BlockRenderer blockRenderer;
-	private StaticShader entityShader;
+	public GLBlockRenderer blockRenderer;
+	private GLStaticShader entityShader;
 	public GLObjectRenderer entityRenderer;
 	private GuiShader guiShader;
 	private GLGuiRenderer guiRenderer;
@@ -47,8 +47,8 @@ public class GLRenderManager
 	public GLRenderManager(Camera camera)
 	{
 		createProjectionMatrix();
-		entityShader = new StaticShader();
-		blockRenderer = new BlockRenderer(entityShader, projectionMatrix);
+		entityShader = new GLStaticShader();
+		blockRenderer = new GLBlockRenderer(entityShader, projectionMatrix);
 		entityRenderer = new GLObjectRenderer(entityShader, projectionMatrix);
 		guiShader = new GuiShader();
 		guiRenderer = new GLGuiRenderer(guiShader);
@@ -95,7 +95,7 @@ public class GLRenderManager
 
 	private void processEntity(RenderObject entity)
 	{
-		GLTexturedModel entityModel = entity.getModel();
+		GLTexturedModel entityModel = (GLTexturedModel) entity.getModel();
 		List<RenderObject> batch = entities.get(entityModel);
 		if (batch != null)
 		{
@@ -111,7 +111,7 @@ public class GLRenderManager
 
 	private void processEntityWithNormal(RenderObject entity)
 	{
-		GLTexturedModel entityModel = entity.getModel();
+		GLTexturedModel entityModel = (GLTexturedModel) entity.getModel();
 		List<RenderObject> batch = normalMapEntities.get(entityModel);
 		if (batch != null)
 		{
@@ -139,14 +139,14 @@ public class GLRenderManager
 		this.entities.clear();
 	}
 
-	public void renderGui(GuiTexture guiTexture)
+	public void renderGui(GLGuiTexture guiTexture)
 	{
-		List<GuiTexture> texture = new ArrayList<GuiTexture>();
+		List<GLGuiTexture> texture = new ArrayList<GLGuiTexture>();
 		texture.add(guiTexture);
 		guiRenderer.render(texture);
 	}
 
-	public void renderGuis(List<GuiTexture> guis)
+	public void renderGuis(List<GLGuiTexture> guis)
 	{ guiRenderer.render(guis); }
 
 	private void renderNormalEntities(List<RenderObject> normalEntities, List<Light> lights, Camera camera, Vector4f clipPlane)

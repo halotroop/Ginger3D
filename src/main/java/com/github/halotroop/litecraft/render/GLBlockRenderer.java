@@ -11,15 +11,15 @@ import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.math.Maths;
 import com.github.hydos.ginger.engine.common.render.Renderer;
 import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
-import com.github.hydos.ginger.engine.opengl.render.shaders.StaticShader;
+import com.github.hydos.ginger.engine.opengl.render.shaders.GLStaticShader;
 import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
 
-public class BlockRenderer extends Renderer implements WorldGenConstants
+public class GLBlockRenderer extends Renderer implements WorldGenConstants
 {
-	public StaticShader shader;
+	public GLStaticShader shader;
 	public int atlasID;
 
-	public BlockRenderer(StaticShader shader, Matrix4f projectionMatrix)
+	public GLBlockRenderer(GLStaticShader shader, Matrix4f projectionMatrix)
 	{
 		this.shader = shader;
 		shader.start();
@@ -79,7 +79,7 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
         for (BlockInstance entity : renderList) {
             if (entity != null && entity.getModel() != null)
             {
-                GLTexturedModel blockModel = entity.getModel();
+                GLTexturedModel blockModel = (GLTexturedModel) entity.getModel();
                 GL11.glBindTexture(GL11.GL_TEXTURE_2D, blockModel.getTexture().getTextureID());
                 prepBlockInstance(entity);
                 GL11.glDrawElements(GL11.GL_TRIANGLES, blockModel.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);

@@ -2,12 +2,12 @@ package com.github.hydos.ginger.engine.common.elements;
 
 import org.joml.Vector2f;
 
-public class GuiTexture
+public class GLGuiTexture
 {
 	private int texture;
 	private Vector2f position, scale;
 
-	public GuiTexture(int texture, Vector2f position, Vector2f scale)
+	public GLGuiTexture(int texture, Vector2f position, Vector2f scale)
 	{
 		this.texture = texture;
 		this.position = position;

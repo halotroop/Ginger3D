@@ -8,13 +8,14 @@ import java.util.function.LongConsumer;
 import org.joml.Vector3f;
 
 import com.github.halotroop.litecraft.Litecraft;
-import com.github.halotroop.litecraft.render.BlockRenderer;
+import com.github.halotroop.litecraft.render.GLBlockRenderer;
 import com.github.halotroop.litecraft.save.LitecraftSave;
 import com.github.halotroop.litecraft.types.block.*;
 import com.github.halotroop.litecraft.types.entity.PlayerEntity;
 import com.github.halotroop.litecraft.world.dimension.Dimension;
 import com.github.halotroop.litecraft.world.gen.*;
 import com.github.halotroop.litecraft.world.gen.modifier.WorldModifier;
+import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
 
 import it.unimi.dsi.fastutil.longs.*;
 
@@ -175,9 +176,9 @@ public class World implements BlockAccess, WorldGenConstants
 	public Chunk optimiseChunk(Chunk chunk)
 	{ return chunk; }
 
-	public void render(BlockRenderer blockRenderer)
+	public void render(GLBlockRenderer blockRenderer)
 	{
-		blockRenderer.prepareModel(this.dummy.getModel());
+		blockRenderer.prepareModel((GLTexturedModel) this.dummy.getModel());
 		this.chunks.forEach((pos, c) -> 
 		{
 			if (c != null && c.isFullyGenerated())

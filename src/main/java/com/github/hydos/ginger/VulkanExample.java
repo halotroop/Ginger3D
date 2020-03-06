@@ -32,8 +32,7 @@ public class VulkanExample {
 
 	public static final int MAX_FRAMES_IN_FLIGHT = 2;
 		
-	public static final Set<String> DEVICE_EXTENSIONS = Stream.of(VK_KHR_SWAPCHAIN_EXTENSION_NAME)
-		.collect(toSet());
+	public static final Set<String> DEVICE_EXTENSIONS = Stream.of(VK_KHR_SWAPCHAIN_EXTENSION_NAME).collect(toSet());
 
 
 

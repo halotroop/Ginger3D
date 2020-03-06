@@ -6,7 +6,7 @@ import java.util.function.ToIntFunction;
 import org.joml.Vector3f;
 
 import com.github.halotroop.litecraft.logic.SODSerializable;
-import com.github.halotroop.litecraft.render.BlockRenderer;
+import com.github.halotroop.litecraft.render.GLBlockRenderer;
 import com.github.halotroop.litecraft.types.block.*;
 import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 
@@ -71,7 +71,7 @@ public class Chunk implements BlockAccess, WorldGenConstants, SODSerializable
 		return this.blockInstances[index(x, y, z)];
 	}
 
-	public void render(BlockRenderer blockRenderer)
+	public void render(GLBlockRenderer blockRenderer)
 	{
 		if (shouldRender)
 		{

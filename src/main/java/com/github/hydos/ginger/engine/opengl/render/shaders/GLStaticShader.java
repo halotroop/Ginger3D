@@ -8,7 +8,7 @@ import com.github.hydos.ginger.engine.common.cameras.Camera;
 import com.github.hydos.ginger.engine.common.elements.objects.Light;
 import com.github.hydos.ginger.engine.common.math.Maths;
 
-public class StaticShader extends ShaderProgram
+public class GLStaticShader extends ShaderProgram
 {
 	private static final int MAX_LIGHTS = 5;
 	private int location_transformationMatrix;
@@ -22,7 +22,7 @@ public class StaticShader extends ShaderProgram
 	private int location_useFakeLighting;
 	private int location_skyColour;
 
-	public StaticShader()
+	public GLStaticShader()
 	{ super("entityVertexShader.glsl", "entityFragmentShader.glsl"); }
 
 	@Override

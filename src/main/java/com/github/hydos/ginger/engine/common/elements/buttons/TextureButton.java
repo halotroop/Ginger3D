@@ -5,13 +5,13 @@ import java.util.List;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
-import com.github.hydos.ginger.engine.common.elements.GuiTexture;
+import com.github.hydos.ginger.engine.common.elements.GLGuiTexture;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
 
 public class TextureButton
 {
-	private GuiTexture guiTexture;
+	private GLGuiTexture guiTexture;
 	private boolean shown = false;
 	private boolean clicked = false;
 	private boolean isHovering = false;
@@ -20,10 +20,10 @@ public class TextureButton
 	public TextureButton(String texture, Vector2f position, Vector2f scale)
 	{
 		resourceLocation = texture;
-		guiTexture = new GuiTexture(GLLoader.loadTextureDirectly(texture), position, scale);
+		guiTexture = new GLGuiTexture(GLLoader.loadTextureDirectly(texture), position, scale);
 	}
 
-	public void hide(List<GuiTexture> guiTextureList)
+	public void hide(List<GLGuiTexture> guiTextureList)
 	{
 		if (!shown)
 		{
@@ -44,7 +44,7 @@ public class TextureButton
 	public boolean isShown()
 	{ return shown; }
 
-	public void show(List<GuiTexture> guiTextureList)
+	public void show(List<GLGuiTexture> guiTextureList)
 	{
 		if (shown)
 		{

@@ -8,7 +8,7 @@ import com.github.halotroop.litecraft.Litecraft;
 import com.github.halotroop.litecraft.save.LitecraftSave;
 import com.github.halotroop.litecraft.world.dimension.Dimensions;
 import com.github.hydos.ginger.engine.common.api.GingerEngine;
-import com.github.hydos.ginger.engine.common.elements.GuiTexture;
+import com.github.hydos.ginger.engine.common.elements.GLGuiTexture;
 import com.github.hydos.ginger.engine.common.elements.buttons.TextureButton;
 import com.github.hydos.ginger.engine.common.font.GUIText;
 import com.github.hydos.ginger.engine.common.io.Window;
@@ -28,7 +28,7 @@ public class TitleScreen extends Screen
 
 	public TitleScreen()
 	{
-		elements = new ArrayList<GuiTexture>();
+		elements = new ArrayList<GLGuiTexture>();
 		playButton = ((GingerGL)engine).registerButton("/textures/guis/playbutton.png", new Vector2f(0, 0), new Vector2f(0.25f, 0.1f));
 		playButton.show(Litecraft.getInstance().data.guis);
 		debugText = ((GingerGL)engine).registerText("Loading...", 2, new Vector2f(0, 0), 1f, true, "debugInfo");

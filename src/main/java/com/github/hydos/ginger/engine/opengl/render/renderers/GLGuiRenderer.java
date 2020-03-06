@@ -5,7 +5,7 @@ import java.util.List;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.*;
 
-import com.github.hydos.ginger.engine.common.elements.GuiTexture;
+import com.github.hydos.ginger.engine.common.elements.GLGuiTexture;
 import com.github.hydos.ginger.engine.common.math.Maths;
 import com.github.hydos.ginger.engine.common.render.Renderer;
 import com.github.hydos.ginger.engine.opengl.render.models.RawModel;
@@ -30,7 +30,7 @@ public class GLGuiRenderer extends Renderer
 	public void cleanUp()
 	{ shader.cleanUp(); }
 
-	public void render(List<GuiTexture> guis)
+	public void render(List<GLGuiTexture> guis)
 	{
 		if (guis != null)
 		{
@@ -41,7 +41,7 @@ public class GLGuiRenderer extends Renderer
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			
-			for (GuiTexture gui : guis)
+			for (GLGuiTexture gui : guis)
 			{
 				GL13.glActiveTexture(GL13.GL_TEXTURE0);
 				GL11.glBindTexture(GL11.GL_TEXTURE_2D, gui.getTexture());
