@@ -77,6 +77,7 @@ public class VulkanExample {
 		initWindow();
 		initVulkan();
 		mainLoop();
+		GingerVK.getInstance().cleanup();
 		VKUtils.cleanup();
 	}
 	
