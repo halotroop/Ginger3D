@@ -7,11 +7,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetFramebufferSizeCallback;
-import static org.lwjgl.glfw.GLFWVulkan.glfwCreateWindowSurface;
 import static org.lwjgl.glfw.GLFWVulkan.glfwGetRequiredInstanceExtensions;
-import static org.lwjgl.stb.STBImage.STBI_rgb_alpha;
-import static org.lwjgl.stb.STBImage.stbi_image_free;
-import static org.lwjgl.stb.STBImage.stbi_load;
 import static org.lwjgl.system.MemoryStack.stackGet;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.vulkan.KHRSurface.VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
@@ -22,22 +18,13 @@ import static org.lwjgl.vulkan.KHRSurface.vkGetPhysicalDeviceSurfaceCapabilities
 import static org.lwjgl.vulkan.KHRSurface.vkGetPhysicalDeviceSurfaceFormatsKHR;
 import static org.lwjgl.vulkan.KHRSurface.vkGetPhysicalDeviceSurfacePresentModesKHR;
 import static org.lwjgl.vulkan.KHRSurface.vkGetPhysicalDeviceSurfaceSupportKHR;
-import static org.lwjgl.vulkan.KHRSwapchain.VK_ERROR_OUT_OF_DATE_KHR;
-import static org.lwjgl.vulkan.KHRSwapchain.VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 import static org.lwjgl.vulkan.KHRSwapchain.VK_KHR_SWAPCHAIN_EXTENSION_NAME;
-import static org.lwjgl.vulkan.KHRSwapchain.VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-import static org.lwjgl.vulkan.KHRSwapchain.VK_SUBOPTIMAL_KHR;
-import static org.lwjgl.vulkan.KHRSwapchain.vkAcquireNextImageKHR;
-import static org.lwjgl.vulkan.KHRSwapchain.vkQueuePresentKHR;
 import static org.lwjgl.vulkan.VK10.*;
 
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -47,31 +34,15 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.joml.Matrix4f;
-import org.joml.Vector2fc;
-import org.joml.Vector3fc;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.Pointer;
-import org.lwjgl.vulkan.VkAttachmentDescription;
-import org.lwjgl.vulkan.VkAttachmentReference;
-import org.lwjgl.vulkan.VkBufferCopy;
-import org.lwjgl.vulkan.VkBufferCreateInfo;
 import org.lwjgl.vulkan.VkBufferImageCopy;
-import org.lwjgl.vulkan.VkClearValue;
 import org.lwjgl.vulkan.VkCommandBuffer;
-import org.lwjgl.vulkan.VkCommandBufferAllocateInfo;
-import org.lwjgl.vulkan.VkCommandBufferBeginInfo;
-import org.lwjgl.vulkan.VkCommandPoolCreateInfo;
-import org.lwjgl.vulkan.VkDescriptorBufferInfo;
-import org.lwjgl.vulkan.VkDescriptorImageInfo;
 import org.lwjgl.vulkan.VkDescriptorPoolCreateInfo;
 import org.lwjgl.vulkan.VkDescriptorPoolSize;
-import org.lwjgl.vulkan.VkDescriptorSetAllocateInfo;
 import org.lwjgl.vulkan.VkDescriptorSetLayoutBinding;
 import org.lwjgl.vulkan.VkDescriptorSetLayoutCreateInfo;
-import org.lwjgl.vulkan.VkDevice;
-import org.lwjgl.vulkan.VkDeviceCreateInfo;
-import org.lwjgl.vulkan.VkDeviceQueueCreateInfo;
 import org.lwjgl.vulkan.VkExtensionProperties;
 import org.lwjgl.vulkan.VkExtent2D;
 import org.lwjgl.vulkan.VkExtent3D;
@@ -84,27 +55,13 @@ import org.lwjgl.vulkan.VkImageMemoryBarrier;
 import org.lwjgl.vulkan.VkImageViewCreateInfo;
 import org.lwjgl.vulkan.VkMemoryAllocateInfo;
 import org.lwjgl.vulkan.VkMemoryRequirements;
-import org.lwjgl.vulkan.VkOffset2D;
 import org.lwjgl.vulkan.VkPhysicalDevice;
-import org.lwjgl.vulkan.VkPhysicalDeviceFeatures;
 import org.lwjgl.vulkan.VkPhysicalDeviceMemoryProperties;
 import org.lwjgl.vulkan.VkPhysicalDeviceProperties;
-import org.lwjgl.vulkan.VkPresentInfoKHR;
-import org.lwjgl.vulkan.VkQueue;
 import org.lwjgl.vulkan.VkQueueFamilyProperties;
-import org.lwjgl.vulkan.VkRect2D;
-import org.lwjgl.vulkan.VkRenderPassBeginInfo;
-import org.lwjgl.vulkan.VkRenderPassCreateInfo;
-import org.lwjgl.vulkan.VkSamplerCreateInfo;
 import org.lwjgl.vulkan.VkSemaphoreCreateInfo;
-import org.lwjgl.vulkan.VkSubmitInfo;
-import org.lwjgl.vulkan.VkSubpassDependency;
-import org.lwjgl.vulkan.VkSubpassDescription;
 import org.lwjgl.vulkan.VkSurfaceCapabilitiesKHR;
 import org.lwjgl.vulkan.VkSurfaceFormatKHR;
-import org.lwjgl.vulkan.VkVertexInputAttributeDescription;
-import org.lwjgl.vulkan.VkVertexInputBindingDescription;
-import org.lwjgl.vulkan.VkWriteDescriptorSet;
 
 import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
@@ -117,9 +74,8 @@ import com.github.hydos.ginger.engine.vulkan.misc.AlignmentUtils;
 import com.github.hydos.ginger.engine.vulkan.misc.Frame;
 import com.github.hydos.ginger.engine.vulkan.misc.VKModelLoader;
 import com.github.hydos.ginger.engine.vulkan.misc.VKModelLoader.VKMesh;
+import com.github.hydos.ginger.engine.vulkan.misc.VKVertex;
 import com.github.hydos.ginger.engine.vulkan.render.VKBufferMesh;
-import com.github.hydos.ginger.engine.vulkan.render.VKRenderManager;
-import com.github.hydos.ginger.engine.vulkan.render.renderers.EntityRenderer;
 import com.github.hydos.ginger.engine.vulkan.swapchain.VKSwapchainManager;
 import com.github.hydos.ginger.engine.vulkan.utils.VKBufferUtils;
 import com.github.hydos.ginger.engine.vulkan.utils.VKDeviceManager;
@@ -160,79 +116,19 @@ public class VulkanExample {
 
 	}
 
-	private static class UniformBufferObject {
+	public static class UniformBufferObject {
 
-		private static final int SIZEOF = 3 * 16 * Float.BYTES;
+		public static final int SIZEOF = 3 * 16 * Float.BYTES;
 
-		private Matrix4f model;
-		private Matrix4f view;
-		private Matrix4f proj;
+		public Matrix4f model;
+		public Matrix4f view;
+		public Matrix4f proj;
 
 		public UniformBufferObject() {
 			model = new Matrix4f();
 			view = new Matrix4f();
 			proj = new Matrix4f();
 		}
-	}
-
-	public static class VKVertex {
-
-		private static final int SIZEOF = (3 + 3 + 2) * Float.BYTES;
-		private static final int OFFSETOF_POS = 0;
-		private static final int OFFSETOF_COLOR = 3 * Float.BYTES;
-		private static final int OFFSETOF_TEXTCOORDS = (3 + 3) * Float.BYTES;
-
-		private Vector3fc pos;
-		private Vector3fc color;
-		private Vector2fc texCoords;
-
-		public VKVertex(Vector3fc pos, Vector3fc color, Vector2fc texCoords) {
-			this.pos = pos;
-			this.color = color;
-			this.texCoords = texCoords;
-		}
-
-		public static VkVertexInputBindingDescription.Buffer getBindingDescription() {
-
-			VkVertexInputBindingDescription.Buffer bindingDescription =
-				VkVertexInputBindingDescription.callocStack(1);
-
-			bindingDescription.binding(0);
-			bindingDescription.stride(VKVertex.SIZEOF);
-			bindingDescription.inputRate(VK_VERTEX_INPUT_RATE_VERTEX);
-
-			return bindingDescription;
-		}
-
-		public static VkVertexInputAttributeDescription.Buffer getAttributeDescriptions() {
-
-			VkVertexInputAttributeDescription.Buffer attributeDescriptions =
-				VkVertexInputAttributeDescription.callocStack(3);
-
-			// Position
-			VkVertexInputAttributeDescription posDescription = attributeDescriptions.get(0);
-			posDescription.binding(0);
-			posDescription.location(0);
-			posDescription.format(VK_FORMAT_R32G32B32_SFLOAT);
-			posDescription.offset(OFFSETOF_POS);
-
-			// Color
-			VkVertexInputAttributeDescription colorDescription = attributeDescriptions.get(1);
-			colorDescription.binding(0);
-			colorDescription.location(1);
-			colorDescription.format(VK_FORMAT_R32G32B32_SFLOAT);
-			colorDescription.offset(OFFSETOF_COLOR);
-
-			// Texture coordinates
-			VkVertexInputAttributeDescription texCoordsDescription = attributeDescriptions.get(2);
-			texCoordsDescription.binding(0);
-			texCoordsDescription.location(2);
-			texCoordsDescription.format(VK_FORMAT_R32G32_SFLOAT);
-			texCoordsDescription.offset(OFFSETOF_TEXTCOORDS);
-
-			return attributeDescriptions.rewind();
-		}
-
 	}
 
 	// ======= METHODS ======= //
@@ -941,71 +837,6 @@ public class VulkanExample {
 			}
 
 			VKVariables.descriptorPool = pDescriptorPool.get(0);
-		}
-	}
-
-	public static void createDescriptorSets() {
-
-		try(MemoryStack stack = stackPush()) {
-
-			LongBuffer layouts = stack.mallocLong(VKVariables.swapChainImages.size());
-			for(int i = 0;i < layouts.capacity();i++) {
-				layouts.put(i, VKVariables.descriptorSetLayout);
-			}
-
-			VkDescriptorSetAllocateInfo allocInfo = VkDescriptorSetAllocateInfo.callocStack(stack);
-			allocInfo.sType(VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO);
-			allocInfo.descriptorPool(VKVariables.descriptorPool);
-			allocInfo.pSetLayouts(layouts);
-
-			LongBuffer pDescriptorSets = stack.mallocLong(VKVariables.swapChainImages.size());
-
-			if(vkAllocateDescriptorSets(VKVariables.device, allocInfo, pDescriptorSets) != VK_SUCCESS) {
-				throw new RuntimeException("Failed to allocate descriptor sets");
-			}
-
-			VKVariables.descriptorSets = new ArrayList<>(pDescriptorSets.capacity());
-
-			VkDescriptorBufferInfo.Buffer bufferInfo = VkDescriptorBufferInfo.callocStack(1, stack);
-			bufferInfo.offset(0);
-			bufferInfo.range(UniformBufferObject.SIZEOF);
-
-			VkDescriptorImageInfo.Buffer imageInfo = VkDescriptorImageInfo.callocStack(1, stack);
-			imageInfo.imageLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-			imageInfo.imageView(VKVariables.textureImageView);
-			imageInfo.sampler(VKVariables.textureSampler);
-
-			VkWriteDescriptorSet.Buffer descriptorWrites = VkWriteDescriptorSet.callocStack(2, stack);
-
-			VkWriteDescriptorSet uboDescriptorWrite = descriptorWrites.get(0);
-			uboDescriptorWrite.sType(VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET);
-			uboDescriptorWrite.dstBinding(0);
-			uboDescriptorWrite.dstArrayElement(0);
-			uboDescriptorWrite.descriptorType(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
-			uboDescriptorWrite.descriptorCount(1);
-			uboDescriptorWrite.pBufferInfo(bufferInfo);
-
-			VkWriteDescriptorSet samplerDescriptorWrite = descriptorWrites.get(1);
-			samplerDescriptorWrite.sType(VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET);
-			samplerDescriptorWrite.dstBinding(1);
-			samplerDescriptorWrite.dstArrayElement(0);
-			samplerDescriptorWrite.descriptorType(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
-			samplerDescriptorWrite.descriptorCount(1);
-			samplerDescriptorWrite.pImageInfo(imageInfo);
-
-			for(int i = 0;i < pDescriptorSets.capacity();i++) {
-
-				long descriptorSet = pDescriptorSets.get(i);
-
-				bufferInfo.buffer(VKVariables.uniformBuffers.get(i));
-
-				uboDescriptorWrite.dstSet(descriptorSet);
-				samplerDescriptorWrite.dstSet(descriptorSet);
-
-				vkUpdateDescriptorSets(VKVariables.device, descriptorWrites, null);
-
-				VKVariables.descriptorSets.add(descriptorSet);
-			}
 		}
 	}
 

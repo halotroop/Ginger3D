@@ -42,6 +42,7 @@ import com.github.hydos.ginger.engine.vulkan.VKVariables;
 import com.github.hydos.ginger.engine.vulkan.managers.CommandBufferManager;
 import com.github.hydos.ginger.engine.vulkan.render.VKRenderManager;
 import com.github.hydos.ginger.engine.vulkan.render.pipelines.VKPipelineManager;
+import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
 
 public class VKSwapchainManager
 {
@@ -180,7 +181,7 @@ public class VKSwapchainManager
         VulkanExample.createFramebuffers();
         VulkanExample.createUniformBuffers();
         VulkanExample.createDescriptorPool();
-        VulkanExample.createDescriptorSets();
+        VKUtils.createDescriptorSets();
         CommandBufferManager.createCommandBuffers();
     }
 	

@@ -12,8 +12,8 @@ import org.lwjgl.vulkan.VkInstance;
 import org.lwjgl.vulkan.VkPhysicalDevice;
 import org.lwjgl.vulkan.VkQueue;
 
-import com.github.hydos.ginger.VulkanExample.VKVertex;
 import com.github.hydos.ginger.engine.vulkan.misc.Frame;
+import com.github.hydos.ginger.engine.vulkan.misc.VKVertex;
 import com.github.hydos.ginger.engine.vulkan.render.VKRenderManager;
 
 /**

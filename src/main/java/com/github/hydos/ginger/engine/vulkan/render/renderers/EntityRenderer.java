@@ -1,22 +1,25 @@
 package com.github.hydos.ginger.engine.vulkan.render.renderers;
 
-import static org.lwjgl.vulkan.VK12.*;
+import static org.lwjgl.vulkan.VK10.VK_INDEX_TYPE_UINT32;
+import static org.lwjgl.vulkan.VK10.VK_PIPELINE_BIND_POINT_GRAPHICS;
+import static org.lwjgl.vulkan.VK10.vkCmdBindDescriptorSets;
+import static org.lwjgl.vulkan.VK10.vkCmdBindIndexBuffer;
+import static org.lwjgl.vulkan.VK10.vkCmdBindVertexBuffers;
+import static org.lwjgl.vulkan.VK10.vkCmdDrawIndexed;
 
 import java.nio.LongBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.joml.Vector3f;
-import org.joml.Vector3fc;
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.vulkan.VkCommandBuffer;
 
 import com.github.hydos.ginger.VulkanExample;
-import com.github.hydos.ginger.VulkanExample.VKVertex;
 import com.github.hydos.ginger.engine.common.render.Renderer;
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
 import com.github.hydos.ginger.engine.vulkan.misc.VKModelLoader.VKMesh;
+import com.github.hydos.ginger.engine.vulkan.misc.VKVertex;
 import com.github.hydos.ginger.engine.vulkan.render.VKBufferMesh;
 
 public class EntityRenderer extends Renderer
