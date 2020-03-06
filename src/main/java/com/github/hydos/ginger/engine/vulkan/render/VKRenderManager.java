@@ -10,10 +10,10 @@ import java.util.*;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
 
-import com.github.hydos.ginger.VulkanExample;
 import com.github.hydos.ginger.engine.common.exceptions.GingerException;
 import com.github.hydos.ginger.engine.common.render.Renderer;
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
+import com.github.hydos.ginger.engine.vulkan.utils.VKUtils;
 
 /** used to manage all the renderers and shaders to go with them
  * 
@@ -105,7 +105,7 @@ public class VKRenderManager
 			// Depth-Stencil attachments
 
 			VkAttachmentDescription depthAttachment = attachments.get(1);
-			depthAttachment.format(VulkanExample.findDepthFormat());
+			depthAttachment.format(VKUtils.findDepthFormat());
 			depthAttachment.samples(VKVariables.msaaSamples);
 			depthAttachment.loadOp(VK_ATTACHMENT_LOAD_OP_CLEAR);
 			depthAttachment.storeOp(VK_ATTACHMENT_STORE_OP_DONT_CARE);

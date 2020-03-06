@@ -12,7 +12,6 @@ import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.VkSamplerCreateInfo;
 
-import com.github.hydos.ginger.VulkanExample;
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
 import com.github.hydos.ginger.engine.vulkan.utils.*;
 
@@ -33,7 +32,7 @@ public class VKTextureManager
 
 			long imageSize = pWidth.get(0) * pHeight.get(0) * 4; // pChannels.get(0);
 
-			VKVariables.mipLevels = (int) Math.floor(VulkanExample.log2(Math.max(pWidth.get(0), pHeight.get(0)))) + 1;
+			VKVariables.mipLevels = (int) Math.floor(VKUtils.log2(Math.max(pWidth.get(0), pHeight.get(0)))) + 1;
 
 			if(pixels == null) {
 				throw new RuntimeException("Failed to load texture image " + filename);
@@ -59,7 +58,7 @@ public class VKTextureManager
 
 			LongBuffer pTextureImage = stack.mallocLong(1);
 			LongBuffer pTextureImageMemory = stack.mallocLong(1);
-			VulkanExample.createImage(pWidth.get(0), pHeight.get(0),
+			VKUtils.createImage(pWidth.get(0), pHeight.get(0),
 				VKVariables.mipLevels,
 				VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
 				VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
@@ -79,7 +78,7 @@ public class VKTextureManager
 			VKUtils.copyBufferToImage(pStagingBuffer.get(0), VKVariables.textureImage, pWidth.get(0), pHeight.get(0));
 
 			// Transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
-			VulkanExample.generateMipmaps(VKVariables.textureImage, VK_FORMAT_R8G8B8A8_SRGB, pWidth.get(0), pHeight.get(0), VKVariables.mipLevels);
+			VKUtils.generateMipmaps(VKVariables.textureImage, VK_FORMAT_R8G8B8A8_SRGB, pWidth.get(0), pHeight.get(0), VKVariables.mipLevels);
 
 			vkDestroyBuffer(VKVariables.device, pStagingBuffer.get(0), null);
 			vkFreeMemory(VKVariables.device, pStagingBufferMemory.get(0), null);
@@ -90,7 +89,7 @@ public class VKTextureManager
 	}
 	
 	public static void createTextureImageView() {
-		VKVariables.textureImageView = VulkanExample.createImageView(VKVariables.textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, VKVariables.mipLevels);
+		VKVariables.textureImageView = VKUtils.createImageView(VKVariables.textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, VKVariables.mipLevels);
 	}
 	
 	public static void createTextureSampler() {

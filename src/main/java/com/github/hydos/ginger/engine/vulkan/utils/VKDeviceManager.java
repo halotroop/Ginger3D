@@ -109,7 +109,7 @@ public class VKDeviceManager
 			}
 
 			VKVariables.physicalDevice = device;
-			VKVariables.msaaSamples = VulkanExample.getMaxUsableSampleCount();
+			VKVariables.msaaSamples = VKUtils.getMaxUsableSampleCount();
 		}
 	}
 	
