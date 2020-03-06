@@ -48,8 +48,7 @@ import org.lwjgl.vulkan.VkPipelineViewportStateCreateInfo;
 import org.lwjgl.vulkan.VkRect2D;
 import org.lwjgl.vulkan.VkViewport;
 
-import com.github.hydos.ginger.VulkanExample;
-import com.github.hydos.ginger.VulkanExample.VulkanDemoGinger2.Vertex;
+import com.github.hydos.ginger.VulkanExample.Vertex;
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
 import com.github.hydos.ginger.engine.vulkan.shaders.VKShaderManager;
 import com.github.hydos.ginger.engine.vulkan.shaders.VKShaderUtils;

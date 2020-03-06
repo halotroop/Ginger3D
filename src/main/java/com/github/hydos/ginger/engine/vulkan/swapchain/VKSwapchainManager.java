@@ -1,19 +1,42 @@
 package com.github.hydos.ginger.engine.vulkan.swapchain;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
+import static org.lwjgl.glfw.GLFW.glfwWaitEvents;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.vulkan.KHRSurface.VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-import static org.lwjgl.vulkan.KHRSwapchain.*;
-import static org.lwjgl.vulkan.VK10.*;
+import static org.lwjgl.vulkan.KHRSwapchain.VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+import static org.lwjgl.vulkan.KHRSwapchain.vkCreateSwapchainKHR;
+import static org.lwjgl.vulkan.KHRSwapchain.vkDestroySwapchainKHR;
+import static org.lwjgl.vulkan.KHRSwapchain.vkGetSwapchainImagesKHR;
+import static org.lwjgl.vulkan.VK10.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+import static org.lwjgl.vulkan.VK10.VK_NULL_HANDLE;
+import static org.lwjgl.vulkan.VK10.VK_SHARING_MODE_CONCURRENT;
+import static org.lwjgl.vulkan.VK10.VK_SHARING_MODE_EXCLUSIVE;
+import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
+import static org.lwjgl.vulkan.VK10.vkDestroyBuffer;
+import static org.lwjgl.vulkan.VK10.vkDestroyDescriptorPool;
+import static org.lwjgl.vulkan.VK10.vkDestroyFramebuffer;
+import static org.lwjgl.vulkan.VK10.vkDestroyImage;
+import static org.lwjgl.vulkan.VK10.vkDestroyImageView;
+import static org.lwjgl.vulkan.VK10.vkDestroyPipeline;
+import static org.lwjgl.vulkan.VK10.vkDestroyPipelineLayout;
+import static org.lwjgl.vulkan.VK10.vkDestroyRenderPass;
+import static org.lwjgl.vulkan.VK10.vkDeviceWaitIdle;
+import static org.lwjgl.vulkan.VK10.vkFreeCommandBuffers;
+import static org.lwjgl.vulkan.VK10.vkFreeMemory;
 
-import java.nio.*;
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
 import java.util.ArrayList;
 
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.vulkan.*;
+import org.lwjgl.vulkan.VkExtent2D;
+import org.lwjgl.vulkan.VkSurfaceFormatKHR;
+import org.lwjgl.vulkan.VkSwapchainCreateInfoKHR;
 
-import com.github.hydos.ginger.VulkanExample.VulkanDemoGinger2;
-import com.github.hydos.ginger.VulkanExample.VulkanDemoGinger2.*;
+import com.github.hydos.ginger.VulkanExample;
+import com.github.hydos.ginger.VulkanExample.QueueFamilyIndices;
+import com.github.hydos.ginger.VulkanExample.SwapChainSupportDetails;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
 import com.github.hydos.ginger.engine.vulkan.render.pipelines.VKPipelineManager;
@@ -38,7 +61,7 @@ public class VKSwapchainManager
 
         VKVariables.swapChainFramebuffers.forEach(framebuffer -> vkDestroyFramebuffer(VKVariables.device, framebuffer, null));
 
-        vkFreeCommandBuffers(VKVariables.device, VKVariables.commandPool, VulkanDemoGinger2.asPointerBuffer(VKVariables.commandBuffers));
+        vkFreeCommandBuffers(VKVariables.device, VKVariables.commandPool, VulkanExample.asPointerBuffer(VKVariables.commandBuffers));
 
         vkDestroyPipeline(VKVariables.device, VKVariables.graphicsPipeline, null);
 
@@ -75,11 +98,11 @@ public class VKSwapchainManager
 
         try(MemoryStack stack = stackPush()) {
 
-            SwapChainSupportDetails swapChainSupport = VulkanDemoGinger2.querySwapChainSupport(VKVariables.physicalDevice, stack);
+            SwapChainSupportDetails swapChainSupport = VulkanExample.querySwapChainSupport(VKVariables.physicalDevice, stack);
 
-            VkSurfaceFormatKHR surfaceFormat = VulkanDemoGinger2.chooseSwapSurfaceFormat(swapChainSupport.formats);
-            int presentMode = VulkanDemoGinger2.chooseSwapPresentMode(swapChainSupport.presentModes);
-            VkExtent2D extent = VulkanDemoGinger2.chooseSwapExtent(swapChainSupport.capabilities);
+            VkSurfaceFormatKHR surfaceFormat = VulkanExample.chooseSwapSurfaceFormat(swapChainSupport.formats);
+            int presentMode = VulkanExample.chooseSwapPresentMode(swapChainSupport.presentModes);
+            VkExtent2D extent = VulkanExample.chooseSwapExtent(swapChainSupport.capabilities);
 
             IntBuffer imageCount = stack.ints(swapChainSupport.capabilities.minImageCount() + 1);
 
@@ -100,7 +123,7 @@ public class VKSwapchainManager
             createInfo.imageArrayLayers(1);
             createInfo.imageUsage(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
 
-            QueueFamilyIndices indices = VulkanDemoGinger2.findQueueFamilies(VKVariables.physicalDevice);
+            QueueFamilyIndices indices = VulkanExample.findQueueFamilies(VKVariables.physicalDevice);
 
             if(!indices.graphicsFamily.equals(indices.presentFamily)) {
                 createInfo.imageSharingMode(VK_SHARING_MODE_CONCURRENT);
@@ -147,16 +170,16 @@ public class VKSwapchainManager
      */
     public static void createSwapChainObjects() {
     	createSwapChain();
-    	VulkanDemoGinger2.createImageViews();
-    	VulkanDemoGinger2.createRenderPass();
+    	VulkanExample.createImageViews();
+    	VulkanExample.createRenderPass();
         VKPipelineManager.createGraphicsPipeline();
-        VulkanDemoGinger2.createColorResources();
-        VulkanDemoGinger2.createDepthResources();
-        VulkanDemoGinger2.createFramebuffers();
-        VulkanDemoGinger2.createUniformBuffers();
-        VulkanDemoGinger2.createDescriptorPool();
-        VulkanDemoGinger2.createDescriptorSets();
-        VulkanDemoGinger2.createCommandBuffers();
+        VulkanExample.createColorResources();
+        VulkanExample.createDepthResources();
+        VulkanExample.createFramebuffers();
+        VulkanExample.createUniformBuffers();
+        VulkanExample.createDescriptorPool();
+        VulkanExample.createDescriptorSets();
+        VulkanExample.createCommandBuffers();
     }
 	
 }

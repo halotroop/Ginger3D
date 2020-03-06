@@ -12,7 +12,6 @@ import java.nio.LongBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.VkCommandBuffer;
 
-import com.github.hydos.ginger.VulkanExample.VulkanDemoGinger2;
 import com.github.hydos.ginger.engine.common.render.Renderer;
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
 

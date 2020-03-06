@@ -12,7 +12,7 @@ import org.lwjgl.vulkan.VkInstance;
 import org.lwjgl.vulkan.VkPhysicalDevice;
 import org.lwjgl.vulkan.VkQueue;
 
-import com.github.hydos.ginger.VulkanExample.VulkanDemoGinger2.Vertex;
+import com.github.hydos.ginger.VulkanExample.Vertex;
 import com.github.hydos.ginger.engine.vulkan.misc.Frame;
 import com.github.hydos.ginger.engine.vulkan.render.VKRenderManager;
 
