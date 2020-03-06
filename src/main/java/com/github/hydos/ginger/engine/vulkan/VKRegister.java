@@ -1,21 +1,13 @@
 package com.github.hydos.ginger.engine.vulkan;
 
 import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.vulkan.VK10.VK_API_VERSION_1_0;
-import static org.lwjgl.vulkan.VK10.VK_MAKE_VERSION;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_APPLICATION_INFO;
-import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
-import static org.lwjgl.vulkan.VK10.vkCreateInstance;
+import static org.lwjgl.vulkan.VK10.*;
 
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.vulkan.VkApplicationInfo;
-import org.lwjgl.vulkan.VkInstance;
-import org.lwjgl.vulkan.VkInstanceCreateInfo;
+import org.lwjgl.vulkan.*;
 
 import com.github.hydos.ginger.VulkanExample;
-import com.github.hydos.ginger.engine.vulkan.utils.VKDeviceManager;
 
 public class VKRegister
 {
