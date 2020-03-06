@@ -1,16 +1,58 @@
 package com.github.hydos.ginger.engine.vulkan.render.pipelines;
 
 import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.vulkan.VK10.*;
+import static org.lwjgl.vulkan.VK10.VK_COLOR_COMPONENT_A_BIT;
+import static org.lwjgl.vulkan.VK10.VK_COLOR_COMPONENT_B_BIT;
+import static org.lwjgl.vulkan.VK10.VK_COLOR_COMPONENT_G_BIT;
+import static org.lwjgl.vulkan.VK10.VK_COLOR_COMPONENT_R_BIT;
+import static org.lwjgl.vulkan.VK10.VK_COMPARE_OP_LESS;
+import static org.lwjgl.vulkan.VK10.VK_CULL_MODE_BACK_BIT;
+import static org.lwjgl.vulkan.VK10.VK_FRONT_FACE_COUNTER_CLOCKWISE;
+import static org.lwjgl.vulkan.VK10.VK_LOGIC_OP_COPY;
+import static org.lwjgl.vulkan.VK10.VK_NULL_HANDLE;
+import static org.lwjgl.vulkan.VK10.VK_POLYGON_MODE_FILL;
+import static org.lwjgl.vulkan.VK10.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+import static org.lwjgl.vulkan.VK10.VK_SHADER_STAGE_FRAGMENT_BIT;
+import static org.lwjgl.vulkan.VK10.VK_SHADER_STAGE_VERTEX_BIT;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
+import static org.lwjgl.vulkan.VK10.vkCreateGraphicsPipelines;
+import static org.lwjgl.vulkan.VK10.vkCreatePipelineLayout;
+import static org.lwjgl.vulkan.VK10.vkDestroyShaderModule;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.LongBuffer;
 
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.vulkan.*;
+import org.lwjgl.vulkan.VkGraphicsPipelineCreateInfo;
+import org.lwjgl.vulkan.VkOffset2D;
+import org.lwjgl.vulkan.VkPipelineColorBlendAttachmentState;
+import org.lwjgl.vulkan.VkPipelineColorBlendStateCreateInfo;
+import org.lwjgl.vulkan.VkPipelineDepthStencilStateCreateInfo;
+import org.lwjgl.vulkan.VkPipelineInputAssemblyStateCreateInfo;
+import org.lwjgl.vulkan.VkPipelineLayoutCreateInfo;
+import org.lwjgl.vulkan.VkPipelineMultisampleStateCreateInfo;
+import org.lwjgl.vulkan.VkPipelineRasterizationStateCreateInfo;
+import org.lwjgl.vulkan.VkPipelineShaderStageCreateInfo;
+import org.lwjgl.vulkan.VkPipelineVertexInputStateCreateInfo;
+import org.lwjgl.vulkan.VkPipelineViewportStateCreateInfo;
+import org.lwjgl.vulkan.VkRect2D;
+import org.lwjgl.vulkan.VkViewport;
 
 import com.github.hydos.ginger.VulkanExample;
 import com.github.hydos.ginger.VulkanExample.VulkanDemoGinger2.Vertex;
-import com.github.hydos.ginger.engine.vulkan.shaders.*;
+import com.github.hydos.ginger.engine.vulkan.VKVariables;
+import com.github.hydos.ginger.engine.vulkan.shaders.VKShaderManager;
+import com.github.hydos.ginger.engine.vulkan.shaders.VKShaderUtils;
 import com.github.hydos.ginger.engine.vulkan.shaders.VKShaderUtils.SPIRV;
 
 public class VKPipelineManager
@@ -62,14 +104,14 @@ public class VKPipelineManager
             VkViewport.Buffer viewport = VkViewport.callocStack(1, stack);
             viewport.x(0.0f);
             viewport.y(0.0f);
-            viewport.width(VulkanExample.VulkanDemoGinger2.swapChainExtent.width());
-            viewport.height(VulkanExample.VulkanDemoGinger2.swapChainExtent.height());
+            viewport.width(VKVariables .swapChainExtent.width());
+            viewport.height(VKVariables.swapChainExtent.height());
             viewport.minDepth(0.0f);
             viewport.maxDepth(1.0f);
 
             VkRect2D.Buffer scissor = VkRect2D.callocStack(1, stack);
             scissor.offset(VkOffset2D.callocStack(stack).set(0, 0));
-            scissor.extent(VulkanExample.VulkanDemoGinger2.swapChainExtent);
+            scissor.extent(VKVariables.swapChainExtent);
 
             VkPipelineViewportStateCreateInfo viewportState = VkPipelineViewportStateCreateInfo.callocStack(stack);
             viewportState.sType(VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO);
@@ -94,7 +136,7 @@ public class VKPipelineManager
             multisampling.sType(VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO);
             multisampling.sampleShadingEnable(true);
             multisampling.minSampleShading(0.2f); // Enable sample shading in the pipeline
-            multisampling.rasterizationSamples(VulkanExample.VulkanDemoGinger2.msaaSamples); // Min fraction for sample shading; closer to one is smoother
+            multisampling.rasterizationSamples(VKVariables.msaaSamples); // Min fraction for sample shading; closer to one is smoother
 
             VkPipelineDepthStencilStateCreateInfo depthStencil = VkPipelineDepthStencilStateCreateInfo.callocStack(stack);
             depthStencil.sType(VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO);
@@ -123,15 +165,15 @@ public class VKPipelineManager
 
             VkPipelineLayoutCreateInfo pipelineLayoutInfo = VkPipelineLayoutCreateInfo.callocStack(stack);
             pipelineLayoutInfo.sType(VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO);
-            pipelineLayoutInfo.pSetLayouts(stack.longs(VulkanExample.VulkanDemoGinger2.descriptorSetLayout));
+            pipelineLayoutInfo.pSetLayouts(stack.longs(VKVariables.descriptorSetLayout));
 
             LongBuffer pPipelineLayout = stack.longs(VK_NULL_HANDLE);
 
-            if(vkCreatePipelineLayout(VulkanExample.VulkanDemoGinger2.device, pipelineLayoutInfo, null, pPipelineLayout) != VK_SUCCESS) {
+            if(vkCreatePipelineLayout(VKVariables.device, pipelineLayoutInfo, null, pPipelineLayout) != VK_SUCCESS) {
                 throw new RuntimeException("Failed to create pipeline layout");
             }
 
-            VulkanExample.VulkanDemoGinger2.pipelineLayout = pPipelineLayout.get(0);
+            VKVariables.pipelineLayout = pPipelineLayout.get(0);
 
             VkGraphicsPipelineCreateInfo.Buffer pipelineInfo = VkGraphicsPipelineCreateInfo.callocStack(1, stack);
             pipelineInfo.sType(VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO);
@@ -143,24 +185,24 @@ public class VKPipelineManager
             pipelineInfo.pMultisampleState(multisampling);
             pipelineInfo.pDepthStencilState(depthStencil);
             pipelineInfo.pColorBlendState(colorBlending);
-            pipelineInfo.layout(VulkanExample.VulkanDemoGinger2.pipelineLayout);
-            pipelineInfo.renderPass(VulkanExample.VulkanDemoGinger2.renderPass);
+            pipelineInfo.layout(VKVariables.pipelineLayout);
+            pipelineInfo.renderPass(VKVariables.renderPass);
             pipelineInfo.subpass(0);
             pipelineInfo.basePipelineHandle(VK_NULL_HANDLE);
             pipelineInfo.basePipelineIndex(-1);
 
             LongBuffer pGraphicsPipeline = stack.mallocLong(1);
 
-            if(vkCreateGraphicsPipelines(VulkanExample.VulkanDemoGinger2.device, VK_NULL_HANDLE, pipelineInfo, null, pGraphicsPipeline) != VK_SUCCESS) {
+            if(vkCreateGraphicsPipelines(VKVariables.device, VK_NULL_HANDLE, pipelineInfo, null, pGraphicsPipeline) != VK_SUCCESS) {
                 throw new RuntimeException("Failed to create graphics pipeline");
             }
 
-            VulkanExample.VulkanDemoGinger2.graphicsPipeline = pGraphicsPipeline.get(0);
+            VKVariables.graphicsPipeline = pGraphicsPipeline.get(0);
 
             // Cleanup
 
-            vkDestroyShaderModule(VulkanExample.VulkanDemoGinger2.device, vertShaderModule, null);
-            vkDestroyShaderModule(VulkanExample.VulkanDemoGinger2.device, fragShaderModule, null);
+            vkDestroyShaderModule(VKVariables.device, vertShaderModule, null);
+            vkDestroyShaderModule(VKVariables.device, fragShaderModule, null);
 
             vertShaderSPIRV.free();
             fragShaderSPIRV.free();

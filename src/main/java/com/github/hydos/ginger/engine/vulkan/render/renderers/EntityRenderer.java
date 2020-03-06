@@ -14,6 +14,7 @@ import org.lwjgl.vulkan.VkCommandBuffer;
 
 import com.github.hydos.ginger.VulkanExample.VulkanDemoGinger2;
 import com.github.hydos.ginger.engine.common.render.Renderer;
+import com.github.hydos.ginger.engine.vulkan.VKVariables;
 
 public class EntityRenderer extends Renderer
 {
@@ -24,20 +25,20 @@ public class EntityRenderer extends Renderer
 	@Override
 	public void VKRender(MemoryStack stack, VkCommandBuffer commandBuffer, int index) 
 	{
-        LongBuffer vertexBuffers = stack.longs(VulkanDemoGinger2.vertexBuffer);
+        LongBuffer vertexBuffers = stack.longs(VKVariables.vertexBuffer);
         LongBuffer offsets = stack.longs(0);
         vkCmdBindVertexBuffers(commandBuffer, 0, vertexBuffers, offsets);
 
-        vkCmdBindIndexBuffer(commandBuffer, VulkanDemoGinger2.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+        vkCmdBindIndexBuffer(commandBuffer, VKVariables.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-        	VulkanDemoGinger2.pipelineLayout,
+        	VKVariables.pipelineLayout,
                 0, stack.longs(
-                	VulkanDemoGinger2.descriptorSets.get(index)
+                	VKVariables.descriptorSets.get(index)
                 	), 
                 null);
 
-        vkCmdDrawIndexed(commandBuffer, VulkanDemoGinger2.indices.length, 1, 0, 0, 0);
+        vkCmdDrawIndexed(commandBuffer, VKVariables.indices.length, 1, 0, 0, 0);
 	}
 	
 	

@@ -15,6 +15,7 @@ import org.lwjgl.vulkan.*;
 import com.github.hydos.ginger.VulkanExample.VulkanDemoGinger2;
 import com.github.hydos.ginger.VulkanExample.VulkanDemoGinger2.*;
 import com.github.hydos.ginger.engine.common.io.Window;
+import com.github.hydos.ginger.engine.vulkan.VKVariables;
 import com.github.hydos.ginger.engine.vulkan.render.pipelines.VKPipelineManager;
 
 public class VKSwapchainManager
@@ -22,32 +23,32 @@ public class VKSwapchainManager
 	
     public static void cleanupSwapChain() {
 
-        vkDestroyImageView(VulkanDemoGinger2.device, VulkanDemoGinger2.colorImageView, null);
-        vkDestroyImage(VulkanDemoGinger2.device, VulkanDemoGinger2.colorImage, null);
-        vkFreeMemory(VulkanDemoGinger2.device, VulkanDemoGinger2.colorImageMemory, null);
+        vkDestroyImageView(VKVariables.device, VKVariables.colorImageView, null);
+        vkDestroyImage(VKVariables.device, VKVariables.colorImage, null);
+        vkFreeMemory(VKVariables.device, VKVariables.colorImageMemory, null);
 
-        vkDestroyImageView(VulkanDemoGinger2.device, VulkanDemoGinger2.depthImageView, null);
-        vkDestroyImage(VulkanDemoGinger2.device, VulkanDemoGinger2.depthImage, null);
-        vkFreeMemory(VulkanDemoGinger2.device, VulkanDemoGinger2.depthImageMemory, null);
+        vkDestroyImageView(VKVariables.device, VKVariables.depthImageView, null);
+        vkDestroyImage(VKVariables.device, VKVariables.depthImage, null);
+        vkFreeMemory(VKVariables.device, VKVariables.depthImageMemory, null);
 
-        VulkanDemoGinger2.uniformBuffers.forEach(ubo -> vkDestroyBuffer(VulkanDemoGinger2.device, ubo, null));
-        VulkanDemoGinger2.uniformBuffersMemory.forEach(uboMemory -> vkFreeMemory(VulkanDemoGinger2.device, uboMemory, null));
+        VKVariables.uniformBuffers.forEach(ubo -> vkDestroyBuffer(VKVariables.device, ubo, null));
+        VKVariables.uniformBuffersMemory.forEach(uboMemory -> vkFreeMemory(VKVariables.device, uboMemory, null));
 
-        vkDestroyDescriptorPool(VulkanDemoGinger2.device, VulkanDemoGinger2.descriptorPool, null);
+        vkDestroyDescriptorPool(VKVariables.device, VKVariables.descriptorPool, null);
 
-        VulkanDemoGinger2.swapChainFramebuffers.forEach(framebuffer -> vkDestroyFramebuffer(VulkanDemoGinger2.device, framebuffer, null));
+        VKVariables.swapChainFramebuffers.forEach(framebuffer -> vkDestroyFramebuffer(VKVariables.device, framebuffer, null));
 
-        vkFreeCommandBuffers(VulkanDemoGinger2.device, VulkanDemoGinger2.commandPool, VulkanDemoGinger2.asPointerBuffer(VulkanDemoGinger2.commandBuffers));
+        vkFreeCommandBuffers(VKVariables.device, VKVariables.commandPool, VulkanDemoGinger2.asPointerBuffer(VKVariables.commandBuffers));
 
-        vkDestroyPipeline(VulkanDemoGinger2.device, VulkanDemoGinger2.graphicsPipeline, null);
+        vkDestroyPipeline(VKVariables.device, VKVariables.graphicsPipeline, null);
 
-        vkDestroyPipelineLayout(VulkanDemoGinger2.device, VulkanDemoGinger2.pipelineLayout, null);
+        vkDestroyPipelineLayout(VKVariables.device, VKVariables.pipelineLayout, null);
 
-        vkDestroyRenderPass(VulkanDemoGinger2.device, VulkanDemoGinger2.renderPass, null);
+        vkDestroyRenderPass(VKVariables.device, VKVariables.renderPass, null);
 
-        VulkanDemoGinger2.swapChainImageViews.forEach(imageView -> vkDestroyImageView(VulkanDemoGinger2.device, imageView, null));
+        VKVariables.swapChainImageViews.forEach(imageView -> vkDestroyImageView(VKVariables.device, imageView, null));
 
-        vkDestroySwapchainKHR(VulkanDemoGinger2.device, VulkanDemoGinger2.swapChain, null);
+        vkDestroySwapchainKHR(VKVariables.device, VKVariables.swapChain, null);
     }
     
     public static void recreateSwapChain() {
@@ -63,7 +64,7 @@ public class VKSwapchainManager
             }
         }
 
-        vkDeviceWaitIdle(VulkanDemoGinger2.device);
+        vkDeviceWaitIdle(VKVariables.device);
 
         VKSwapchainManager.cleanupSwapChain();
 
@@ -74,7 +75,7 @@ public class VKSwapchainManager
 
         try(MemoryStack stack = stackPush()) {
 
-            SwapChainSupportDetails swapChainSupport = VulkanDemoGinger2.querySwapChainSupport(VulkanDemoGinger2.physicalDevice, stack);
+            SwapChainSupportDetails swapChainSupport = VulkanDemoGinger2.querySwapChainSupport(VKVariables.physicalDevice, stack);
 
             VkSurfaceFormatKHR surfaceFormat = VulkanDemoGinger2.chooseSwapSurfaceFormat(swapChainSupport.formats);
             int presentMode = VulkanDemoGinger2.chooseSwapPresentMode(swapChainSupport.presentModes);
@@ -89,7 +90,7 @@ public class VKSwapchainManager
             VkSwapchainCreateInfoKHR createInfo = VkSwapchainCreateInfoKHR.callocStack(stack);
 
             createInfo.sType(VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR);
-            createInfo.surface(VulkanDemoGinger2.surface);
+            createInfo.surface(VKVariables.surface);
 
             // Image settings
             createInfo.minImageCount(imageCount.get(0));
@@ -99,7 +100,7 @@ public class VKSwapchainManager
             createInfo.imageArrayLayers(1);
             createInfo.imageUsage(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
 
-            QueueFamilyIndices indices = VulkanDemoGinger2.findQueueFamilies(VulkanDemoGinger2.physicalDevice);
+            QueueFamilyIndices indices = VulkanDemoGinger2.findQueueFamilies(VKVariables.physicalDevice);
 
             if(!indices.graphicsFamily.equals(indices.presentFamily)) {
                 createInfo.imageSharingMode(VK_SHARING_MODE_CONCURRENT);
@@ -117,26 +118,26 @@ public class VKSwapchainManager
 
             LongBuffer pSwapChain = stack.longs(VK_NULL_HANDLE);
 
-            if(vkCreateSwapchainKHR(VulkanDemoGinger2.device, createInfo, null, pSwapChain) != VK_SUCCESS) {
+            if(vkCreateSwapchainKHR(VKVariables.device, createInfo, null, pSwapChain) != VK_SUCCESS) {
                 throw new RuntimeException("Failed to create swap chain");
             }
 
-            VulkanDemoGinger2.swapChain = pSwapChain.get(0);
+            VKVariables.swapChain = pSwapChain.get(0);
 
-            vkGetSwapchainImagesKHR(VulkanDemoGinger2.device, VulkanDemoGinger2.swapChain, imageCount, null);
+            vkGetSwapchainImagesKHR(VKVariables.device, VKVariables.swapChain, imageCount, null);
 
             LongBuffer pSwapchainImages = stack.mallocLong(imageCount.get(0));
 
-            vkGetSwapchainImagesKHR(VulkanDemoGinger2.device, VulkanDemoGinger2.swapChain, imageCount, pSwapchainImages);
+            vkGetSwapchainImagesKHR(VKVariables.device, VKVariables.swapChain, imageCount, pSwapchainImages);
 
-            VulkanDemoGinger2.swapChainImages = new ArrayList<>(imageCount.get(0));
+            VKVariables.swapChainImages = new ArrayList<>(imageCount.get(0));
 
             for(int i = 0;i < pSwapchainImages.capacity();i++) {
-            	VulkanDemoGinger2.swapChainImages.add(pSwapchainImages.get(i));
+            	VKVariables.swapChainImages.add(pSwapchainImages.get(i));
             }
 
-            VulkanDemoGinger2.swapChainImageFormat = surfaceFormat.format();
-            VulkanDemoGinger2.swapChainExtent = VkExtent2D.create().set(extent);
+            VKVariables.swapChainImageFormat = surfaceFormat.format();
+            VKVariables.swapChainExtent = VkExtent2D.create().set(extent);
         }
     }
     

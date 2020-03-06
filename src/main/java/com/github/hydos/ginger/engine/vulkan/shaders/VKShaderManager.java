@@ -1,14 +1,17 @@
 package com.github.hydos.ginger.engine.vulkan.shaders;
 
 import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.vulkan.VK10.*;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
+import static org.lwjgl.vulkan.VK10.vkCreateShaderModule;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.LongBuffer;
 
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.VkShaderModuleCreateInfo;
 
-import com.github.hydos.ginger.VulkanExample;
+import com.github.hydos.ginger.engine.vulkan.VKVariables;
 
 /**
  * will be used in the future to manage multiple shaders
@@ -28,7 +31,7 @@ public class VKShaderManager
 
             LongBuffer pShaderModule = stack.mallocLong(1);
 
-            if(vkCreateShaderModule(VulkanExample.VulkanDemoGinger2.device, createInfo, null, pShaderModule) != VK_SUCCESS) {
+            if(vkCreateShaderModule(VKVariables.device, createInfo, null, pShaderModule) != VK_SUCCESS) {
                 throw new RuntimeException("Failed to create shader module");
             }
 
