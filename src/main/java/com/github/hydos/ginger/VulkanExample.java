@@ -119,6 +119,7 @@ import com.github.hydos.ginger.engine.vulkan.misc.AlignmentUtils;
 import com.github.hydos.ginger.engine.vulkan.misc.Frame;
 import com.github.hydos.ginger.engine.vulkan.misc.VKModelLoader;
 import com.github.hydos.ginger.engine.vulkan.misc.VKModelLoader.VKMesh;
+import com.github.hydos.ginger.engine.vulkan.render.VKBufferMesh;
 import com.github.hydos.ginger.engine.vulkan.render.VKRenderManager;
 import com.github.hydos.ginger.engine.vulkan.render.renderers.EntityRenderer;
 import com.github.hydos.ginger.engine.vulkan.swapchain.VKSwapchainManager;
@@ -267,8 +268,6 @@ public class VulkanExample {
 		createTextureImageView();
 		createTextureSampler();
 		loadModel();
-		createVertexBuffer();
-		createIndexBuffer();
 		createDescriptorSetLayout();
 		VKSwapchainManager.createSwapChainObjects();
 		createSyncObjects();
@@ -1159,32 +1158,15 @@ public class VulkanExample {
 		File modelFile = new File(ClassLoader.getSystemClassLoader().getResource("models/chalet.obj").getFile());
 
 		VKMesh model = VKModelLoader.loadModel(modelFile, aiProcess_FlipUVs | aiProcess_DropNormals);
-
-		final int vertexCount = model.positions.size();
-
-		VKVariables.vertices = new VKVertex[vertexCount];
-
-		final Vector3fc color = new Vector3f(1.0f, 1.0f, 1.0f);
-
-		for(int i = 0;i < vertexCount;i++) {
-			VKVariables.vertices[i] = new VKVertex(
-				model.positions.get(i),
-				color,
-				model.texCoords.get(i));
-		}
-
-		VKVariables.indices = new int[model.indices.size()];
-
-		for(int i = 0;i < VKVariables.indices.length;i++) {
-			VKVariables.indices[i] = model.indices.get(i);
-		}
+		EntityRenderer renderer = (EntityRenderer) VKRenderManager.getInstance().renderers.get(0); //tmp
+		renderer.processEntity(model);
 	}
 
-	private void createVertexBuffer() {
+	public static VKBufferMesh createVertexBuffer(VKBufferMesh processedMesh) {
 
 		try(MemoryStack stack = stackPush()) {
 
-			long bufferSize = VKVertex.SIZEOF * VKVariables.vertices.length;
+			long bufferSize = VKVertex.SIZEOF * processedMesh.vertices.length;
 
 			LongBuffer pBuffer = stack.mallocLong(1);
 			LongBuffer pBufferMemory = stack.mallocLong(1);
@@ -1201,7 +1183,7 @@ public class VulkanExample {
 
 			vkMapMemory(VKVariables.device, stagingBufferMemory, 0, bufferSize, 0, data);
 			{
-				memcpy(data.getByteBuffer(0, (int) bufferSize), VKVariables.vertices);
+				memcpy(data.getByteBuffer(0, (int) bufferSize), processedMesh.vertices);
 			}
 			vkUnmapMemory(VKVariables.device, stagingBufferMemory);
 
@@ -1211,21 +1193,23 @@ public class VulkanExample {
 				pBuffer,
 				pBufferMemory);
 
-			VKVariables.vertexBuffer = pBuffer.get(0);
-			VKVariables.vertexBufferMemory = pBufferMemory.get(0);
+			processedMesh.vertexBuffer = pBuffer.get(0);
+			processedMesh.vertexBufferMemory = pBufferMemory.get(0);
 
-			copyBuffer(stagingBuffer, VKVariables.vertexBuffer, bufferSize);
+			copyBuffer(stagingBuffer, processedMesh.vertexBuffer, bufferSize);
 
 			vkDestroyBuffer(VKVariables.device, stagingBuffer, null);
 			vkFreeMemory(VKVariables.device, stagingBufferMemory, null);
+			
+			return processedMesh;
 		}
 	}
 
-	private void createIndexBuffer() {
+	public static VKBufferMesh createIndexBuffer(VKBufferMesh processedMesh) {
 
 		try(MemoryStack stack = stackPush()) {
 
-			long bufferSize = Integer.BYTES * VKVariables.indices.length;
+			long bufferSize = Integer.BYTES * processedMesh.indices.length;
 
 			LongBuffer pBuffer = stack.mallocLong(1);
 			LongBuffer pBufferMemory = stack.mallocLong(1);
@@ -1242,7 +1226,7 @@ public class VulkanExample {
 
 			vkMapMemory(VKVariables.device, stagingBufferMemory, 0, bufferSize, 0, data);
 			{
-				memcpy(data.getByteBuffer(0, (int) bufferSize), VKVariables.indices);
+				memcpy(data.getByteBuffer(0, (int) bufferSize), processedMesh.indices);
 			}
 			vkUnmapMemory(VKVariables.device, stagingBufferMemory);
 
@@ -1252,13 +1236,14 @@ public class VulkanExample {
 				pBuffer,
 				pBufferMemory);
 
-			VKVariables.indexBuffer = pBuffer.get(0);
-			VKVariables.indexBufferMemory = pBufferMemory.get(0);
+			processedMesh.indexBuffer = pBuffer.get(0);
+			processedMesh.indexBufferMemory = pBufferMemory.get(0);
 
-			copyBuffer(stagingBuffer, VKVariables.indexBuffer, bufferSize);
+			copyBuffer(stagingBuffer, processedMesh.indexBuffer, bufferSize);
 
 			vkDestroyBuffer(VKVariables.device, stagingBuffer, null);
 			vkFreeMemory(VKVariables.device, stagingBufferMemory, null);
+			return processedMesh;
 		}
 	}
 
@@ -1452,7 +1437,7 @@ public class VulkanExample {
 		}
 	}
 
-	private void copyBuffer(long srcBuffer, long dstBuffer, long size) {
+	private static void copyBuffer(long srcBuffer, long dstBuffer, long size) {
 
 		try(MemoryStack stack = stackPush()) {
 
@@ -1467,7 +1452,7 @@ public class VulkanExample {
 		}
 	}
 
-	private void memcpy(ByteBuffer buffer, VKVertex[] vertices) {
+	private static void memcpy(ByteBuffer buffer, VKVertex[] vertices) {
 		for(VKVertex vertex : vertices) {
 			buffer.putFloat(vertex.pos.x());
 			buffer.putFloat(vertex.pos.y());
@@ -1482,7 +1467,7 @@ public class VulkanExample {
 		}
 	}
 
-	private void memcpy(ByteBuffer buffer, int[] indices) {
+	private static void memcpy(ByteBuffer buffer, int[] indices) {
 
 		for(int index : indices) {
 			buffer.putInt(index);
