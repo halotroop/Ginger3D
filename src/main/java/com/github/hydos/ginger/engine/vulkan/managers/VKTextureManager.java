@@ -1,4 +1,4 @@
-package com.github.hydos.ginger.engine.vulkan.misc;
+package com.github.hydos.ginger.engine.vulkan.managers;
 
 import static org.lwjgl.stb.STBImage.STBI_rgb_alpha;
 import static org.lwjgl.stb.STBImage.stbi_image_free;
@@ -43,6 +43,7 @@ import org.lwjgl.vulkan.VkSamplerCreateInfo;
 
 import com.github.hydos.ginger.VulkanExample;
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
+import com.github.hydos.ginger.engine.vulkan.utils.VKBufferUtils;
 
 public class VKTextureManager
 {
@@ -69,7 +70,7 @@ public class VKTextureManager
 
 			LongBuffer pStagingBuffer = stack.mallocLong(1);
 			LongBuffer pStagingBufferMemory = stack.mallocLong(1);
-			VulkanExample.createBuffer(imageSize,
+			VKBufferUtils.createBuffer(imageSize,
 				VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 				pStagingBuffer,

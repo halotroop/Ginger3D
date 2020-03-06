@@ -39,6 +39,8 @@ import com.github.hydos.ginger.VulkanExample.QueueFamilyIndices;
 import com.github.hydos.ginger.VulkanExample.SwapChainSupportDetails;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.vulkan.VKVariables;
+import com.github.hydos.ginger.engine.vulkan.managers.CommandBufferManager;
+import com.github.hydos.ginger.engine.vulkan.render.VKRenderManager;
 import com.github.hydos.ginger.engine.vulkan.render.pipelines.VKPipelineManager;
 
 public class VKSwapchainManager
@@ -171,7 +173,7 @@ public class VKSwapchainManager
     public static void createSwapChainObjects() {
     	createSwapChain();
     	VulkanExample.createImageViews();
-    	VulkanExample.createRenderPass();
+    	VKRenderManager.createRenderPass();
         VKPipelineManager.createGraphicsPipeline();
         VulkanExample.createColorResources();
         VulkanExample.createDepthResources();
@@ -179,7 +181,7 @@ public class VKSwapchainManager
         VulkanExample.createUniformBuffers();
         VulkanExample.createDescriptorPool();
         VulkanExample.createDescriptorSets();
-        VulkanExample.createCommandBuffers();
+        CommandBufferManager.createCommandBuffers();
     }
 	
 }
