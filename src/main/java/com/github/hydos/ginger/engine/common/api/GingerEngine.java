@@ -10,12 +10,10 @@ public abstract class GingerEngine
 {
 	protected static GingerEngine INSTANCE;
 	protected GingerRegister registry;
-	
+
 	public static GingerEngine getInstance()
-	{
-		return INSTANCE;
-	}
-	
+	{ return INSTANCE; }
+
 	protected Timer timer;
 	protected TickListener gameTickListener = new TickListener()
 	{
@@ -26,7 +24,7 @@ public abstract class GingerEngine
 			if (GingerRegister.getInstance().currentScreen != null) GingerRegister.getInstance().currentScreen.tick();
 		};
 	};
-	
+
 	public void startGameLoop()
 	{
 		while (!Window.closed())

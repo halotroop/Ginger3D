@@ -15,9 +15,9 @@ public class OBJFileLoader
 		{
 			scene = Assimp.aiImportFile(resourceLocation + filePath, Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate);
 			if (scene == null)
-			{ 
+			{
 				System.err.println("The model " + resourceLocation + filePath + " has failed to load");
-				return new Mesh(new float[0], new float[0], new float[0], new int[0], 1F); 
+				return new Mesh(new float[0], new float[0], new float[0], new int[0], 1F);
 			}
 			AIMesh mesh = AIMesh.create(scene.mMeshes().get(0));
 			int vertexCount = mesh.mNumVertices();

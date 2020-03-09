@@ -9,9 +9,7 @@ public final class OctaveSimplexNoise
 	private double spread, amplitudeLow, amplitudeHigh;
 
 	public OctaveSimplexNoise(Random rand, int octaves)
-	{
-		this(rand, octaves, 1D, 1D, 1D);
-	}
+	{ this(rand, octaves, 1D, 1D, 1D); }
 
 	public OctaveSimplexNoise(Random rand, int octaves, double spread, double amplitudeHigh, double amplitudeLow)
 	{

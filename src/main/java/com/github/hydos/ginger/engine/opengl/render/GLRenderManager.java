@@ -37,7 +37,7 @@ public class GLRenderManager
 	public GLObjectRenderer entityRenderer;
 	private GuiShader guiShader;
 	private GLGuiRenderer guiRenderer;
-//	private SkyboxRenderer skyboxRenderer;
+	//	private SkyboxRenderer skyboxRenderer;
 	private GLNormalMappingRenderer normalRenderer;
 	private Matrix4f projectionMatrix;
 	private ShadowMapMasterRenderer shadowMapRenderer;
@@ -162,7 +162,7 @@ public class GLRenderManager
 		renderEntities(entities, camera, lights);
 		renderNormalEntities(normalEntities, lights, camera, clipPlane);
 		GingerRegister.getInstance().game.renderScene();
-//		skyboxRenderer.render(camera);
+		//		skyboxRenderer.render(camera);
 	}
 
 	public void renderShadowMap(List<RenderObject> entityList, Light sun)

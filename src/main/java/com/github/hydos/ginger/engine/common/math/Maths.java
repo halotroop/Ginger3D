@@ -44,7 +44,6 @@ public class Maths
 	private static final Vector3f ZVEC = new Vector3f(0, 0, 1);
 	private static final Matrix4f matrix = new Matrix4f();
 
-
 	public static Matrix4f createTransformationMatrix(Vector3f translation, float rx, float ry, float rz, Vector3f scale)
 	{
 		matrix.zero();

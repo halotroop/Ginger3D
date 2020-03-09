@@ -13,18 +13,18 @@ public class ModelLoader
 		GLTexturedModel tm = new GLTexturedModel(GLLoader.loadToVAO(data.getVertices(), data.getIndices(), data.getNormals(), data.getTextureCoords()), new ModelTexture(cubeTexture));
 		return tm;
 	}
-	
-	public static Mesh getCubeMesh() {
-		return StaticCube.getCube();
-	}
+
+	public static Mesh getCubeMesh()
+	{ return StaticCube.getCube(); }
 
 	public static GLTexturedModel loadModel(String objPath, String texturePath)
 	{
 		Mesh data = OBJFileLoader.loadModel(objPath);
 		return new GLTexturedModel(GLLoader.loadToVAO(data.getVertices(), data.getIndices(), data.getNormals(), data.getTextureCoords()), new ModelTexture(texturePath));
 	}
-	
-	public static Mesh loadMesh(String meshPath) {
+
+	public static Mesh loadMesh(String meshPath)
+	{
 		Mesh data = OBJFileLoader.loadModel(meshPath);
 		return data;
 	}

@@ -1,8 +1,6 @@
 package tk.valoeghese.gateways.client.io;
 
-/**
- * Author: Valoeghese
- */
+/** Author: Valoeghese */
 public final class InitialPressHandler implements KeyListener
 {
 	private boolean activatedPreviously = false;

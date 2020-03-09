@@ -2,9 +2,7 @@ package tk.valoeghese.gateways.client.io;
 
 import java.util.*;
 
-/**
- * Author: Valoeghese
- */
+/** Author: Valoeghese */
 public class Input
 {
 	private static final Map<Keybind, List<KeyCallback>> CALLBACKS = new HashMap<>();

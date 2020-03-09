@@ -50,7 +50,8 @@ public class PlayerEntity extends Entity implements WorldGenConstants
 			position.x += Math.sin(ry) * Constants.movementSpeed;
 			break;
 		case UP:
-			if (this.noWeight) position.y += Constants.movementSpeed;
+			if (this.noWeight)
+				position.y += Constants.movementSpeed;
 			else this.jump();
 			break;
 		case DOWN:
@@ -85,11 +86,9 @@ public class PlayerEntity extends Entity implements WorldGenConstants
 		upwardsSpeed += Constants.gravity.y() * Window.getTime(); // TODO: Implement 3D gravity
 		isInAir = false;
 		upwardsSpeed = 0;
-		
 		int newChunkX = (int) position.x >> POS_SHIFT;
 		int newChunkY = (int) position.y >> POS_SHIFT;
 		int newChunkZ = (int) position.z >> POS_SHIFT;
-		
 		if (newChunkX != this.chunkX || newChunkY != this.chunkY || newChunkZ != this.chunkZ)
 		{
 			Litecraft.getInstance().getWorld().updateLoadedChunks(newChunkX, newChunkY, newChunkZ);

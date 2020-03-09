@@ -9,6 +9,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
+import com.github.hydos.ginger.engine.common.api.GingerEngine;
 import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.opengl.api.GingerGL;
 import com.github.hydos.ginger.engine.opengl.render.texture.Image;
@@ -29,7 +30,7 @@ public class Window
 
 	public static boolean isFullscreen()
 	{ return fullscreen; }
-	
+
 	public static RenderAPI renderAPI;
 	public static int width;
 	public static int height;
@@ -63,7 +64,7 @@ public class Window
 			System.exit(-1);
 		}
 		renderAPI = api;
-		if(renderAPI == RenderAPI.OpenGL)
+		if (renderAPI == RenderAPI.OpenGL)
 		{
 			GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 4);
 			GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 6);
@@ -72,10 +73,9 @@ public class Window
 		}
 		else if (renderAPI == RenderAPI.Vulkan)
 		{
-	        GLFW.glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	        if (!GLFWVulkan.glfwVulkanSupported()) {
-	            throw new AssertionError("GLFW failed to find the Vulkan loader");
-	        }
+			GLFW.glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+			if (!GLFWVulkan.glfwVulkanSupported())
+			{ throw new AssertionError("GLFW failed to find the Vulkan loader"); }
 		}
 		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -91,7 +91,8 @@ public class Window
 			System.exit(-1);
 		}
 		GLFW.glfwMakeContextCurrent(getWindow());
-		if(api == RenderAPI.OpenGL) {
+		if (api == RenderAPI.OpenGL)
+		{
 			glContext = GL.createCapabilities();
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 		}
@@ -99,7 +100,6 @@ public class Window
 		GLFW.glfwShowWindow(getWindow());
 		time = getTime();
 		getCurrentTime();
-		
 		oldWindowWidth = getWidth();
 		oldWindowHeight = getHeight();
 	}
@@ -208,15 +208,16 @@ public class Window
 
 	public static void update()
 	{
-		if(renderAPI == RenderAPI.OpenGL) {
+		if (renderAPI == RenderAPI.OpenGL)
+		{
 			if ((oldWindowHeight != Window.getHeight() || oldWindowWidth != Window.getWidth()) && Window.getHeight() > 10 && Window.getWidth() > 10)
 			{
-				((GingerGL)GingerGL.getInstance()).contrastFbo.resizeFBOs();
+				((GingerGL) GingerEngine.getInstance()).contrastFbo.resizeFBOs();
 				oldWindowWidth = Window.getWidth();
 				oldWindowHeight = Window.getHeight();
 			}
 			GL11.glViewport(0, 0, width, height);
-			GL11.glClearColor(backgroundColour.x/255, backgroundColour.y/255, backgroundColour.z/255, 1.0f);
+			GL11.glClearColor(backgroundColour.x / 255, backgroundColour.y / 255, backgroundColour.z / 255, 1.0f);
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		}
 		IntBuffer widthBuffer = BufferUtils.createIntBuffer(1);
@@ -237,7 +238,5 @@ public class Window
 	{ Window.fullscreen = !Window.isFullscreen(); }
 
 	public static long getWindow()
-	{
-		return window;
-	}
+	{ return window; }
 }

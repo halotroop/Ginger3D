@@ -21,6 +21,7 @@ public class GingerGL extends GingerEngine
 	public FontType globalFont;
 	public FrameBufferObject contrastFbo;
 
+	@Override
 	public void cleanup()
 	{
 		Window.stop();
@@ -30,12 +31,13 @@ public class GingerGL extends GingerEngine
 		GLLoader.cleanUp();
 	}
 
+	@Override
 	public void openScreen(Screen screen)
 	{
 		if (getRegistry().currentScreen != null) getRegistry().currentScreen.cleanup();
 		getRegistry().currentScreen = screen;
 	}
-	
+
 	public void setGingerPlayer(RenderObject player)
 	{
 		registry.game.data.entities.remove(registry.game.player); // remove the old player
@@ -60,6 +62,7 @@ public class GingerGL extends GingerEngine
 		return text;
 	}
 
+	@Override
 	public void renderOverlays()
 	{
 		getRegistry().masterRenderer.renderGuis(getRegistry().game.data.guis);
@@ -82,7 +85,7 @@ public class GingerGL extends GingerEngine
 		picker = new MousePicker(game.data.camera, masterRenderer.getProjectionMatrix());
 		PostProcessing.init();
 	}
-	
+
 	@Override
 	public void update()
 	{
@@ -92,7 +95,5 @@ public class GingerGL extends GingerEngine
 	}
 
 	public GingerRegister getRegistry()
-	{
-		return registry;
-	}
+	{ return registry; }
 }

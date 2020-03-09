@@ -17,18 +17,23 @@ public class FirstPersonCamera extends Camera
 		playerEntity.setVisible(false);
 	}
 
+	@Override
 	public float getPitch()
 	{ return pitch; }
 
+	@Override
 	public Vector3f getPosition()
 	{ return position; }
 
+	@Override
 	public float getRoll()
 	{ return roll; }
 
+	@Override
 	public float getYaw()
 	{ return yaw; }
 
+	@Override
 	public void updateMovement()
 	{
 		position.x = player.getPosition().x;

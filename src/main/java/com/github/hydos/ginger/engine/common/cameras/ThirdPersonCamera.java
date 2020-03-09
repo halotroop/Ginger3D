@@ -8,12 +8,11 @@ import com.github.hydos.ginger.engine.common.io.Window;
 public class ThirdPersonCamera extends Camera
 {
 	public ThirdPersonCamera(RenderObject playerEntity)
-	{
-		this.player = playerEntity;
-	}
+	{ this.player = playerEntity; }
 
 	private float distanceFromPlayer = 5;
 	private float angleAroundPlayer = 0;
+
 	private void calculatePitch()
 	{
 		if (Window.isMouseDown(1))
@@ -28,7 +27,8 @@ public class ThirdPersonCamera extends Camera
 			{ setPitch(90); }
 		}
 	}
-	
+
+	@Override
 	public void updateMovement()
 	{
 		calculateZoom();

@@ -4,40 +4,38 @@ import java.util.Iterator;
 
 import it.unimi.dsi.fastutil.floats.*;
 
-public class FloatArrayDataSection implements BaseDataSection<Float> {
-	public FloatArrayDataSection() {
-		this.array = new FloatArrayList();
-	}
+public class FloatArrayDataSection implements BaseDataSection<Float>
+{
+	public FloatArrayDataSection()
+	{ this.array = new FloatArrayList(); }
 
 	private final FloatList array;
 
-	public void writeFloat(float value) {
-		this.array.add(value);
-	}
+	public void writeFloat(float value)
+	{ this.array.add(value); }
 
-	public int size() {
-		return array.size();
-	}
+	public int size()
+	{ return array.size(); }
 
-	/**
-	 * @deprecated Should only be used by the parser! Please use the type specific methods instead for writing data.
-	 */
+	/** @deprecated Should only be used by the parser! Please use the type specific methods instead for writing data. */
 	@Deprecated
 	@Override
-	public <T> void writeForParser(T data) throws UnsupportedOperationException {
-		if (data instanceof Float) {
+	public <T> void writeForParser(T data) throws UnsupportedOperationException
+	{
+		if (data instanceof Float)
+		{
 			this.writeFloat((float) data);
-		} else {
+		}
+		else
+		{
 			throw new UnsupportedOperationException("Invalid data type parameter for this data section");
 		}
 	}
 
-	public float readFloat(int index) {
-		return this.array.getFloat(index);
-	}
+	public float readFloat(int index)
+	{ return this.array.getFloat(index); }
 
 	@Override
-	public Iterator<Float> iterator() {
-		return this.array.iterator();
-	}
+	public Iterator<Float> iterator()
+	{ return this.array.iterator(); }
 }

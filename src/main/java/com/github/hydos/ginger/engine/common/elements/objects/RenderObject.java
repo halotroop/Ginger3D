@@ -82,12 +82,8 @@ public class RenderObject
 	{ this.scale = scale; }
 
 	public boolean isVisible()
-	{
-		return visible;
-	}
+	{ return visible; }
 
 	public void setVisible(boolean visible)
-	{
-		this.visible = visible;
-	}
+	{ this.visible = visible; }
 }

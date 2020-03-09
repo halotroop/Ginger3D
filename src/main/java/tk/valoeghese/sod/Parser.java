@@ -5,168 +5,186 @@ import java.util.*;
 
 import tk.valoeghese.sod.exception.SODParseException;
 
-final class Parser {
-	@SuppressWarnings({"deprecation", "rawtypes", "unchecked"})
-	static BinaryData parse(DataInputStream input) throws IOException, SODParseException {
+final class Parser
+{
+	@SuppressWarnings(
+	{
+		"deprecation", "rawtypes", "unchecked"
+	})
+	static BinaryData parse(DataInputStream input) throws IOException, SODParseException
+	{
 		BinaryData data = new BinaryData();
-
 		DataType dataType;
 		DataType sectionType;
 		dataType = DataType.of(input.readByte());
 		sectionType = dataType;
-
 		BaseDataSection currentSection;
 		int arraySizeCountdown = 0;
-
-		try {
+		try
+		{
 			currentSection = dataType.createSection();
-			if (dataType != DataType.SECTION) {
-				arraySizeCountdown = input.readInt();
-			}
-		} catch (SODParseException e) {
+			if (dataType != DataType.SECTION)
+			{ arraySizeCountdown = input.readInt(); }
+		}
+		catch (SODParseException e)
+		{
 			throw new SODParseException("Data must be segregated into sections!");
 		}
-
 		data.put(input.readUTF(), currentSection);
-
-		while (input.available() > 0) {
-			switch (sectionType) {
+		while (input.available() > 0)
+		{
+			switch (sectionType)
+			{
 			case BYTE_ARRAY_SECTION:
-				while (arraySizeCountdown --> 0) {
-					currentSection.writeForParser(input.readByte());
-				}
+				while (arraySizeCountdown-- > 0)
+				{ currentSection.writeForParser(input.readByte()); }
 				// create new section if available
-				if (input.available() > 0) {
-					try {
+				if (input.available() > 0)
+				{
+					try
+					{
 						dataType = DataType.of(input.readByte());
 						sectionType = dataType;
 						currentSection = dataType.createSection();
 						data.put(input.readUTF(), currentSection);
 						// set countdown
-						if (dataType != DataType.SECTION) {
-							arraySizeCountdown = input.readInt();
-						}
-					} catch (SODParseException e) {
+						if (dataType != DataType.SECTION)
+						{ arraySizeCountdown = input.readInt(); }
+					}
+					catch (SODParseException e)
+					{
 						throw new RuntimeException("This error should never be thrown! If this error occurs, the parser is not properly dealing with a most-likely-invalid data type.");
 					}
 				}
 				break;
 			case SHORT_ARRAY_SECTION:
-				while (arraySizeCountdown --> 0) {
-					currentSection.writeForParser(input.readShort());
-				}
+				while (arraySizeCountdown-- > 0)
+				{ currentSection.writeForParser(input.readShort()); }
 				// create new section if available
-				if (input.available() > 0) {
-					try {
+				if (input.available() > 0)
+				{
+					try
+					{
 						dataType = DataType.of(input.readByte());
 						sectionType = dataType;
 						currentSection = dataType.createSection();
 						data.put(input.readUTF(), currentSection);
 						// set countdown
-						if (dataType != DataType.SECTION) {
-							arraySizeCountdown = input.readInt();
-						}
-					} catch (SODParseException e) {
+						if (dataType != DataType.SECTION)
+						{ arraySizeCountdown = input.readInt(); }
+					}
+					catch (SODParseException e)
+					{
 						throw new RuntimeException("This error should never be thrown! If this error occurs, the parser is not properly dealing with a most-likely-invalid data type.");
 					}
 				}
 				break;
 			case INT_ARRAY_SECTION:
-				while (arraySizeCountdown --> 0) {
-					currentSection.writeForParser(input.readInt());
-				}
+				while (arraySizeCountdown-- > 0)
+				{ currentSection.writeForParser(input.readInt()); }
 				// create new section if available
-				if (input.available() > 0) {
-					try {
+				if (input.available() > 0)
+				{
+					try
+					{
 						dataType = DataType.of(input.readByte());
 						sectionType = dataType;
 						currentSection = dataType.createSection();
 						data.put(input.readUTF(), currentSection);
 						// set countdown
-						if (dataType != DataType.SECTION) {
-							arraySizeCountdown = input.readInt();
-						}
-					} catch (SODParseException e) {
+						if (dataType != DataType.SECTION)
+						{ arraySizeCountdown = input.readInt(); }
+					}
+					catch (SODParseException e)
+					{
 						throw new RuntimeException("This error should never be thrown! If this error occurs, the parser is not properly dealing with a most-likely-invalid data type.");
 					}
 				}
 				break;
 			case LONG_ARRAY_SECTION:
-				while (arraySizeCountdown --> 0) {
-					currentSection.writeForParser(input.readLong());
-				}
+				while (arraySizeCountdown-- > 0)
+				{ currentSection.writeForParser(input.readLong()); }
 				// create new section if available
-				if (input.available() > 0) {
-					try {
+				if (input.available() > 0)
+				{
+					try
+					{
 						dataType = DataType.of(input.readByte());
 						sectionType = dataType;
 						currentSection = dataType.createSection();
 						data.put(input.readUTF(), currentSection);
 						// set countdown
-						if (dataType != DataType.SECTION) {
-							arraySizeCountdown = input.readInt();
-						}
-					} catch (SODParseException e) {
+						if (dataType != DataType.SECTION)
+						{ arraySizeCountdown = input.readInt(); }
+					}
+					catch (SODParseException e)
+					{
 						throw new RuntimeException("This error should never be thrown! If this error occurs, the parser is not properly dealing with a most-likely-invalid data type.");
 					}
 				}
 				break;
 			case FLOAT_ARRAY_SECTION:
-				while (arraySizeCountdown --> 0) {
-					currentSection.writeForParser(input.readFloat());
-				}
+				while (arraySizeCountdown-- > 0)
+				{ currentSection.writeForParser(input.readFloat()); }
 				// create new section if available
-				if (input.available() > 0) {
-					try {
+				if (input.available() > 0)
+				{
+					try
+					{
 						dataType = DataType.of(input.readByte());
 						sectionType = dataType;
 						currentSection = dataType.createSection();
 						data.put(input.readUTF(), currentSection);
 						// set countdown
-						if (dataType != DataType.SECTION) {
-							arraySizeCountdown = input.readInt();
-						}
-					} catch (SODParseException e) {
+						if (dataType != DataType.SECTION)
+						{ arraySizeCountdown = input.readInt(); }
+					}
+					catch (SODParseException e)
+					{
 						throw new RuntimeException("This error should never be thrown! If this error occurs, the parser is not properly dealing with a most-likely-invalid data type.");
 					}
 				}
 				break;
 			case DOUBLE_ARRAY_SECTION:
-				while (arraySizeCountdown --> 0) {
-					currentSection.writeForParser(input.readDouble());
-				}
+				while (arraySizeCountdown-- > 0)
+				{ currentSection.writeForParser(input.readDouble()); }
 				// create new section if available
-				if (input.available() > 0) {
-					try {
+				if (input.available() > 0)
+				{
+					try
+					{
 						dataType = DataType.of(input.readByte());
 						sectionType = dataType;
 						currentSection = dataType.createSection();
 						data.put(input.readUTF(), currentSection);
 						// set countdown
-						if (dataType != DataType.SECTION) {
-							arraySizeCountdown = input.readInt();
-						}
-					} catch (SODParseException e) {
+						if (dataType != DataType.SECTION)
+						{ arraySizeCountdown = input.readInt(); }
+					}
+					catch (SODParseException e)
+					{
 						throw new RuntimeException("This error should never be thrown! If this error occurs, the parser is not properly dealing with a most-likely-invalid data type.");
 					}
 				}
 				break;
 			case STRING_ARRAY_SECTION:
-				while (arraySizeCountdown --> 0) {
-					currentSection.writeForParser(input.readUTF());
-				}
+				while (arraySizeCountdown-- > 0)
+				{ currentSection.writeForParser(input.readUTF()); }
 				// create new section if available
-				if (input.available() > 0) {
-					try {
+				if (input.available() > 0)
+				{
+					try
+					{
 						dataType = DataType.of(input.readByte());
 						sectionType = dataType;
 						currentSection = dataType.createSection();
 						data.put(input.readUTF(), currentSection);
 						// set countdown
-						if (dataType != DataType.SECTION) {
-							arraySizeCountdown = input.readInt();
-						}
-					} catch (SODParseException e) {
+						if (dataType != DataType.SECTION)
+						{ arraySizeCountdown = input.readInt(); }
+					}
+					catch (SODParseException e)
+					{
 						throw new RuntimeException("This error should never be thrown! If this error occurs, the parser is not properly dealing with a most-likely-invalid data type.");
 					}
 				}
@@ -174,8 +192,8 @@ final class Parser {
 			case SECTION:
 			default:
 				dataType = DataType.of(input.readByte());
-
-				switch (dataType) {
+				switch (dataType)
+				{
 				case BYTE:
 					currentSection.writeForParser(input.readByte());
 					break;
@@ -198,14 +216,16 @@ final class Parser {
 					currentSection.writeForParser(input.readUTF());
 					break;
 				default:
-					try {
+					try
+					{
 						currentSection = dataType.createSection();
 						sectionType = dataType;
 						data.put(input.readUTF(), currentSection);
-						if (dataType != DataType.SECTION) {
-							arraySizeCountdown = input.readInt();
-						}
-					} catch (SODParseException e) {
+						if (dataType != DataType.SECTION)
+						{ arraySizeCountdown = input.readInt(); }
+					}
+					catch (SODParseException e)
+					{
 						throw new RuntimeException("This error should never be thrown! If this error occurs, the parser is not properly dealing with a most-likely-invalid data type.");
 					}
 					break;
@@ -213,114 +233,125 @@ final class Parser {
 				break;
 			}
 		}
-
 		return data;
 	}
 
 	@SuppressWarnings("rawtypes")
-	static void write(BinaryData data, DataOutputStream dos) throws IOException {
+	static void write(BinaryData data, DataOutputStream dos) throws IOException
+	{
 		dos.writeLong(0xA77D1E);
-
 		Iterator<Map.Entry<String, BaseDataSection>> sectionStream = data.iterator();
-
-		while (sectionStream.hasNext()) {
+		while (sectionStream.hasNext())
+		{
 			Map.Entry<String, BaseDataSection> entry = sectionStream.next();
 			BaseDataSection section = entry.getValue();
-
-			if (section instanceof DataSection) {
+			if (section instanceof DataSection)
+			{
 				dos.writeByte(DataType.SECTION.id);
 				dos.writeUTF(entry.getKey());
-
 				Iterator<Object> dataStream = ((DataSection) section).iterator();
-
-				while (dataStream.hasNext()) {
+				while (dataStream.hasNext())
+				{
 					Object o = dataStream.next();
-
-					if (o instanceof Byte) {
+					if (o instanceof Byte)
+					{
 						dos.writeByte(DataType.BYTE.id);
 						dos.writeByte((byte) o);
-					} else if (o instanceof Short) {
+					}
+					else if (o instanceof Short)
+					{
 						dos.writeByte(DataType.SHORT.id);
 						dos.writeShort((short) o);
-					} else if (o instanceof Integer) {
+					}
+					else if (o instanceof Integer)
+					{
 						dos.writeByte(DataType.INT.id);
 						dos.writeInt((int) o);
-					} else if (o instanceof Long) {
+					}
+					else if (o instanceof Long)
+					{
 						dos.writeByte(DataType.LONG.id);
 						dos.writeLong((long) o);
-					} else if (o instanceof Float) {
+					}
+					else if (o instanceof Float)
+					{
 						dos.writeByte(DataType.FLOAT.id);
 						dos.writeFloat((float) o);
-					} else if (o instanceof Double) {
+					}
+					else if (o instanceof Double)
+					{
 						dos.writeByte(DataType.DOUBLE.id);
 						dos.writeDouble((double) o);
-					} else if (o instanceof String) {
+					}
+					else if (o instanceof String)
+					{
 						dos.writeByte(DataType.STRING.id);
 						dos.writeUTF((String) o);
 					}
 				}
-			} else if (section instanceof ByteArrayDataSection) { // byte array
+			}
+			else if (section instanceof ByteArrayDataSection)
+			{ // byte array
 				dos.writeByte(DataType.BYTE_ARRAY_SECTION.id);
 				dos.writeUTF(entry.getKey());
 				dos.writeInt(((ByteArrayDataSection) section).size());
-
-				for (byte b : (ByteArrayDataSection) section) {
-					dos.writeByte(b);
-				}
-			} else if (section instanceof ShortArrayDataSection) { // short array
+				for (byte b : (ByteArrayDataSection) section)
+				{ dos.writeByte(b); }
+			}
+			else if (section instanceof ShortArrayDataSection)
+			{ // short array
 				dos.writeByte(DataType.SHORT_ARRAY_SECTION.id);
 				dos.writeUTF(entry.getKey());
 				dos.writeInt(((ShortArrayDataSection) section).size());
-
-				for (short s : (ShortArrayDataSection) section) {
-					dos.writeShort(s);
-				}
-			} else if (section instanceof IntArrayDataSection) { // int array
+				for (short s : (ShortArrayDataSection) section)
+				{ dos.writeShort(s); }
+			}
+			else if (section instanceof IntArrayDataSection)
+			{ // int array
 				dos.writeByte(DataType.INT_ARRAY_SECTION.id);
 				dos.writeUTF(entry.getKey());
 				dos.writeInt(((IntArrayDataSection) section).size());
-
-				for (int i : (IntArrayDataSection) section) {
-					dos.writeInt(i);
-				}
-			} else if (section instanceof LongArrayDataSection) { // long array
+				for (int i : (IntArrayDataSection) section)
+				{ dos.writeInt(i); }
+			}
+			else if (section instanceof LongArrayDataSection)
+			{ // long array
 				dos.writeByte(DataType.LONG_ARRAY_SECTION.id);
 				dos.writeUTF(entry.getKey());
 				dos.writeInt(((LongArrayDataSection) section).size());
-
-				for (long l : (LongArrayDataSection) section) {
-					dos.writeLong(l);
-				}
-			} else if (section instanceof FloatArrayDataSection) { // float array
+				for (long l : (LongArrayDataSection) section)
+				{ dos.writeLong(l); }
+			}
+			else if (section instanceof FloatArrayDataSection)
+			{ // float array
 				dos.writeByte(DataType.FLOAT_ARRAY_SECTION.id);
 				dos.writeUTF(entry.getKey());
 				dos.writeInt(((FloatArrayDataSection) section).size());
-
-				for (float f: (FloatArrayDataSection) section) {
-					dos.writeFloat(f);
-				}
-			} else if (section instanceof DoubleArrayDataSection) { // double array
+				for (float f : (FloatArrayDataSection) section)
+				{ dos.writeFloat(f); }
+			}
+			else if (section instanceof DoubleArrayDataSection)
+			{ // double array
 				dos.writeByte(DataType.DOUBLE_ARRAY_SECTION.id);
 				dos.writeUTF(entry.getKey());
 				dos.writeInt(((DoubleArrayDataSection) section).size());
-
-				for (double d : (DoubleArrayDataSection) section) {
-					dos.writeDouble(d);
-				}
-			} else if (section instanceof StringArrayDataSection) { // string array
+				for (double d : (DoubleArrayDataSection) section)
+				{ dos.writeDouble(d); }
+			}
+			else if (section instanceof StringArrayDataSection)
+			{ // string array
 				dos.writeByte(DataType.STRING_ARRAY_SECTION.id);
 				dos.writeUTF(entry.getKey());
 				dos.writeInt(((StringArrayDataSection) section).size());
-
-				for (String s : (StringArrayDataSection) section) {
-					dos.writeUTF(s);
-				}
+				for (String s : (StringArrayDataSection) section)
+				{ dos.writeUTF(s); }
 			}
 		}
 	}
 }
 
-enum DataType {
+enum DataType
+{
 	SECTION(0),
 	BYTE(1),
 	SHORT(2),
@@ -337,14 +368,15 @@ enum DataType {
 	DOUBLE_ARRAY_SECTION(13),
 	STRING_ARRAY_SECTION(14);
 
-	private DataType(int id) {
-		this.id = (byte) id;
-	}
+	private DataType(int id)
+	{ this.id = (byte) id; }
 
 	public final byte id;
 
-	public static DataType of(byte id) throws SODParseException {
-		switch (id) {
+	public static DataType of(byte id) throws SODParseException
+	{
+		switch (id)
+		{
 		case 0:
 			return SECTION;
 		case 1:
@@ -381,8 +413,10 @@ enum DataType {
 	}
 
 	@SuppressWarnings("rawtypes")
-	BaseDataSection createSection() {
-		switch (this) {
+	BaseDataSection createSection()
+	{
+		switch (this)
+		{
 		case SECTION:
 			return new DataSection();
 		case BYTE_ARRAY_SECTION:

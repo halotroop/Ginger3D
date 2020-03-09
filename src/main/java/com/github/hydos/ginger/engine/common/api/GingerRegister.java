@@ -26,9 +26,7 @@ public class GingerRegister
 	public boolean wireframe = false;
 
 	public GingerRegister()
-	{
-		INSTANCE = this;
-	}
+	{ INSTANCE = this; }
 
 	public void registerButton(TextureButton button)
 	{
@@ -59,9 +57,7 @@ public class GingerRegister
 	}
 
 	public void toggleWireframe()
-	{
-		this.wireframe = !this.wireframe;
-	}
+	{ this.wireframe = !this.wireframe; }
 
 	public GUIText retrieveText(String string)
 	{

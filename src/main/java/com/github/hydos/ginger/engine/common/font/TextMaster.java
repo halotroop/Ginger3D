@@ -2,6 +2,7 @@ package com.github.hydos.ginger.engine.common.font;
 
 import java.util.*;
 
+import com.github.hydos.ginger.engine.common.api.GingerEngine;
 import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.opengl.api.GingerGL;
@@ -51,10 +52,10 @@ public class TextMaster
 		if (Window.renderAPI == RenderAPI.OpenGL)
 		{
 			Map<FontType, List<GUIText>> oldTexts = texts;
-			List<GUIText> oldFontText = texts.get(((GingerGL)GingerGL.getInstance()).globalFont);
+			List<GUIText> oldFontText = texts.get(((GingerGL) GingerEngine.getInstance()).globalFont);
 			oldFontText.add(buildText);
 			texts.clear();
-			texts.put(((GingerGL)GingerGL.getInstance()).globalFont, oldFontText);
+			texts.put(((GingerGL) GingerEngine.getInstance()).globalFont, oldFontText);
 			texts = oldTexts;
 		}
 	}

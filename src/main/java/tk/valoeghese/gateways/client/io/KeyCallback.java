@@ -1,8 +1,6 @@
 package tk.valoeghese.gateways.client.io;
 
-/**
- * Author: Valoeghese
- */
+/** Author: Valoeghese */
 public interface KeyCallback
 {
 	public void onCallback();

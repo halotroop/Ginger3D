@@ -2,9 +2,7 @@ package tk.valoeghese.gateways.client.io;
 
 import org.lwjgl.glfw.*;
 
-/**
- * Author: Valoeghese
- */
+/** Author: Valoeghese */
 public class MouseCallbackHandler extends GLFWMouseButtonCallback
 {
 	private static final MouseCallbackHandler INSTANCE = new MouseCallbackHandler();

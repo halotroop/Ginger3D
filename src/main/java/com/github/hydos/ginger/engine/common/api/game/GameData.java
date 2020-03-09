@@ -8,10 +8,8 @@ import com.github.hydos.ginger.engine.common.cameras.Camera;
 import com.github.hydos.ginger.engine.common.elements.GuiTexture;
 import com.github.hydos.ginger.engine.common.elements.objects.*;
 
-/**
- * Used for storing essential engine game data so main class isn't messy
- * Also in general used with Game Class
- */
+/** Used for storing essential engine game data so main class isn't messy
+ * Also in general used with Game Class */
 public class GameData
 {
 	public List<GuiTexture> guis;

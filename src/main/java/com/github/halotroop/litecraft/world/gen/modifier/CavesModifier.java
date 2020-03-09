@@ -10,6 +10,7 @@ import com.github.halotroop.litecraft.world.gen.WorldGenConstants;
 public class CavesModifier implements WorldModifier, WorldGenConstants
 {
 	private OctaveSimplexNoise caveNoise;
+
 	@Override
 	public void initialize(long seed)
 	{
@@ -21,7 +22,6 @@ public class CavesModifier implements WorldModifier, WorldGenConstants
 	public void modifyWorld(BlockAccess world, Random rand, int chunkStartX, int chunkStartY, int chunkStartZ)
 	{
 		final int subChunks = CHUNK_SIZE >> 2; // in 4x4x4 blocks
-
 		for (int subChunkX = 0; subChunkX < subChunks; subChunkX++)
 		{
 			int scOffsetX = subChunkX << 2; // sub chunk offset x
@@ -34,7 +34,7 @@ public class CavesModifier implements WorldModifier, WorldGenConstants
 				{
 					int scOffsetY = subChunkY << 2; // sub chunk offset y
 					int scTotalY = scOffsetY + chunkStartY;
-					double scSampleY = (double) scTotalY * 1.5; // squish caves along y axis a bit
+					double scSampleY = scTotalY * 1.5; // squish caves along y axis a bit
 					double scUpperYOffset = 4.0 * 1.5;
 					// calculate noise at each corner of the cube [lower|upper][south|north][west|east]
 					double noiseLSW = this.caveNoise.sample(scTotalX, scSampleY, scTotalZ); // base = lower south west
@@ -82,9 +82,7 @@ public class CavesModifier implements WorldModifier, WorldGenConstants
 								// if the noise is within the threshold for that block for caves
 								float threshold = world.getBlock(totalX, totalY, totalZ).getCaveCarveThreshold();
 								if (-threshold < lerpNoise && lerpNoise < threshold)
-								{
-									world.setBlock(totalX, totalY, totalZ, Blocks.AIR);
-								}
+								{ world.setBlock(totalX, totalY, totalZ, Blocks.AIR); }
 								// add progress to the noise
 								lerpNoise += lerpProg;
 							}

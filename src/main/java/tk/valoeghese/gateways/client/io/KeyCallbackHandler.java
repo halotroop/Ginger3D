@@ -2,9 +2,7 @@ package tk.valoeghese.gateways.client.io;
 
 import org.lwjgl.glfw.*;
 
-/**
- * Author: Valoeghese
- */
+/** Author: Valoeghese */
 public class KeyCallbackHandler extends GLFWKeyCallback
 {
 	private static final KeyCallbackHandler INSTANCE = new KeyCallbackHandler();

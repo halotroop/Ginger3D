@@ -64,7 +64,6 @@ public class Image
 	public IntBuffer getComp()
 	{ return comp; }
 
-	public String getLocation() {
-		return location;
-	}
+	public String getLocation()
+	{ return location; }
 }

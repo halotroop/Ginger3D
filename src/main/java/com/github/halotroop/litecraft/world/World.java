@@ -33,6 +33,7 @@ public class World implements BlockAccess, WorldGenConstants
 	int renderBoundVertical;
 	// dummy block instance for retrieving the default block model
 	private final BlockInstance dummy;
+
 	public World(long seed, int renderSize, Dimension<?> dim, LitecraftSave save)
 	{
 		this.threadPool = new ForkJoinPool(4, ForkJoinPool.defaultForkJoinWorkerThreadFactory, null, true);
@@ -44,32 +45,26 @@ public class World implements BlockAccess, WorldGenConstants
 		this.worldModifiers = dim.getWorldModifierArray();
 		// initialize world modifiers with seed
 		for (WorldModifier modifier : this.worldModifiers)
-		{
-			modifier.initialize(seed);
-		}
+		{ modifier.initialize(seed); }
 		this.genBlockAccess = new GenerationWorld(this);
 		this.save = save;
 		this.dimension = dim.id;
 		this.renderBound = renderSize / 2;
 		this.renderBoundVertical = this.renderBound / 2;
 		if (this.renderBoundVertical < 2)
-		{
-			this.renderBoundVertical = 2;
-		}
+		{ this.renderBoundVertical = 2; }
 	}
 
 	public int findAir(int x, int z)
 	{
 		int y = SEA_LEVEL;
 		int attemptsRemaining = 255;
-
 		while (attemptsRemaining-- > 0)
 		{
 			// DO NOT CHANGE TO y++
 			if (this.getBlock(x, ++y, z) == Blocks.AIR)
 				return y;
 		}
-
 		return -1; // if it fails, returns -1
 	}
 
@@ -78,7 +73,6 @@ public class World implements BlockAccess, WorldGenConstants
 		int y = this.findAir(0, 0);
 		if (y == -1)
 			y = 300; // yeet
-
 		this.spawnPlayer(0, y, -3);
 	}
 
@@ -86,7 +80,6 @@ public class World implements BlockAccess, WorldGenConstants
 	{
 		this.playerEntity = (PlayerEntity) Litecraft.getInstance().player;
 		this.playerEntity.setVisible(false);
-
 		// Generate world around player
 		long time = System.currentTimeMillis();
 		System.out.println("Generating world!");
@@ -142,9 +135,7 @@ public class World implements BlockAccess, WorldGenConstants
 	}
 
 	void populateChunk(Chunk chunk)
-	{
-		this.populateChunk(chunk.chunkX, chunk.chunkY, chunk.chunkZ, chunk.chunkStartX, chunk.chunkStartY, chunk.chunkStartZ);
-	}
+	{ this.populateChunk(chunk.chunkX, chunk.chunkY, chunk.chunkZ, chunk.chunkStartX, chunk.chunkStartY, chunk.chunkStartZ); }
 
 	private void populateChunk(int chunkX, int chunkY, int chunkZ, int chunkStartX, int chunkStartY, int chunkStartZ)
 	{
@@ -178,7 +169,7 @@ public class World implements BlockAccess, WorldGenConstants
 	public void render(BlockRenderer blockRenderer)
 	{
 		blockRenderer.prepareModel(this.dummy.getModel());
-		this.chunks.forEach((pos, c) -> 
+		this.chunks.forEach((pos, c) ->
 		{
 			if (c != null && c.isFullyGenerated())
 				c.render(blockRenderer);
@@ -220,7 +211,6 @@ public class World implements BlockAccess, WorldGenConstants
 				for (int z = chunkZ - this.renderBound; z < chunkZ + this.renderBound; z++)
 					for (int y = chunkY - this.renderBound; y < chunkY + this.renderBound; y++)
 						toKeep.add(this.getChunkToLoad(x, y, z));
-
 			LongList toRemove = new LongArrayList();
 			// check which loaded chunks are not neccesary
 			chunks.forEach((pos, chunk) ->
@@ -230,7 +220,6 @@ public class World implements BlockAccess, WorldGenConstants
 			});
 			// unload unneccesary chunks from chunk array
 			toRemove.forEach((LongConsumer) this::unloadChunk);
-
 			toKeep.forEach(chunk ->
 			{
 				if (!chunk.isFullyGenerated())

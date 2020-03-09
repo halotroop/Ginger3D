@@ -75,17 +75,17 @@ public class BlockRenderer extends Renderer implements WorldGenConstants
 	public void render(BlockInstance[] renderList)
 	{
 		prepareRender();
-
-        for (BlockInstance entity : renderList) {
-            if (entity != null && entity.getModel() != null)
-            {
-                GLTexturedModel blockModel = entity.getModel();
-                GL11.glBindTexture(GL11.GL_TEXTURE_2D, blockModel.getTexture().getTextureID());
-                prepBlockInstance(entity);
-                GL11.glDrawElements(GL11.GL_TRIANGLES, blockModel.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-            }
-        }
-//		disableWireframe();
-//		shader.stop();
+		for (BlockInstance entity : renderList)
+		{
+			if (entity != null && entity.getModel() != null)
+			{
+				GLTexturedModel blockModel = entity.getModel();
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, blockModel.getTexture().getTextureID());
+				prepBlockInstance(entity);
+				GL11.glDrawElements(GL11.GL_TRIANGLES, blockModel.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+			}
+		}
+		//		disableWireframe();
+		//		shader.stop();
 	}
 }
