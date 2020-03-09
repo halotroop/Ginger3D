@@ -2,6 +2,7 @@ package com.github.halotroop.litecraft;
 
 import org.joml.*;
 
+import com.github.halotroop.litecraft.render.BlockRenderer;
 import com.github.halotroop.litecraft.save.LitecraftSave;
 import com.github.halotroop.litecraft.screens.*;
 import com.github.halotroop.litecraft.types.block.Blocks;
@@ -19,7 +20,7 @@ import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.obj.ModelLoader;
 import com.github.hydos.ginger.engine.opengl.api.GingerGL;
 import com.github.hydos.ginger.engine.opengl.postprocessing.PostProcessing;
-import com.github.hydos.ginger.engine.opengl.render.GLRenderManager;
+import com.github.hydos.ginger.engine.opengl.render.*;
 import com.github.hydos.ginger.engine.opengl.render.models.GLTexturedModel;
 import com.github.hydos.ginger.engine.opengl.utils.*;
 
@@ -35,6 +36,7 @@ public class Litecraft extends Game
 	public int fps, ups, tps;
 	public Vector4i dbgStats = new Vector4i();
 	private long frameTimer;
+	private BlockRenderer blockRenderer;
 
 	public Litecraft(int windowWidth, int windowHeight, float frameLimit)
 	{
@@ -141,6 +143,7 @@ public class Litecraft extends Game
 				//Set the player model
 				GLTexturedModel playerModel = ModelLoader.loadGenericCube("block/cubes/stone/brick/stonebrick.png");
 				FontType font = new FontType(GLLoader.loadFontAtlas("candara.png"), "candara.fnt");
+				this.blockRenderer = new BlockRenderer(GingerRegister.getInstance().masterRenderer.getEntityShader(), GingerRegister.getInstance().masterRenderer.getProjectionMatrix());
 				this.player = new PlayerEntity(playerModel, new Vector3f(0, 0, -3), 0, 180f, 0, new Vector3f(0.2f, 0.2f, 0.2f));
 				this.camera = new FirstPersonCamera(player);
 				this.data = new GameData(this.player, this.camera, 20);
@@ -210,5 +213,5 @@ public class Litecraft extends Game
 
 	@Override
 	public void renderScene()
-	{ world.render(GingerRegister.getInstance().masterRenderer.blockRenderer); }
+	{ world.render(this.blockRenderer); }
 }

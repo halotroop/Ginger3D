@@ -5,7 +5,6 @@ import java.util.*;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.*;
 
-import com.github.halotroop.litecraft.types.block.BlockInstance;
 import com.github.hydos.ginger.engine.common.api.GingerRegister;
 import com.github.hydos.ginger.engine.common.elements.objects.RenderObject;
 import com.github.hydos.ginger.engine.common.io.Window;
@@ -84,7 +83,7 @@ public class GLObjectRenderer extends Renderer
 		GL30.glBindVertexArray(0);
 	}
 
-	public void render(List<BlockInstance> renderList)
+	public void render(List<RenderObject> renderList)
 	{
 		prepare();
 		shader.start();

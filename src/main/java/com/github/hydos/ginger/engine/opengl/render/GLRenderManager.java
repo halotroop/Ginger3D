@@ -6,7 +6,6 @@ import java.util.*;
 import org.joml.*;
 import org.lwjgl.opengl.*;
 
-import com.github.halotroop.litecraft.render.BlockRenderer;
 import com.github.hydos.ginger.engine.common.api.GingerRegister;
 import com.github.hydos.ginger.engine.common.cameras.Camera;
 import com.github.hydos.ginger.engine.common.elements.GuiTexture;
@@ -32,7 +31,6 @@ public class GLRenderManager
 		//		GL11.glCullFace(GL11.GL_BACK);
 	}
 
-	public BlockRenderer blockRenderer;
 	private StaticShader entityShader;
 	public GLObjectRenderer entityRenderer;
 	private GuiShader guiShader;
@@ -48,8 +46,7 @@ public class GLRenderManager
 	{
 		createProjectionMatrix();
 		entityShader = new StaticShader();
-		blockRenderer = new BlockRenderer(entityShader, projectionMatrix);
-		entityRenderer = new GLObjectRenderer(entityShader, projectionMatrix);
+		entityRenderer = new GLObjectRenderer(getEntityShader(), projectionMatrix);
 		guiShader = new GuiShader();
 		guiRenderer = new GLGuiRenderer(guiShader);
 		normalRenderer = new GLNormalMappingRenderer(projectionMatrix);
@@ -58,7 +55,7 @@ public class GLRenderManager
 
 	public void cleanUp()
 	{
-		entityShader.cleanUp();
+		getEntityShader().cleanUp();
 		guiRenderer.cleanUp();
 		shadowMapRenderer.cleanUp();
 		normalRenderer.cleanUp();
@@ -130,12 +127,12 @@ public class GLRenderManager
 		for (RenderObject entity : entities)
 		{ processEntity(entity); }
 		entityRenderer.prepare();
-		entityShader.start();
-		entityShader.loadSkyColour(Window.getColour());
-		entityShader.loadLights(lights);
-		entityShader.loadViewMatrix(camera);
+		getEntityShader().start();
+		getEntityShader().loadSkyColour(Window.getColour());
+		getEntityShader().loadLights(lights);
+		getEntityShader().loadViewMatrix(camera);
 		entityRenderer.render(this.entities);
-		entityShader.stop();
+		getEntityShader().stop();
 		this.entities.clear();
 	}
 
@@ -171,5 +168,10 @@ public class GLRenderManager
 		{ processEntity(entity); }
 		shadowMapRenderer.render(entities, sun);
 		entities.clear();
+	}
+
+	public StaticShader getEntityShader()
+	{
+		return entityShader;
 	}
 }

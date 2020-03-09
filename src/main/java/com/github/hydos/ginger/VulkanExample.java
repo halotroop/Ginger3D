@@ -1406,6 +1406,7 @@ public class VulkanExample
 			return indices.isComplete() && extensionsSupported && swapChainAdequate && anisotropySupported;
 		}
 
+		@SuppressWarnings("unlikely-arg-type")
 		private boolean checkDeviceExtensionSupport(VkPhysicalDevice device)
 		{
 			try (MemoryStack stack = stackPush())
